@@ -2,6 +2,9 @@ import EC from 'elliptic/lib/elliptic/ec';
 import csprng from 'secure-random';
 import WIF from 'wif';
 import bech32 from 'bech32';
+import cryp from 'crypto-browserify';
+import uuid from 'uuid';
+import _ from 'lodash';
 
 import {
   ab2hexstring,
@@ -121,4 +124,83 @@ export const generateSignature = (hex, privateKey) => {
   ]);
 
   return signature.toString('hex');
+};
+
+/**
+ * Generates a keystore file based on given private key and password.
+ * @param {string} privateKey - Private Key.
+ * @param {string} password - Password.
+ */
+export const generateKeyStore = (privateKey, password) => {
+  const address = getAddressFromPrivateKey(privateKey);
+  const salt = cryp.randomBytes(32);
+  const iv = cryp.randomBytes(16);
+
+  const kdfparams = {
+    dklen: 32,
+    salt: salt.toString('hex'),
+    c: 262144,
+    prf: 'hmac-sha256'
+  };
+
+  const derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+  const cipher = cryp.createCipher('aes-128-ctr', derivedKey.slice(0, 16), iv);
+  if (!cipher) {
+    throw new Error('Unsupported cipher');
+  }
+
+  const ciphertext = Buffer.concat([cipher.update(new Buffer(privateKey, 'hex')), cipher.final()]);
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')]);
+  const mac = sha256(bufferValue.toString('hex'));
+
+  return {
+    version: 1,
+    id: uuid.v4({
+      random: cryp.randomBytes(16)
+    }),
+    address: address.toLowerCase(),
+    crypto: {
+      ciphertext: ciphertext.toString('hex'),
+      cipherparams: {
+        iv: iv.toString('hex')
+      },
+      cipher: 'aes-128-ctr',
+      kdf: 'pbkdf2',
+      kdfparams: kdfparams,
+      mac: mac
+    }
+  };
+};
+
+/**
+ * Generates privatekey based on keystore and password
+ * @param {string} keystore - keystore file json format.
+ * @param {string} password - Password.
+ */
+export const getPrivateKeyFromKeyStore = (keystore, password) => {
+
+  if (!_.isString(password)) {
+    throw new Error('No password given.');
+  }
+  
+  const json = _.isObject(keystore) ? keystore : JSON.parse(keystore);
+  const kdfparams = json.crypto.kdfparams;
+
+  if (kdfparams.prf !== 'hmac-sha256') {
+    throw new Error('Unsupported parameters to PBKDF2');
+  }
+
+  const derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+  const ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext]);
+  const mac = sha256(bufferValue.toString('hex'));
+
+  if (mac !== json.crypto.mac) {
+    throw new Error('Key derivation failed - possibly wrong password');
+  }
+
+  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+  const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
+
+  return privateKey;
 };
