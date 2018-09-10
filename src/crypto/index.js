@@ -144,7 +144,7 @@ export const generateKeyStore = (privateKey, password) => {
   };
 
   const derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
-  const cipher = cryp.createCipher('aes-128-ctr', derivedKey.slice(0, 16), iv);
+  const cipher = cryp.createCipher('aes-256-ctr', derivedKey.slice(0, 16), iv);
   if (!cipher) {
     throw new Error('Unsupported cipher');
   }
@@ -164,7 +164,7 @@ export const generateKeyStore = (privateKey, password) => {
       cipherparams: {
         iv: iv.toString('hex')
       },
-      cipher: 'aes-128-ctr',
+      cipher: 'aes-256-ctr',
       kdf: 'pbkdf2',
       kdfparams: kdfparams,
       mac: mac
