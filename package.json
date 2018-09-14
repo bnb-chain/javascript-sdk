@@ -18,6 +18,7 @@
     "lodash": "^4.17.10",
     "secure-random": "^1.1.1",
     "uuid": "^3.3.2",
+    "varint": "^5.0.0",
     "varstruct": "^6.1.2",
     "wif": "^2.0.6"
   },
