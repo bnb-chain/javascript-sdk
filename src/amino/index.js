@@ -1,5 +1,6 @@
 import vstruct from 'varstruct';
-import varint, { UVarInt } from '../utils/varint';
+import Varint, { UVarInt } from './varint';
+import placeOrderMsg from './placeOrderMsg';
 
 const VarString = vstruct.VarString(UVarInt);
 
@@ -8,7 +9,7 @@ const VarString = vstruct.VarString(UVarInt);
  * @param num
  */
 export const encodeNumber = (num) => {
-  return varint.encode(num);
+  return Varint.encode(num);
 }
 
 /**
@@ -16,10 +17,10 @@ export const encodeNumber = (num) => {
  * @param b
  */
 export const encodeBool = (b) => {
-  if(b){
-    return varint.encode(1);
+  if(b) {
+    return Varint.encode(1);
   } else {
-    return varint.encode(0);
+    return Varint.encode(0);
   }
 }
 
@@ -29,6 +30,23 @@ export const encodeBool = (b) => {
  */
 export const encodeString = (str) => {
   return VarString.encode(str);
+}
+
+/**
+ * encode plceOrderMsg
+ * @param data.account_number
+ * @param data.memo
+ * @param data.msgs
+ * @param data.sequence
+ */
+export const encodePlaceOrderMsg = (data) => {
+  const tx = vstruct([
+    { name: 'account_number', type: UVarInt },
+    { name: 'memo', type: VarString },
+    { name: 'msgs', type: vstruct.VarArray(vstruct.Byte, placeOrderMsg) },
+    { name: 'sequence', type: UVarInt  }
+  ]);
+  return tx.encode(data);
 }
 
 /**
@@ -51,3 +69,5 @@ export const encodeTime = (value) => {
 
   return buffer
 }
+
+
