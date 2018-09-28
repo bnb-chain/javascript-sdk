@@ -5,6 +5,7 @@ import bech32 from 'bech32';
 import cryp from 'crypto-browserify';
 import uuid from 'uuid';
 import _ from 'lodash';
+import bip39 from 'bip39';
 
 import {
   ab2hexstring,
@@ -205,3 +206,28 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
 
   return privateKey;
 };
+
+/**
+ * Gets Mnemonic from a private key.
+ * @param {string} privateKey the private key hexstring
+ */
+export const getMnemonicFromPrivateKey = privateKey => {
+  return bip39.entropyToMnemonic(privateKey);
+}
+
+/**
+ * Generate Mnemonic (length=== 15)
+ */
+export const generateMnemonic = () => {
+  return bip39.generateMnemonic(160);
+}
+
+/**
+ * Get privatekey from mnemonic.
+ * @param {mnemonic} 
+ */
+export const getPrivateKeyFromMnemonic = mnemonic => {
+  return bip39.mnemonicToEntropy(mnemonic);
+}
+
+
