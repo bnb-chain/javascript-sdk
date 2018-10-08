@@ -17,8 +17,10 @@ describe('crypto', () => {
   });
 
   it('getPrivateKeyFromMnemonic', ()=>{
-    const seed = crypto.getPrivateKeyFromMnemonic(mnemonic);
-    console.log(seed.toString('hex'));
+    let privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic);
+    privateKey = privateKey.toString('hex');
+    const address = crypto.getAddressFromPrivateKey(privateKey);
+    console.log(address);
   });
 
 });
