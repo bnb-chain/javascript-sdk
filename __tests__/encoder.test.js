@@ -1,5 +1,4 @@
 import * as encoder from '../src/amino/';
-import placeOrderMsg from '../src/amino/placeOrderMsg';
 
 describe('encoder', () => {
   it('encode time', () => {
@@ -31,14 +30,55 @@ describe('encoder', () => {
     expect(encodedString).toBe('11596f75206172652062656175746966756c');
   });
 
-  it('placeOrderMsg', () => {
+  // it('placeOrderMsg', () => {
+  //   const data = {
+  //     "Address": 1,
+  //     "Sender": 2,
+  //     "Symbol": 3,
+  //   };
+  //   let encodedString = placeOrderMsg.encode(data);
+  //   encodedString = encodedString.toString('hex');
+  //   console.log(encodedString);
+  //   // expect(encodedString).toBe('08041237636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e67363472787133683479702d3436180220022a34636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e673634727871336834797030023a0758595a5f424e424002');
+  // });
+
+  it('encodeStruct', () => {
+    // const data = {
+    //   "account_number": "2",
+    //   "chain_id": "bnbchain-1000",
+    //   "fee": {
+    //     "amount": [{
+    //       "amount1": "0",
+    //       "denom": ""
+    //     }],
+    //     "gas": "0"
+    //   },
+    //   "memo": "",
+    //   "msgs": [{
+    //     "id": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp-46",
+    //     "ordertype": 2,
+    //     "price": 1,
+    //     "quantity": 1,
+    //     "sender": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp",
+    //     "side": 1,
+    //     "symbol": "XYZ_BNB",
+    //     "timeinforce": 1
+    //   }],
+    //   "sequence": "46"
+    // };
     const data = {
-      "Id": 1,
-      "Sender": 2,
-      "Symbol": 3,
+      "id": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp-46",
+      "ordertype": 2,
+      "price": 1,
+      "quantity": 1,
+      "sender": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp",
+      "side": 1,
+      "symbol": "XYZ_BNB",
+      "timeinforce": 1
     };
-    let encodedString = placeOrderMsg.encode(data);
-    encodedString = encodedString.toString('hex');
-    // expect(encodedString).toBe('08041237636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e67363472787133683479702d3436180220022a34636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e673634727871336834797030023a0758595a5f424e424002');
+    let encodeString = encoder.encodeStruct(data);
+    console.log(encodeString);
+    // expect(encodeString).toBe('0a013110041806');
   });
+
 });

@@ -1,15 +1,30 @@
-import vstruct from 'varstruct';
-import Varint, { UVarInt } from './varint';
-import placeOrderMsg from './placeOrderMsg';
+import vstruct, { Array } from 'varstruct';
+import _ from 'lodash';
+import VarInt, { UVarInt } from './varint';
+import typeToTyp3 from '../utils/aminoHelper';
 
 const VarString = vstruct.VarString(UVarInt);
+// const placeOrderPrefix = Buffer.from('CE6DC043', 'hex');
+
+// const PlaceOrder = {
+//   encode(orderMsg, buffer, offset = 0){
+//     orderMsg = encodeStruct(orderMsg);
+//     buffer = buffer || Buffer.alloc(orderMsg.length);
+//     placeOrderPrefix.copy(buffer, offset);
+//     Buffer.from(orderMsg).copy(buffer, offset + placeOrderPrefix.length);
+//     return buffer;
+//   },
+//   decode(){
+//     throw Error('Decode not implemented');
+//   }
+// }
 
 /**
  * encode number
  * @param num
  */
 export const encodeNumber = (num) => {
-  return Varint.encode(num);
+  return VarInt.encode(num);
 }
 
 /**
@@ -18,9 +33,9 @@ export const encodeNumber = (num) => {
  */
 export const encodeBool = (b) => {
   if(b) {
-    return Varint.encode(1);
+    return VarInt.encode(1);
   } else {
-    return Varint.encode(0);
+    return VarInt.encode(0);
   }
 }
 
@@ -30,23 +45,6 @@ export const encodeBool = (b) => {
  */
 export const encodeString = (str) => {
   return VarString.encode(str);
-}
-
-/**
- * encode plceOrderMsg
- * @param data.account_number
- * @param data.memo
- * @param data.msgs
- * @param data.sequence
- */
-export const encodePlaceOrderMsg = (data) => {
-  const tx = vstruct([
-    { name: 'account_number', type: UVarInt },
-    { name: 'memo', type: VarString },
-    { name: 'msgs', type: vstruct.VarArray(vstruct.Byte, placeOrderMsg) },
-    { name: 'sequence', type: UVarInt  }
-  ]);
-  return tx.encode(data);
 }
 
 /**
@@ -70,4 +68,101 @@ export const encodeTime = (value) => {
   return buffer
 }
 
+/**
+ * encode object to binary
+ * @param data --- object
+ */
+export const encodeStruct = (data) => {
+  if(!_.isObject(data)) throw new TypeError('data must be an object');
 
+  const { struct, newData } = generateStruct(data);
+  const bytes = vstruct(struct).encode(newData);
+  return bytes.toString('hex');
+}
+
+const generateStruct = (data) => {
+  if(!_.isObject(data)) return {};
+  const struct = [];
+  const newData = {};
+
+  Object.keys(data).map((key, index)=>{
+    if(_.isNumber(data[key])){
+      struct.push({name: `type${key}`, type: UVarInt});
+      struct.push({name: key, type: VarInt});
+    }
+
+    if(_.isString(data[key])){
+      struct.push({name: `type${key}`, type: UVarInt});
+      struct.push({name: key, type: VarString });
+    }
+
+    if(_.isPlainObject(data[key])){
+      const { struct, newData } = generateStruct(data[key]);
+      data[key] = newData;
+      struct.push({ name: `type${key}`, type: UVarInt });
+      struct.push({ name: key, type: vstruct(struct)});
+    }
+
+    if(_.isArray(data[key])){
+      struct.push({name: `type${key}`, type: UVarInt});
+      let itemType = getEncodeType(data[key]);
+      data[key] = generateArrayValue(data[key]);
+      struct.push({name: key, type: Array(data[key].length, itemType)});
+    }
+
+    newData[`type${key}`] = (index + 1) << 3 | typeToTyp3(data[key]);
+    newData[key] = data[key];
+  });
+
+  return { struct, newData }
+}
+
+const generateArrayValue = (arr)=>{
+  if(!_.isArray(arr)) throw new TypeError('data should array instance');
+  if(arr.length === 0) throw new Error('array should not be null');
+  if(_.isArray(arr[0])) throw new Error('not support two dimensional arrays');
+
+  const result = [];
+  arr.forEach((item)=>{
+    if(_.isObject(item)){
+      const newItem = {};
+      generateStruct(item, [], newItem);
+      result.push(newItem);
+    } else {
+      result.push(item);
+    }
+  });
+
+  return result;
+}
+
+/**
+ * get encode type
+ */
+export const getEncodeType = (data)=>{
+  if(data === undefined || data === null) 
+    throw new TypeError('data should not be null or undefined');
+
+  let encodeType;
+
+  if(_.isNumber(data)){
+    encodeType = VarInt;
+  }
+
+  if(_.isString(data)){
+    encodeType = VarString;
+  }
+
+  if(_.isPlainObject(data)){
+    const { struct } = generateStruct(data);
+    encodeType = vstruct(struct);
+  }
+
+  if(_.isArray(data)){
+    if(data.length === 0) throw new Error('array should not be null');
+    if(_.isArray(data[0])) throw new Error('not support two dimensional arrays');
+    encodeType = getEncodeType(data[0]);
+  }
+
+  return encodeType;
+}
