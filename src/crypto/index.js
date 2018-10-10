@@ -1,4 +1,3 @@
-import EC from 'elliptic/lib/elliptic/ec';
 import csprng from 'secure-random';
 import WIF from 'wif';
 import bech32 from 'bech32';
@@ -13,6 +12,8 @@ import {
   sha256,
   sha256ripemd160,
 } from "../utils";
+
+const EC = require('elliptic').ec;
 
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32;
