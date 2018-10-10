@@ -6,6 +6,7 @@ import cryp from 'crypto-browserify';
 import uuid from 'uuid';
 import _ from 'lodash';
 import bip39 from 'bip39';
+import bip32 from 'bip32';
 
 import {
   ab2hexstring,
@@ -16,6 +17,9 @@ import {
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32;
 const CURVE = 'secp256k1';
+
+//hdpath
+const HDPATH = "44'/118'/0'/0/0";
 
 const ec = new EC(CURVE);
 
@@ -227,7 +231,8 @@ export const generateMnemonic = () => {
  * @param {mnemonic} 
  */
 export const getPrivateKeyFromMnemonic = mnemonic => {
-  return bip39.mnemonicToEntropy(mnemonic);
+  const seed = bip39.mnemonicToSeed(mnemonic);
+  const master = bip32.fromSeed(seed);
+  const child = master.derivePath(HDPATH);
+  return child.privateKey;
 }
-
-

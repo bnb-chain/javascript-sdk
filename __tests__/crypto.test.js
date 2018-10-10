@@ -17,10 +17,9 @@ describe('crypto', () => {
   });
 
   it('getPrivateKeyFromMnemonic', ()=>{
-    let privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic);
-    privateKey = privateKey.toString('hex');
-    const address = crypto.getAddressFromPrivateKey(privateKey);
-    console.log(address);
+    const mnemonic = 'bacon riot clap clarify cash forest magic give camp blast blade regret visa parent coach wasp banner axis escape deer evolve poem express fine';
+    const pk = crypto.getPrivateKeyFromMnemonic(mnemonic);
+    const address = crypto.getAddressFromPrivateKey(pk);
+    expect(address).toBe('cosmosaccaddr1d27dffpdrp9qrwjvtc5rjvpug5ykplxmutnrev');
   });
-
 });
