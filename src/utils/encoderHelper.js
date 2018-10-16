@@ -3,6 +3,10 @@ import _ from 'lodash';
 // typeToTyp3
 //amino type convert
 export default type => {
+  if(_.isBoolean(type)){
+    return 0;
+  }
+
   if(_.isNumber(type)){
     if(_.isInteger(type)){
       return 0;
