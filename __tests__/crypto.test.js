@@ -8,8 +8,8 @@ const mnemonic = crypto.generateMnemonic();
 
 describe('crypto', () => {
   it('getPrivateKeyFromKeyStore baseon on keyStore', () => {
-    const seed = crypto.getPrivateKeyFromKeyStore(keyStore, '1234567');
-    expect(seed).toBe(privateKey);
+    const pk = crypto.getPrivateKeyFromKeyStore(keyStore, '1234567');
+    expect(pk).toBe(privateKey);
   });
 
   it('getMnemonicFromPrivateKey', ()=>{
