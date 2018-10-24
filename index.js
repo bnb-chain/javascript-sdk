@@ -14,8 +14,6 @@ class Bnc {
   }
 }
 
-Bnc.crypto = crypto;
-Bnc.amino = amino;
-Bnc.Transaction = Transaction;
+export { crypto, amino, Transaction };
 
 export default Bnc;

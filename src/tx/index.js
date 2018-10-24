@@ -1,14 +1,14 @@
 import * as crypto from '../crypto/';
 import * as encoder from '../encoder/';
 
-const txType = {
+export const txType = {
   MsgSend: 'MsgSend',
   NewOrderMsg: 'NewOrderMsg',
   CancelOrderMsg: 'CancelOrderMsg',
   StdTx: 'StdTx'
 }
 
-const typePrefix = {
+export const typePrefix = {
   MsgSend: '2A2C87FA',
   NewOrderMsg: 'CE6DC043',
   CancelOrderMsg: '166E681B',
@@ -99,8 +99,5 @@ class Transaction {
     return bytes.toString('hex');
   }
 }
-
-Transaction.txType = txType;
-Transaction.typePrefix = typePrefix;
 
 export default Transaction;
