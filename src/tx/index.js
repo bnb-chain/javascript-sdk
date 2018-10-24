@@ -43,6 +43,10 @@ class Transaction {
 
     data = data || {};
 
+    //add specified version field to msg
+    data.msg = data.msg || {};
+    data.msg.version = 0x01;
+
     this.type = data.type;
     this.sequence = data.sequence || 0;
     this.account_number = data.account_number || 0;
@@ -91,7 +95,7 @@ class Transaction {
       memo: this.memo
     }
 
-    const bytes = encoder.encodeTx(stdTx);
+    const bytes = encoder.marshalBinary(stdTx);
     return bytes.toString('hex');
   }
 }
