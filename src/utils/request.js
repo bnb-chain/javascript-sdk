@@ -41,4 +41,4 @@ class HttpRequest {
   }
 }
 
-export default new HttpRequest();
+export default HttpRequest;
