@@ -1,4 +1,4 @@
-import * as encoder from '../src/encoder/';
+import * as encoder from '../src/encoder';
 
 describe('encoder', () => {
   it('encode time', () => {
