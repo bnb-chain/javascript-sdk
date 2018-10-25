@@ -5,14 +5,18 @@ export const txType = {
   MsgSend: 'MsgSend',
   NewOrderMsg: 'NewOrderMsg',
   CancelOrderMsg: 'CancelOrderMsg',
-  StdTx: 'StdTx'
+  StdTx: 'StdTx',
+  PubKeySecp256k1: 'PubKeySecp256k1',
+  SignatureSecp256k1: 'SignatureSecp256k1',
 }
 
 export const typePrefix = {
   MsgSend: '2A2C87FA',
   NewOrderMsg: 'CE6DC043',
   CancelOrderMsg: '166E681B',
-  StdTx: 'F0625DEE'
+  StdTx: 'F0625DEE',
+  PubKeySecp256k1: 'EB5AE987',
+  SignatureSecp256k1: '7FC4A495',
 }
 
 /**
@@ -43,16 +47,18 @@ class Transaction {
 
     data = data || {};
 
-    //add specified version field to msg
-    data.msg = data.msg || {};
-    data.msg.version = 0x01;
-
     this.type = data.type;
     this.sequence = data.sequence || 0;
     this.account_number = data.account_number || 0;
     this.chain_id = data.chain_id || 'bnbchain-1000';
     this.msgs = data.msg ? [data.msg] : [];
-    this.fee = data.fee ? data.fee : {};
+    this.fee = {
+      amount: [{
+        amount: 0,
+        denom: ""
+      }],
+      gas: 200000
+    };
     this.memo = data.memo;
   }
 
@@ -60,23 +66,30 @@ class Transaction {
    * sign transaction with a given private key
    * @param {string} privateKey
    **/
-  sign(privateKey) {
-    const msg = this.msgs.length > 0 ? this.msgs[0] : {};
+  sign(privateKey, pub_key) {
     const signMsg = {
-      account_number: this.account_number,
       chain_id: this.chain_id,
-      fee: encoder.convertObjectToBytes(this.fee),
+      account_number: this.account_number,
+      sequence: this.sequence,
+      fee: this.fee,
+      msgs: this.msgs,
       memo: this.memo,
-      msgs: encoder.convertObjectToBytes(msg),
-      sequence: this.sequence
     };
     const signMsgBytes = encoder.convertObjectToBytes(signMsg);
     const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
     this.signatures = [{
+      pub_key:{
+        value: pub_key,
+        msgType: 'PubKeySecp256k1',
+      },
+      signature: {
+        value: signature.buffer,
+        msgType: 'SignatureSecp256k1'
+      },
       account_number: this.account_number,
       sequence: this.sequence,
-      signature
     }];
+    this.sig = signature.hexStr;
     return this;
   }
 
@@ -92,8 +105,9 @@ class Transaction {
       msg: this.msgs,
       fee: this.fee,
       signatures: this.signatures,
-      memo: this.memo
-    }
+      memo: this.memo,
+      msgType: txType.StdTx
+    };
 
     const bytes = encoder.marshalBinary(stdTx);
     return bytes.toString('hex');

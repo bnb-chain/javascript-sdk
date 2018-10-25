@@ -29,8 +29,8 @@ const ec = new EC(CURVE);
  * @param {string} value the bech32 address to decode
  */
 export const decodeAddress = (value) => {
-  const words = bech32.decode(value);
-  return bech32.fromWords(words);
+  const decodeAddress = bech32.decode(value);
+  return Buffer.from(bech32.fromWords(decodeAddress.words));
 };
 
 /**
@@ -129,7 +129,7 @@ export const generateSignature = (hex, privateKey) => {
     sig.s.toArrayLike(Buffer, 'be', 32)
   ]);
 
-  return signature.toString('hex');
+  return { buffer: signature, hexStr: signature.toString('hex')};
 };
 
 /**

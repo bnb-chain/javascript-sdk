@@ -11,7 +11,7 @@ class Bnc {
   async sendTx(tx) {
     const opts = {
       body: tx,
-      'content-type': 'text/plain'
+      headers:{ 'content-type': 'text/plain' }
     };
     const data = await this.httpClient.request('post', '/api/v1/broadcast', null, opts);
     return data;
