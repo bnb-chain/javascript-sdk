@@ -26,7 +26,7 @@ const txObj = {
 
 describe('Transaction', () => {
   it('signAndEncode', () => {
-    const tx = new Tx(txObj, txType.NewOrderMsg);
+    const tx = new Tx(txObj);
     const encodeTXString = tx.sign('fbd9eb6aea3fb34f40e57154e7d0602f3391a06a560c5d99ba256619f781672f').serialize();
     console.log(encodeTXString);
   })

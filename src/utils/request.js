@@ -8,7 +8,7 @@ class HttpRequest {
     });
   } 
 
-  request(method, path, params) {
+  request(method, path, params, opts) {
     const options = {
       method,
       url: path,
@@ -20,6 +20,10 @@ class HttpRequest {
       } else {
         options.data = params;
       }
+    }
+
+    for(const key in opts) {
+      options[key] = opts[key];
     }
 
     return this.httpClient
