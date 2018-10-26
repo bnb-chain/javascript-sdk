@@ -53,13 +53,28 @@ class Transaction {
     this.chain_id = data.chain_id || 'bnbchain-1000';
     this.msgs = data.msg ? [data.msg] : [];
     this.fee = {
-      amount: [{
-        amount: 0,
-        denom: ""
+      "amount": [{
+        "denom": "",
+        "amount": {
+          "neg": false,
+          "abs": [0]
+        }
       }],
-      gas: 200000
+      "gas": 200000
     };
     this.memo = data.memo;
+  }
+
+  buildMsgWithoutType(){
+    const msg = this.msgs[0] || {};
+    const result = {};
+    for(const key in msg){
+      if(key !== 'msgType'){
+        result[key] = msg[key];
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -67,25 +82,30 @@ class Transaction {
    * @param {string} privateKey
    **/
   sign(privateKey, pub_key) {
+    const msg = this.buildMsgWithoutType();
     const signMsg = {
-      chain_id: this.chain_id,
-      account_number: this.account_number,
-      sequence: this.sequence,
-      fee: this.fee,
-      msgs: this.msgs,
-      memo: this.memo,
+      "account_number": this.account_number.toString(),
+      "chain_id": this.chain_id,
+      "fee": {
+        "amount": {
+          "denom": "",
+          "amount": "nil"
+          // "amount": {
+          //   "neg": "false",
+          //   "abs": "0"
+          // }
+        },
+        "gas": "200000"
+      },
+      "memo": this.memo,
+      "msgs": msg,
+      "sequence": this.sequence.toString()
     };
     const signMsgBytes = encoder.convertObjectToBytes(signMsg);
     const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
     this.signatures = [{
-      pub_key:{
-        value: pub_key,
-        msgType: 'PubKeySecp256k1',
-      },
-      signature: {
-        value: signature.buffer,
-        msgType: 'SignatureSecp256k1'
-      },
+      pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), Buffer.from(pub_key)]),
+      signature:Buffer.concat([Buffer.from('7FC4A495', 'hex'), Buffer.from(signature.buffer)]),
       account_number: this.account_number,
       sequence: this.sequence,
     }];

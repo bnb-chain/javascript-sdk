@@ -244,13 +244,18 @@ export const encodeBinary = (info, fieldNum, isByteLenPrefix) => {
 
   let bytes;
 
-  if(_.isObject(info)){
+  if(Buffer.isBuffer(info)){
+    bytes = bytes;
+  }
+
+  if(_.isPlainObject(info)){
     bytes = encodeObjectBinary(info, isByteLenPrefix);
   }
 
   if(_.isArray(info)){
     bytes = encodeArrayBinary(fieldNum, info, isByteLenPrefix);
   }
+  
 
   if(_.isNumber(info)){
     bytes = encodeNumber(info);
