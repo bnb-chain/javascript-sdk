@@ -220,3 +220,19 @@ export const sha256 = (hex) => {
   let hexEncoded = hexEncoding.parse(hex)
   return SHA256(hexEncoded).toString()
 }
+
+//returns the bytes for the passed big integer adjusted as
+// necessary to ensure that a big-endian encoded integer can't possibly be
+// misinterpreted as a negative number.  This can happen when the most
+// significant bit is set, so it is padded by a leading zero byte in this case.
+// Also, the returned bytes will have at least a single byte when the passed
+// value is 0.  This is required for DER encoding.
+export const toDER = (x)=>{
+  const ZERO = Buffer.alloc(1, 0);
+  let i = 0
+  while (x[i] === 0) ++i
+  if (i === x.length) return ZERO
+  x = x.slice(i)
+  if (x[0] & 0x80) return Buffer.concat([ZERO, x], 1 + x.length)
+  return x
+}

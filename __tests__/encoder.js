@@ -69,4 +69,6 @@ describe('encoder', () => {
     const str = encoder.convertObjectToBytes(jsonObj);
     expect(str.toString('hex')).toBe('7b2261646472657373223a312c2273656e646572223a322c2273796d626f6c223a337d');
   });
+
+
 });

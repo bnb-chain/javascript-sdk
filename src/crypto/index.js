@@ -6,6 +6,10 @@ import uuid from 'uuid';
 import _ from 'lodash';
 import bip39 from 'bip39';
 import bip32 from 'bip32';
+import bip66 from 'bip66';
+import bscript from 'bitcoinjs-lib/src/script_signature';
+import * as encoder from '../encoder/';
+import { toDER } from '../utils/';
 
 import {
   ab2hexstring,
@@ -121,15 +125,32 @@ export const getAddressFromPrivateKey = privateKey => {
 export const generateSignature = (hex, privateKey) => {
   const msgHash = sha256(hex);
   const msgHashHex = Buffer.from(msgHash, 'hex');
-
+  console.log('msgHash: ' + msgHash );
+  console.log( msgHashHex );
   let elliptic = new EC(CURVE);
   const sig = elliptic.sign(msgHashHex, privateKey, null);
-  const signature = Buffer.concat([
-    sig.r.toArrayLike(Buffer, 'be', 32),
-    sig.s.toArrayLike(Buffer, 'be', 32)
-  ]);
+  // let signature = Buffer.concat([
+  //   sig.r.toArrayLike(Buffer, 'be', 32),
+  //   sig.s.toArrayLike(Buffer, 'be', 32)
+  // ]);
 
-  return { buffer: signature, hexStr: signature.toString('hex')};
+  const r = toDER(sig.r.toArrayLike(Buffer, 'be', 32));
+  const s = toDER(sig.s.toArrayLike(Buffer, 'be', 32));
+
+  console.log('privateKey: '  + privateKey);
+
+  const signature = bip66.encode(r, s);
+
+  console.log(signature.toString('hex'));
+
+  // // random hashtype, will remove later.
+  // signature  = bscript.encode(signature, 1);
+
+  // // Note that the serialized bytes returned do not include the appended hash type
+  // // used in Bitcoin signature scripts.
+  // signature = signature.slice(0, signature.length - 2);
+
+  return encoder.marshalBinaryBare(signature);;
 };
 
 /**

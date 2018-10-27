@@ -89,11 +89,10 @@ class Transaction {
       "fee": {
         "amount": {
           "denom": "",
-          "amount": "nil"
-          // "amount": {
-          //   "neg": "false",
-          //   "abs": "0"
-          // }
+          "amount": {
+            "neg": false,
+            "abs": [0]
+          }
         },
         "gas": "200000"
       },
