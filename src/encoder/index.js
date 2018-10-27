@@ -215,10 +215,9 @@ export const marshalBinary = (obj) => {
   if (!_.isObject(obj))
     throw new TypeError('data must be an object');
 
-  let bytes = encodeBinary(obj, true);
- 
-  const lenBytes = UVarInt.encode(bytes.length);
-  bytes = Buffer.concat([lenBytes, bytes]);
+  let bytes = encodeBinary(obj, null, true);
+  // const lenBytes = UVarInt.encode(bytes.length);
+  // bytes = Buffer.concat([lenBytes, bytes]);
 
   return bytes.toString('hex');
 }
@@ -245,7 +244,7 @@ export const encodeBinary = (info, fieldNum, isByteLenPrefix) => {
   let bytes;
 
   if(Buffer.isBuffer(info)){
-    bytes = bytes;
+    bytes = info;
   }
 
   if(_.isPlainObject(info)){
@@ -284,7 +283,7 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
       bufferArr.push(encodeArrayBinary(index, obj[key]));
     } else {
       bufferArr.push(encodeTypeAndField(index, obj[key]));
-      bufferArr.push(encodeBinary(obj[key], true));
+      bufferArr.push(encodeBinary(obj[key], index, true));
     }
   });
 
@@ -316,7 +315,7 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
       return;
     }
 
-    result.push(encodeBinary(item, true));
+    result.push(encodeBinary(item, fieldNum, true));
     console.log(`result :`);
     console.log(result.length);
   });
