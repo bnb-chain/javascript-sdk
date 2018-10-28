@@ -89,10 +89,7 @@ class Transaction {
       "fee": {
         "amount": {
           "denom": "",
-          "amount": {
-            "neg": false,
-            "abs": [0]
-          }
+          "amount": "0"
         },
         "gas": "200000"
       },
@@ -104,11 +101,11 @@ class Transaction {
     const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
     this.signatures = [{
       pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), Buffer.from(pub_key)]),
-      signature:Buffer.concat([Buffer.from('7FC4A495', 'hex'), Buffer.from(signature.buffer)]),
+      signature: signature,
       account_number: this.account_number,
       sequence: this.sequence,
     }];
-    this.sig = signature.hexStr;
+    this.sig = signatures.toString('hex');
     return this;
   }
 

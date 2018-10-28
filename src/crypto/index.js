@@ -7,9 +7,8 @@ import _ from 'lodash';
 import bip39 from 'bip39';
 import bip32 from 'bip32';
 import bip66 from 'bip66';
-import bscript from 'bitcoinjs-lib/src/script_signature';
-import * as encoder from '../encoder/';
 import { toDER } from '../utils/';
+import { UVarInt } from '../encoder/varint';
 
 import {
   ab2hexstring,
@@ -18,6 +17,7 @@ import {
 } from "../utils";
 
 const EC = require('elliptic').ec;
+const ecc = require('tiny-secp256k1');
 
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32;
@@ -120,37 +120,21 @@ export const getAddressFromPrivateKey = privateKey => {
  * Generates a signature of the transaction based on given private key.
  * @param {string} hex - Serialized unsigned transaction. or hexstring.
  * @param {string} privateKey - Private Key.
- * @return {string} Signature. Does not include tx.
+ * @return {Buffer} Signature. Does not include tx.
  */
 export const generateSignature = (hex, privateKey) => {
   const msgHash = sha256(hex);
   const msgHashHex = Buffer.from(msgHash, 'hex');
-  console.log('msgHash: ' + msgHash );
-  console.log( msgHashHex );
-  let elliptic = new EC(CURVE);
-  const sig = elliptic.sign(msgHashHex, privateKey, null);
-  // let signature = Buffer.concat([
-  //   sig.r.toArrayLike(Buffer, 'be', 32),
-  //   sig.s.toArrayLike(Buffer, 'be', 32)
-  // ]);
-
-  const r = toDER(sig.r.toArrayLike(Buffer, 'be', 32));
-  const s = toDER(sig.s.toArrayLike(Buffer, 'be', 32));
-
-  console.log('privateKey: '  + privateKey);
-
+  const sig = ecc.sign(msgHashHex, Buffer.from(privateKey, 'hex'));
+  const r = toDER(Buffer.from(sig.slice(0, 32), 'hex'));
+  const s = toDER(Buffer.from(sig.slice(32), 'hex'));
   const signature = bip66.encode(r, s);
 
-  console.log(signature.toString('hex'));
+  //prefix length and signature amino signature type(0x7FC4A495)
+  const aminoPrefix = Buffer.from('7FC4A495', 'hex');
+  const lengthPrefix = UVarInt.encode(signature.length);
 
-  // // random hashtype, will remove later.
-  // signature  = bscript.encode(signature, 1);
-
-  // // Note that the serialized bytes returned do not include the appended hash type
-  // // used in Bitcoin signature scripts.
-  // signature = signature.slice(0, signature.length - 2);
-
-  return encoder.marshalBinaryBare(signature);;
+  return Buffer.concat([aminoPrefix, lengthPrefix, signature]);
 };
 
 /**
