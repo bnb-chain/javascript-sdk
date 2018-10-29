@@ -56,29 +56,6 @@ export const encodeTime = (value) => {
   return buffer
 }
 
-/**
- * encode transaction(not used)
- * @param tx -- Transaction object
- * @return bytes -- hex string
- */
-export const encodeTx = (tx) => {
-  const {struct, newData} = generateStruct(tx);
-  const bytes = vstruct(struct).encode(newData);
-  return bytes.toString('hex');
-}
-
-/**
- * encode object to binary
- * @param data --- object
- */
-export const encodeStruct = (data) => {
-  if (!_.isObject(data))
-    throw new TypeError('data must be an object');
-
-  const {struct, newData} = generateStruct(data);
-  const bytes = vstruct(struct).encode(newData);
-  return bytes.toString('hex');
-}
 
 /**
  * @param obj -- {object}
@@ -86,125 +63,6 @@ export const encodeStruct = (data) => {
  */
 export const convertObjectToBytes = (obj) => {
   return Buffer.from(JSON.stringify(obj));
-}
-
-export const generateStruct = (data) => {
-  if (!_.isObject(data)) return {};
-  const struct = [];
-  const newData = {};
-
-  Object.keys(data).map((key, index) => {
-    if (_.isNumber(data[key])) {
-      struct.push({
-        name: `type${key}`,
-        type: UVarInt
-      });
-      struct.push({
-        name: key,
-        type: VarInt
-      });
-    }
-
-    if (_.isString(data[key])) {
-      struct.push({
-        name: `type${key}`,
-        type: UVarInt
-      });
-      struct.push({
-        name: key,
-        type: VarString
-      });
-    }
-
-    if (_.isPlainObject(data[key])) {
-      const {struct, newData} = generateStruct(data[key]);
-      data[key] = newData;
-      struct.push({
-        name: `type${key}`,
-        type: UVarInt
-      });
-      struct.push({
-        name: key,
-        type: vstruct(struct)
-      });
-    }
-
-    if (_.isArray(data[key])) {
-      struct.push({
-        name: `type${key}`,
-        type: UVarInt
-      });
-      let itemType = getEncodeType(data[key]);
-      data[key] = generateArrayValue(data[key]);
-      struct.push({
-        name: key,
-        type: Array(data[key].length, itemType)
-      });
-    }
-
-    newData[`type${key}`] = (index + 1) << 3 | typeToTyp3(data[key]);
-    newData[key] = data[key];
-  });
-
-  return {
-    struct,
-    newData
-  }
-}
-
-export const generateArrayValue = (arr) => {
-  if (!_.isArray(arr))
-    throw new TypeError('data should array instance');
-  if (arr.length === 0)
-    throw new Error('array should not be null');
-  if (_.isArray(arr[0]))
-    throw new Error('not support two dimensional arrays');
-
-  const result = [];
-  arr.forEach((item) => {
-    if (_.isObject(item)) {
-      const newItem = {};
-      generateStruct(item, [], newItem);
-      result.push(newItem);
-    } else {
-      result.push(item);
-    }
-  });
-
-  return result;
-}
-
-/**
- * get encode type
- */
-export const getEncodeType = (data) => {
-  if (data === undefined || data === null)
-    throw new TypeError('data should not be null or undefined');
-
-  let encodeType;
-
-  if (_.isNumber(data)) {
-    encodeType = VarInt;
-  }
-
-  if (_.isString(data)) {
-    encodeType = VarString;
-  }
-
-  if (_.isPlainObject(data)) {
-    const {struct} = generateStruct(data);
-    encodeType = vstruct(struct);
-  }
-
-  if (_.isArray(data)) {
-    if (data.length === 0)
-      throw new Error('array should not be null');
-    if (_.isArray(data[0]))
-      throw new Error('not support two dimensional arrays');
-    encodeType = getEncodeType(data[0]);
-  }
-
-  return encodeType;
 }
 
 /**
@@ -234,45 +92,72 @@ export const marshalBinaryBare = (obj) => {
 }
 
 /**
+ * This is the main entrypoint for encoding all types in binary form.
  * @param {*} js data type (not null, not undefined)
+ * @param {number} field index of object
  * @param {bool} isByteLenPrefix
+ * @return {Buffer} binary of object.
  */
-export const encodeBinary = (info, fieldNum, isByteLenPrefix) => {
-  if (info === null || info === undefined)
+export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
+  if (val === null || val === undefined)
     throw new TypeError('unsupported type');
 
   let bytes;
 
-  if(Buffer.isBuffer(info)){
-    bytes = Buffer.concat(info, UVarInt.encode(info.length));
+  if(Buffer.isBuffer(val)){
+    if(isByteLenPrefix){
+      bytes = Buffer.concat([UVarInt.encode(val.length), val]);
+    } else {
+      bytes = val;
+    }   
   }
 
-  if(_.isPlainObject(info)){
-    bytes = encodeObjectBinary(info, isByteLenPrefix);
+  else if(_.isPlainObject(val)){
+    bytes = encodeObjectBinary(val, isByteLenPrefix);
   }
 
-  if(_.isArray(info)){
-    bytes = encodeArrayBinary(fieldNum, info, isByteLenPrefix);
+  else if(_.isArray(val)){
+    bytes = encodeArrayBinary(fieldNum, val, isByteLenPrefix);
   }
   
 
-  if(_.isNumber(info)){
-    bytes = encodeNumber(info);
+  else if(_.isNumber(val)){
+    bytes = encodeNumber(val);
   }
 
-  if(_.isBoolean(info)){
-    bytes = encodeBool(info);
+  else if(_.isBoolean(val)){
+    bytes = encodeBool(val);
   }
 
-  if(_.isString(info)){
-    bytes = encodeString(info);
+  else if(_.isString(val)){
+    bytes = encodeString(val);
   }
 
   return bytes;
 }
 
+/**
+ * prefixed with bytes length
+ * @param {Buffer} bytes 
+ * @return {Buffer} with bytes length prefixed
+ */
+export const encodeBinaryByteArray = (bytes)=>{
+  const lenPrefix = bytes.length;
+  return Buffer.concat([UVarInt.encode(lenPrefix), bytes]);
+}
+
+/**
+ * 
+ * @param {Object} obj 
+ * @return {Buffer} with bytes length prefixed
+ */
 export const encodeObjectBinary = (obj, isByteLenPrefix) => {
   const bufferArr = [];
+
+  //if obj have msgType, add version 0x1
+  if(obj.msgType){
+    bufferArr.push(UVarInt.encode(1));
+  }
 
   Object.keys(obj).forEach((key, index) => {
     if (key === 'msgType') return;
@@ -304,6 +189,12 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
   return bytes;
 }
 
+/**
+ * @param {number} fieldNum object field index
+ * @param {Array} arr
+ * @param {bool} isByteLenPrefix
+ * @return {Buffer} bytes of array
+ */
 export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
   const result = [];
 
@@ -316,8 +207,6 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
     }
 
     result.push(encodeBinary(item, fieldNum, true));
-    console.log(`result :`);
-    console.log(result.length);
   });
 
   console.log(result);
@@ -335,6 +224,7 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
   return Buffer.concat(result);
 }
 
+// Write field key.
 const encodeTypeAndField = (index, field) => {
   const value = (index + 1) << 3 | typeToTyp3(field);
   return UVarInt.encode(value);

@@ -56,10 +56,7 @@ class Transaction {
     this.fee = {
       "amount": [{
         "denom": "",
-        "amount": {
-          "neg": false,
-          "abs": [0]
-        }
+        "amount": "0"
       }],
       "gas": 200000
     };
@@ -68,7 +65,7 @@ class Transaction {
 
   buildMsgWithoutType(){
     const msg = this.msgs[0] || {};
-    const result = {};
+    const result = {version: 0x1};
     for(const key in msg){
       if(key !== 'msgType'){
         result[key] = msg[key];
@@ -85,10 +82,14 @@ class Transaction {
     if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
       format |= 0x1;
     }
-    return Buffer.concat([
+
+    const pubKey = Buffer.concat([
       UVarInt.encode(format), 
       Buffer.from(unencodedPubKey.x.toString('hex'), 'hex')
     ]);
+
+    //prefixed with length;
+    return encoder.encodeBinaryByteArray(pubKey);
   }
 
   /**
@@ -114,27 +115,32 @@ class Transaction {
 
     const signMsgBytes = encoder.convertObjectToBytes(signMsg);
     const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
+    // const signature = '7fc4a495473045022100b0ffd97ca7fbfe8118984966a0a9a79fa77297a664233c28eb2d31420a9f8fe1022009a2f6023c482d08313c42adf8a0d23f70916e8a6cac357ab293e299bc3cf28c';
     const pub_key = this.serializePubKey(privateKey);
     this.signatures = [{
       pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), pub_key]),
-      signature: signature,
+      signature: Buffer.from(signature, 'hex'),
       account_number: this.account_number,
       sequence: this.sequence,
     }];
-    this.sig = signatures.toString('hex');
+    this.sig = signature.toString('hex');
     return this;
   }
 
   /**
+   * @param {object} opts msg field
    * encode signed transaction to hex which is compatible with amino 
    */
-  serialize(){
+  serialize(opts){
     if(!this.signatures){
       throw new Error(`need signature`);
     }
 
+    let msg = this.msgs[0];
+    msg = Object.assign({version: 0x1 }, msg, opts);
+
     const stdTx = {
-      msg: this.msgs,
+      msg: [msg],
       fee: this.fee,
       signatures: this.signatures,
       memo: this.memo,
