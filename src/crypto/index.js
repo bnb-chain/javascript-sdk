@@ -103,6 +103,18 @@ export const getPublicKeyFromPrivateKey = privateKey => {
 };
 
 /**
+ * PubKey performs the point-scalar multiplication from the privKey on the
+ * generator point to get the pubkey.
+ * @param {string} privateKey
+ * @return {array-bn} PubKey
+ * */ 
+export const generatePubKey = privateKey =>{
+  const curve = new EC(CURVE);
+  const keypair = curve.keyFromPrivate(privateKey, 'hex');
+  return keypair.getPublic();
+}
+
+/**
  * Gets an address from a private key.
  * @param {string} privateKey the private key hexstring
  */

@@ -1,5 +1,6 @@
 import * as crypto from '../crypto/';
 import * as encoder from '../encoder/';
+import { UVarInt } from '../encoder/varint';
 
 export const txType = {
   MsgSend: 'MsgSend',
@@ -77,11 +78,24 @@ class Transaction {
     return result;
   }
 
+  //serializes a public key in a 33-byte compressed format.
+  serializePubKey(privateKey){
+    let unencodedPubKey = crypto.generatePubKey(privateKey);
+    let format = 0x2;
+    if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
+      format |= 0x1;
+    }
+    return Buffer.concat([
+      UVarInt.encode(format), 
+      Buffer.from(unencodedPubKey.x.toString('hex'), 'hex')
+    ]);
+  }
+
   /**
    * sign transaction with a given private key
    * @param {string} privateKey
    **/
-  sign(privateKey, pub_key) {
+  sign(privateKey) {
     const msg = this.buildMsgWithoutType();
     const signMsg = {
       "account_number": this.account_number.toString(),
@@ -97,10 +111,12 @@ class Transaction {
       "msgs": msg,
       "sequence": this.sequence.toString()
     };
+
     const signMsgBytes = encoder.convertObjectToBytes(signMsg);
     const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
+    const pub_key = this.serializePubKey(privateKey);
     this.signatures = [{
-      pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), Buffer.from(pub_key)]),
+      pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), pub_key]),
       signature: signature,
       account_number: this.account_number,
       sequence: this.sequence,

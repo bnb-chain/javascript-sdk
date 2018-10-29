@@ -244,7 +244,7 @@ export const encodeBinary = (info, fieldNum, isByteLenPrefix) => {
   let bytes;
 
   if(Buffer.isBuffer(info)){
-    bytes = info;
+    bytes = Buffer.concat(info, UVarInt.encode(info.length));
   }
 
   if(_.isPlainObject(info)){
