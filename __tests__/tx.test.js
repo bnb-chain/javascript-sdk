@@ -17,16 +17,16 @@ const txObj = {
   "msgs": [{
     version: 1,
     sender: crypto.decodeAddress("cosmosaccaddr1wqrn76z0v36pr3vx3sgue4y5rv4pzpu6ffnjj0"),
-    "id": "70073F684F647411C5868C11CCD4941B2A11079A-6",
+    "id": "70073F684F647411C5868C11CCD4941B2A11079A-15",
     "symbol": "NNB_BNB",
     "ordertype": 2,
     "side": 1,
     "price": 600000000,
-    "quantity": 1497869700,
+    "quantity": 10000000,
     "timeinforce": 1,
     "msgType": 'NewOrderMsg'
   }],
-  "sequence": 5,
+  "sequence": 14,
   type: 'NewOrderMsg'
 }
 
