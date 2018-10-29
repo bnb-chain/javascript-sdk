@@ -8,8 +8,8 @@ const txObj = {
   "chain_id": "test-chain-n4b735",
   "fee": {
     "amount": [{
-      "amount": 0,
-      "denom": ""
+      "denom": "",
+      "amount": 0
     }],
     "gas": 200000
   },
@@ -34,8 +34,8 @@ describe('Transaction', () => {
   it('signAndEncode', () => {
     const tx = new Tx(txObj);
     const pk = '897f4cfd1bf7f3d58e1037843d289c7ad42067ce79517d594b3dc4596f2b65ff';
-    const pub_key = 'AsJ+V9rl0ns7dZ/BSjKtfQ7t9h32DJ8EJev+qD78EnQq';
-    const encodeTXString = tx.sign(pk, pub_key).serialize();
+    // const pub_key = 'AsJ+V9rl0ns7dZ/BSjKtfQ7t9h32DJ8EJev+qD78EnQq';
+    const encodeTXString = tx.sign(pk).serialize();
     expect(tx.sig).toBe(signature);
     console.log(encodeTXString);
   })
