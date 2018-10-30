@@ -63,19 +63,11 @@ class Transaction {
     this.memo = data.memo;
   }
 
-  buildMsgWithoutType(){
-    const msg = this.msgs[0] || {};
-    const result = {version: 0x1};
-    for(const key in msg){
-      if(key !== 'msgType'){
-        result[key] = msg[key];
-      }
-    }
-
-    return result;
-  }
-
-  //serializes a public key in a 33-byte compressed format.
+  /**
+   * serializes a public key in a 33-byte compressed format.
+   * @param {hex string} privateKey 
+   * @return {Buffer}
+   */
   serializePubKey(privateKey){
     let unencodedPubKey = crypto.generatePubKey(privateKey);
     let format = 0x2;
@@ -93,33 +85,36 @@ class Transaction {
   }
 
   /**
-   * sign transaction with a given private key
+   * sign transaction with a given private key and msg
    * @param {string} privateKey
+   * @param {Object} concrete msg object
    **/
-  sign(privateKey) {
-    const msg = this.buildMsgWithoutType();
+  sign(privateKey, msg) {
+    if(!msg){
+      throw new Error(`msg should be an object`);
+    }
+
     const signMsg = {
       "account_number": this.account_number.toString(),
       "chain_id": this.chain_id,
       "fee": {
         "amount": [{
-          "denom": "",
-          "amount": "nil"
+          "amount": "0",
+          "denom": ""
         }],
         "gas": "200000"
       },
       "memo": this.memo,
-      "msgs": msg,
+      "msgs": [msg],
       "sequence": this.sequence.toString()
     };
 
     const signMsgBytes = encoder.convertObjectToBytes(signMsg);
     const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
-    // const signature = '7fc4a495473045022100b0ffd97ca7fbfe8118984966a0a9a79fa77297a664233c28eb2d31420a9f8fe1022009a2f6023c482d08313c42adf8a0d23f70916e8a6cac357ab293e299bc3cf28c';
     const pub_key = this.serializePubKey(privateKey);
     this.signatures = [{
       pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), pub_key]),
-      signature: Buffer.from(signature, 'hex'),
+      signature: signature,
       account_number: this.account_number,
       sequence: this.sequence,
     }];
@@ -128,16 +123,16 @@ class Transaction {
   }
 
   /**
+   * encode signed transaction to hex which is compatible with amino
    * @param {object} opts msg field
-   * encode signed transaction to hex which is compatible with amino 
    */
-  serialize(opts){
+  serialize(){
     if(!this.signatures){
       throw new Error(`need signature`);
     }
 
     let msg = this.msgs[0];
-    msg = Object.assign({version: 0x1 }, msg, opts);
+    msg = Object.assign({ version: 0x1 }, msg);
 
     const stdTx = {
       msg: [msg],
