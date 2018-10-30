@@ -102,10 +102,10 @@ class Transaction {
       "account_number": this.account_number.toString(),
       "chain_id": this.chain_id,
       "fee": {
-        "amount": {
+        "amount": [{
           "denom": "",
-          "amount": "0"
-        },
+          "amount": "nil"
+        }],
         "gas": "200000"
       },
       "memo": this.memo,

@@ -30,9 +30,9 @@ class HttpRequest {
       .request(options)
       .then(response => {
         const data = response.data;
+        data.status = response.status;
         return data;
-      })
-      .catch(err => {
+      }).catch(err => {
         let error;
         error = new Error(
           '[API] HTTP request failed. Inspect this error for more info'
