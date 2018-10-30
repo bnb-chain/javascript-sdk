@@ -1,5 +1,7 @@
 import * as encoder from '../src/encoder';
 import * as crypto from '../src/crypto';
+import bn from 'bn.js';
+import big from 'big.js';
 
 describe('encoder', () => {
   it('encode time', () => {
@@ -31,35 +33,34 @@ describe('encoder', () => {
     expect(encodedString).toBe('11596f75206172652062656175746966756c');
   });
 
-
-  it('marshalBinary', () => {
-    const data = {
-      "account_number": "2",
-      "chain_id": "bnbchain-1000",
-      "fee": {
-        "amount": [{
-          "denom": "",
-          "amount": 0
-        }],
-        "gas": 0
-      },
-      "memo": "",
-      "msgs": [{
-        "id": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp-46",
-        "ordertype": 2,
-        "price": 1,
-        "quantity": 1,
-        "sender": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp",
-        "side": 1,
-        "symbol": "XYZ_BNB",
-        "timeinforce": 1
-      }],
-      "sequence": "46"
-    }
-    let encodeString = encoder.marshalBinaryBare(data);
-    console.log(encodeString);
-    expect(encodeString).toBe('0a0132120d626e62636861696e2d313030301a020a002a82010a37636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e67363472787133683479702d34361004180220022a34636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e673634727871336834797030023a0758595a5f424e42400232023436');
-  })
+  // it('marshalBinary', () => {
+  //   const data = {
+  //     "account_number": "2",
+  //     "chain_id": "bnbchain-1000",
+  //     "fee": {
+  //       "amount": [{
+  //         "denom": "",
+  //         "amount": 0
+  //       }],
+  //       "gas": 0
+  //     },
+  //     "memo": "",
+  //     "msgs": [{
+  //       "id": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp-46",
+  //       "ordertype": 2,
+  //       "price": 1,
+  //       "quantity": 1,
+  //       "sender": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp",
+  //       "side": 1,
+  //       "symbol": "XYZ_BNB",
+  //       "timeinforce": 1
+  //     }],
+  //     "sequence": "46"
+  //   }
+  //   let encodeString = encoder.marshalBinaryBare(data);
+  //   console.log(encodeString);
+  //   expect(encodeString).toBe('0a0132120d626e62636861696e2d313030301a020a002a82010a37636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e67363472787133683479702d34361004180220022a34636f736d6f7361636361646472313733687975366474666b726a3976756a6a68767a3261796568726e673634727871336834797030023a0758595a5f424e42400232023436');
+  // })
 
   it('convertObjectToBytes', () => {
     const jsonObj = {
@@ -70,8 +71,5 @@ describe('encoder', () => {
     const str = encoder.convertObjectToBytes(jsonObj);
     expect(str.toString('hex')).toBe('7b2261646472657373223a312c2273656e646572223a322c2273796d626f6c223a337d');
   });
-
  
-
-
 });

@@ -1,4 +1,5 @@
 'use strict'
+import BN from 'bn.js';
 
 const safeParseInt = (nStr)=> {
   let n = parseInt(nStr)
@@ -26,9 +27,11 @@ const VarInt = (signed)=> {
     if (signed) n *= 2
 
     let i = 0
+    let bn = new BN(n)
     while (n >= 0x80) {
       buffer[offset + i] = (n & 0xff) | 0x80
-      n >>= 7
+      n = bn.shrn(7).toNumber()
+      bn = new BN(n)
       i++
     }
     buffer[offset + i] = n & 0xff
