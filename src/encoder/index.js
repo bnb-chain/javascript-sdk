@@ -74,8 +74,6 @@ export const marshalBinary = (obj) => {
     throw new TypeError('data must be an object');
 
   let bytes = encodeBinary(obj, null, true);
-  // const lenBytes = UVarInt.encode(bytes.length);
-  // bytes = Buffer.concat([lenBytes, bytes]);
 
   return bytes.toString('hex');
 }
@@ -154,13 +152,14 @@ export const encodeBinaryByteArray = (bytes)=>{
 export const encodeObjectBinary = (obj, isByteLenPrefix) => {
   const bufferArr = [];
 
-  //if obj have msgType, add version 0x1
-  if(obj.msgType){
+   //add version 0x1
+   if(obj.version === 1){
+    bufferArr.push(encodeTypeAndField(0, 1));
     bufferArr.push(UVarInt.encode(1));
-  }
+   }
 
   Object.keys(obj).forEach((key, index) => {
-    if (key === 'msgType') return;
+    if (key === 'msgType' || key === 'version') return;
 
     if (isDefaultValue(obj[key])) return;
 

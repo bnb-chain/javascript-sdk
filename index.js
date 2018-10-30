@@ -10,8 +10,11 @@ class Bnc {
 
   async sendTx(tx) {
     const opts = {
-      body: tx,
-      headers:{ 'content-type': 'text/plain' }
+      data: tx,
+      headers:{ 
+        'content-type': 'text/plain',
+        'X-Real-Ip': '127.0.0.1',
+      }
     };
     const data = await this.httpClient.request('post', '/api/v1/broadcast', null, opts);
     return data;
