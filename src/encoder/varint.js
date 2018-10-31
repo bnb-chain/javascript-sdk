@@ -1,5 +1,5 @@
 'use strict'
-import BN from 'bn.js';
+const BN = require('bn.js')
 
 const safeParseInt = (nStr)=> {
   let n = parseInt(nStr)
