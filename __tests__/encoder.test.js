@@ -1,7 +1,6 @@
 import * as encoder from '../src/encoder';
 import * as crypto from '../src/crypto';
 import bn from 'bn.js';
-import big from 'big.js';
 
 describe('encoder', () => {
   it('encode time', () => {
@@ -26,6 +25,12 @@ describe('encoder', () => {
     encodedFalse = encodedFalse.toString('hex');
     expect(encodedFalse).toBe('00');
   });
+
+  it('bn', ()=>{
+    const num = new bn(100000000);
+    const b1 = new bn(Math.pow(10, 8));
+    console.log(num.mul(b1).shrn(7))
+  })
 
   it('encode string', () => {
     let encodedString = encoder.encodeString('You are beautiful');
