@@ -1,5 +1,5 @@
 {
-  "name": "bnc-web-lib",
+  "name": "@binance/bnc-web-lib",
   "version": "0.1.0",
   "main": "index.js",
   "dependencies": {
