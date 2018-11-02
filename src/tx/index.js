@@ -147,4 +147,7 @@ class Transaction {
   }
 }
 
+Transaction.txType = txType;
+Transaction.typePrefix = typePrefix;
+
 export default Transaction;

@@ -2,6 +2,7 @@
   "name": "bnc-web-lib",
   "version": "0.1.0",
   "private": true,
+  "main": "index.js",
   "dependencies": {
     "axios": "^0.18.0",
     "babel-core": "^6.26.3",
