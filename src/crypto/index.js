@@ -8,7 +8,7 @@ import bip39 from 'bip39';
 import bip32 from 'bip32';
 // import bip66 from 'bip66';
 // import { toDER } from '../utils/';
-import { UVarInt } from '../encoder/varint';
+// import { UVarInt } from '../encoder/varint';
 
 import {
   ab2hexstring,

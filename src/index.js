@@ -1,7 +1,7 @@
-import * as crypto from './lib/crypto/';
-import * as amino from './lib/encoder/';
-import Transaction from './lib/tx/';
-import HttpRequest from './lib/utils/request';
+import * as crypto from './crypto';
+import * as amino from './encoder';
+import Transaction from './tx';
+import HttpRequest from './utils/request';
 
 class Bnc {
   constructor(server){

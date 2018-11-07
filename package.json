@@ -1,7 +1,7 @@
 {
   "name": "@binance/bnc-web-lib",
-  "version": "0.1.0",
-  "main": "index.js",
+  "version": "0.1.1",
+  "main": "/lib/index.js",
   "dependencies": {
     "@binance/bnc-web-lib": "^0.1.0",
     "axios": "^0.18.0",
@@ -34,11 +34,14 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "build": "rm -rf lib && babel src -d lib"
+    "build": "rm -rf lib && npx babel src -d lib"
   },
   "babel": {
     "presets": [
       "es2015"
+    ],
+    "plugins": [
+
     ]
   }
 }
