@@ -42,11 +42,11 @@ export const typePrefix = {
  * */
 class Transaction {
   constructor(data) {
+    data = data || {};
+
     if(!txType[data.type]) {
       throw new TypeError(`does not support transaction type: ${data.type}`);
     }
-
-    data = data || {};
 
     this.type = data.type;
     this.sequence = data.sequence || 0;
@@ -97,13 +97,7 @@ class Transaction {
     const signMsg = {
       "account_number": this.account_number.toString(),
       "chain_id": this.chain_id,
-      // "fee": {
-      //   "amount": [{
-      //     "amount": "0",
-      //     "denom": ""
-      //   }],
-      //   "gas": "200000"
-      // },
+      "fee": this.fee,
       "memo": this.memo,
       "msgs": [msg],
       "sequence": this.sequence.toString()
