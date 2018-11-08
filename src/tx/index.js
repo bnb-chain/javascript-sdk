@@ -46,12 +46,16 @@ class Transaction {
       throw new TypeError(`does not support transaction type: ${data.type}`);
     }
 
+    if(!data.chain_id){
+      throw new Error('chain id should not be null');
+    }
+
     data = data || {};
 
     this.type = data.type;
     this.sequence = data.sequence || 0;
     this.account_number = data.account_number || 0;
-    this.chain_id = data.chain_id || 'bnbchain-1000';
+    this.chain_id = data.chain_id;
     this.msgs = data.msg ? [data.msg] : [];
     this.fee = {
       "amount": [{
@@ -132,7 +136,7 @@ class Transaction {
     }
 
     let msg = this.msgs[0];
-    msg = Object.assign({ version: 0x1 }, msg);
+    // msg = Object.assign({ version: 0x1 }, msg);
 
     const stdTx = {
       msg: [msg],
