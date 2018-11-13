@@ -43,7 +43,7 @@ export const decodeAddress = (value) => {
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
  */
-export const encodeAddress = (value, prefix = "cosmos", type = "hex") => {
+export const encodeAddress = (value, prefix = "bnc", type = "hex") => {
   const words = bech32.toWords(Buffer.from(value, type));
   return bech32.encode(prefix, words);
 }
@@ -137,7 +137,7 @@ export const getAddressFromPrivateKey = privateKey => {
 export const generateSignature = (hex, privateKey) => {
   const msgHash = sha256(hex);
   const msgHashHex = Buffer.from(msgHash, 'hex');
-  const sig = ecc.sign(msgHashHex, Buffer.from(privateKey, 'hex'));
+  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, 'hex'));
   // const r = toDER(Buffer.from(sig.slice(0, 32), 'hex'));
   // const s = toDER(Buffer.from(sig.slice(32), 'hex'));
   // const signature = bip66.encode(r, s);
