@@ -140,7 +140,7 @@ class Transaction {
 
     const stdTx = {
       msg: [msg],
-      fee: this.fee,
+      // fee: this.fee,
       signatures: this.signatures,
       memo: this.memo,
       msgType: txType.StdTx
