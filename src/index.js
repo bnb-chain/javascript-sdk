@@ -8,14 +8,14 @@ class Bnc {
     this.httpClient = new HttpRequest(server);
   }
 
-  async sendTx(tx) {
+  async sendTx(tx, sync) {
     const opts = {
       data: tx,
       headers:{ 
         'content-type': 'text/plain',
       }
     };
-    const data = await this.httpClient.request('post', '/api/v1/broadcast', null, opts);
+    const data = await this.httpClient.request('post', `/api/v1/broadcast?sync=${sync}`, null, opts);
     return data;
   }
 }

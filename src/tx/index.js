@@ -81,7 +81,7 @@ class Transaction {
 
     const pubKey = Buffer.concat([
       UVarInt.encode(format), 
-      Buffer.from(unencodedPubKey.x.toString('hex'), 'hex')
+      unencodedPubKey.x.toArrayLike(Buffer, 'be', 32)
     ]);
 
     //prefixed with length;

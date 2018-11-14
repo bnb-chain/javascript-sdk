@@ -24,7 +24,7 @@ const PRIVKEY_LEN = 32;
 const CURVE = 'secp256k1';
 
 //hdpath
-const HDPATH = "44'/118'/0'/0/0";
+const HDPATH = "44'/714'/0'/0/0";
 
 const ec = new EC(CURVE);
 
