@@ -24,10 +24,10 @@ describe('crypto', () => {
   });
 
   it('getPrivateKeyFromMnemonic', ()=>{
-    const mnemonic = 'bacon riot clap clarify cash forest magic give camp blast blade regret visa parent coach wasp banner axis escape deer evolve poem express fine';
+    const mnemonic = 'interest diary pole oblige impulse jaguar february exchange mind divert grocery entire soccer viable relax slow album pipe era goose delay tiger knife check';
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic);
     const address = crypto.getAddressFromPrivateKey(pk);
-    expect(address).toBe('cosmosaccaddr1d27dffpdrp9qrwjvtc5rjvpug5ykplxmutnrev');
+    expect(address).toBe('bnc1cv5hmpsxqktsguceepu2ecsg5a5gnrn9mp6hwj');
   });
 
   it('generateSignature', ()=>{
