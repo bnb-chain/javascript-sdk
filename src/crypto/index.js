@@ -249,6 +249,9 @@ export const generateMnemonic = () => {
  * @param {mnemonic} 
  */
 export const getPrivateKeyFromMnemonic = mnemonic => {
+  if(!bip39.validateMnemonic(mnemonic)){
+    throw new Error('wrong mnemonic format');
+  }
   const seed = bip39.mnemonicToSeed(mnemonic);
   const master = bip32.fromSeed(seed);
   const child = master.derivePath(HDPATH);
