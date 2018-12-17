@@ -44,11 +44,11 @@ amino.marshalBinaryBare(data);
 ## BncClient
 - every tx has a specified type and encode prefix
 - supported type and according prefix:
-  type|name|prefix
-  ---|:--:|---:
-  MsgSend|transfer|2A2C87FA
-  NewOrderMsg|placeOrder|CE6DC043
-  CancelOrderMsg|cancelOrder|166E681B
+  |type|name|prefix|
+  |:---|:---|:---
+  |MsgSend|transfer|2A2C87FA|
+  |NewOrderMsg|placeOrder|CE6DC043|
+  |CancelOrderMsg|cancelOrder|166E681B|
 
 
 
