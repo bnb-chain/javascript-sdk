@@ -167,14 +167,14 @@ export const generateKeyStore = (privateKey, password) => {
     prf: 'hmac-sha256'
   };
 
-  const derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
   const cipher = cryp.createCipher(cipherAlg, derivedKey.slice(0, 16), iv);
   if (!cipher) {
     throw new Error('Unsupported cipher');
   }
 
-  const ciphertext = Buffer.concat([cipher.update(new Buffer(privateKey, 'hex')), cipher.final()]);
-  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')]);
+  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKey, 'hex')), cipher.final()]);
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')]);
   const mac = sha256(bufferValue.toString('hex'));
 
   return {
@@ -214,8 +214,8 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     throw new Error('Unsupported parameters to PBKDF2');
   }
 
-  const derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
-  const ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+  const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext]);
   const mac = sha256(bufferValue.toString('hex'));
 
@@ -223,7 +223,7 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     throw new Error('Key derivation failed - possibly wrong password');
   }
 
-  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
   const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
 
   return privateKey;

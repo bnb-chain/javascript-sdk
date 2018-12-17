@@ -136,11 +136,9 @@ class Transaction {
     }
 
     let msg = this.msgs[0];
-    // msg = Object.assign({ version: 0x1 }, msg);
 
     const stdTx = {
       msg: [msg],
-      // fee: this.fee,
       signatures: this.signatures,
       memo: this.memo,
       msgType: txType.StdTx

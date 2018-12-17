@@ -4,7 +4,6 @@ const privateKey = crypto.generatePrivateKey();
 console.log(privateKey);
 const keyStore = crypto.generateKeyStore(privateKey, '1234567');
 const mnemonic = crypto.generateMnemonic();
-// const mnemonic = crypto.getMnemonicFromPrivateKey(privateKey);
 
 describe('crypto', () => {
   it('getPrivateKeyFromKeyStore baseon on keyStore', () => {
@@ -27,7 +26,7 @@ describe('crypto', () => {
     const mnemonic = 'interest diary pole oblige impulse jaguar february exchange mind divert grocery entire soccer viable relax slow album pipe era goose delay tiger knife check';
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic);
     const address = crypto.getAddressFromPrivateKey(pk);
-    expect(address).toBe('bnc1cv5hmpsxqktsguceepu2ecsg5a5gnrn9mp6hwj');
+    expect(address).toBe('bnc1w4hcgrsd2dtk3nyl8s3c2zvyhk73cqwj7nu9zv');
   });
 
   it('generateSignature', ()=>{

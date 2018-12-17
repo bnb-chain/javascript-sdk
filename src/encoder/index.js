@@ -1,4 +1,4 @@
-import vstruct, { Array } from 'varstruct';
+import vstruct from 'varstruct';
 import _ from 'lodash';
 import VarInt, { UVarInt } from './varint';
 import typeToTyp3 from '../utils/encoderHelper';
@@ -55,7 +55,6 @@ export const encodeTime = (value) => {
 
   return buffer
 }
-
 
 /**
  * @param obj -- {object}
@@ -153,10 +152,11 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
   const bufferArr = [];
 
    //add version 0x1
-   if(obj.version === 1){
-    bufferArr.push(encodeTypeAndField(0, 1));
-    bufferArr.push(UVarInt.encode(1));
-   }
+   //remove version field
+  //  if(obj.version === 1){
+  //   bufferArr.push(encodeTypeAndField(0, 1));
+  //   bufferArr.push(UVarInt.encode(1));
+  //  }
 
   Object.keys(obj).forEach((key, index) => {
     if (key === 'msgType' || key === 'version') return;
@@ -230,6 +230,8 @@ const encodeTypeAndField = (index, field) => {
 }
 
 const isDefaultValue = (obj) => {
+  if(obj === null) return false;
+  
   if (_.isNumber(obj)) {
     return obj === 0;
   }
