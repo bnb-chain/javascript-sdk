@@ -33,14 +33,7 @@ class HttpRequest {
         data.status = response.status;
         return data;
       }).catch(err => {
-        let error;
-        error = new Error(
-          '[API] HTTP request failed. Inspect this error for more info'
-        );
-        Object.assign(error, err.response);
-
-        console.warn(`[WARN] ${error.message || ''}`, error);
-        throw error;
+        throw err;
       });
   }
 }
