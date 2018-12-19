@@ -49,8 +49,8 @@ class Transaction {
     if(!data.chain_id){
       throw new Error('chain id should not be null');
     }
-
-    data = data || {};
+    
+     data = data || {};
 
     this.type = data.type;
     this.sequence = data.sequence || 0;
@@ -101,13 +101,7 @@ class Transaction {
     const signMsg = {
       "account_number": this.account_number.toString(),
       "chain_id": this.chain_id,
-      // "fee": {
-      //   "amount": [{
-      //     "amount": "0",
-      //     "denom": ""
-      //   }],
-      //   "gas": "200000"
-      // },
+      "fee": this.fee,
       "memo": this.memo,
       "msgs": [msg],
       "sequence": this.sequence.toString()

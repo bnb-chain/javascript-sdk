@@ -2,16 +2,23 @@
 import axios from 'axios';
 
 class HttpRequest {
-  constructor(server){
-    this.httpClient = axios.create({
-      baseURL: server
-    });
+  constructor(baseURL){
+    this.httpClient = axios.create({ baseURL });
   } 
+
+  get(path, params, opts) {
+    return this.request("get", path, params, opts);
+  }
+
+  post(path, body, opts) {
+    return this.request("post", path, body, opts);
+  }
 
   request(method, path, params, opts) {
     const options = {
       method,
       url: path,
+      ...opts
     };
 
     if (params) {
@@ -22,9 +29,9 @@ class HttpRequest {
       }
     }
 
-    for(const key in opts) {
-      options[key] = opts[key];
-    }
+    // for(const key in opts) {
+    //   options[key] = opts[key];
+    // }
 
     return this.httpClient
       .request(options)
