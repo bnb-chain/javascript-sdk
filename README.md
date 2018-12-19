@@ -33,6 +33,8 @@ const address = crypto.getAddressFromPrivateKey(privateKey);
 
 ## amino (js-amino)
 
+[Read go-amino](https://github.com/tendermint/go-amino)
+
 serialize object to hex string which compatible with go-amino
 
 ```js
@@ -50,6 +52,8 @@ amino.marshalBinaryBare(data);
   |MsgSend|transfer|2A2C87FA|
   |NewOrderMsg|placeOrder|CE6DC043|
   |CancelOrderMsg|cancelOrder|166E681B|
+
+
 
 
 

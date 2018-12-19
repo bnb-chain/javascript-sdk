@@ -50,20 +50,13 @@ class Transaction {
       throw new Error('chain id should not be null');
     }
     
-     data = data || {};
+    data = data || {};
 
     this.type = data.type;
     this.sequence = data.sequence || 0;
     this.account_number = data.account_number || 0;
     this.chain_id = data.chain_id;
     this.msgs = data.msg ? [data.msg] : [];
-    this.fee = {
-      "amount": [{
-        "denom": "",
-        "amount": "0"
-      }],
-      "gas": 200000
-    };
     this.memo = data.memo;
   }
 

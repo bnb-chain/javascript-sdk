@@ -8,7 +8,7 @@ const sortFieldSequence = (obj) => {
   const result = {};
   const sortedKeys = Object.keys(obj).sort();
   sortedKeys.map((key) => {
-    if(key !== 'msgType'){
+    if(key !== 'msgType') {
       result[key] = obj[key];
     }
   });
@@ -16,14 +16,15 @@ const sortFieldSequence = (obj) => {
 };
 
 class BncClient {
+
    /**
-   * @param {server} Binance Chain url
+   * @param {string} Binance Chain url
    * @param {String} privateKey
    * @param {String} chainId
    * @param {Number} account_number
    * @param {Number} sequence
    */
-  constructor(options){
+  constructor(options) {
     if(!options){
       throw new Error(`options should not be null`);
     }
@@ -45,12 +46,13 @@ class BncClient {
 
    /**
    * 
-   * @param {string} fromAddress 
-   * @param {string} toAddress 
-   * @param {number} amount 
-   * @param {string} asset 
+   * @param {String} fromAddress 
+   * @param {String} toAddress 
+   * @param {Number} amount 
+   * @param {String} asset 
+   * @param {String} memo 
    */
-  async transfer(fromAddress, toAddress, amount, asset){
+  async transfer(fromAddress, toAddress, amount, asset, memo){
     const accCode = crypto.decodeAddress(fromAddress);
     const toAccCode = crypto.decodeAddress(toAddress);
 
@@ -88,7 +90,7 @@ class BncClient {
       }]
     };
 
-    return await this.sendTransaction(msg, signMsg);
+    return await this.sendTransaction(msg, signMsg, true, null, memo);
   }
 
   async cancelOrder(fromAddress, symbol, orderIds, refids, sequence){
@@ -119,12 +121,12 @@ class BncClient {
 
   /**
    * placeOrder
-   * @param {string} address
-   * @param {string} symbol
-   * @param {string} side
-   * @param {number} price
-   * @param {number} quantity
-   * @param {number} sequence
+   * @param {String} address
+   * @param {String} symbol
+   * @param {String} side
+   * @param {Number} price
+   * @param {Number} quantity
+   * @param {Number} sequence
    */
   async placeOrder(address, symbol, side, price, quantity, sequence){
     const accCode = crypto.decodeAddress(address);
@@ -159,19 +161,17 @@ class BncClient {
    * send single transaction to binance chain
    * @param {Object} concrete msg type
    * @param {Object} signature msg
-   * @param {bool} sync
+   * @param {Boolean} sync
    * @param {Number} sequence
+   * @param {String} memo
    * @return {Object} send transaction response(success or fail)
    */
-  async sendTransaction(msg, signMsg, sync=false, sequence=null){
-    if (sequence === null) {
-      // TODO: fetch sequence from API
-    }
-    
+  async sendTransaction(msg, signMsg, sync=false, sequence=null, memo){
+
     const options = {
       account_number: parseInt(this.account_number),
       chain_id: this.chainId,
-      memo: '',
+      memo: memo,
       msg,
       sequence: parseInt(this.sequence),
       type: msg.msgType,
@@ -188,7 +188,7 @@ class BncClient {
    * send multiple transaction to binance chain
    * @param {Array} concrete msg type array
    * @param {Array} signature msg array
-   * @param {bool} sync
+   * @param {Boolean} sync
    * @param {Number} sequence
    * @return {Object} send transaction response(success or fail)
    */
