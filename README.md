@@ -43,7 +43,7 @@ amino.marshalBinaryBare(data);
 
 ## BncClient
 - every tx has a specified type and encode prefix
-- supported type and according prefix:
+- supported type and prefix:
 
   |type|name|prefix|
   |:---|:---|:---
