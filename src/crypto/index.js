@@ -24,7 +24,7 @@ const PRIVKEY_LEN = 32;
 const CURVE = 'secp256k1';
 
 //hdpath
-const HDPATH = "44'/118'/0'/0/0";
+const HDPATH = "44'/714'/0'/0/0";
 
 const ec = new EC(CURVE);
 
@@ -43,7 +43,7 @@ export const decodeAddress = (value) => {
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
  */
-export const encodeAddress = (value, prefix = "cosmos", type = "hex") => {
+export const encodeAddress = (value, prefix = "bnc", type = "hex") => {
   const words = bech32.toWords(Buffer.from(value, type));
   return bech32.encode(prefix, words);
 }
@@ -137,7 +137,7 @@ export const getAddressFromPrivateKey = privateKey => {
 export const generateSignature = (hex, privateKey) => {
   const msgHash = sha256(hex);
   const msgHashHex = Buffer.from(msgHash, 'hex');
-  const sig = ecc.sign(msgHashHex, Buffer.from(privateKey, 'hex'));
+  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, 'hex'));
   // const r = toDER(Buffer.from(sig.slice(0, 32), 'hex'));
   // const s = toDER(Buffer.from(sig.slice(32), 'hex'));
   // const signature = bip66.encode(r, s);
@@ -167,14 +167,14 @@ export const generateKeyStore = (privateKey, password) => {
     prf: 'hmac-sha256'
   };
 
-  const derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
   const cipher = cryp.createCipher(cipherAlg, derivedKey.slice(0, 16), iv);
   if (!cipher) {
     throw new Error('Unsupported cipher');
   }
 
-  const ciphertext = Buffer.concat([cipher.update(new Buffer(privateKey, 'hex')), cipher.final()]);
-  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')]);
+  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKey, 'hex')), cipher.final()]);
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')]);
   const mac = sha256(bufferValue.toString('hex'));
 
   return {
@@ -214,8 +214,8 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     throw new Error('Unsupported parameters to PBKDF2');
   }
 
-  const derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
-  const ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+  const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext]);
   const mac = sha256(bufferValue.toString('hex'));
 
@@ -223,7 +223,7 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     throw new Error('Key derivation failed - possibly wrong password');
   }
 
-  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
   const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
 
   return privateKey;
@@ -249,6 +249,9 @@ export const generateMnemonic = () => {
  * @param {mnemonic} 
  */
 export const getPrivateKeyFromMnemonic = mnemonic => {
+  if(!bip39.validateMnemonic(mnemonic)){
+    throw new Error('wrong mnemonic format');
+  }
   const seed = bip39.mnemonicToSeed(mnemonic);
   const master = bip32.fromSeed(seed);
   const child = master.derivePath(HDPATH);

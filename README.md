@@ -1,17 +1,12 @@
 # bnc-web-lib
-Basic JS Libraray for BinanceChain, include two parts: wallet libraray and encoding.
+Binance Chain JavaScript API
 
-## Usage
-add "bnc-wallet-lib": "https://github.com/BiJie/bnc-web-lib.git" to package.json,
-then yarn or npm install.
+# Usage
+> yarn add @binance/bnc-web-lib -S --registry https://npm-registry.fdgahl.cn
 
-```js
-import Bnc from 'bnc-wallet-lib/';
-```
+# API
 
-## API
-
-### Bnc.crypto
+## crypto
 
 generate privatekey, address, keystore, mneonic
 
@@ -23,7 +18,7 @@ const address = crypto.getAddressFromPrivateKey(privateKey);
 const keyStore = crypto.generateKeyStore(privateKey, password);
 
 const mneonic = crypto.getMnemonicFromPrivateKey(privateKey);
-                crypto.generateMnemonic();//15 
+                crypto.generateMnemonic();//24
 ```
 
 recover privatekey, address from keystore, mneonic
@@ -36,7 +31,7 @@ const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic);
 const address = crypto.getAddressFromPrivateKey(privateKey);
 ```
 
-### Bnc.amino (js-amino)
+## amino (js-amino)
 
 serialize object to hex string which compatible with go-amino
 
@@ -46,46 +41,15 @@ amino.marshalBinary(data)
 amino.marshalBinaryBare(data);
 ```
 
-### SendTx
-every tx has a specified type and encode prefix
-supported type and according prefix:
-  MsgSend: '2A2C87FA',
-  NewOrderMsg: 'CE6DC043',
-  CancelOrderMsg: '166E681B',
-  StdTx: 'F0625DEE'
+## BncClient
+- every tx has a specified type and encode prefix
+- supported type and according prefix:
 
-```js
-const txType = Transaction.txType;
-const typePrefix = Transaction.typePrefix;
-
-const txObj = {
-  "account_number": "2",
-  "chain_id": "bnbchain-1000",
-  "fee": {
-    "amount": [{
-      "amount": "0",
-      "denom": ""
-    }],
-    "gas": "0"
-  },
-  "memo": "",
-  "msgs": [{
-    "id": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp-46",
-    "ordertype": 2,
-    "price": 1,
-    "quantity": 1,
-    "sender": "cosmosaccaddr173hyu6dtfkrj9vujjhvz2ayehrng64rxq3h4yp",
-    "side": 1,
-    "symbol": "XYZ_BNB",
-    "timeinforce": 1
-  }],
-  "sequence": "46"
-}
-
-const tx = new Transcation(txObj, txType.NewOrderMsg);
-const bnc = new Bnc('http://xxxx.com');
-bnc.sendTx(tx);
-```
+  |type|name|prefix|
+  |:---|:---|:---
+  |MsgSend|transfer|2A2C87FA|
+  |NewOrderMsg|placeOrder|CE6DC043|
+  |CancelOrderMsg|cancelOrder|166E681B|
 
 
 
