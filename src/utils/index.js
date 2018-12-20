@@ -17,11 +17,7 @@ export const str2ab = str => {
   if (typeof str !== 'string') {
     throw new Error('str2ab expects a string')
   }
-  const result = new Uint8Array(str.length)
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    result[i] = str.charCodeAt(i)
-  }
-  return result
+  return new Uint8Array(str.length).map((item, i) => str.charCodeAt(i))
 }
 
 /**
@@ -31,13 +27,10 @@ export const str2ab = str => {
 export const hexstring2ab = str => {
   ensureHex(str)
   if (!str.length) return new Uint8Array()
-  const iters = str.length / 2
-  const result = new Uint8Array(iters)
-  for (let i = 0; i < iters; i++) {
-    result[i] = parseInt(str.substring(0, 2), 16)
-    str = str.substring(2)
-  }
-  return result
+  // TODO: the variable name of "iters" could change to a more meaningful name
+  const iters = Math.ceil(str.length / 2)
+  return new Uint8Array(iters).map((item, i)
+    => parseInt(str.slice(i * 2, i * 2 + 2), 16))
 }
 
 /**
@@ -48,15 +41,14 @@ export const ab2hexstring = arr => {
   if (typeof arr !== 'object') {
     throw new Error('ab2hexstring expects an array')
   }
-  let result = ''
-  for (let i = 0; i < arr.length; i++) {
+  return arr.reduce((prev, cur) => {
     let str = arr[i].toString(16)
-    str = str.length === 0 ? '00'
-      : str.length === 1 ? '0' + str
-        : str
-    result += str
-  }
-  return result
+    if (str.length === 0) str = '00'
+    if (str.length === 1) str = `0${str}`
+    // TODO: if the array's item to hex'length always less than 2,
+    //       you could use like: `00${str}`.substring(str.length, str.length + 2)
+    return prev + str
+  }, '')
 }
 
 /**
@@ -81,7 +73,7 @@ export const int2hex = num => {
     throw new Error('int2hex expects a number')
   }
   let h = num.toString(16)
-  return h.length % 2 ? '0' + h : h
+  return h.length % 2 ? `0${h}` : h
 }
 
 /**
@@ -146,13 +138,11 @@ export const hexXor = (str1, str2) => {
  * @returns {Uint8Array}
  */
 export const reverseArray = arr => {
-  if (typeof arr !== 'object' || !arr.length) throw new Error('reverseArray expects an array')
-  let result = new Uint8Array(arr.length)
-  for (let i = 0; i < arr.length; i++) {
-    result[i] = arr[arr.length - 1 - i]
+  if (typeof arr !== 'object' || !arr.length) {
+    throw new Error('reverseArray expects an array')
   }
-
-  return result
+  const length = arr.length
+  return new Uint8Array(length).map((item, i) => arr[length - 1 - i])
 }
 
 /**
