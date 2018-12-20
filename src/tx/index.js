@@ -94,10 +94,11 @@ class Transaction {
     const signMsg = {
       "account_number": this.account_number.toString(),
       "chain_id": this.chain_id,
-      "fee": this.fee,
+      "data": null,
       "memo": this.memo,
       "msgs": [msg],
-      "sequence": this.sequence.toString()
+      "sequence": this.sequence.toString(),
+      "source": "1"
     };
 
     const signMsgBytes = encoder.convertObjectToBytes(signMsg);
@@ -118,7 +119,7 @@ class Transaction {
    * @param {object} opts msg field
    */
   serialize(){
-    if(!this.signatures){
+    if(!this.signatures) {
       throw new Error(`need signature`);
     }
 
@@ -128,6 +129,8 @@ class Transaction {
       msg: [msg],
       signatures: this.signatures,
       memo: this.memo,
+      source: 1, // web wallet value is 1
+      data: '',
       msgType: txType.StdTx
     };
 

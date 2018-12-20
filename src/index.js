@@ -22,26 +22,24 @@ class BncClient {
    * @param {String} privateKey
    * @param {String} chainId
    * @param {Number} account_number
-   * @param {Number} sequence
    */
   constructor(options) {
-    if(!options){
+    if(!options) {
       throw new Error(`options should not be null`);
     }
 
-    if(!options.chainId){
-      throw new Error(`chainId should not be null`);
-    }
-
-    if(!options.server){
+    if(!options.server) {
       throw new Error(`Binance chain server should not be null`);
     }
 
     this.httpClient = new HttpRequest(options.server);
     this.account_number = options.account_number;
-    this.sequence = options.sequence;
-    this.privateKey = options.privateKey;
-    this.chainId = options.chainId;
+    this.chainId = options.chainId || 'chain-bnb';
+  }
+
+  setPrivateKey(privateKey) {
+    this.privateKey = privateKey;
+    return this;
   }
 
    /**
@@ -58,7 +56,7 @@ class BncClient {
 
     const coin = {
       denom: asset,
-      amount: amount.toString(),
+      amount: amount,
     };
   
     const msg = {
@@ -90,33 +88,32 @@ class BncClient {
       }]
     };
 
-    return await this.sendTransaction(msg, signMsg, true, null, memo);
+    return await this.sendTransaction(msg, signMsg, fromAddress, null, memo, true);
   }
 
-  async cancelOrder(fromAddress, symbol, orderIds, refids, sequence){
+  async cancelOrder(fromAddress, symbol, orderIds, refids, sequence) {
     const accCode = crypto.decodeAddress(fromAddress);
-    const msgs = [];
-    const signMsgs = [];
-    orderIds.forEach((orderId, index)=>{
-      msgs.push({
+    const requests = [];
+    orderIds.forEach((orderId, index) => {
+      msg = {
         sender: accCode,
         symbol,
         id: orderId,
         refid: refids[index],
         msgType: 'CancelOrderMsg'
-      });
+      };
 
-      signMsgs.push({
+      signMsg = {
         id: orderId,
         refid: refids[index],
         sender: fromAddress,
         symbol
-      });
+      };
+
+      requests.push(this.sendTransaction(msg, signMsg, fromAddress, sequence, ''));
     });
 
-    this.sequence = sequence || this.sequence;
-
-    return await this.sendBatchTransaction(msgs, signMsgs, true);
+    return await Promise.all(requests);
   }
 
   /**
@@ -128,7 +125,7 @@ class BncClient {
    * @param {Number} quantity
    * @param {Number} sequence
    */
-  async placeOrder(address, symbol, side, price, quantity, sequence){
+  async placeOrder(address, symbol, side, price, quantity, sequence) {
     const accCode = crypto.decodeAddress(address);
 
     const placeOrderMsg = {
@@ -154,32 +151,37 @@ class BncClient {
       timeinforce: 1,
     };
 
-    return await this.sendTransaction(placeOrderMsg, signMsg, true, sequence);
+    return await this.sendTransaction(placeOrderMsg, signMsg, address, sequence, '', true);
   }
 
   /**
    * send single transaction to binance chain
    * @param {Object} concrete msg type
-   * @param {Object} signature msg
-   * @param {Boolean} sync
+   * @param {Object} stdSignMsg
+   * @param {String} address
    * @param {Number} sequence
    * @param {String} memo
-   * @return {Object} send transaction response(success or fail)
+   * @param {Boolean} sync 
+   * @return {Object} response (success or fail)
    */
-  async sendTransaction(msg, signMsg, sync=false, sequence=null, memo){
+  async sendTransaction(msg, stdSignMsg, address, sequence=null, memo='', sync=false ){
+    if(!sequence && address) {
+      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      sequence = data.sequence;
+    }
 
     const options = {
       account_number: parseInt(this.account_number),
       chain_id: this.chainId,
       memo: memo,
       msg,
-      sequence: parseInt(this.sequence),
+      sequence: parseInt(sequence),
       type: msg.msgType,
     };
 
     const tx = new Transaction(options);
 
-    const txBytes = tx.sign(this.privateKey, signMsg).serialize();
+    const txBytes = tx.sign(this.privateKey, stdSignMsg).serialize();
     console.log(txBytes);
     return await this.sendTx(txBytes, sync);
   }

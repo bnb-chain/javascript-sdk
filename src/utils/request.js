@@ -40,7 +40,11 @@ class HttpRequest {
         data.status = response.status;
         return data;
       }).catch(err => {
-        throw err;
+        const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message);
+        const error = new Error(msgObj.message);
+        error.code = msgObj.code;
+        error.abci_code = msgObj.abci_code;
+        throw error;
       });
   }
 }
