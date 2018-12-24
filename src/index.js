@@ -187,9 +187,16 @@ class BncClient {
    * @param {Number} sequence
    * @return {Object} send transaction response(success or fail)
    */
-  async sendBatchTransaction(msgs, signMsgs, sync=false, sequence=null) {
-    if (sequence === null) {
-      // TODO: fetch sequence from API
+  async sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo='', sync=false ) {
+    if(!sequence && address) {
+      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      sequence = data.sequence;
+      this.account_number = data.account_number;
+    }
+
+    if(!this.account_number){
+      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      this.account_number = data.account_number;
     }
 
     const batchBytes = [];
@@ -200,7 +207,7 @@ class BncClient {
         chain_id: this.chainId,
         memo: '',
         msg,
-        sequence: parseInt(this.sequence),
+        sequence: parseInt(sequence),
         type: msg.msgType,
       };
   

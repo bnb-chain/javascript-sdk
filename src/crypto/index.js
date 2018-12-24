@@ -6,9 +6,6 @@ import uuid from 'uuid';
 import _ from 'lodash';
 import bip39 from 'bip39';
 import bip32 from 'bip32';
-// import bip66 from 'bip66';
-// import { toDER } from '../utils/';
-// import { UVarInt } from '../encoder/varint';
 
 import {
   ab2hexstring,
@@ -57,7 +54,7 @@ export const generatePrivateKey = () => {
 };
 
 /**
- * Generates a arrayBuffer filled with random bits.
+ * Generates an arrayBuffer filled with random bits.
  * @param {number} length - Length of buffer.
  * @returns {ArrayBuffer}
  */

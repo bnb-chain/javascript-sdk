@@ -53,7 +53,29 @@ amino.marshalBinaryBare(data);
   |NewOrderMsg|placeOrder|CE6DC043|
   |CancelOrderMsg|cancelOrder|166E681B|
 
+- initial client
+```js
+  const client = new BncClient('https://xxx.api.com/');
+```  
 
+- API 
 
+it should set private key with setPrivateKey method before use.
+
+```js
+
+  client.setPrivateKey(privateKey);
+
+  client.placeOrder(address, symbol, side, price, quantity)
+
+  client.transfer(address, to, amount, symbol, memo)
+
+  client.canceOrder(address, symbols, orderIds, orderIds, sequence) 
+```
+
+## Test Cases
+
+go to [test folder](./__tests__)
+  
 
 
