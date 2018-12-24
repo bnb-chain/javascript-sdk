@@ -42,7 +42,7 @@ export const ab2hexstring = arr => {
     throw new Error('ab2hexstring expects an array')
   }
   return arr.reduce((prev, cur) => {
-    let str = arr[i].toString(16)
+    let str = cur.toString(16)
     if (str.length === 0) str = '00'
     if (str.length === 1) str = `0${str}`
     // TODO: if the array's item to hex'length always less than 2,
