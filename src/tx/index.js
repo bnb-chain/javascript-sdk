@@ -46,7 +46,7 @@ class Transaction {
       throw new TypeError(`does not support transaction type: ${data.type}`);
     }
 
-    if(!data.chain_id){
+    if(!data.chain_id) {
       throw new Error('chain id should not be null');
     }
     

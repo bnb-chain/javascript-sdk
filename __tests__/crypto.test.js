@@ -4,9 +4,11 @@ const privateKey = crypto.generatePrivateKey();
 const keyStore = crypto.generateKeyStore(privateKey, '1234567');
 
 describe('crypto', () => {
+
   it('generate a random address', () => {
     const pk = crypto.generatePrivateKey();
     const address = crypto.getAddressFromPrivateKey(pk);
+    console.log(crypto.getPublicKeyFromPrivateKey(pk));
     expect(address).toBe('bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh');
   });
 

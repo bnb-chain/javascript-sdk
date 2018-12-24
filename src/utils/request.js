@@ -36,12 +36,10 @@ class HttpRequest {
     return this.httpClient
       .request(options)
       .then(response => {
-        const data = response.data;
-        data.status = response.status;
-        return data;
+        return { ...response.data, status: response.status };
       }).catch(err => {
         const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message);
-        const error = new Error(msgObj.message);
+        let error = new Error(msgObj.message);
         error.code = msgObj.code;
         error.abci_code = msgObj.abci_code;
         throw error;

@@ -3,38 +3,25 @@ import * as amino from './encoder';
 import Transaction from './tx';
 import HttpRequest from './utils/request';
 
-const sortFieldSequence = (obj) => {
-  if (!obj) return { };
-  const result = {};
-  const sortedKeys = Object.keys(obj).sort();
-  sortedKeys.map((key) => {
-    if(key !== 'msgType') {
-      result[key] = obj[key];
-    }
-  });
-  return result;
-};
-
 class BncClient {
 
    /**
-   * @param {string} Binance Chain url
-   * @param {String} privateKey
-   * @param {String} chainId
-   * @param {Number} account_number
+   * @param {string} Binance Chain public url
    */
-  constructor(options) {
-    if(!options) {
-      throw new Error(`options should not be null`);
-    }
-
-    if(!options.server) {
+  constructor(server) {
+    if(!server) {
       throw new Error(`Binance chain server should not be null`);
     }
 
-    this.httpClient = new HttpRequest(options.server);
-    this.account_number = options.account_number;
-    this.chainId = options.chainId || 'chain-bnb';
+    this.httpClient = new HttpRequest(server);
+  }
+
+  async initChain() {
+    if(!this.chainId) {
+      const data = await this.httpClient.request('get', `/api/v1/node-info`);
+      this.chainId = data.node_info && data.node_info.network || 'chain-bnb';
+    }
+    return this;
   }
 
   setPrivateKey(privateKey) {
@@ -50,7 +37,7 @@ class BncClient {
    * @param {String} asset 
    * @param {String} memo 
    */
-  async transfer(fromAddress, toAddress, amount, asset, memo){
+  async transfer(fromAddress, toAddress, amount, asset, memo) {
     const accCode = crypto.decodeAddress(fromAddress);
     const toAccCode = crypto.decodeAddress(toAddress);
 
@@ -91,26 +78,26 @@ class BncClient {
     return await this.sendTransaction(msg, signMsg, fromAddress, null, memo, true);
   }
 
-  async cancelOrder(fromAddress, symbol, orderIds, refids, sequence) {
+  async cancelOrder(fromAddress, symbols, orderIds, refids, sequence) {
     const accCode = crypto.decodeAddress(fromAddress);
     const requests = [];
     orderIds.forEach((orderId, index) => {
-      msg = {
+      const msg = {
         sender: accCode,
-        symbol,
+        symbol: symbols[index],
         id: orderId,
         refid: refids[index],
         msgType: 'CancelOrderMsg'
       };
 
-      signMsg = {
+      const signMsg = {
         id: orderId,
         refid: refids[index],
         sender: fromAddress,
-        symbol
+        symbol: symbols[index]
       };
 
-      requests.push(this.sendTransaction(msg, signMsg, fromAddress, sequence, ''));
+      requests.push(this.sendTransaction(msg, signMsg, fromAddress, sequence+index, ''));
     });
 
     return await Promise.all(requests);
@@ -168,6 +155,12 @@ class BncClient {
     if(!sequence && address) {
       const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
       sequence = data.sequence;
+      this.account_number = data.account_number;
+    }
+
+    if(!this.account_number){
+      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      this.account_number = data.account_number;
     }
 
     const options = {
