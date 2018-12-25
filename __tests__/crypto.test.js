@@ -9,7 +9,7 @@ describe('crypto', () => {
     const pk = crypto.generatePrivateKey();
     const address = crypto.getAddressFromPrivateKey(pk);
     console.log(crypto.getPublicKeyFromPrivateKey(pk));
-    expect(address).toBe('bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh');
+    expect(address.length).toBe(42);
   });
 
   it('generate an address from privateKey', () => {
@@ -21,6 +21,11 @@ describe('crypto', () => {
   it('generate private key from keyStore', () => {
     const pk = crypto.getPrivateKeyFromKeyStore(keyStore, '1234567');
     expect(pk).toBe(privateKey);
+  });
+
+  it('generate private key from mnemonic', () => {
+    const pk = crypto.getPrivateKeyFromMnemonic('fragile duck lunch coyote cotton pole gym orange share muscle impulse mom pause isolate define oblige hungry sound stereo spider style river fun account');
+    expect(pk.toString('hex')).toBe('caf2009a04bd53d426fc0907383b3f1dfe13013aee694d0159f6befc3fdccd5f');
   });
 
   it('generate mnemonic from private key', ()=>{
@@ -35,7 +40,7 @@ describe('crypto', () => {
     expect(decod.toString('hex')).toBe('70073f684f647411c5868c11ccd4941b2a11079a');
   });
 
-  it('generate address from mnemonic', ()=>{
+  it('generate address from mnemonic', () => {
     const mnemonic = 'offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin';
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic);
     const address = crypto.getAddressFromPrivateKey(pk);

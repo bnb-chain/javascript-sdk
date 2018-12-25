@@ -13,12 +13,12 @@ class BncClient {
       throw new Error(`Binance chain server should not be null`);
     }
 
-    this.httpClient = new HttpRequest(server);
+    this._httpClient = new HttpRequest(server);
   }
 
   async initChain() {
     if(!this.chainId) {
-      const data = await this.httpClient.request('get', `/api/v1/node-info`);
+      const data = await this._httpClient.request('get', '/api/v1/node-info');
       this.chainId = data.node_info && data.node_info.network || 'chain-bnb';
     }
     return this;
@@ -30,22 +30,22 @@ class BncClient {
   }
 
    /**
-   * 
-   * @param {String} fromAddress 
-   * @param {String} toAddress 
-   * @param {Number} amount 
-   * @param {String} asset 
-   * @param {String} memo 
+   *
+   * @param {String} fromAddress
+   * @param {String} toAddress
+   * @param {Number} amount
+   * @param {String} asset
+   * @param {String} memo
    */
   async transfer(fromAddress, toAddress, amount, asset, memo) {
     const accCode = crypto.decodeAddress(fromAddress);
     const toAccCode = crypto.decodeAddress(toAddress);
-
+    amount = amount*100000000;
     const coin = {
       denom: asset,
       amount: amount,
     };
-  
+
     const msg = {
       inputs: [{
         address: accCode,
@@ -54,10 +54,10 @@ class BncClient {
       outputs: [{
         address: toAccCode,
         coins: [coin]
-      }], 
+      }],
       msgType: 'MsgSend'
     };
-  
+
     const signMsg = {
       inputs: [{
         address: fromAddress,
@@ -100,7 +100,7 @@ class BncClient {
       requests.push(this.sendTransaction(msg, signMsg, fromAddress, sequence+index, ''));
     });
 
-    return await Promise.all(requests);
+    return Promise.all(requests);
   }
 
   /**
@@ -148,18 +148,18 @@ class BncClient {
    * @param {String} address
    * @param {Number} sequence
    * @param {String} memo
-   * @param {Boolean} sync 
+   * @param {Boolean} sync
    * @return {Object} response (success or fail)
    */
   async sendTransaction(msg, stdSignMsg, address, sequence=null, memo='', sync=false ){
     if(!sequence && address) {
-      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
       sequence = data.sequence;
       this.account_number = data.account_number;
     }
 
     if(!this.account_number){
-      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
       this.account_number = data.account_number;
     }
 
@@ -189,18 +189,18 @@ class BncClient {
    */
   async sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo='', sync=false ) {
     if(!sequence && address) {
-      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
       sequence = data.sequence;
       this.account_number = data.account_number;
     }
 
     if(!this.account_number){
-      const data = await this.httpClient.request('get', `/api/v1/account/${address}`);
+      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
       this.account_number = data.account_number;
     }
 
     const batchBytes = [];
-    
+
     msgs.forEach((msg, index)=>{
       const options = {
         account_number: parseInt(this.account_number),
@@ -210,25 +210,29 @@ class BncClient {
         sequence: parseInt(sequence),
         type: msg.msgType,
       };
-  
+
       const tx = new Transaction(options);
-  
+
       const txBytes = tx.sign(this.privateKey, stdSignMsgs[index]).serialize();
       batchBytes.push(txBytes);
     });
-    
+
     return await this.sendTx(batchBytes.join(','), sync);
   }
 
   async sendTx(tx, sync=true) {
     const opts = {
       data: tx,
-      headers: { 
+      headers: {
         'content-type': 'text/plain',
       }
     }
-    const data = await this.httpClient.request('post', `/api/v1/broadcast?sync=${sync}`, null, opts);
+    const data = await this._httpClient.request('post', `/api/v1/broadcast?sync=${sync}`, null, opts);
     return data;
+  }
+
+  async getBalances() {
+
   }
 }
 
