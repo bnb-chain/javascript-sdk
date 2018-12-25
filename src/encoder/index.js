@@ -1,8 +1,8 @@
 import vstruct from 'varstruct';
+import { Buffer } from 'safe-buffer';
 import _ from 'lodash';
 import VarInt, { UVarInt } from './varint';
 import typeToTyp3 from '../utils/encoderHelper';
-import { Buffer } from 'safe-buffer';
 import { typePrefix } from '../tx/';
 
 const VarString = vstruct.VarString(UVarInt);
@@ -20,27 +20,20 @@ export const encodeNumber = (num) => {
  * @param b
  */
 export const encodeBool = (b) => {
-  if (b) {
-    return VarInt.encode(1);
-  } else {
-    return VarInt.encode(0);
-  }
+  return b ? VarInt.encode(1): VarInt.encode(0)
 }
 
 /**
  * encode string
  * @param str
  */
-export const encodeString = (str) => {
-  return VarString.encode(str);
-}
+export const encodeString = (str) =>  VarString.encode(str);
 
 /**
  * encode time
  * @param value
  */
 export const encodeTime = (value) => {
-
   const millis = new Date(value).getTime()
   const seconds = Math.floor(millis / 1000)
   const nanos = Number(seconds.toString().padEnd(9, '0'))
@@ -60,9 +53,7 @@ export const encodeTime = (value) => {
  * @param obj -- {object}
  * @return bytes {Buffer}
  */
-export const convertObjectToBytes = (obj) => {
-  return Buffer.from(JSON.stringify(obj));
-}
+export const convertObjectToBytes = (obj) => Buffer.from(JSON.stringify(obj));
 
 /**
  * js amino MarshalBinary 

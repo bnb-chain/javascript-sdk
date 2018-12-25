@@ -213,7 +213,7 @@ class BncClient {
   
       const tx = new Transaction(options);
   
-      const txBytes = tx.sign(this.privateKey, signMsgs[index]).serialize();
+      const txBytes = tx.sign(this.privateKey, stdSignMsgs[index]).serialize();
       batchBytes.push(txBytes);
     });
     
@@ -226,7 +226,7 @@ class BncClient {
       headers: { 
         'content-type': 'text/plain',
       }
-    };
+    }
     const data = await this.httpClient.request('post', `/api/v1/broadcast?sync=${sync}`, null, opts);
     return data;
   }

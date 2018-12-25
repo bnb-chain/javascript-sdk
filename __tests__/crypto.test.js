@@ -26,7 +26,7 @@ describe('crypto', () => {
   it('generate mnemonic from private key', ()=>{
     const pk = '90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9';
     const mnemonic = crypto.getMnemonicFromPrivateKey(pk);
-    expect(mnemonic).toBe('offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin');
+    expect(mnemonic).toBe('mother onion trap dress depart minute fury crucial smoke adjust consider siren door chef flip fruit build piano belt major whale brown bless decide');
   });
 
   it('decodeAddress', ()=>{
