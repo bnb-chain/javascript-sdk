@@ -1,4 +1,5 @@
 import * as crypto from '../src/crypto';
+import bip39 from 'bip39';
 
 const privateKey = crypto.generatePrivateKey();
 const keyStore = crypto.generateKeyStore(privateKey, '1234567');
@@ -8,7 +9,6 @@ describe('crypto', () => {
   it('generate a random address', () => {
     const pk = crypto.generatePrivateKey();
     const address = crypto.getAddressFromPrivateKey(pk);
-    console.log(crypto.getPublicKeyFromPrivateKey(pk));
     expect(address.length).toBe(42);
   });
 
@@ -28,10 +28,9 @@ describe('crypto', () => {
     expect(pk.toString('hex')).toBe('caf2009a04bd53d426fc0907383b3f1dfe13013aee694d0159f6befc3fdccd5f');
   });
 
-  it('generate mnemonic from private key', ()=>{
-    const pk = '90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9';
-    const mnemonic = crypto.getMnemonicFromPrivateKey(pk);
-    expect(mnemonic).toBe('mother onion trap dress depart minute fury crucial smoke adjust consider siren door chef flip fruit build piano belt major whale brown bless decide');
+  it('generate mnemonic', ()=>{
+    const mnemonic = crypto.generateMnemonic();
+    expect(bip39.validateMnemonic(mnemonic)).toBe(true);
   });
 
   it('decodeAddress', ()=>{

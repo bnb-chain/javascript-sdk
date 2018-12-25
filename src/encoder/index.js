@@ -199,15 +199,12 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
     result.push(encodeBinary(item, fieldNum, true));
   });
 
-  console.log(result);
-
   //encode length
   if(isByteLenPrefix){
     const length = result.reduce((prev, item) => {
       return prev + item.length;
     }, 0);
   
-    console.log('length: ' + length);
     result.unshift(UVarInt.encode(length));
   }
 

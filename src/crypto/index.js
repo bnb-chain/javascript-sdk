@@ -238,7 +238,7 @@ export const getMnemonicFromPrivateKey = privateKey => {
  * Generate Mnemonic (length=== 15)
  */
 export const generateMnemonic = () => {
-  return bip39.generateMnemonic(160);
+  return bip39.generateMnemonic(256);
 }
 
 /**
@@ -252,5 +252,5 @@ export const getPrivateKeyFromMnemonic = mnemonic => {
   const seed = bip39.mnemonicToSeed(mnemonic);
   const master = bip32.fromSeed(seed);
   const child = master.derivePath(HDPATH);
-  return child.privateKey;
+  return child.privateKey.toString('hex');
 }

@@ -3,6 +3,12 @@ import * as amino from './encoder';
 import Transaction from './tx';
 import HttpRequest from './utils/request';
 
+const api = {
+  broadcast: '/api/v1/broadcast',
+  nodeInfo: '/api/v1/node-info',
+  getAccount: '/api/v1/account'
+}
+
 class BncClient {
 
    /**
@@ -18,9 +24,10 @@ class BncClient {
 
   async initChain() {
     if(!this.chainId) {
-      const data = await this._httpClient.request('get', '/api/v1/node-info');
+      const data = await this._httpClient.request('get', api.nodeInfo);
       this.chainId = data.node_info && data.node_info.network || 'chain-bnb';
     }
+
     return this;
   }
 
@@ -40,7 +47,8 @@ class BncClient {
   async transfer(fromAddress, toAddress, amount, asset, memo) {
     const accCode = crypto.decodeAddress(fromAddress);
     const toAccCode = crypto.decodeAddress(toAddress);
-    amount = amount*100000000;
+    amount = amount * Math.pow(10, 8);
+
     const coin = {
       denom: asset,
       amount: amount,
@@ -75,7 +83,7 @@ class BncClient {
       }]
     };
 
-    return await this.sendTransaction(msg, signMsg, fromAddress, null, memo, true);
+    return await this._sendTransaction(msg, signMsg, fromAddress, null, memo, true);
   }
 
   async cancelOrder(fromAddress, symbols, orderIds, refids, sequence) {
@@ -97,7 +105,7 @@ class BncClient {
         symbol: symbols[index]
       };
 
-      requests.push(this.sendTransaction(msg, signMsg, fromAddress, sequence+index, ''));
+      requests.push(this._sendTransaction(msg, signMsg, fromAddress, sequence+index, ''));
     });
 
     return Promise.all(requests);
@@ -115,14 +123,20 @@ class BncClient {
   async placeOrder(address, symbol, side, price, quantity, sequence) {
     const accCode = crypto.decodeAddress(address);
 
+    if(!sequence){
+      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`);
+      sequence = data.sequence;
+      console.log(data);
+    }
+
     const placeOrderMsg = {
       sender: accCode,
       id: `${accCode.toString('hex')}-${sequence+1}`.toUpperCase(),
       symbol: symbol,
       ordertype: 2,
       side,
-      price: Math.floor(price * 100000000),
-      quantity: Math.floor(quantity * 100000000),
+      price: Math.floor(price * Math.pow(10, 8)),
+      quantity: Math.floor(quantity * Math.pow(10, 8)),
       timeinforce: 1,
       msgType: 'NewOrderMsg',
     };
@@ -138,7 +152,7 @@ class BncClient {
       timeinforce: 1,
     };
 
-    return await this.sendTransaction(placeOrderMsg, signMsg, address, sequence, '', true);
+    return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, '', true);
   }
 
   /**
@@ -151,7 +165,7 @@ class BncClient {
    * @param {Boolean} sync
    * @return {Object} response (success or fail)
    */
-  async sendTransaction(msg, stdSignMsg, address, sequence=null, memo='', sync=false ){
+  async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo='', sync=false ){
     if(!sequence && address) {
       const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
       sequence = data.sequence;
@@ -175,8 +189,7 @@ class BncClient {
     const tx = new Transaction(options);
 
     const txBytes = tx.sign(this.privateKey, stdSignMsg).serialize();
-    console.log(txBytes);
-    return await this.sendTx(txBytes, sync);
+    return await this._sendTx(txBytes, sync);
   }
 
   /**
@@ -187,7 +200,7 @@ class BncClient {
    * @param {Number} sequence
    * @return {Object} send transaction response(success or fail)
    */
-  async sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo='', sync=false ) {
+  async _sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo='', sync=false ) {
     if(!sequence && address) {
       const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
       sequence = data.sequence;
@@ -214,26 +227,98 @@ class BncClient {
       const tx = new Transaction(options);
 
       const txBytes = tx.sign(this.privateKey, stdSignMsgs[index]).serialize();
-      batchBytes.push(txBytes);
     });
 
-    return await this.sendTx(batchBytes.join(','), sync);
+    return await this._sendTx(batchBytes.join(','), sync);
   }
 
-  async sendTx(tx, sync=true) {
+  async _sendTx(tx, sync=true) {
     const opts = {
       data: tx,
       headers: {
         'content-type': 'text/plain',
       }
     }
-    const data = await this._httpClient.request('post', `/api/v1/broadcast?sync=${sync}`, null, opts);
+    const data = await this._httpClient.request('post', `${api.broadcast}?sync=${sync}`, null, opts);
     return data;
   }
 
-  async getBalances() {
+  /**
+   * get balance
+   * @param {String} address 
+   */
+  async getBalance(address) {
+    if(!address) {
+      throw new Error(`address should not be null`);
+    }
 
+    try {
+      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`);
+      return data.balances;
+    } catch(err) {
+      return 0;
+    }
   }
+
+  /**
+   * 
+   * @return {Object} 
+   * {
+   *  address,
+   *  privateKey
+   * }
+   */
+  createAccount() {
+    const privateKey = crypto.generatePrivateKey();
+    return {
+      privateKey,
+      address: crypto.getAddressFromPrivateKey(privateKey)
+    }
+  }
+
+  /**
+   * 
+   * @param {String} password 
+   *  {
+   *  privateKey,
+   *  address,
+   *  keystore
+   * }
+   */
+  createAccountWithKeystore(password){
+    if(!password){
+      throw new Error(`password should not be null`);
+    }
+
+    const privateKey = crypto.generatePrivateKey();
+    const address = crypto.getAddressFromPrivateKey(privateKey);
+    const keystore = crypto.generateKeyStore(privateKey, password);
+    return {
+      privateKey,
+      address,
+      keystore
+    }
+  }
+
+  /**
+   * @return {Object}
+   * {
+   *  privateKey,
+   *  address,
+   *  mnemonic
+   * }
+   */
+  createAccountWithMneomnic() {
+    const mnemonic = crypto.generateMnemonic();
+    const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic);
+    const address = crypto.getAddressFromPrivateKey(privateKey);
+    return {
+      privateKey,
+      address,
+      mnemonic
+    }
+  }
+
 }
 
 export { crypto, amino, Transaction };

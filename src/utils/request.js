@@ -29,10 +29,6 @@ class HttpRequest {
       }
     }
 
-    // for(const key in opts) {
-    //   options[key] = opts[key];
-    // }
-
     return this.httpClient
       .request(options)
       .then(response => {
