@@ -249,11 +249,11 @@ class BncClient {
    */
   async getBalance(address) {
     if(!address) {
-      throw new Error(`address should not be null`);
+      throw new Error(`address should not be null`)
     }
 
     try {
-      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`);
+      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`)
       return data.balances;
     } catch(err) {
       return 0;
@@ -287,12 +287,12 @@ class BncClient {
    */
   createAccountWithKeystore(password){
     if(!password){
-      throw new Error(`password should not be null`);
+      throw new Error(`password should not be null`)
     }
 
-    const privateKey = crypto.generatePrivateKey();
-    const address = crypto.getAddressFromPrivateKey(privateKey);
-    const keystore = crypto.generateKeyStore(privateKey, password);
+    const privateKey = crypto.generatePrivateKey()
+    const address = crypto.getAddressFromPrivateKey(privateKey)
+    const keystore = crypto.generateKeyStore(privateKey, password)
     return {
       privateKey,
       address,
@@ -309,13 +309,61 @@ class BncClient {
    * }
    */
   createAccountWithMneomnic() {
-    const mnemonic = crypto.generateMnemonic();
-    const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic);
-    const address = crypto.getAddressFromPrivateKey(privateKey);
+    const mnemonic = crypto.generateMnemonic()
+    const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
+    const address = crypto.getAddressFromPrivateKey(privateKey)
     return {
       privateKey,
       address,
       mnemonic
+    }
+  }
+
+  /**
+   * @param {String} keystore 
+   * @param {String} password
+   * {
+   * privateKey,
+   * address
+   * } 
+   */
+  recoverAccountFromKeystore(keystore, password){
+    const privateKey = crypto.getPrivateKeyFromKeyStore(keystore, password)
+    const address = crypto.getAddressFromPrivateKey(privateKey)
+    return {
+      privateKey,
+      address
+    }
+  }
+
+  /**
+   * @param {String} mneomnic 
+   * {
+   * privateKey,
+   * address
+   * }
+   */
+  recoverAccountFromMneomnic(mneomnic){
+    const privateKey = crypto.getPrivateKeyFromMnemonic(mneomnic)
+    const address = crypto.getAddressFromPrivateKey(privateKey)
+    return {
+      privateKey,
+      address
+    }
+  }
+
+  /**
+   * @param {String} privateKey 
+   * {
+   * privateKey,
+   * address
+   * }
+   */
+  recoverAccountFromPrivateKey(privateKey){
+    const address = crypto.getAddressFromPrivateKey(privateKey)
+    return {
+      privateKey,
+      address
     }
   }
 
