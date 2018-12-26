@@ -1,6 +1,6 @@
 {
   "name": "@binance/bnc-web-lib",
-  "version": "1.3.7",
+  "version": "1.3.9",
   "main": "/lib/index.js",
   "dependencies": {
     "@babel/cli": "^7.1.5",

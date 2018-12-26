@@ -1,4 +1,4 @@
-# bnc-web-lib
+# JS-Lib
 
 Binance Chain JavaScript API
 
@@ -62,6 +62,9 @@ amino.marshalBinaryBare(data);
 ### Initial client
 
 ```js
+
+import BncClient from '@binance/bnc-web-lib/';
+
 const client = new BncClient("https://xxx.api.com/");
 client.initChain();
 ```
@@ -153,7 +156,7 @@ client.placeOrder(address, symbol, side, price, quantity, sequence);
 
 - symbol - **String**: trade pair
 
-- side - **String**: buy or sell
+- side - **String**: buy or sell, value can only be 1(buy) or 2(sell)
 
 - price - **Number**: the price of trade pair
 
