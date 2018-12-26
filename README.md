@@ -58,21 +58,26 @@ amino.marshalBinaryBare(data);
 
 ## API 
 
-### initial client
+### Initial client
 ```js
   const client = new BncClient('https://xxx.api.com/');
   client.initChain();
 ```
 
-### createAccount 
+### create
 
 ```js
   client.createAccount()
+
+  client.createAccountWithKeystore([password])
+
+  client.createAccountWithMneomnic()
 ```
 
 ### Parameters
  
-> None
+- password - **String**
+
 
 ### Returns
 - Object - The account object with the following structure:
@@ -81,70 +86,27 @@ amino.marshalBinaryBare(data);
 
    - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to null the memory after usage.
 
-### createAccountWithKeystore 
-
-```js
-  client.createAccountWithKeystore([password])
-```
-
-### Parameters
- 
-- password - **String**(Required)
-
-### Returns
-- Object - The account object with the following structure:
-
-   - address - **String**: The account address.
-
-   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
-
    - keystore - **Object**: The encrypted keystore JSON
-
-### createAccountWithMneomnic 
-
-```js
-  client.createAccountWithMneomnic()
-```
-
-### Parameters
- 
-> None
-
-### Returns
-- Object - The account object with the following structure:
-
-   - address - **String**: The account address.
-
-   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
 
    - mneomnic - **String**:  mnemonic sentence -- a group of easy to remember words. 
 
-### recoverAccountFromKeystore 
+   
+### recover
 
 ```js
   client.recoverAccountFromKeystore(keystore, password)
+
+  client.recoverAccountFromMneomnic(mnemonic)
+
+  client.recoverAccountFromPrivateKey(privateKey)
 ```
 
 ### Parameters
  
 - keystore - **Object**: Keystore JSON object.
+
 - password - **String**: The password used for encryption
 
-### Returns
-- Object - The account object with the following structure:
-
-   - address - **String**: The account address.
-
-   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
-
-### recoverAccountFromMneomnic 
-
-```js
-  client.recoverAccountFromMneomnic(mnemonic)
-```
-
-### Parameters
- 
 - mnemonic - **String**: mnemonic sentence.
 
 ### Returns
@@ -154,22 +116,42 @@ amino.marshalBinaryBare(data);
 
    - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
 
-### recoverAccountFromPrivateKey 
+
+### placeOrder
 
 ```js
-  client.recoverAccountFromPrivateKey(privateKey)
+  client.placeOrder(address, symbol, side, price, quantity, sequence)
 ```
 
 ### Parameters
- 
-- privateKey - **String**: The accounts private key
+
+- address - **String**: a valid binance chain address.
+
+- symbol - **String**: trade pair
+
+- side - **String**: buy or sell
+
+- price - **Number**: the price of trade pair
+
+- quantity - **Number**: the amount of symbol
+
+- sequence - **Number**: sequence from every address
+
 
 ### Returns
-- Object - The account object with the following structure:
+```js
+{
+  "0": {
+    "code": 0,
+    "data": "{type:dex/NewOrderResponse,value:{order_id:BA36F0FAD74D8F41045463E4774F328F4AF779E5-80}}",
+    "hash": "641F4333F05B2374700E191EE6B6B03F9A543514",
+    "log": "Msg 0: ",
+    "ok": true
+  },
+  "status": 200
+}
 
-   - address - **String**: The account address.
-
-   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
+```
 
 ## Test Cases
 
