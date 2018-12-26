@@ -45,6 +45,7 @@ amino.marshalBinaryBare(data);
 
 ## BncClient
 - every tx has a specified type and encode prefix
+
 - supported type and prefix:
 
   |type|name|prefix|
@@ -53,25 +54,122 @@ amino.marshalBinaryBare(data);
   |NewOrderMsg|placeOrder|CE6DC043|
   |CancelOrderMsg|cancelOrder|166E681B|
 
-- initial client
+  
+
+## API 
+
+### initial client
 ```js
   const client = new BncClient('https://xxx.api.com/');
-```  
+  client.initChain();
+```
 
-- API 
-
-it should set private key with setPrivateKey method before use.
+### createAccount 
 
 ```js
-
-  client.setPrivateKey(privateKey);
-
-  client.placeOrder(address, symbol, side, price, quantity)
-
-  client.transfer(address, to, amount, symbol, memo)
-
-  client.canceOrder(address, symbols, orderIds, orderIds, sequence) 
+  client.createAccount()
 ```
+
+### Parameters
+ 
+> None
+
+### Returns
+- Object - The account object with the following structure:
+
+   - address - **String**: The account address.
+
+   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to null the memory after usage.
+
+### createAccountWithKeystore 
+
+```js
+  client.createAccountWithKeystore([password])
+```
+
+### Parameters
+ 
+- password - **String**(Required)
+
+### Returns
+- Object - The account object with the following structure:
+
+   - address - **String**: The account address.
+
+   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
+
+   - keystore - **Object**: The encrypted keystore JSON
+
+### createAccountWithMneomnic 
+
+```js
+  client.createAccountWithMneomnic()
+```
+
+### Parameters
+ 
+> None
+
+### Returns
+- Object - The account object with the following structure:
+
+   - address - **String**: The account address.
+
+   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
+
+   - mneomnic - **String**:  mnemonic sentence -- a group of easy to remember words. 
+
+### recoverAccountFromKeystore 
+
+```js
+  client.recoverAccountFromKeystore(keystore, password)
+```
+
+### Parameters
+ 
+- keystore - **Object**: Keystore JSON object.
+- password - **String**: The password used for encryption
+
+### Returns
+- Object - The account object with the following structure:
+
+   - address - **String**: The account address.
+
+   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
+
+### recoverAccountFromMneomnic 
+
+```js
+  client.recoverAccountFromMneomnic(mnemonic)
+```
+
+### Parameters
+ 
+- mnemonic - **String**: mnemonic sentence.
+
+### Returns
+- Object - The account object with the following structure:
+
+   - address - **String**: The account address.
+
+   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
+
+### recoverAccountFromPrivateKey 
+
+```js
+  client.recoverAccountFromPrivateKey(privateKey)
+```
+
+### Parameters
+ 
+- privateKey - **String**: The accounts private key
+
+### Returns
+- Object - The account object with the following structure:
+
+   - address - **String**: The account address.
+
+   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
 
 ## Test Cases
 
