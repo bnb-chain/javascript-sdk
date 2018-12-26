@@ -32,7 +32,7 @@ class HttpRequest {
     return this.httpClient
       .request(options)
       .then(response => {
-        return { ...response.data, status: response.status };
+        return { result: response.data, status: response.status };
       }).catch(err => {
         const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message);
         let error = new Error(msgObj.message);

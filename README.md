@@ -1,7 +1,9 @@
 # bnc-web-lib
+
 Binance Chain JavaScript API
 
 # Usage
+
 > yarn add @binance/bnc-web-lib -S --registry https://npm-registry.fdgahl.cn
 
 # API
@@ -18,7 +20,7 @@ const address = crypto.getAddressFromPrivateKey(privateKey);
 const keyStore = crypto.generateKeyStore(privateKey, password);
 
 const mneonic = crypto.getMnemonicFromPrivateKey(privateKey);
-                crypto.generateMnemonic();//24
+crypto.generateMnemonic(); //24
 ```
 
 recover privatekey, address from keystore, mneonic
@@ -38,71 +40,70 @@ const address = crypto.getAddressFromPrivateKey(privateKey);
 serialize object to hex string which compatible with go-amino
 
 ```js
-amino.marshalBinary(data)
+amino.marshalBinary(data);
 
 amino.marshalBinaryBare(data);
 ```
 
 ## BncClient
+
 - every tx has a specified type and encode prefix
 
 - supported type and prefix:
 
-  |type|name|prefix|
-  |:---|:---|:---
-  |MsgSend|transfer|2A2C87FA|
-  |NewOrderMsg|placeOrder|CE6DC043|
-  |CancelOrderMsg|cancelOrder|166E681B|
+  | type           | name        | prefix   |
+  | :------------- | :---------- | :------- |
+  | MsgSend        | transfer    | 2A2C87FA |
+  | NewOrderMsg    | placeOrder  | CE6DC043 |
+  | CancelOrderMsg | cancelOrder | 166E681B |
 
-  
-
-## API 
+## API
 
 ### Initial client
+
 ```js
-  const client = new BncClient('https://xxx.api.com/');
-  client.initChain();
+const client = new BncClient("https://xxx.api.com/");
+client.initChain();
 ```
 
 ### create
 
 ```js
-  client.createAccount()
+client.createAccount();
 
-  client.createAccountWithKeystore([password])
+client.createAccountWithKeystore([password]);
 
-  client.createAccountWithMneomnic()
+client.createAccountWithMneomnic();
 ```
 
 ### Parameters
- 
+
 - password - **String**
 
-
 ### Returns
+
 - Object - The account object with the following structure:
 
-   - address - **String**: The account address.
+  - address - **String**: The account address.
 
-   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to null the memory after usage.
+  - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to null the memory after usage.
 
-   - keystore - **Object**: The encrypted keystore JSON
+  - keystore - **Object**: The encrypted keystore JSON
 
-   - mneomnic - **String**:  mnemonic sentence -- a group of easy to remember words. 
+  - mneomnic - **String**: mnemonic sentence -- a group of easy to remember words.
 
-   
 ### recover
 
 ```js
-  client.recoverAccountFromKeystore(keystore, password)
+client.recoverAccountFromKeystore(keystore, password);
 
-  client.recoverAccountFromMneomnic(mnemonic)
+client.recoverAccountFromMneomnic(mnemonic);
 
-  client.recoverAccountFromPrivateKey(privateKey)
+client.recoverAccountFromPrivateKey(privateKey);
 ```
 
 ### Parameters
- 
+
 - keystore - **Object**: Keystore JSON object.
 
 - password - **String**: The password used for encryption
@@ -110,22 +111,45 @@ amino.marshalBinaryBare(data);
 - mnemonic - **String**: mnemonic sentence.
 
 ### Returns
+
 - Object - The account object with the following structure:
 
-   - address - **String**: The account address.
+  - address - **String**: The account address.
 
-   - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage!    Also make sure to null the memory after usage.
+  - privateKey - **String**: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to null the memory after usage.
 
-
-### placeOrder
+### getBalance
 
 ```js
-  client.placeOrder(address, symbol, side, price, quantity, sequence)
+client.getBalance(address);
 ```
 
 ### Parameters
 
 - address - **String**: a valid binance chain address.
+
+### Returns
+
+```js
+[
+  {
+    symbol: "BNB",
+    free: "3999.41000000",
+    locked: "1000.00000000",
+    frozen: "0.00000000"
+  }
+];
+```
+
+### placeOrder
+
+```js
+client.placeOrder(address, symbol, side, price, quantity, sequence);
+```
+
+### Parameters
+
+- address - **String**: a valid binance chain address
 
 - symbol - **String**: trade pair
 
@@ -135,13 +159,13 @@ amino.marshalBinaryBare(data);
 
 - quantity - **Number**: the amount of symbol
 
-- sequence - **Number**: sequence from every address
-
+- sequence - **Number**: sequence from account
 
 ### Returns
+
 ```js
 {
-  "0": {
+  "result": {
     "code": 0,
     "data": "{type:dex/NewOrderResponse,value:{order_id:BA36F0FAD74D8F41045463E4774F328F4AF779E5-80}}",
     "hash": "641F4333F05B2374700E191EE6B6B03F9A543514",
@@ -153,9 +177,101 @@ amino.marshalBinaryBare(data);
 
 ```
 
+### transfer
+
+```js
+client.transfer(fromAddress, toAddress, amount, asset, memo);
+```
+
+### Parameters
+
+- fromAddress - **String**: a valid binance chain address.
+
+- toAddress - **String**: a valid binance chain address.
+
+- amount - **Number**
+
+- asset - **String**
+
+- memo - **String**
+
+### Returns
+
+```js
+{
+  "result": [
+    {
+      "code": 0,
+      "hash": "1C1AC45E4E9D213606660264F906310458AEA449",
+      "log": "Msg 0: ",
+      "ok": true
+    }
+  ],
+  "status": 200
+}
+```
+
+### cancelOrder
+
+```js
+client.cancelOrder(fromAddress, symbols, orderIds, refids, sequence);
+```
+
+### Parameters
+
+- fromAddress - **String**: a valid binance chain address.
+
+- symbols - **Array[String]**
+
+- orderIds - **Array[Number]**
+
+- refids - **Array[Number]**
+
+- sequence - **Number**
+
+### Returns
+
+```js
+{
+  "result": {
+    "code": 0,
+    "hash": "79D09209710E32D75935186830AF4309D2A2D9C5",
+    "log": "Msg 0: ",
+    "ok": true
+  },
+  "status": 200
+}
+```
+
+### getAccount
+
+```js
+client.getAccount(address);
+```
+
+### Parameters
+
+- address - **String**: a valid binance chain address.
+
+### Returns
+
+```js
+{
+  "address": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+  "public_key": [],
+  "account_number": 9,
+  "sequence": 81,
+  "balances": [
+    {
+      "symbol": "BNB",
+      "free": "9834046.15286760",
+      "locked": "145.00000000",
+      "frozen": "0.00000000"
+    }
+  ]
+}
+```
+
 ## Test Cases
 
 go to [test folder](./__tests__)
-  
-
-

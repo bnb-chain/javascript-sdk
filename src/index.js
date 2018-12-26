@@ -6,7 +6,8 @@ import HttpRequest from './utils/request';
 const api = {
   broadcast: '/api/v1/broadcast',
   nodeInfo: '/api/v1/node-info',
-  getAccount: '/api/v1/account'
+  getAccount: '/api/v1/account',
+  getSimulateAccount: '/api/v1/simulate/account/'
 }
 
 class BncClient {
@@ -168,13 +169,13 @@ class BncClient {
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo='', sync=false ){
     if(!sequence && address) {
       const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
-      sequence = data.sequence;
-      this.account_number = data.account_number;
+      sequence = data.result.sequence;
+      this.account_number = data.result.account_number;
     }
 
     if(!this.account_number){
       const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
-      this.account_number = data.account_number;
+      this.account_number = data.result.account_number;
     }
 
     const options = {
@@ -254,9 +255,26 @@ class BncClient {
 
     try {
       const data = await this._httpClient.request('get', `${api.getAccount}/${address}`)
-      return data.balances;
+      return data.result.balances
     } catch(err) {
-      return 0;
+      return [];
+    }
+  }
+
+  /**
+   * get account
+   * @param {String} address 
+   */
+  async getAccount(address) {
+    if(!address) {
+      throw new Error(`address should not be null`)
+    }
+
+    try {
+      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`)
+      return data
+    } catch(err) {
+      return null
     }
   }
 
