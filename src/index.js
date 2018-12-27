@@ -1,4 +1,5 @@
-import "regenerator-runtime/runtime"
+import 'babel-polyfill'
+// import "regenerator-runtime/runtime"
 import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import Transaction from "./tx"

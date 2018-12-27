@@ -49,34 +49,26 @@ export const encodeAddress = (value, prefix = "bnc", type = "hex") => {
  * Generates a random private key
  * @returns {string}
  */
-export const generatePrivateKey = () => {
-  return ab2hexstring(csprng(PRIVKEY_LEN))
-}
+export const generatePrivateKey = () => ab2hexstring(csprng(PRIVKEY_LEN))
 
 /**
  * Generates an arrayBuffer filled with random bits.
  * @param {number} length - Length of buffer.
  * @returns {ArrayBuffer}
  */
-export const generateRandomArray = length => {
-  return csprng(length)
-}
+export const generateRandomArray = length => csprng(length)
 
 /**
  * @param {string} privateKey
  * @return {string}
  */
-export const getWIFFromPrivateKey = privateKey => {
-  return WIF.encode(128, Buffer.from(privateKey, "hex"), true)
-}
+export const getWIFFromPrivateKey = privateKey => WIF.encode(128, Buffer.from(privateKey, "hex"), true)
 
 /**
  * @param {string} wif
  * @return {string}
  */
-export const getPrivateKeyFromWIF = wif => {
-  return ab2hexstring(WIF.decode(wif, 128).privateKey)
-}
+export const getPrivateKeyFromWIF = wif => ab2hexstring(WIF.decode(wif, 128).privateKey)
 
 /**
  * @param {string} publicKey - Encoded public key
@@ -230,16 +222,12 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
  * Gets Mnemonic from a private key.
  * @param {string} privateKey the private key hexstring
  */
-export const getMnemonicFromPrivateKey = privateKey => {
-  return bip39.entropyToMnemonic(privateKey)
-}
+export const getMnemonicFromPrivateKey = privateKey => bip39.entropyToMnemonic(privateKey)
 
 /**
  * Generate Mnemonic (length=== 15)
  */
-export const generateMnemonic = () => {
-  return bip39.generateMnemonic(256)
-}
+export const generateMnemonic = () => bip39.generateMnemonic(256)
 
 /**
  * Get privatekey from mnemonic.
