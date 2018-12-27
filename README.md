@@ -4,7 +4,7 @@ Binance Chain JavaScript API
 
 # Usage
 
-> yarn add @binance/bnc-web-lib -S --registry https://npm-registry.fdgahl.cn
+> yarn add @binance/bnc-js -S --registry https://npm-registry.fdgahl.cn
 
 # API
 
