@@ -1,7 +1,7 @@
 {
   "name": "@binance/bnc-js",
-  "version": "2.0.1",
-  "main": "/lib/index.js",
+  "version": "2.1.2",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "build": "rm -rf lib && npx babel src -d lib",
@@ -39,7 +39,8 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-preset-stage-2": "^6.24.1",
-    "eslint": "^5.11.1"
+    "eslint": "^5.11.1",
+    "regenerator-runtime": "^0.13.1"
   },
   "babel": {
     "presets": [

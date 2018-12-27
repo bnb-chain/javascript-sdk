@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime"
 import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import Transaction from "./tx"
@@ -394,3 +395,5 @@ class BncClient {
 export { crypto, amino, Transaction }
 
 export default BncClient
+
+module.exports = BncClient
