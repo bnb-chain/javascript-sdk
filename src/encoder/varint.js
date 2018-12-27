@@ -1,5 +1,5 @@
-'use strict'
-const BN = require('bn.js')
+"use strict"
+const BN = require("bn.js")
 
 const safeParseInt = (nStr)=> {
   let n = parseInt(nStr)
@@ -7,7 +7,7 @@ const safeParseInt = (nStr)=> {
     throw Error(`Value ${JSON.stringify(nStr)} is not an integer`)
   }
   if (Math.abs(n) >= Number.MAX_SAFE_INTEGER) {
-    throw Error(`Absolute value must be < 2^53`)
+    throw Error("Absolute value must be < 2^53")
   }
   if (String(n) !== String(nStr)) {
     throw Error(`Value ${JSON.stringify(nStr)} is not a canonical integer string representation`)
@@ -17,7 +17,7 @@ const safeParseInt = (nStr)=> {
 
 const VarInt = (signed)=> {
   function decode (buffer, start = 0, end = buffer.length) {
-    throw Error('not implemented')
+    throw Error("not implemented")
   }
 
   function encode (n, buffer = Buffer.alloc(encodingLength(n)), offset = 0) {
@@ -42,7 +42,7 @@ const VarInt = (signed)=> {
   function encodingLength (n) {
     if (signed) n *= 2
     if (n < 0 || n > Number.MAX_SAFE_INTEGER) {
-      throw Error('varint value is out of bounds')
+      throw Error("varint value is out of bounds")
     }
     let bits = Math.log2(n + 1)
     return Math.ceil(bits / 7) || 1

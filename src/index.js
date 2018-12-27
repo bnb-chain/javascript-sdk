@@ -1,43 +1,43 @@
-import * as crypto from './crypto';
-import * as amino from './encoder';
-import Transaction from './tx';
-import HttpRequest from './utils/request';
+import * as crypto from "./crypto"
+import * as amino from "./encoder"
+import Transaction from "./tx"
+import HttpRequest from "./utils/request"
 
 const api = {
-  broadcast: '/api/v1/broadcast',
-  nodeInfo: '/api/v1/node-info',
-  getAccount: '/api/v1/account',
-  getSimulateAccount: '/api/v1/simulate/account/'
+  broadcast: "/api/v1/broadcast",
+  nodeInfo: "/api/v1/node-info",
+  getAccount: "/api/v1/account",
+  getSimulateAccount: "/api/v1/simulate/account/"
 }
 
 class BncClient {
 
-   /**
+  /**
    * @param {string} Binance Chain public url
    */
   constructor(server) {
     if(!server) {
-      throw new Error(`Binance chain server should not be null`);
+      throw new Error("Binance chain server should not be null")
     }
 
-    this._httpClient = new HttpRequest(server);
+    this._httpClient = new HttpRequest(server)
   }
 
   async initChain() {
     if(!this.chainId) {
-      const data = await this._httpClient.request('get', api.nodeInfo);
-      this.chainId = data.node_info && data.node_info.network || 'chain-bnb';
+      const data = await this._httpClient.request("get", api.nodeInfo)
+      this.chainId = data.node_info && data.node_info.network || "chain-bnb"
     }
 
-    return this;
+    return this
   }
 
   setPrivateKey(privateKey) {
-    this.privateKey = privateKey;
-    return this;
+    this.privateKey = privateKey
+    return this
   }
 
-   /**
+  /**
    *
    * @param {String} fromAddress
    * @param {String} toAddress
@@ -46,14 +46,14 @@ class BncClient {
    * @param {String} memo
    */
   async transfer(fromAddress, toAddress, amount, asset, memo) {
-    const accCode = crypto.decodeAddress(fromAddress);
-    const toAccCode = crypto.decodeAddress(toAddress);
-    amount = amount * Math.pow(10, 8);
+    const accCode = crypto.decodeAddress(fromAddress)
+    const toAccCode = crypto.decodeAddress(toAddress)
+    amount = amount * Math.pow(10, 8)
 
     const coin = {
       denom: asset,
       amount: amount,
-    };
+    }
 
     const msg = {
       inputs: [{
@@ -64,8 +64,8 @@ class BncClient {
         address: toAccCode,
         coins: [coin]
       }],
-      msgType: 'MsgSend'
-    };
+      msgType: "MsgSend"
+    }
 
     const signMsg = {
       inputs: [{
@@ -82,34 +82,34 @@ class BncClient {
           denom: asset
         }]
       }]
-    };
+    }
 
-    return await this._sendTransaction(msg, signMsg, fromAddress, null, memo, true);
+    return await this._sendTransaction(msg, signMsg, fromAddress, null, memo, true)
   }
 
   async cancelOrder(fromAddress, symbols, orderIds, refids, sequence) {
-    const accCode = crypto.decodeAddress(fromAddress);
-    const requests = [];
+    const accCode = crypto.decodeAddress(fromAddress)
+    const requests = []
     orderIds.forEach((orderId, index) => {
       const msg = {
         sender: accCode,
         symbol: symbols[index],
         id: orderId,
         refid: refids[index],
-        msgType: 'CancelOrderMsg'
-      };
+        msgType: "CancelOrderMsg"
+      }
 
       const signMsg = {
         id: orderId,
         refid: refids[index],
         sender: fromAddress,
         symbol: symbols[index]
-      };
+      }
 
-      requests.push(this._sendTransaction(msg, signMsg, fromAddress, sequence+index, ''));
-    });
+      requests.push(this._sendTransaction(msg, signMsg, fromAddress, sequence+index, ""))
+    })
 
-    return Promise.all(requests);
+    return Promise.all(requests)
   }
 
   /**
@@ -123,28 +123,28 @@ class BncClient {
    */
   async placeOrder(address, symbol, side, price, quantity, sequence) {
     if(side !== 1 || side !== 2){
-      throw new Error(`side can only be 1 or 2`);
+      throw new Error("side can only be 1 or 2")
     }
 
-    const accCode = crypto.decodeAddress(address);
+    const accCode = crypto.decodeAddress(address)
 
     if(!sequence){
-      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`);
-      sequence = data.sequence;
-      console.log(data);
+      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      sequence = data.sequence
+      console.log(data)
     }
 
     const placeOrderMsg = {
       sender: accCode,
-      id: `${accCode.toString('hex')}-${sequence+1}`.toUpperCase(),
+      id: `${accCode.toString("hex")}-${sequence+1}`.toUpperCase(),
       symbol: symbol,
       ordertype: 2,
       side,
       price: Math.floor(price * Math.pow(10, 8)),
       quantity: Math.floor(quantity * Math.pow(10, 8)),
       timeinforce: 1,
-      msgType: 'NewOrderMsg',
-    };
+      msgType: "NewOrderMsg",
+    }
 
     const signMsg = {
       id: placeOrderMsg.id,
@@ -155,9 +155,9 @@ class BncClient {
       side: placeOrderMsg.side,
       symbol: placeOrderMsg.symbol,
       timeinforce: 1,
-    };
+    }
 
-    return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, '', true);
+    return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "", true)
   }
 
   /**
@@ -170,16 +170,16 @@ class BncClient {
    * @param {Boolean} sync
    * @return {Object} response (success or fail)
    */
-  async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo='', sync=false ){
+  async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=false ){
     if(!sequence && address) {
-      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
-      sequence = data.result.sequence;
-      this.account_number = data.result.account_number;
+      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+      sequence = data.result.sequence
+      this.account_number = data.result.account_number
     }
 
     if(!this.account_number){
-      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
-      this.account_number = data.result.account_number;
+      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+      this.account_number = data.result.account_number
     }
 
     const options = {
@@ -189,12 +189,12 @@ class BncClient {
       msg,
       sequence: parseInt(sequence),
       type: msg.msgType,
-    };
+    }
 
-    const tx = new Transaction(options);
+    const tx = new Transaction(options)
 
-    const txBytes = tx.sign(this.privateKey, stdSignMsg).serialize();
-    return await this._sendTx(txBytes, sync);
+    const txBytes = tx.sign(this.privateKey, stdSignMsg).serialize()
+    return await this._sendTx(txBytes, sync)
   }
 
   /**
@@ -205,47 +205,47 @@ class BncClient {
    * @param {Number} sequence
    * @return {Object} send transaction response(success or fail)
    */
-  async _sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo='', sync=false ) {
+  async _sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo="", sync=false ) {
     if(!sequence && address) {
-      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
-      sequence = data.sequence;
-      this.account_number = data.account_number;
+      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+      sequence = data.sequence
+      this.account_number = data.account_number
     }
 
     if(!this.account_number){
-      const data = await this._httpClient.request('get', `/api/v1/account/${address}`);
-      this.account_number = data.account_number;
+      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+      this.account_number = data.account_number
     }
 
-    const batchBytes = [];
+    const batchBytes = []
 
     msgs.forEach((msg, index)=>{
       const options = {
         account_number: parseInt(this.account_number),
         chain_id: this.chainId,
-        memo: '',
+        memo: "",
         msg,
         sequence: parseInt(sequence),
         type: msg.msgType,
-      };
+      }
 
-      const tx = new Transaction(options);
+      const tx = new Transaction(options)
 
-      const txBytes = tx.sign(this.privateKey, stdSignMsgs[index]).serialize();
-    });
+      const txBytes = tx.sign(this.privateKey, stdSignMsgs[index]).serialize()
+    })
 
-    return await this._sendTx(batchBytes.join(','), sync);
+    return await this._sendTx(batchBytes.join(","), sync)
   }
 
   async _sendTx(tx, sync=true) {
     const opts = {
       data: tx,
       headers: {
-        'content-type': 'text/plain',
+        "content-type": "text/plain",
       }
     }
-    const data = await this._httpClient.request('post', `${api.broadcast}?sync=${sync}`, null, opts);
-    return data;
+    const data = await this._httpClient.request("post", `${api.broadcast}?sync=${sync}`, null, opts)
+    return data
   }
 
   /**
@@ -254,14 +254,14 @@ class BncClient {
    */
   async getBalance(address) {
     if(!address) {
-      throw new Error(`address should not be null`)
+      throw new Error("address should not be null")
     }
 
     try {
-      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`)
+      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
       return data.result.balances
     } catch(err) {
-      return [];
+      return []
     }
   }
 
@@ -271,11 +271,11 @@ class BncClient {
    */
   async getAccount(address) {
     if(!address) {
-      throw new Error(`address should not be null`)
+      throw new Error("address should not be null")
     }
 
     try {
-      const data = await this._httpClient.request('get', `${api.getAccount}/${address}`)
+      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
       return data
     } catch(err) {
       return null
@@ -291,7 +291,7 @@ class BncClient {
    * }
    */
   createAccount() {
-    const privateKey = crypto.generatePrivateKey();
+    const privateKey = crypto.generatePrivateKey()
     return {
       privateKey,
       address: crypto.getAddressFromPrivateKey(privateKey)
@@ -309,7 +309,7 @@ class BncClient {
    */
   createAccountWithKeystore(password){
     if(!password){
-      throw new Error(`password should not be null`)
+      throw new Error("password should not be null")
     }
 
     const privateKey = crypto.generatePrivateKey()
@@ -391,6 +391,6 @@ class BncClient {
 
 }
 
-export { crypto, amino, Transaction };
+export { crypto, amino, Transaction }
 
-export default BncClient;
+export default BncClient

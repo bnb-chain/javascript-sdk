@@ -1,23 +1,23 @@
-import * as crypto from '../crypto/';
-import * as encoder from '../encoder/';
-import { UVarInt } from '../encoder/varint';
+import * as crypto from "../crypto/"
+import * as encoder from "../encoder/"
+import { UVarInt } from "../encoder/varint"
 
 export const txType = {
-  MsgSend: 'MsgSend',
-  NewOrderMsg: 'NewOrderMsg',
-  CancelOrderMsg: 'CancelOrderMsg',
-  StdTx: 'StdTx',
-  PubKeySecp256k1: 'PubKeySecp256k1',
-  SignatureSecp256k1: 'SignatureSecp256k1',
+  MsgSend: "MsgSend",
+  NewOrderMsg: "NewOrderMsg",
+  CancelOrderMsg: "CancelOrderMsg",
+  StdTx: "StdTx",
+  PubKeySecp256k1: "PubKeySecp256k1",
+  SignatureSecp256k1: "SignatureSecp256k1",
 }
 
 export const typePrefix = {
-  MsgSend: '2A2C87FA',
-  NewOrderMsg: 'CE6DC043',
-  CancelOrderMsg: '166E681B',
-  StdTx: 'F0625DEE',
-  PubKeySecp256k1: 'EB5AE987',
-  SignatureSecp256k1: '7FC4A495',
+  MsgSend: "2A2C87FA",
+  NewOrderMsg: "CE6DC043",
+  CancelOrderMsg: "166E681B",
+  StdTx: "F0625DEE",
+  PubKeySecp256k1: "EB5AE987",
+  SignatureSecp256k1: "7FC4A495",
 }
 
 /**
@@ -43,21 +43,21 @@ export const typePrefix = {
 class Transaction {
   constructor(data) {
     if(!txType[data.type]) {
-      throw new TypeError(`does not support transaction type: ${data.type}`);
+      throw new TypeError(`does not support transaction type: ${data.type}`)
     }
 
     if(!data.chain_id) {
-      throw new Error('chain id should not be null');
+      throw new Error("chain id should not be null")
     }
     
-    data = data || {};
+    data = data || {}
 
-    this.type = data.type;
-    this.sequence = data.sequence || 0;
-    this.account_number = data.account_number || 0;
-    this.chain_id = data.chain_id;
-    this.msgs = data.msg ? [data.msg] : [];
-    this.memo = data.memo;
+    this.type = data.type
+    this.sequence = data.sequence || 0
+    this.account_number = data.account_number || 0
+    this.chain_id = data.chain_id
+    this.msgs = data.msg ? [data.msg] : []
+    this.memo = data.memo
   }
 
   /**
@@ -66,19 +66,19 @@ class Transaction {
    * @return {Buffer}
    */
   serializePubKey(privateKey){
-    let unencodedPubKey = crypto.generatePubKey(privateKey);
-    let format = 0x2;
+    let unencodedPubKey = crypto.generatePubKey(privateKey)
+    let format = 0x2
     if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
-      format |= 0x1;
+      format |= 0x1
     }
 
     const pubKey = Buffer.concat([
       UVarInt.encode(format), 
-      unencodedPubKey.x.toArrayLike(Buffer, 'be', 32)
-    ]);
+      unencodedPubKey.x.toArrayLike(Buffer, "be", 32)
+    ])
 
     //prefixed with length;
-    return encoder.encodeBinaryByteArray(pubKey);
+    return encoder.encodeBinaryByteArray(pubKey)
   }
 
   /**
@@ -88,7 +88,7 @@ class Transaction {
    **/
   sign(privateKey, msg) {
     if(!msg){
-      throw new Error(`msg should be an object`);
+      throw new Error("msg should be an object")
     }
 
     const signMsg = {
@@ -99,19 +99,19 @@ class Transaction {
       "msgs": [msg],
       "sequence": this.sequence.toString(),
       "source": "1"
-    };
+    }
 
-    const signMsgBytes = encoder.convertObjectToBytes(signMsg);
-    const signature = crypto.generateSignature(signMsgBytes.toString('hex'), privateKey);
-    const pub_key = this.serializePubKey(privateKey);
+    const signMsgBytes = encoder.convertObjectToBytes(signMsg)
+    const signature = crypto.generateSignature(signMsgBytes.toString("hex"), privateKey)
+    const pub_key = this.serializePubKey(privateKey)
     this.signatures = [{
-      pub_key: Buffer.concat([Buffer.from('EB5AE987', 'hex'), pub_key]),
+      pub_key: Buffer.concat([Buffer.from("EB5AE987", "hex"), pub_key]),
       signature: signature,
       account_number: this.account_number,
       sequence: this.sequence,
-    }];
-    this.sig = signature.toString('hex');
-    return this;
+    }]
+    this.sig = signature.toString("hex")
+    return this
   }
 
   /**
@@ -120,26 +120,26 @@ class Transaction {
    */
   serialize(){
     if(!this.signatures) {
-      throw new Error(`need signature`);
+      throw new Error("need signature")
     }
 
-    let msg = this.msgs[0];
+    let msg = this.msgs[0]
 
     const stdTx = {
       msg: [msg],
       signatures: this.signatures,
       memo: this.memo,
       source: 1, // web wallet value is 1
-      data: '',
+      data: "",
       msgType: txType.StdTx
-    };
+    }
 
-    const bytes = encoder.marshalBinary(stdTx);
-    return bytes.toString('hex');
+    const bytes = encoder.marshalBinary(stdTx)
+    return bytes.toString("hex")
   }
 }
 
-Transaction.txType = txType;
-Transaction.typePrefix = typePrefix;
+Transaction.txType = txType
+Transaction.typePrefix = typePrefix
 
-export default Transaction;
+export default Transaction

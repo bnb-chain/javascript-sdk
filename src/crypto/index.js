@@ -1,38 +1,38 @@
-import csprng from 'secure-random';
-import WIF from 'wif';
-import bech32 from 'bech32';
-import cryp from 'crypto-browserify';
-import uuid from 'uuid';
-import _ from 'lodash';
-import bip39 from 'bip39';
-import bip32 from 'bip32';
+import csprng from "secure-random"
+import WIF from "wif"
+import bech32 from "bech32"
+import cryp from "crypto-browserify"
+import uuid from "uuid"
+import _ from "lodash"
+import bip39 from "bip39"
+import bip32 from "bip32"
+import { ec as EC } from "elliptic"
+import ecc from "tiny-secp256k1"
 
 import {
   ab2hexstring,
   sha256,
   sha256ripemd160,
-} from "../utils";
+} from "../utils"
 
-const EC = require('elliptic').ec;
-const ecc = require('tiny-secp256k1');
 
 // secp256k1 privkey is 32 bytes
-const PRIVKEY_LEN = 32;
-const CURVE = 'secp256k1';
+const PRIVKEY_LEN = 32
+const CURVE = "secp256k1"
 
 //hdpath
-const HDPATH = "44'/714'/0'/0/0";
+const HDPATH = "44'/714'/0'/0/0"
 
-const ec = new EC(CURVE);
+const ec = new EC(CURVE)
 
 /**
  * Decodes an address in bech32 format.
  * @param {string} value the bech32 address to decode
  */
 export const decodeAddress = (value) => {
-  const decodeAddress = bech32.decode(value);
-  return Buffer.from(bech32.fromWords(decodeAddress.words));
-};
+  const decodeAddress = bech32.decode(value)
+  return Buffer.from(bech32.fromWords(decodeAddress.words))
+}
 
 /**
  * Encodes an address from input data bytes.
@@ -41,8 +41,8 @@ export const decodeAddress = (value) => {
  * @param {*} type the output type (default: hex)
  */
 export const encodeAddress = (value, prefix = "bnc", type = "hex") => {
-  const words = bech32.toWords(Buffer.from(value, type));
-  return bech32.encode(prefix, words);
+  const words = bech32.toWords(Buffer.from(value, type))
+  return bech32.encode(prefix, words)
 }
 
 /**
@@ -50,8 +50,8 @@ export const encodeAddress = (value, prefix = "bnc", type = "hex") => {
  * @returns {string}
  */
 export const generatePrivateKey = () => {
-  return ab2hexstring(csprng(PRIVKEY_LEN));
-};
+  return ab2hexstring(csprng(PRIVKEY_LEN))
+}
 
 /**
  * Generates an arrayBuffer filled with random bits.
@@ -59,33 +59,33 @@ export const generatePrivateKey = () => {
  * @returns {ArrayBuffer}
  */
 export const generateRandomArray = length => {
-  return csprng(length);
-};
+  return csprng(length)
+}
 
 /**
  * @param {string} privateKey
  * @return {string}
  */
 export const getWIFFromPrivateKey = privateKey => {
-  return WIF.encode(128, Buffer.from(privateKey, 'hex'), true);
-};
+  return WIF.encode(128, Buffer.from(privateKey, "hex"), true)
+}
 
 /**
  * @param {string} wif
  * @return {string}
  */
 export const getPrivateKeyFromWIF = wif => {
-  return ab2hexstring(WIF.decode(wif, 128).privateKey);
-};
+  return ab2hexstring(WIF.decode(wif, 128).privateKey)
+}
 
 /**
  * @param {string} publicKey - Encoded public key
  * @return {string} decoded public key
  */
 export const getPublicKey = publicKey => {
-  let keyPair = ec.keyFromPublic(publicKey, 'hex');
-  return keyPair.getPublic().encode('hex');
-};
+  let keyPair = ec.keyFromPublic(publicKey, "hex")
+  return keyPair.getPublic().encode("hex")
+}
 
 /**
  * Calculates the public key from a given private key.
@@ -93,22 +93,22 @@ export const getPublicKey = publicKey => {
  * @return {string}
  */
 export const getPublicKeyFromPrivateKey = privateKey => {
-  const curve = new EC(CURVE);
-  const keypair = curve.keyFromPrivate(privateKey, 'hex');
-  const unencodedPubKey = keypair.getPublic().encode('hex');
-  return unencodedPubKey;
-};
+  const curve = new EC(CURVE)
+  const keypair = curve.keyFromPrivate(privateKey, "hex")
+  const unencodedPubKey = keypair.getPublic().encode("hex")
+  return unencodedPubKey
+}
 
 /**
  * PubKey performs the point-scalar multiplication from the privKey on the
  * generator point to get the pubkey.
  * @param {string} privateKey
  * @return {array-bn} PubKey
- * */ 
+ * */
 export const generatePubKey = privateKey =>{
-  const curve = new EC(CURVE);
-  const keypair = curve.keyFromPrivate(privateKey, 'hex');
-  return keypair.getPublic();
+  const curve = new EC(CURVE)
+  const keypair = curve.keyFromPrivate(privateKey, "hex")
+  return keypair.getPublic()
 }
 
 /**
@@ -116,13 +116,13 @@ export const generatePubKey = privateKey =>{
  * @param {string} privateKey the private key hexstring
  */
 export const getAddressFromPrivateKey = privateKey => {
-  const pubKey = ec.keyFromPublic(getPublicKeyFromPrivateKey(privateKey), 'hex');
-  const pubPoint = pubKey.getPublic();
-  const compressed = pubPoint.encodeCompressed();
-  const hexed = ab2hexstring(compressed);
-  const hash = sha256ripemd160(hexed); // https://git.io/fAn8N
-  const address = encodeAddress(hash);
-  return address;
+  const pubKey = ec.keyFromPublic(getPublicKeyFromPrivateKey(privateKey), "hex")
+  const pubPoint = pubKey.getPublic()
+  const compressed = pubPoint.encodeCompressed()
+  const hexed = ab2hexstring(compressed)
+  const hash = sha256ripemd160(hexed) // https://git.io/fAn8N
+  const address = encodeAddress(hash)
+  return address
 }
 
 /**
@@ -132,9 +132,9 @@ export const getAddressFromPrivateKey = privateKey => {
  * @return {Buffer} Signature. Does not include tx.
  */
 export const generateSignature = (hex, privateKey) => {
-  const msgHash = sha256(hex);
-  const msgHashHex = Buffer.from(msgHash, 'hex');
-  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, 'hex'));
+  const msgHash = sha256(hex)
+  const msgHashHex = Buffer.from(msgHash, "hex")
+  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, "hex"))
   // const r = toDER(Buffer.from(sig.slice(0, 32), 'hex'));
   // const s = toDER(Buffer.from(sig.slice(32), 'hex'));
   // const signature = bip66.encode(r, s);
@@ -143,8 +143,8 @@ export const generateSignature = (hex, privateKey) => {
   // const aminoPrefix = Buffer.from('7FC4A495', 'hex');
   // const lengthPrefix = UVarInt.encode(signature.length);
 
-  return signature;
-};
+  return signature
+}
 
 /**
  * Generates a keystore file based on given private key and password.
@@ -152,27 +152,27 @@ export const generateSignature = (hex, privateKey) => {
  * @param {string} password - Password.
  */
 export const generateKeyStore = (privateKey, password) => {
-  const address = getAddressFromPrivateKey(privateKey);
-  const salt = cryp.randomBytes(32);
-  const iv = cryp.randomBytes(16);
-  const cipherAlg = 'aes-256-ctr';
+  const address = getAddressFromPrivateKey(privateKey)
+  const salt = cryp.randomBytes(32)
+  const iv = cryp.randomBytes(16)
+  const cipherAlg = "aes-256-ctr"
 
   const kdfparams = {
     dklen: 32,
-    salt: salt.toString('hex'),
+    salt: salt.toString("hex"),
     c: 262144,
-    prf: 'hmac-sha256'
-  };
-
-  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
-  const cipher = cryp.createCipher(cipherAlg, derivedKey.slice(0, 16), iv);
-  if (!cipher) {
-    throw new Error('Unsupported cipher');
+    prf: "hmac-sha256"
   }
 
-  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKey, 'hex')), cipher.final()]);
-  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')]);
-  const mac = sha256(bufferValue.toString('hex'));
+  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256")
+  const cipher = cryp.createCipher(cipherAlg, derivedKey.slice(0, 16), iv)
+  if (!cipher) {
+    throw new Error("Unsupported cipher")
+  }
+
+  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKey, "hex")), cipher.final()])
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, "hex")])
+  const mac = sha256(bufferValue.toString("hex"))
 
   return {
     version: 1,
@@ -181,17 +181,17 @@ export const generateKeyStore = (privateKey, password) => {
     }),
     address: address.toLowerCase(),
     crypto: {
-      ciphertext: ciphertext.toString('hex'),
+      ciphertext: ciphertext.toString("hex"),
       cipherparams: {
-        iv: iv.toString('hex')
+        iv: iv.toString("hex")
       },
       cipher: cipherAlg,
-      kdf: 'pbkdf2',
+      kdf: "pbkdf2",
       kdfparams: kdfparams,
       mac: mac
     }
-  };
-};
+  }
+}
 
 /**
  * Generates privatekey based on keystore and password
@@ -201,56 +201,56 @@ export const generateKeyStore = (privateKey, password) => {
 export const getPrivateKeyFromKeyStore = (keystore, password) => {
 
   if (!_.isString(password)) {
-    throw new Error('No password given.');
-  }
-  
-  const json = _.isObject(keystore) ? keystore : JSON.parse(keystore);
-  const kdfparams = json.crypto.kdfparams;
-
-  if (kdfparams.prf !== 'hmac-sha256') {
-    throw new Error('Unsupported parameters to PBKDF2');
+    throw new Error("No password given.")
   }
 
-  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
-  const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
-  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext]);
-  const mac = sha256(bufferValue.toString('hex'));
+  const json = _.isObject(keystore) ? keystore : JSON.parse(keystore)
+  const kdfparams = json.crypto.kdfparams
+
+  if (kdfparams.prf !== "hmac-sha256") {
+    throw new Error("Unsupported parameters to PBKDF2")
+  }
+
+  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c, kdfparams.dklen, "sha256")
+  const ciphertext = Buffer.from(json.crypto.ciphertext, "hex")
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext])
+  const mac = sha256(bufferValue.toString("hex"))
 
   if (mac !== json.crypto.mac) {
-    throw new Error('Key derivation failed - possibly wrong password');
+    throw new Error("Key derivation failed - possibly wrong password")
   }
 
-  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
-  const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex');
+  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, "hex"))
+  const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("hex")
 
-  return privateKey;
-};
+  return privateKey
+}
 
 /**
  * Gets Mnemonic from a private key.
  * @param {string} privateKey the private key hexstring
  */
 export const getMnemonicFromPrivateKey = privateKey => {
-  return bip39.entropyToMnemonic(privateKey);
+  return bip39.entropyToMnemonic(privateKey)
 }
 
 /**
  * Generate Mnemonic (length=== 15)
  */
 export const generateMnemonic = () => {
-  return bip39.generateMnemonic(256);
+  return bip39.generateMnemonic(256)
 }
 
 /**
  * Get privatekey from mnemonic.
- * @param {mnemonic} 
+ * @param {mnemonic}
  */
 export const getPrivateKeyFromMnemonic = mnemonic => {
   if(!bip39.validateMnemonic(mnemonic)){
-    throw new Error('wrong mnemonic format');
+    throw new Error("wrong mnemonic format")
   }
-  const seed = bip39.mnemonicToSeed(mnemonic);
-  const master = bip32.fromSeed(seed);
-  const child = master.derivePath(HDPATH);
-  return child.privateKey.toString('hex');
+  const seed = bip39.mnemonicToSeed(mnemonic)
+  const master = bip32.fromSeed(seed)
+  const child = master.derivePath(HDPATH)
+  return child.privateKey.toString("hex")
 }
