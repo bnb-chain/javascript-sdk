@@ -33,7 +33,8 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "build": "rm -rf lib && npx babel src -d lib"
+    "build": "rm -rf lib && npx babel src -d lib",
+    "prepublishOnly": "npm run build"
   },
   "babel": {
     "presets": [
@@ -43,6 +44,9 @@
       "@babel/plugin-transform-async-to-generator"
     ]
   },
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "babel-core": "^7.0.0-0"
   }
