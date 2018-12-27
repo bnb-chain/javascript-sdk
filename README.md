@@ -13,24 +13,24 @@ Binance Chain JavaScript API
 generate privatekey, address, keystore, mneonic
 
 ```js
-const privateKey = crypto.generatePrivateKey();
+const privateKey = crypto.generatePrivateKey()
 
-const address = crypto.getAddressFromPrivateKey(privateKey);
+const address = crypto.getAddressFromPrivateKey(privateKey)
 
-const keyStore = crypto.generateKeyStore(privateKey, password);
+const keyStore = crypto.generateKeyStore(privateKey, password)
 
-const mneonic = crypto.getMnemonicFromPrivateKey(privateKey);
-crypto.generateMnemonic(); //24
+const mneonic = crypto.getMnemonicFromPrivateKey(privateKey)
+crypto.generateMnemonic() //24
 ```
 
 recover privatekey, address from keystore, mneonic
 
 ```js
-const privateKey = crypto.getPrivateKeyFromKeyStore(keystore, password);
+const privateKey = crypto.getPrivateKeyFromKeyStore(keystore, password)
 
-const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic);
+const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
 
-const address = crypto.getAddressFromPrivateKey(privateKey);
+const address = crypto.getAddressFromPrivateKey(privateKey)
 ```
 
 ## amino (js-amino)
@@ -40,9 +40,9 @@ const address = crypto.getAddressFromPrivateKey(privateKey);
 serialize object to hex string which compatible with go-amino
 
 ```js
-amino.marshalBinary(data);
+amino.marshalBinary(data)
 
-amino.marshalBinaryBare(data);
+amino.marshalBinaryBare(data)
 ```
 
 ## BncClient
@@ -63,20 +63,25 @@ amino.marshalBinaryBare(data);
 
 ```js
 
-import BncClient from '@binance/bnc-web-lib/';
+//common
+const BncClient = require('@binance/bnc-js')
 
-const client = new BncClient("https://xxx.api.com/");
-client.initChain();
+//es6
+import BncClient from '@binance/bnc-js'
+
+
+const client = new BncClient("https://xxx.api.com/")
+client.initChain()
 ```
 
 ### create
 
 ```js
-client.createAccount();
+client.createAccount()
 
-client.createAccountWithKeystore([password]);
+client.createAccountWithKeystore([password])
 
-client.createAccountWithMneomnic();
+client.createAccountWithMneomnic()
 ```
 
 ### Parameters
@@ -98,11 +103,11 @@ client.createAccountWithMneomnic();
 ### recover
 
 ```js
-client.recoverAccountFromKeystore(keystore, password);
+client.recoverAccountFromKeystore(keystore, password)
 
-client.recoverAccountFromMneomnic(mnemonic);
+client.recoverAccountFromMneomnic(mnemonic)
 
-client.recoverAccountFromPrivateKey(privateKey);
+client.recoverAccountFromPrivateKey(privateKey)
 ```
 
 ### Parameters
@@ -124,7 +129,7 @@ client.recoverAccountFromPrivateKey(privateKey);
 ### getBalance
 
 ```js
-client.getBalance(address);
+client.getBalance(address)
 ```
 
 ### Parameters
@@ -141,13 +146,13 @@ client.getBalance(address);
     locked: "1000.00000000",
     frozen: "0.00000000"
   }
-];
+]
 ```
 
 ### placeOrder
 
 ```js
-client.placeOrder(address, symbol, side, price, quantity, sequence);
+client.placeOrder(address, symbol, side, price, quantity, sequence)
 ```
 
 ### Parameters
@@ -183,7 +188,7 @@ client.placeOrder(address, symbol, side, price, quantity, sequence);
 ### transfer
 
 ```js
-client.transfer(fromAddress, toAddress, amount, asset, memo);
+client.transfer(fromAddress, toAddress, amount, asset, memo)
 ```
 
 ### Parameters
@@ -217,7 +222,7 @@ client.transfer(fromAddress, toAddress, amount, asset, memo);
 ### cancelOrder
 
 ```js
-client.cancelOrder(fromAddress, symbols, orderIds, refids, sequence);
+client.cancelOrder(fromAddress, symbols, orderIds, refids, sequence)
 ```
 
 ### Parameters
@@ -249,7 +254,7 @@ client.cancelOrder(fromAddress, symbols, orderIds, refids, sequence);
 ### getAccount
 
 ```js
-client.getAccount(address);
+client.getAccount(address)
 ```
 
 ### Parameters
