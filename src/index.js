@@ -122,6 +122,10 @@ class BncClient {
    * @param {Number} sequence
    */
   async placeOrder(address, symbol, side, price, quantity, sequence) {
+    if(side !== 1 || side !== 2){
+      throw new Error(`side can only be 1 or 2`);
+    }
+
     const accCode = crypto.decodeAddress(address);
 
     if(!sequence){
