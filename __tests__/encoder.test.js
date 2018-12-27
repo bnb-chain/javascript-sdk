@@ -1,53 +1,53 @@
-import * as encoder from '../src/encoder';
-import * as crypto from '../src/crypto';
-import { UVarInt } from '../src/encoder/varint';
+import * as encoder from "../src/encoder"
+import * as crypto from "../src/crypto"
+import { UVarInt } from "../src/encoder/varint"
 
-describe('encoder', () => {
-  it('encode time', () => {
-    let encodedTime = encoder.encodeTime('1973-11-29T21:33:09.123456789Z');
-    encodedTime = encodedTime.toString('hex');
-    expect(encodedTime).toBe('0915cd5b07000000001515cd5b07');
-  });
+describe("encoder", () => {
+  it("encode time", () => {
+    let encodedTime = encoder.encodeTime("1973-11-29T21:33:09.123456789Z")
+    encodedTime = encodedTime.toString("hex")
+    expect(encodedTime).toBe("0915cd5b07000000001515cd5b07")
+  })
 
-  it('encode number', () => {
-    let encodedNumber = encoder.encodeNumber(100000);
-    encodedNumber = encodedNumber.toString('hex');
-    expect(encodedNumber).toBe('c09a0c');
-  });
+  it("encode number", () => {
+    let encodedNumber = encoder.encodeNumber(100000)
+    encodedNumber = encodedNumber.toString("hex")
+    expect(encodedNumber).toBe("c09a0c")
+  })
 
-  it('UVarInt', () => {
-    let encodedNumber = UVarInt.encode(17);
-    encodedNumber = encodedNumber.toString('hex');
-    expect(encodedNumber).toBe('11');
-  });
+  it("UVarInt", () => {
+    let encodedNumber = UVarInt.encode(17)
+    encodedNumber = encodedNumber.toString("hex")
+    expect(encodedNumber).toBe("11")
+  })
 
-  it('encode bool', () => {
-    let encodedTrue = encoder.encodeBool(true);
-    encodedTrue = encodedTrue.toString('hex');
-    expect(encodedTrue).toBe('02');
+  it("encode bool", () => {
+    let encodedTrue = encoder.encodeBool(true)
+    encodedTrue = encodedTrue.toString("hex")
+    expect(encodedTrue).toBe("02")
 
-    let encodedFalse = encoder.encodeBool(false);
-    encodedFalse = encodedFalse.toString('hex');
-    expect(encodedFalse).toBe('00');
-  });
+    let encodedFalse = encoder.encodeBool(false)
+    encodedFalse = encodedFalse.toString("hex")
+    expect(encodedFalse).toBe("00")
+  })
 
-  it('encode string', () => {
-    let encodedString = encoder.encodeString('You are beautiful');
-    encodedString = encodedString.toString('hex');
-    expect(encodedString).toBe('11596f75206172652062656175746966756c');
-  });
+  it("encode string", () => {
+    let encodedString = encoder.encodeString("You are beautiful")
+    encodedString = encodedString.toString("hex")
+    expect(encodedString).toBe("11596f75206172652062656175746966756c")
+  })
 
-  it('convertObjectToBytes', () => {
+  it("convertObjectToBytes", () => {
     const jsonObj = {
       address: 1,
       sender: 2,
       symbol: 3,
     }
-    const str = encoder.convertObjectToBytes(jsonObj);
-    expect(str.toString('hex')).toBe('7b2261646472657373223a312c2273656e646572223a322c2273796d626f6c223a337d');
-  });
+    const str = encoder.convertObjectToBytes(jsonObj)
+    expect(str.toString("hex")).toBe("7b2261646472657373223a312c2273656e646572223a322c2273796d626f6c223a337d")
+  })
 
-  it('marshalBinary', () => {
+  it("marshalBinary", () => {
     const stdTx = {
       "msg": [{
         "sender": Buffer.from([182, 86, 29, 204, 16, 65, 48, 5, 154, 124, 8, 244, 140, 100, 97, 12, 31, 111, 144, 100]),
@@ -68,10 +68,10 @@ describe('encoder', () => {
       }],
       "memo": "",
       "msgType": "StdTx"
-    };
+    }
 
-    const bytes = encoder.marshalBinary(stdTx);
-    expect(bytes).toBe('db01f0625dee0a65ce6dc0430a14b6561dcc104130059a7c08f48c64610c1f6f9064122b423635363144434331303431333030353941374330384634384336343631304331463646393036342d31311a0b4254432d3543345f424e4220042802308084af5f3880b0b4f8084002126e0a26eb5ae9872103baf53d1424f8ea83d03a82f6d157b5401c4ea57ffb8317872e15a19fc9b7ad7b1240e79a6606d28cf07b9cc6f566b524a5282b13beccc3162376c79f392620c95a447b19f64e761e22a7a3bc311a780e7d9fdd521e2f7edec25308c5bac6aa1c0a3118022014');
+    const bytes = encoder.marshalBinary(stdTx)
+    expect(bytes).toBe("db01f0625dee0a65ce6dc0430a14b6561dcc104130059a7c08f48c64610c1f6f9064122b423635363144434331303431333030353941374330384634384336343631304331463646393036342d31311a0b4254432d3543345f424e4220042802308084af5f3880b0b4f8084002126e0a26eb5ae9872103baf53d1424f8ea83d03a82f6d157b5401c4ea57ffb8317872e15a19fc9b7ad7b1240e79a6606d28cf07b9cc6f566b524a5282b13beccc3162376c79f392620c95a447b19f64e761e22a7a3bc311a780e7d9fdd521e2f7edec25308c5bac6aa1c0a3118022014")
   })
 
-});
+})
