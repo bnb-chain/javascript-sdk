@@ -1,4 +1,4 @@
-import * as encoder from "../src/encoder"
+import { amino as encoder } from "../src/"
 import { UVarInt } from "../src/encoder/varint"
 
 describe("encoder", () => {

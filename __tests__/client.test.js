@@ -1,5 +1,5 @@
 import BncClient from "../src"
-import * as crypto from "../src/crypto"
+import { crypto } from "../src"
 
 const mnemonic = "fragile duck lunch coyote cotton pole gym orange share muscle impulse mom pause isolate define oblige hungry sound stereo spider style river fun account"
 
@@ -20,14 +20,14 @@ describe("BncClient test", async () => {
 
   it("create account", async () => {
     const client = await getClient()
-    const res = client.createAccount()
+    const res = client.account.createAccount()
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("create account with keystore", async () => {
     const client = await getClient()
-    const res = client.createAccountWithKeystore("12345678")
+    const res = client.account.createAccountWithKeystore("12345678")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
     expect(res.keystore).toBeTruthy()
@@ -35,7 +35,7 @@ describe("BncClient test", async () => {
 
   it("create account with mneomnic", async () => {
     const client = await getClient()
-    const res = client.createAccountWithMneomnic()
+    const res = client.account.createAccountWithMneomnic()
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
     expect(res.mnemonic).toBeTruthy()
@@ -43,14 +43,14 @@ describe("BncClient test", async () => {
 
   it("recover account from keystore", async () => {
     const client = await getClient()
-    const res = client.recoverAccountFromKeystore(keystore, "12345qwert!S")
+    const res = client.account.recoverAccountFromKeystore(keystore, "12345qwert!S")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("recover account from mneomnic", async () => {
     const client = await getClient()
-    const res = client.recoverAccountFromMneomnic(mnemonic)
+    const res = client.account.recoverAccountFromMneomnic(mnemonic)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
@@ -58,15 +58,21 @@ describe("BncClient test", async () => {
   it("recover account from privatekey", async () => {
     const client = await getClient()
     const pk = crypto.generatePrivateKey()
-    const res = client.recoverAccountFromPrivateKey(pk)
+    const res = client.account.recoverAccountFromPrivateKey(pk)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("get balance", async () => {
     const client = await getClient()
-    const res = await client.getBalance("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+    const res = await client.account.getBalance("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
     expect(res.length).toBeGreaterThanOrEqual(0)
+  })
+
+  it("get account", async () => {
+    const client = await getClient()
+    const res = await client.account.getAccount("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+    expect(res.status).toBe(200)
   })
 
   it("transfer bnb to other wallet", async () => {
@@ -75,10 +81,10 @@ describe("BncClient test", async () => {
     expect(res.result[0].code).toBe(0)
   })
 
-  it("get account", async () => {
+  it("transfer bnb to other wallet", async () => {
     const client = await getClient()
-    const res = await client.getAccount("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
-    expect(res.status).toBe(200)
+    const res = await client.transfer(fromAddress, targetAddress, 5, "BNB", "hello world")
+    expect(res.result[0].code).toBe(0)
   })
 
 })
