@@ -1,5 +1,5 @@
 {
-  "name": "@binance/bnc-js",
+  "name": "@binance-chain/javascript-sdk",
   "version": "2.1.3",
   "main": "./lib/index.js",
   "scripts": {
