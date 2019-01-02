@@ -129,10 +129,9 @@ class BncClient {
 
     const accCode = crypto.decodeAddress(address)
 
-    if(!sequence){
+    if(sequence !== 0 && !sequence){
       const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
-      sequence = data.sequence
-      console.log(data)
+      sequence = data.result && data.result.sequence
     }
 
     const placeOrderMsg = {
@@ -209,13 +208,13 @@ class BncClient {
   async _sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo="", sync=false ) {
     if(!sequence && address) {
       const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
-      sequence = data.sequence
-      this.account_number = data.account_number
+      sequence = data.result.sequence
+      this.account_number = data.result.account_number
     }
 
     if(!this.account_number){
       const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
-      this.account_number = data.account_number
+      this.account_number = data.result.account_number
     }
 
     const batchBytes = []
