@@ -1,6 +1,6 @@
 # Binance Chain JavaScript SDK
 
-The Binance Chain JavaScript SDK includes the following core components:
+The Binance Chain JavaScript SDK allows browsers and node.js clients to interact with Binance Chain. It includes the following core components:
 
 * **crypto** - core cryptographic functions.
 * **amino** - [amino](https://github.com/binance-chain/docs-site/blob/master/docs/encoding.md) (protobuf-like) encoding and decoding of transactions.
