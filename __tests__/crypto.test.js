@@ -1,4 +1,5 @@
-import * as crypto from "../src/crypto"
+// import * as crypto from "../src/crypto"
+import { crypto } from '../src'
 import bip39 from "bip39"
 
 const privateKey = crypto.generatePrivateKey()

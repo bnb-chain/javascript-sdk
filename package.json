@@ -1,7 +1,7 @@
 {
   "name": "@binance-chain/javascript-sdk",
-  "version": "2.1.3",
-  "main": "./lib/index.js",
+  "version": "2.1.8",
+  "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "build": "rm -rf lib && npx babel src -d lib",

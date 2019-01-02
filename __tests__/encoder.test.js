@@ -1,5 +1,4 @@
 import * as encoder from "../src/encoder"
-import * as crypto from "../src/crypto"
 import { UVarInt } from "../src/encoder/varint"
 
 describe("encoder", () => {

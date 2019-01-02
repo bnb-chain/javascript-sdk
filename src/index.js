@@ -1,5 +1,4 @@
 import 'babel-polyfill'
-// import "regenerator-runtime/runtime"
 import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import Transaction from "./tx"
@@ -124,7 +123,7 @@ class BncClient {
    * @param {Number} sequence
    */
   async placeOrder(address, symbol, side, price, quantity, sequence) {
-    if(side !== 1 || side !== 2){
+    if(side !== 1 && side !== 2){
       throw new Error("side can only be 1 or 2")
     }
 
@@ -393,8 +392,6 @@ class BncClient {
 
 }
 
-export { crypto, amino, Transaction }
-
-export default BncClient
-
 module.exports = BncClient
+module.exports.crypto = crypto
+module.exports.amino = amino
