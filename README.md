@@ -188,7 +188,7 @@ client.placeOrder(address, symbol, side, price, quantity, sequence)
 ### transfer
 
 ```js
-client.transfer(fromAddress, toAddress, amount, asset, memo)
+client.transfer(fromAddress, toAddress, amount, asset, memo, sequence)
 ```
 
 ### Parameters
@@ -202,6 +202,8 @@ client.transfer(fromAddress, toAddress, amount, asset, memo)
 - asset - **String**
 
 - memo - **String**
+
+- sequence - **Number**: sequence from account
 
 ### Returns
 

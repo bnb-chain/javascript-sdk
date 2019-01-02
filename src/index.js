@@ -47,7 +47,7 @@ class BncClient {
    * @param {String} asset
    * @param {String} memo
    */
-  async transfer(fromAddress, toAddress, amount, asset, memo) {
+  async transfer(fromAddress, toAddress, amount, asset, memo, sequence) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
     amount = amount * Math.pow(10, 8)
@@ -86,7 +86,7 @@ class BncClient {
       }]
     }
 
-    return await this._sendTransaction(msg, signMsg, fromAddress, null, memo, true)
+    return await this._sendTransaction(msg, signMsg, fromAddress, sequence, memo, true)
   }
 
   async cancelOrder(fromAddress, symbols, orderIds, refids, sequence) {
