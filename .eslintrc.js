@@ -14,8 +14,8 @@ module.exports = {
   "rules": {
     "indent": [ "error", 2],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "double"],
-    "semi": ["error", "never"],
+    "quotes": ["warn", "double"],
+    "semi": ["warn", "never"],
     "no-buffer-constructor": 1
   }
 };
