@@ -9,7 +9,7 @@ const targetAddress = "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh"
 const fromAddress = "bnc1ss57e8sa7xnwq030k2ctr775uac9gjzg6tfrv7"
 
 const getClient = async () => {
-  const client = new BncClient("https://dex-api.fdgahl.cn")
+  const client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic).toString("hex")
   client.setPrivateKey(privateKey)
@@ -65,15 +65,18 @@ describe("BncClient test", async () => {
 
   it("get balance", async () => {
     const client = await getClient()
-    const res = await client.getBalance("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+    const res = await client.getBalance(targetAddress)
     expect(res.length).toBeGreaterThanOrEqual(0)
   })
 
-  it("transfer bnb to other wallet", async () => {
-    const client = await getClient()
-    const res = await client.transfer(fromAddress, targetAddress, 100, "BNB", "hello world")
-    expect(res.result[0].code).toBe(0)
-  })
+  // it("transfer bnb to other wallet", async () => {
+  //   const client = await getClient()
+  //   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  //   const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+  //   const sequence = account.result && account.result.sequence
+  //   const res = await client.transfer(addr, targetAddress, 100, "BNB", "hello world", +sequence)
+  //   expect(res.result[0].code).toBe(0)
+  // })
 
   it("get account", async () => {
     const client = await getClient()
