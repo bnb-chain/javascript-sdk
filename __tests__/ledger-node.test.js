@@ -1,4 +1,4 @@
-const { App, Transports } = require("../src/utils/ledger");
+const { App, Transports } = require("../src/ledger");
 
 const TIMEOUT = 1000;
 const EXPECTED_MAJOR = 0;
