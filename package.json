@@ -4,6 +4,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
+    "test:browser": "./run-browser-tests.sh",
     "test:ledger": "yarn test --runTestsByPath --verbose __tests__/ledger-node.test.js",
     "build": "rm -rf lib && npx babel src -d lib",
     "prepublishOnly": "npm run build",
@@ -45,7 +46,10 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-preset-stage-2": "^6.24.1",
-    "eslint": "^5.11.1"
+    "browserify": "^16.2.3",
+    "eslint": "^5.11.1",
+    "http-server": "^0.11.1",
+    "opn-cli": "^4.0.0"
   },
   "babel": {
     "presets": [

@@ -1,3 +1,6 @@
+browser-tests/ledger.js
+*.pem
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

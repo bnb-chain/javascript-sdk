@@ -15,11 +15,12 @@
  *  limitations under the License.
  ********************************************************************************/
 
+require("babel-polyfill")
+
 const Ledger = module.exports
 
 Ledger.App = require("./ledger-app")
 
 Ledger.Transports = {
-  node: require("@ledgerhq/hw-transport-node-hid").default,
   u2f: require("@ledgerhq/hw-transport-u2f").default,
 }
