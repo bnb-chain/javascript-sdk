@@ -4,6 +4,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
+    "test:ledger": "yarn test --runTestsByPath --verbose __tests__/ledger-node.test.js",
     "build": "rm -rf lib && npx babel src -d lib",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__"
