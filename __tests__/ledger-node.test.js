@@ -1,4 +1,4 @@
-const { App, comm_node: comm } = require("../src/utils/ledger");
+const { App, Transports } = require("../src/utils/ledger");
 
 const TIMEOUT = 1000;
 const EXPECTED_MAJOR = 0;
@@ -8,14 +8,17 @@ const EXPECTED_PATCH = 1;
 describe("get_version", function() {
   let response;
 
-  beforeAll(() => {
-    return comm.create_async(TIMEOUT, true).then(function(comm) {
-      let app = new App(comm);
-      return app.get_version().then(function(result) {
-        response = result;
-        console.log(response);
-      });
-    });
+  beforeAll(async () => {
+    console.log("Attempting to connect to hardware wallet...")
+    try {
+      const transport = await Transports.node.create(TIMEOUT)
+      let app = new App(transport)
+      const version = await app.get_version()
+      response = version
+      console.log(response)
+    } catch (err) {
+      console.error("Unable to connect to hardware wallet. Please connect it and open the app.", err)
+    }
   });
 
   it("return_code is 0x9000", function() {

@@ -592,6 +592,31 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@ledgerhq/hw-transport-node-hid@^4.33.3":
+  version "4.33.3"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid/-/hw-transport-node-hid-4.33.3.tgz#5e96dca2be0a23d80814303f262398087b208a6a"
+  integrity sha512-hmNAm7k385RJXY38hVUpzYgGgyk9QjScD3erNlFCTO8FnnxmEJCFUmVhWkv4sTwufuUJSpXL3ZXXNZ44qLMJpg==
+  dependencies:
+    "@ledgerhq/hw-transport" "^4.32.0"
+    lodash "^4.17.11"
+    node-hid "^0.7.2"
+    usb "^1.3.3"
+
+"@ledgerhq/hw-transport-u2f@^4.32.0":
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-u2f/-/hw-transport-u2f-4.32.0.tgz#847969744aafecfa6c16bc481fe6615814ee2385"
+  integrity sha512-xzY+Q7ObVVv/V/wxvp1eEbDhFf+LFnavQGvqw8EZkCEmkX4iKh2w7AH+B8k1XWS+Mpa3CiG3TVQQE85mf+6jQg==
+  dependencies:
+    "@ledgerhq/hw-transport" "^4.32.0"
+    u2f-api "0.2.7"
+
+"@ledgerhq/hw-transport@^4.32.0":
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.32.0.tgz#592b9dc51459cb1cd31ce9444cf943f627bc4beb"
+  integrity sha512-Wgsk9UHC4RShqYoDeIEeKgHZOvNCtB0WWIG0xqlVPzS+IcKDkIxtXQw7hTA7GQSuDuGeauVtlbTQ5yat6+2/BA==
+  dependencies:
+    events "^3.0.0"
+
 abab@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.0.tgz#aba0ab4c5eee2d4c79d3487d85450fb2376ebb0f"
@@ -1973,6 +1998,11 @@ estraverse@^4.0.0, estraverse@^4.1.0, estraverse@^4.1.1, estraverse@^4.2.0:
 esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
+
+events@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/events/-/events-3.0.0.tgz#9a0a0dfaf62893d92b875b8f2698ca4114973e88"
+  integrity sha512-Dc381HFWJzEOhQ+d8pkNon++bk9h6cdAoAj4iE6Q4y6xgTzySWXlKn05/TVNpjnfRqi/X0EpJEJohPjNI3zpVA==
 
 evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
   version "1.0.3"
@@ -3469,7 +3499,7 @@ nan@^2.10.0, nan@^2.2.1, nan@^2.9.2:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
 
-nan@^2.12.1:
+nan@^2.12.1, nan@^2.8.0:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.12.1.tgz#7b1aa193e9aa86057e3c7bbd0ac448e770925552"
   integrity sha512-JY7V6lRkStKcKTvHO5NVSQRv+RV+FIL5pvDoLiAtSL9pKlC5x9PKQcZDsq7m4FO4d57mkhC6Z+QhAh3Jdk5JFw==
@@ -3518,7 +3548,7 @@ node-abi@^2.2.0:
   dependencies:
     semver "^5.4.1"
 
-node-hid@^0.7.6:
+node-hid@^0.7.2, node-hid@^0.7.6:
   version "0.7.6"
   resolved "https://registry.yarnpkg.com/node-hid/-/node-hid-0.7.6.tgz#61523694f1111d209fca55bb704732dad029f3bc"
   integrity sha512-cjbjL1CmOpImKQrqkvQKZUWuzvofwECZQ50zoih5vtPRowIZ4TFJDTN3tJYfVhbQYM9PGqDFXLcTILjx9EPvzw==
@@ -3543,6 +3573,22 @@ node-notifier@^5.2.1:
 node-pre-gyp@^0.10.0:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.3.tgz#3070040716afdc778747b61b6887bf78880b80fc"
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4"
+
+node-pre-gyp@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.11.0.tgz#db1f33215272f692cd38f03238e3e9b47c5dd054"
+  integrity sha512-TwWAOZb0j7e9eGaf9esRx3ZcLaE5tQ2lvYy1pb5IAaG1a2e2Kv5Lms1Y4hpj+ciXJRofIxxlt5haeQ/2ANeE0Q==
   dependencies:
     detect-libc "^1.0.2"
     mkdirp "^0.5.1"
@@ -4751,6 +4797,11 @@ typeforce@^1.11.5:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/typeforce/-/typeforce-1.16.0.tgz#060f871420f4ed90d411e0606bebc62a0889ad55"
 
+u2f-api@0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/u2f-api/-/u2f-api-0.2.7.tgz#17bf196b242f6bf72353d9858e6a7566cc192720"
+  integrity sha512-fqLNg8vpvLOD5J/z4B6wpPg4Lvowz1nJ9xdHcCzdUPKcFE/qNCceV2gNZxSJd5vhAZemHr/K/hbzVA0zxB5mkg==
+
 uglify-js@^3.1.4:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.4.9.tgz#af02f180c1207d76432e473ed24a28f4a782bae3"
@@ -4810,6 +4861,14 @@ uri-js@^4.2.2:
 urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
+
+usb@^1.3.3:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/usb/-/usb-1.5.0.tgz#3e07b23c6dacf06a7c8801ae913926702a818218"
+  integrity sha512-/0stiQEmweuO2BKv2avzQQ8ypDUjo4Osz5sSEi+d0F4Rc+ddX1xED3uf4Tkelc1eADlfn0JQZYHP0bI7CNDA0Q==
+  dependencies:
+    nan "^2.8.0"
+    node-pre-gyp "^0.11.0"
 
 use@^3.1.0:
   version "3.1.1"

@@ -1,7 +1,5 @@
 /********************************************************************************
- *   Ledger Node JS API
- *   (c) 2016-2017 Ledger
- *   (c) 2018 ZondaX GmbH
+ *   Binance Chain Ledger App Interface
  *   (c) 2018-2019 Binance
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,56 +15,27 @@
  *  limitations under the License.
  ********************************************************************************/
 
-"use strict";
-
-var LedgerApp = function(comm) {
-  this.comm = comm;
-  this.comm.setScrambleKey("CSM");
+var LedgerApp = function(transport) {
+  this.transport = transport
+  this.transport.setScrambleKey("CSM")
 };
 
-const CLA = 0x55;
-const INS_GET_VERSION = 0x00;
+const CLA = 0x55
+const INS_GET_VERSION = 0x00
+const ACCEPT_STATUSES = [0x9000]
 
-function serialize(CLA, INS, p1 = 0, p2 = 0, data = null) {
-  let size = 5;
-  if (data != null) {
-    if (data.length > 255) {
-      throw new Error("maximum data size = 255");
-    }
-    size += data.length;
-  }
-  let buffer = Buffer.alloc(size);
-
-  buffer[0] = CLA;
-  buffer[1] = INS;
-  buffer[2] = p1;
-  buffer[3] = p2;
-  buffer[4] = 0;
-
-  if (data != null) {
-    buffer[4] = data.length;
-    buffer.set(data, 5);
-  }
-
-  return buffer;
+LedgerApp.prototype.get_version = async function() {
+  const result = {};
+  let apduResponse = await this.transport.send(
+    CLA, INS_GET_VERSION, 0, 0, Buffer.alloc(0), ACCEPT_STATUSES)
+  apduResponse = Buffer.from(apduResponse, "hex")
+  let error_code_data = apduResponse.slice(-2)
+  result["test_mode"] = apduResponse[0] !== 0
+  result["major"] = apduResponse[1]
+  result["minor"] = apduResponse[2]
+  result["patch"] = apduResponse[3]
+  result["return_code"] = error_code_data[0] * 256 + error_code_data[1]
+  return result
 }
 
-LedgerApp.prototype.get_version = function() {
-  var buffer = serialize(CLA, INS_GET_VERSION, 0, 0);
-
-  return this.comm
-    .exchange(buffer.toString("hex"), [0x9000])
-    .then(function(apduResponse) {
-      var result = {};
-      apduResponse = Buffer.from(apduResponse, "hex");
-      let error_code_data = apduResponse.slice(-2);
-      result["test_mode"] = apduResponse[0] !== 0;
-      result["major"] = apduResponse[1];
-      result["minor"] = apduResponse[2];
-      result["patch"] = apduResponse[3];
-      result["return_code"] = error_code_data[0] * 256 + error_code_data[1];
-      return result;
-    });
-};
-
-module.exports = LedgerApp;
+module.exports = LedgerApp

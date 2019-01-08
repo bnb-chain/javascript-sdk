@@ -1,6 +1,5 @@
 /********************************************************************************
- *   Ledger Node JS API
- *   (c) 2016-2017 Ledger
+ *   Binance Chain Ledger App Interface
  *   (c) 2018-2019 Binance
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +15,13 @@
  *  limitations under the License.
  ********************************************************************************/
 
-const ledger = module.exports;
+const Ledger = module.exports
 
-ledger.comm_node = require("./ledger-comm-node");
-ledger.comm_u2f = require("./ledger-comm-u2f");
-ledger.App = require("./ledger-app");
+Ledger.App = require("./ledger-app")
 
-module.exports = ledger;
+Ledger.Transports = {
+  node: require("@ledgerhq/hw-transport-node-hid").default,
+  u2f: require("@ledgerhq/hw-transport-u2f").default,
+}
+
+module.exports = Ledger
