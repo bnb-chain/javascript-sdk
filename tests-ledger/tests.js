@@ -1,6 +1,6 @@
 /* global QUnit */
 
-const Ledger = window.Ledger
+const Ledger = typeof window !== "undefined" ? window.Ledger : require("../src/ledger/index").default
 
 const TIMEOUT = 1000;
 const EXPECTED_MAJOR = 0;

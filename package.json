@@ -4,8 +4,9 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "test:browser": "./run-browser-tests.sh",
-    "test:ledger": "yarn test --runTestsByPath --verbose __tests__/ledger-node.test.js",
+    "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
+    "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
+    "test:ledger:jest": "yarn test --runTestsByPath --verbose __tests__/ledger-node.test.js",
     "build": "rm -rf lib && npx babel src -d lib",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__"
@@ -50,7 +51,7 @@
     "browserify": "^16.2.3",
     "eslint": "^5.11.1",
     "http-server": "^0.11.1",
-    "opn-cli": "^4.0.0"
+    "qunit": "^2.9.1"
   },
   "babel": {
     "presets": [
