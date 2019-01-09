@@ -3,6 +3,7 @@ import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import Transaction from "./tx"
 import HttpRequest from "./utils/request"
+import Ledger from "./ledger"
 
 const api = {
   broadcast: "/api/v1/broadcast",
@@ -397,3 +398,4 @@ class BncClient {
 module.exports = BncClient
 module.exports.crypto = crypto
 module.exports.amino = amino
+module.exports.ledger = Ledger
