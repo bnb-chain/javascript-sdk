@@ -13,7 +13,7 @@ describe("get_version", function() {
     try {
       const transport = await Transports.node.create(TIMEOUT)
       let app = new App(transport)
-      const version = await app.get_version()
+      const version = await app.getVersion()
       response = version
       console.log(response)
     } catch (err) {

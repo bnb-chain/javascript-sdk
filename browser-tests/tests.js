@@ -14,7 +14,7 @@ QUnit.begin(async function() {
   try {
     const transport = await Ledger.Transports.u2f.create(TIMEOUT)
     let app = new Ledger.App(transport)
-    const version = await app.get_version()
+    const version = await app.getVersion()
     response = version
     console.log(response)
   } catch (err) {
