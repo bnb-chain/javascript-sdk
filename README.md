@@ -6,7 +6,7 @@ The Binance Chain JavaScript SDK allows browsers and node.js clients to interact
 * **amino** - [amino](https://github.com/binance-chain/docs-site/blob/master/docs/encoding.md) (protobuf-like) encoding and decoding of transactions.
 * **client** - implementations of Binance Chain transaction types, such as for transfers and trading.
 * **accounts** - management of "accounts" and wallets, including seed and encrypted mnemonic generation.
-* **ledger** - Ledger Nano S/X support via HID, U2F and Web BLE (Bluetooth). _WIP_
+* **ledger** - Ledger Nano S/X support via HID, U2F and Web BLE (Bluetooth).
 
 # Installation
 

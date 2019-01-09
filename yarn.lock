@@ -610,6 +610,14 @@
     "@ledgerhq/hw-transport" "^4.32.0"
     u2f-api "0.2.7"
 
+"@ledgerhq/hw-transport-web-ble@^4.32.0":
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-web-ble/-/hw-transport-web-ble-4.32.0.tgz#5bb8d4e4d62bd0f8ec2f10775831d64c70f8350f"
+  integrity sha512-RZxllrRCGcYd6A5Oo/ctUOmF883/51YU/bl4nBO/+ukQvUUdbwN7mBIyy5wouZWKvRjGn1HxexpyB0mtSRCwDA==
+  dependencies:
+    "@ledgerhq/hw-transport" "^4.32.0"
+    rxjs "^6.3.3"
+
 "@ledgerhq/hw-transport@^4.32.0":
   version "4.32.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.32.0.tgz#592b9dc51459cb1cd31ce9444cf943f627bc4beb"
@@ -4951,7 +4959,7 @@ run-async@^2.2.0:
   dependencies:
     is-promise "^2.1.0"
 
-rxjs@^6.1.0:
+rxjs@^6.1.0, rxjs@^6.3.3:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
   dependencies:
