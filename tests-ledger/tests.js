@@ -1,24 +1,35 @@
 /* global QUnit */
 
-let Ledger
-let isBrowser
+const { test } = QUnit
 
-// tests support both browser and node. find out which we're in
-if (typeof window !== "undefined") {
-  isBrowser = true
-  Ledger = window.Ledger
-} else {
-  isBrowser = false // is node.js
-  Ledger = require("../src/ledger/index")
-}
-
-const TIMEOUT = 1000
+const LONG_TIMEOUT = 15000
 const EXPECTED_MAJOR = 1
 const EXPECTED_MINOR = 0
 const EXPECTED_PATCH = 1
 
 let app
 let response
+
+const getApp = async function(timeout = LONG_TIMEOUT) {
+  let Ledger, isBrowser
+
+  // tests support both browser and node. find out which we're in
+  if (typeof window !== "undefined") {
+    isBrowser = true
+    Ledger = window.Ledger
+  } else {
+    isBrowser = false // is node.js
+    Ledger = require("../src/ledger/index")
+  }
+
+  const transClass = isBrowser
+    ? Ledger.transports.u2f
+    : Ledger.transports.node
+  const transport = await transClass.create(timeout)
+  app = new Ledger.App(transport)
+
+  return app
+}
 
 // init connection
 
@@ -30,11 +41,7 @@ QUnit.begin(async function() {
     "If the device is not connected or the app is not open, exit and rerun this test when it is."
   )
   try {
-    const transClass = isBrowser
-      ? Ledger.Transports.u2f
-      : Ledger.Transports.node
-    const transport = await transClass.create(TIMEOUT)
-    app = new Ledger.App(transport)
+    app = await getApp()
   } catch (err) {
     console.error(
       "Unable to connect to hardware wallet. Please connect it and open the app.",
@@ -60,27 +67,27 @@ QUnit.module("GET_VERSION", {
   }
 })
 
-QUnit.test("return_code is 0x9000", function(assert) {
+test("return_code is 0x9000", function(assert) {
   assert.ok(response.return_code === 0x9000, "Passed")
 })
 
-QUnit.test("has property test_mode", function(assert) {
+test("has property test_mode", function(assert) {
   assert.ok(response.test_mode !== undefined, "Passed")
 })
 
-QUnit.test("has property major", function(assert) {
+test("has property major", function(assert) {
   assert.ok(response.major !== undefined, "Passed")
 })
 
-QUnit.test("has property minor", function(assert) {
+test("has property minor", function(assert) {
   assert.ok(response.minor !== undefined, "Passed")
 })
 
-QUnit.test("has property patch", function(assert) {
+test("has property patch", function(assert) {
   assert.ok(response.patch !== undefined, "Passed")
 })
 
-QUnit.test("app has matching version", function(assert) {
+test("app has matching version", function(assert) {
   assert.ok(response.major === EXPECTED_MAJOR, "Passed")
   assert.ok(response.minor === EXPECTED_MINOR, "Passed")
   assert.ok(response.patch === EXPECTED_PATCH, "Passed")
@@ -103,15 +110,15 @@ QUnit.module("PUBLIC_KEY_SECP256K1", {
   }
 })
 
-QUnit.test("return_code is 0x9000", function(assert) {
+test("return_code is 0x9000", function(assert) {
   assert.ok(response.return_code === 0x9000, "Passed")
 })
 
-QUnit.test("has property pk", function(assert) {
+test("has property pk", function(assert) {
   assert.ok(response.pk !== undefined, "Passed")
 })
 
-QUnit.test("pk is the correct size", function(assert) {
+test("pk is the correct size", function(assert) {
   assert.equal(response.pk.length, 64, "Passed")
 })
 
@@ -121,8 +128,9 @@ QUnit.module("SIGN_SECP256K1", {
   before: async function() {
     try {
       // eslint-disable-next-line quotes
-      const txMsg = '{"account_number":0,"chain_id":"bnbchain"},"msgs":["msg"],"sequence":1}'
+      const txMsg = `{"account_number":1,"chain_id":"bnbchain","fee":{"amount":[],"gas":0},"memo":"","msgs":["msg"],"sequence":1}`
       const hdPath = [44, 118, 0, 0, 0]
+      // app = await getApp(LONG_TIMEOUT)
       response = await app.signSecp256k1(txMsg, hdPath)
       console.log(response)
     } catch (err) {
@@ -134,14 +142,14 @@ QUnit.module("SIGN_SECP256K1", {
   }
 })
 
-QUnit.test("return_code is 0x9000", function(assert) {
+test("return_code is 0x9000", function(assert) {
   assert.ok(response.return_code === 0x9000, "Passed")
 })
 
-QUnit.test("has property signature", function(assert) {
+test("has property signature", function(assert) {
   assert.ok(response.signature !== undefined, "Passed")
 })
 
-QUnit.test("signature is the correct size", function(assert) {
-  assert.equal(response.signature.length, 71, "Passed")
+test("signature is the correct size", function(assert) {
+  assert.ok(response.signature.length === 70 || response.signature.length === 71, "Passed")
 })

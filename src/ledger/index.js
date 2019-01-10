@@ -19,7 +19,7 @@ const Ledger = module.exports
 
 Ledger.App = require("./ledger-app")
 
-Ledger.Transports = {
+Ledger.transports = {
   node: require("@ledgerhq/hw-transport-node-hid").default,
   u2f: require("@ledgerhq/hw-transport-u2f").default,
   wble: require("@ledgerhq/hw-transport-web-ble").default,

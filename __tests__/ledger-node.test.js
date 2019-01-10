@@ -1,4 +1,4 @@
-const { App, Transports } = require("../src/ledger")
+const { App, transports } = require("../src/ledger")
 
 const TIMEOUT = 1000
 const EXPECTED_MAJOR = 0
@@ -11,7 +11,7 @@ describe("get_version", function() {
   beforeAll(async () => {
     console.log("Attempting to connect to hardware wallet...")
     try {
-      const transport = await Transports.node.create(TIMEOUT)
+      const transport = await transports.node.create(TIMEOUT)
       let app = new App(transport)
       const version = await app.getVersion()
       response = version
