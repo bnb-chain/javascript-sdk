@@ -1,12 +1,12 @@
-const { App, Transports } = require("../src/ledger");
+const { App, Transports } = require("../src/ledger")
 
-const TIMEOUT = 1000;
-const EXPECTED_MAJOR = 0;
-const EXPECTED_MINOR = 1;
-const EXPECTED_PATCH = 1;
+const TIMEOUT = 1000
+const EXPECTED_MAJOR = 0
+const EXPECTED_MINOR = 1
+const EXPECTED_PATCH = 1
 
 describe("get_version", function() {
-  let response;
+  let response
 
   beforeAll(async () => {
     console.log("Attempting to connect to hardware wallet...")
@@ -19,35 +19,35 @@ describe("get_version", function() {
     } catch (err) {
       console.error("Unable to connect to hardware wallet. Please connect it and open the app.", err)
     }
-  });
+  })
 
   it("return_code is 0x9000", function() {
-    expect(response.return_code).toBe(0x9000);
-  });
+    expect(response.return_code).toBe(0x9000)
+  })
 
   it("has property test_mode", function() {
-    expect(response).toHaveProperty("test_mode");
-  });
+    expect(response).toHaveProperty("test_mode")
+  })
 
   it("has property major", function() {
-    expect(response).toHaveProperty("major");
-  });
+    expect(response).toHaveProperty("major")
+  })
 
   it("has property minor", function() {
-    expect(response).toHaveProperty("minor");
-  });
+    expect(response).toHaveProperty("minor")
+  })
 
   it("has property patch", function() {
-    expect(response).toHaveProperty("patch");
-  });
+    expect(response).toHaveProperty("patch")
+  })
 
   it("test_mode is enabled", function() {
-    expect(response.test_mode).toBe(true);
-  });
+    expect(response.test_mode).toBe(true)
+  })
 
   it("app has matching version", function() {
-    expect(response.major).toBe(EXPECTED_MAJOR);
-    expect(response.minor).toBe(EXPECTED_MINOR);
-    expect(response.patch).toBe(EXPECTED_PATCH);
-  });
-});
+    expect(response.major).toBe(EXPECTED_MAJOR)
+    expect(response.minor).toBe(EXPECTED_MINOR)
+    expect(response.patch).toBe(EXPECTED_PATCH)
+  })
+})
