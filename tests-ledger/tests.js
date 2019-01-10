@@ -22,9 +22,7 @@ const getApp = async function(timeout = LONG_TIMEOUT) {
     Ledger = require("../src/ledger/index")
   }
 
-  const transClass = isBrowser
-    ? Ledger.transports.u2f
-    : Ledger.transports.node
+  const transClass = isBrowser ? Ledger.transports.u2f : Ledger.transports.node
   const transport = await transClass.create(timeout)
   app = new Ledger.App(transport)
 
@@ -122,6 +120,50 @@ test("pk is the correct size", function(assert) {
   assert.equal(response.pk.length, 64, "Passed")
 })
 
+// SIGN CHUNKS
+
+let chunks
+QUnit.module("SIGN CHUNKS", {
+  before: async function() {
+    try {
+      const hdPath = [44, 118, 0, 0, 0]
+      const msg = Buffer.alloc(1234)
+      chunks = app._signGetChunks(msg, hdPath)
+    } catch (err) {
+      // bleh
+      console.error("An error occurred while calling _signGetChunks")
+    }
+  }
+})
+
+test("number of chunks is 6", function(assert) {
+  assert.equal(chunks.length, 6, "Got 6 chunks")
+})
+
+test("chunk 1 is derivation path", function(assert) {
+  assert.equal(chunks[0].length, 1 + 5 * 4, "Chunk 0 contains 21 bytes")
+})
+
+test("chunk 2 is message", function(assert) {
+  assert.equal(chunks[1].length, 250, "Chunk 1 contains 250 bytes")
+})
+
+test("chunk 3 is message", function(assert) {
+  assert.equal(chunks[2].length, 250, "Chunk 2 contains 250 bytes")
+})
+
+test("chunk 4 is message", function(assert) {
+  assert.equal(chunks[3].length, 250, "Chunk 3 contains 250 bytes")
+})
+
+test("chunk 5 is message", function(assert) {
+  assert.equal(chunks[4].length, 250, "Chunk 4 contains 250 bytes")
+})
+
+test("chunk 6 is remainder of message", function(assert) {
+  assert.equal(chunks[5].length, 234, "Chunk 5 contains 234 bytes")
+})
+
 // SIGN_SECP256K1
 
 QUnit.module("SIGN_SECP256K1", {
@@ -151,5 +193,8 @@ test("has property signature", function(assert) {
 })
 
 test("signature is the correct size", function(assert) {
-  assert.ok(response.signature.length === 70 || response.signature.length === 71, "Passed")
+  assert.ok(
+    response.signature.length === 70 || response.signature.length === 71,
+    "Passed"
+  )
 })
