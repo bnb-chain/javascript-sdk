@@ -28,6 +28,7 @@ The general structure of Ledger commands and responses is as follows:
 | 0x6982      | Empty buffer            |
 | 0x6983      | Output buffer too small |
 | 0x6986      | Command not allowed     |
+| 0x6A80      | Incorrect tx data       |
 | 0x6D00      | INS not supported       |
 | 0x6E00      | CLA not supported       |
 | 0x6F00      | Unknown                 |
@@ -82,7 +83,7 @@ First three items in the derivation path will be hardened automatically hardened
 
 | Field   | Type      | Content       | Note                            |
 | ------- | --------- | ------------- | ------------------------------- |
-| PK      | byte (65) | Public Key    |  |
+| PK      | byte (64) | Public Key    |  |
 | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
 ### SIGN_SECP256K1

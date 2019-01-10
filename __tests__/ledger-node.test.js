@@ -41,10 +41,6 @@ describe("get_version", function() {
     expect(response).toHaveProperty("patch")
   })
 
-  it("test_mode is enabled", function() {
-    expect(response.test_mode).toBe(true)
-  })
-
   it("app has matching version", function() {
     expect(response.major).toBe(EXPECTED_MAJOR)
     expect(response.minor).toBe(EXPECTED_MINOR)

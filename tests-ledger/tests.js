@@ -13,8 +13,8 @@ if (typeof window !== "undefined") {
 }
 
 const TIMEOUT = 1000
-const EXPECTED_MAJOR = 0
-const EXPECTED_MINOR = 1
+const EXPECTED_MAJOR = 1
+const EXPECTED_MINOR = 0
 const EXPECTED_PATCH = 1
 
 let app
@@ -80,10 +80,6 @@ QUnit.test("has property patch", function(assert) {
   assert.ok(response.patch !== undefined, "Passed")
 })
 
-QUnit.test("test_mode is enabled", function(assert) {
-  assert.ok(response.test_mode, "Passed")
-})
-
 QUnit.test("app has matching version", function(assert) {
   assert.ok(response.major === EXPECTED_MAJOR, "Passed")
   assert.ok(response.minor === EXPECTED_MINOR, "Passed")
@@ -115,15 +111,19 @@ QUnit.test("has property pk", function(assert) {
   assert.ok(response.pk !== undefined, "Passed")
 })
 
+QUnit.test("pk is the correct size", function(assert) {
+  assert.equal(response.pk.length, 64, "Passed")
+})
+
 // SIGN_SECP256K1
 
 QUnit.module("SIGN_SECP256K1", {
   before: async function() {
     try {
       // eslint-disable-next-line quotes
-      const msg = '{"account_number":0,"chain_id":"bnbchain"},"msgs":["msg"],"sequence":1}'
+      const txMsg = '{"account_number":0,"chain_id":"bnbchain"},"msgs":["msg"],"sequence":1}'
       const hdPath = [44, 118, 0, 0, 0]
-      response = await app.signSecp256k1(msg, hdPath)
+      response = await app.signSecp256k1(txMsg, hdPath)
       console.log(response)
     } catch (err) {
       console.error(
@@ -136,4 +136,12 @@ QUnit.module("SIGN_SECP256K1", {
 
 QUnit.test("return_code is 0x9000", function(assert) {
   assert.ok(response.return_code === 0x9000, "Passed")
+})
+
+QUnit.test("has property signature", function(assert) {
+  assert.ok(response.signature !== undefined, "Passed")
+})
+
+QUnit.test("signature is the correct size", function(assert) {
+  assert.equal(response.signature.length, 71, "Passed")
 })

@@ -173,9 +173,9 @@ class LedgerApp {
       result["patch"] = apduResponse[3]
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
-    } catch (response) {
-      // ledger returns a string!
-      result["return_code"] = parseInt(response.slice(-4), 16)
+    } catch ({ message, statusCode, statusText, stack }) {
+      console.error(message, statusText, stack)
+      result["return_code"] = statusCode
       result["error_message"] = this._errorMessage(result["return_code"])
     }
     return result
@@ -224,9 +224,9 @@ class LedgerApp {
       result["pk"] = apduResponse.slice(3, 3 + 65)
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
-    } catch (response) {
-      // ledger returns a string!
-      result["return_code"] = parseInt(response.slice(-4), 16)
+    } catch ({ message, statusCode, statusText, stack }) {
+      console.error(message, statusText, stack)
+      result["return_code"] = statusCode
       result["error_message"] = this._errorMessage(result["return_code"])
     }
     return result
@@ -307,8 +307,9 @@ class LedgerApp {
       if (apduResponse.length > 2) {
         result["signature"] = apduResponse.slice(0, apduResponse.length - 2)
       }
-    } catch (response) {
-      result["return_code"] = parseInt(response.slice(-4), 16)
+    } catch ({ message, statusCode, statusText, stack }) {
+      console.error(message, statusText, stack)
+      result["return_code"] = statusCode
       result["error_message"] = this._errorMessage(result["return_code"])
     }
     return result
@@ -318,6 +319,7 @@ class LedgerApp {
   async signSecp256k1(txMsg, hdPath = [44, 118, 0, 0, 0]) {
     const response = {}
     const chunks = this._signGetChunks(txMsg, hdPath)
+    console.log('chunks', chunks)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
     let result = await this._signSendChunk(1, chunks.length, chunks[0])
     response["return_code"] = result.return_code

@@ -13,6 +13,6 @@ if [[ ! -e ./cert.pem ]]; then
   echo ""
 fi
 
-echo "Starting the https web server. Browse to https://localhost:8080"
+echo "Starting the https web server. Please accept the browser security warning"
 yarn http-server tests-ledger/ -o --ssl
 echo ""
