@@ -1,6 +1,15 @@
 /* global QUnit */
 
-const Ledger = typeof window !== "undefined" ? window.Ledger : require("../src/ledger/index").default
+let Ledger;
+let isBrowser;
+
+if (typeof window !== "undefined") {
+  isBrowser = true
+  Ledger = window.Ledger
+} else {
+  isBrowser = false // is node.js
+  Ledger = require("../src/ledger/index")
+}
 
 const TIMEOUT = 1000;
 const EXPECTED_MAJOR = 0;
@@ -10,9 +19,11 @@ const EXPECTED_PATCH = 1;
 let response;
 
 QUnit.begin(async function() {
-  console.log("Attempting to connect to hardware wallet...")
+  console.log("Attempting to connect to hardware wallet, please ensure that it is plugged in and the app is open.")
+  console.log("If the device is not connected or the app is not open, exit and rerun this test when it is.")
   try {
-    const transport = await Ledger.Transports.u2f.create(TIMEOUT)
+    const transClass = isBrowser ? Ledger.Transports.u2f : Ledger.Transports.node
+    const transport = await transClass.create(TIMEOUT)
     let app = new Ledger.App(transport)
     const version = await app.getVersion()
     response = version
