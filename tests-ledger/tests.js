@@ -65,8 +65,8 @@ QUnit.module("GET_VERSION", {
   }
 })
 
-test("return_code is 0x9000", function(assert) {
-  assert.ok(response.return_code === 0x9000, "Passed")
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
 })
 
 test("has property test_mode", function(assert) {
@@ -108,8 +108,8 @@ QUnit.module("PUBLIC_KEY_SECP256K1", {
   }
 })
 
-test("return_code is 0x9000", function(assert) {
-  assert.ok(response.return_code === 0x9000, "Passed")
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
 })
 
 test("has property pk", function(assert) {
@@ -118,6 +118,30 @@ test("has property pk", function(assert) {
 
 test("pk is the correct size", function(assert) {
   assert.equal(response.pk.length, 64, "Passed")
+})
+
+// PUBLIC_KEY_SECP256K1 (bad hdPath throws)
+
+let badPkErrored, badPkErrorMsg
+QUnit.module("PUBLIC_KEY_SECP256K1", {
+  before: async function() {
+    try {
+      const hdPath = [44] // TOO SHORT
+      response = await app.publicKeySecp256k1(hdPath)
+      badPkErrored = false
+    } catch (err) {
+      badPkErrored = true
+      badPkErrorMsg = err.message
+    }
+  }
+})
+
+test("did throw an error", function(assert) {
+  assert.ok(badPkErrored, "Passed")
+})
+
+test("error message is 'Invalid path.'", function(assert) {
+  assert.equal(badPkErrorMsg, "Invalid path.", "Error message is 'Invalid path.'")
 })
 
 // SIGN CHUNKS
@@ -164,7 +188,33 @@ test("chunk 6 is remainder of message", function(assert) {
   assert.equal(chunks[5].length, 234, "Chunk 5 contains 234 bytes")
 })
 
-// SIGN_SECP256K1
+// SIGN_SECP256K1 (bad tx throws)
+
+let badTxErrored, badTxErrorCode
+QUnit.module("SIGN_SECP256K1", {
+  before: async function() {
+    try {
+      // INCORRECT JSON in this tx (data is before chain_id, which is not the correct sort order.)
+      // eslint-disable-next-line quotes
+      const txMsg = `{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
+      response = await app.signSecp256k1(txMsg)
+      badTxErrored = false
+    } catch (err) {
+      badTxErrored = true
+      badTxErrorCode = err.statusCode
+    }
+  }
+})
+
+test("did throw an error", function(assert) {
+  assert.ok(badTxErrored, "Passed")
+})
+
+test("status code is 0x6A80", function(assert) {
+  assert.equal(badTxErrorCode, 0x6A80, "Status code is 0x6A80")
+})
+
+// SIGN_SECP256K1 (good tx)
 
 QUnit.module("SIGN_SECP256K1", {
   before: async function() {
@@ -185,8 +235,8 @@ QUnit.module("SIGN_SECP256K1", {
   }
 })
 
-test("return_code is 0x9000", function(assert) {
-  assert.ok(response.return_code === 0x9000, "Passed")
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
 })
 
 test("has property signature", function(assert) {
@@ -200,7 +250,7 @@ test("signature is the correct size", function(assert) {
   )
 })
 
-// SIGN_SECP256K1 (with data)
+// SIGN_SECP256K1 (good tx with data)
 
 QUnit.module("SIGN_SECP256K1", {
   before: async function() {
@@ -221,8 +271,8 @@ QUnit.module("SIGN_SECP256K1", {
   }
 })
 
-test("return_code is 0x9000", function(assert) {
-  assert.ok(response.return_code === 0x9000, "Passed")
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
 })
 
 test("has property signature", function(assert) {

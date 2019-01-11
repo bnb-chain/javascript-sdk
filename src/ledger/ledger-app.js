@@ -173,10 +173,11 @@ class LedgerApp {
       result["patch"] = apduResponse[3]
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
-    } catch ({ message, statusCode, statusText, stack }) {
-      console.error(message, statusText, stack)
-      result["return_code"] = statusCode
-      result["error_message"] = this._errorMessage(result["return_code"])
+    } catch (err) {
+      const { statusCode, statusText, message, stack } = err
+      console.warn("Ledger getVersion error:",
+        this._errorMessage(statusCode), message, statusText, stack)
+      throw err
     }
     return result
   }
@@ -224,10 +225,11 @@ class LedgerApp {
       result["pk"] = apduResponse.slice(3, 3 + 65)
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
-    } catch ({ message, statusCode, statusText, stack }) {
-      console.error(message, statusText, stack)
-      result["return_code"] = statusCode
-      result["error_message"] = this._errorMessage(result["return_code"])
+    } catch (err) {
+      const { statusCode, statusText, message, stack } = err
+      console.warn("Ledger publicKeySecp256k1 error:",
+        this._errorMessage(statusCode), message, statusText, stack)
+      throw err
     }
     return result
   }
@@ -307,10 +309,11 @@ class LedgerApp {
       if (apduResponse.length > 2) {
         result["signature"] = apduResponse.slice(0, apduResponse.length - 2)
       }
-    } catch ({ message, statusCode, statusText, stack }) {
-      console.error(message, statusText, stack)
-      result["return_code"] = statusCode
-      result["error_message"] = this._errorMessage(result["return_code"])
+    } catch (err) {
+      const { statusCode, statusText, message, stack } = err
+      console.warn("Ledger signSendChunk error:",
+        this._errorMessage(statusCode), message, statusText, stack)
+      throw err
     }
     return result
   }
@@ -321,15 +324,30 @@ class LedgerApp {
     const chunks = this._signGetChunks(txMsg, hdPath)
     console.log('chunks', chunks)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
-    let result = await this._signSendChunk(1, chunks.length, chunks[0])
-    response["return_code"] = result.return_code
-    response["error_message"] = result.error_message
-    response["signature"] = null
+    let result
+    try {
+      result = await this._signSendChunk(1, chunks.length, chunks[0])
+      response["return_code"] = result.return_code
+      response["error_message"] = result.error_message
+      response["signature"] = null
+    } catch (err) {
+      const { statusCode, statusText, message, stack } = err
+      console.warn("Ledger signSecp256k1 error (chunk 1):",
+        this._errorMessage(statusCode), message, statusText, stack)
+      throw err
+    }
     if (result.return_code === 0x9000) {
       for (let i = 1; i < chunks.length; i++) {
-        result = await this._signSendChunk(1 + i, chunks.length, chunks[i])
-        response["return_code"] = result.return_code
-        response["error_message"] = result.error_message
+        try {
+          result = await this._signSendChunk(1 + i, chunks.length, chunks[i])
+          response["return_code"] = result.return_code
+          response["error_message"] = result.error_message
+        } catch (err) {
+          const { statusCode, statusText, message, stack } = err
+          console.warn("Ledger signSecp256k1 error (chunk 2):",
+            this._errorMessage(statusCode), message, statusText, stack)
+          throw err
+        }
         if (result.return_code !== 0x9000) {
           break
         }
