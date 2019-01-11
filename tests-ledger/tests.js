@@ -24,7 +24,7 @@ const getApp = async function(timeout = LONG_TIMEOUT) {
 
   const transClass = isBrowser ? Ledger.transports.u2f : Ledger.transports.node
   const transport = await transClass.create(timeout)
-  app = new Ledger.App(transport)
+  app = new Ledger.app(transport)
 
   return app
 }
