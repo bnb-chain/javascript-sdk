@@ -8,14 +8,21 @@ const keyStore = crypto.generateKeyStore(privateKey, "1234567")
 describe("crypto", () => {
 
   it("generate a random address", () => {
-    const pk = crypto.generatePrivateKey()
-    const address = crypto.getAddressFromPrivateKey(pk)
+    const privateKey = crypto.generatePrivateKey()
+    const address = crypto.getAddressFromPrivateKey(privateKey)
     expect(address.length).toBe(42)
   })
 
   it("generate an address from privateKey", () => {
-    const pk = "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
-    const address = crypto.getAddressFromPrivateKey(pk)
+    const privateKey = "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
+    const address = crypto.getAddressFromPrivateKey(privateKey)
+    expect(address).toBe("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+  })
+
+  it("generate an address from publicKey", () => {
+    const privateKey = "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
+    const publicKey = crypto.getPublicKeyFromPrivateKey(privateKey)
+    const address = crypto.getAddressFromPublicKey(publicKey)
     expect(address).toBe("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
   })
 

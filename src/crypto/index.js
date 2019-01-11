@@ -81,12 +81,12 @@ export const getPublicKey = publicKey => {
 
 /**
  * Calculates the public key from a given private key.
- * @param {string} privateKey
+ * @param {string} privateKeyHex the private key hexstring
  * @return {string}
  */
-export const getPublicKeyFromPrivateKey = privateKey => {
+export const getPublicKeyFromPrivateKey = privateKeyHex => {
   const curve = new EC(CURVE)
-  const keypair = curve.keyFromPrivate(privateKey, "hex")
+  const keypair = curve.keyFromPrivate(privateKeyHex, "hex")
   const unencodedPubKey = keypair.getPublic().encode("hex")
   return unencodedPubKey
 }
@@ -104,17 +104,25 @@ export const generatePubKey = privateKey =>{
 }
 
 /**
- * Gets an address from a private key.
- * @param {string} privateKey the private key hexstring
+ * Gets an address from a public key hex.
+ * @param {string} publicKeyHex the public key hexstring
  */
-export const getAddressFromPrivateKey = privateKey => {
-  const pubKey = ec.keyFromPublic(getPublicKeyFromPrivateKey(privateKey), "hex")
+export const getAddressFromPublicKey = publicKeyHex => {
+  const pubKey = ec.keyFromPublic(publicKeyHex, "hex")
   const pubPoint = pubKey.getPublic()
   const compressed = pubPoint.encodeCompressed()
   const hexed = ab2hexstring(compressed)
   const hash = sha256ripemd160(hexed) // https://git.io/fAn8N
   const address = encodeAddress(hash)
   return address
+}
+
+/**
+ * Gets an address from a private key.
+ * @param {string} privateKeyHex the private key hexstring
+ */
+export const getAddressFromPrivateKey = privateKeyHex => {
+  return getAddressFromPublicKey(getPublicKeyFromPrivateKey(privateKeyHex))
 }
 
 /**
