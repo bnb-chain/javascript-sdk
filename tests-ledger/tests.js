@@ -169,8 +169,45 @@ test("chunk 6 is remainder of message", function(assert) {
 QUnit.module("SIGN_SECP256K1", {
   before: async function() {
     try {
+      // this tx msg follows the BNC structure (no fee, + source and data)
       // eslint-disable-next-line quotes
-      const txMsg = `{"account_number":1,"chain_id":"bnbchain","fee":{"amount":[],"gas":0},"memo":"","msgs":["msg"],"sequence":1}`
+      const txMsg = `{"account_number":1,"chain_id":"bnbchain","data":null,"memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
+      const hdPath = [44, 118, 0, 0, 0]
+      // app = await getApp(LONG_TIMEOUT)
+      response = await app.signSecp256k1(txMsg, hdPath)
+      console.log(response)
+    } catch (err) {
+      console.error(
+        "Error invoking SIGN_SECP256K1. Please connect it and open the app.",
+        err
+      )
+    }
+  }
+})
+
+test("return_code is 0x9000", function(assert) {
+  assert.ok(response.return_code === 0x9000, "Passed")
+})
+
+test("has property signature", function(assert) {
+  assert.ok(response.signature !== undefined, "Passed")
+})
+
+test("signature is the correct size", function(assert) {
+  assert.ok(
+    response.signature.length === 70 || response.signature.length === 71,
+    "Passed"
+  )
+})
+
+// SIGN_SECP256K1 (with data)
+
+QUnit.module("SIGN_SECP256K1", {
+  before: async function() {
+    try {
+      // this tx msg follows the BNC structure (no fee, + source and data)
+      // eslint-disable-next-line quotes
+      const txMsg = `{"account_number":1,"chain_id":"bnbchain","data":"ABCD","memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
       const hdPath = [44, 118, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
       response = await app.signSecp256k1(txMsg, hdPath)
