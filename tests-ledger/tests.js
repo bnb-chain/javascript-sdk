@@ -219,9 +219,9 @@ test("status code is 0x6A80", function(assert) {
 QUnit.module("SIGN_SECP256K1", {
   before: async function() {
     try {
-      // this tx msg follows the BNC structure (no fee, + source and data)
+      // this tx msg is a real BNC TX (no fee, with source and data)
       // eslint-disable-next-line quotes
-      const txMsg = `{"account_number":1,"chain_id":"bnbchain","data":null,"memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
+      const txMsg = `{"account_number":"12","chain_id":"chain-bnb","data":null,"memo":"","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1600000000,"quantity":100000000,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
       const hdPath = [44, 118, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
       response = await app.signSecp256k1(txMsg, hdPath)
