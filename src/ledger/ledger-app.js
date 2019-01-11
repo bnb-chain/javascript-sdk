@@ -222,7 +222,7 @@ class LedgerApp {
       )
       apduResponse = Buffer.from(apduResponse, "hex")
       const returnCode = apduResponse.slice(-2)
-      result["pk"] = apduResponse.slice(3, 3 + 65)
+      result["pk"] = apduResponse.slice(0, 1 + 64)
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
     } catch (err) {

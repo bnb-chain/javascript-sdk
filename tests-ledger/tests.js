@@ -117,7 +117,19 @@ test("has property pk", function(assert) {
 })
 
 test("pk is the correct size", function(assert) {
-  assert.equal(response.pk.length, 64, "Passed")
+  assert.equal(response.pk.length, 1 + 64, "Passed")
+})
+
+// the 0x04 prefix represents an uncompressed pubkey
+// https://github.com/libbitcoin/libbitcoin-system/wiki/Elliptic-Curve-Operations#point-operations-on-the-elliptic-curve
+test("pk is prefixed with 0x04", function(assert) {
+  assert.equal(response.pk[0], 0x04, "Passed")
+})
+
+// the 0x9000 suffix was being incorrectly appended, this test checks that it's not there now
+test("pk does not end in 0x9000", function(assert) {
+  assert.notEqual(response.pk[response.pk.length-2], 0x90, "Passed")
+  assert.notEqual(response.pk[response.pk.length-1], 0x00, "Passed")
 })
 
 // PUBLIC_KEY_SECP256K1 (bad hdPath throws)

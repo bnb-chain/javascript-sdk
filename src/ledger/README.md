@@ -83,7 +83,7 @@ First three items in the derivation path will be hardened automatically hardened
 
 | Field   | Type      | Content       | Note                            |
 | ------- | --------- | ------------- | ------------------------------- |
-| PK      | byte (64) | Public Key    |  |
+| PK      | byte (65) | Public Key    |  |
 | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
 ### SIGN_SECP256K1
