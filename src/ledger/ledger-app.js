@@ -209,7 +209,7 @@ class LedgerApp {
   // | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
   // default hdPath from Cosmos
-  async publicKeySecp256k1(hdPath = [44, 118, 0, 0, 0]) {
+  async publicKeySecp256k1(hdPath = [44, 714, 0, 0, 0]) {
     const result = {}
     try {
       let apduResponse = await this._transport.send(
@@ -319,7 +319,7 @@ class LedgerApp {
   }
 
   // default hdPath
-  async signSecp256k1(txMsg, hdPath = [44, 118, 0, 0, 0]) {
+  async signSecp256k1(txMsg, hdPath = [44, 714, 0, 0, 0]) {
     const response = {}
     const chunks = this._signGetChunks(txMsg, hdPath)
     console.log('chunks', chunks)
