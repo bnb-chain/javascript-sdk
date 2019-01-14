@@ -1,3 +1,6 @@
+tests-ledger/ledger-bundle.js
+*.pem
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

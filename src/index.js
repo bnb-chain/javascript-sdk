@@ -3,6 +3,7 @@ import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import Transaction from "./tx"
 import HttpRequest from "./utils/request"
+import Ledger from "./ledger"
 
 const api = {
   broadcast: "/api/v1/broadcast",
@@ -45,6 +46,7 @@ class BncClient {
    * @param {Number} amount
    * @param {String} asset
    * @param {String} memo
+   * @param {Number} sequence
    */
   async transfer(fromAddress, toAddress, amount, asset, memo, sequence) {
     const accCode = crypto.decodeAddress(fromAddress)
@@ -171,14 +173,16 @@ class BncClient {
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=false ){
+    let data
+
     if(!sequence && address) {
-      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+      data = await this._httpClient.request("get", `/api/v1/account/${address}`)
       sequence = data.result.sequence
       this.account_number = data.result.account_number
     }
 
     if(!this.account_number){
-      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+      if (!data) data = await this._httpClient.request("get", `/api/v1/account/${address}`)
       this.account_number = data.result.account_number
     }
 
@@ -250,7 +254,7 @@ class BncClient {
 
   /**
    * get balance
-   * @param {String} address 
+   * @param {String} address
    */
   async getBalance(address) {
     if(!address) {
@@ -267,7 +271,7 @@ class BncClient {
 
   /**
    * get account
-   * @param {String} address 
+   * @param {String} address
    */
   async getAccount(address) {
     if(!address) {
@@ -283,8 +287,8 @@ class BncClient {
   }
 
   /**
-   * 
-   * @return {Object} 
+   *
+   * @return {Object}
    * {
    *  address,
    *  privateKey
@@ -299,8 +303,8 @@ class BncClient {
   }
 
   /**
-   * 
-   * @param {String} password 
+   *
+   * @param {String} password
    *  {
    *  privateKey,
    *  address,
@@ -342,12 +346,12 @@ class BncClient {
   }
 
   /**
-   * @param {String} keystore 
+   * @param {String} keystore
    * @param {String} password
    * {
    * privateKey,
    * address
-   * } 
+   * }
    */
   recoverAccountFromKeystore(keystore, password){
     const privateKey = crypto.getPrivateKeyFromKeyStore(keystore, password)
@@ -359,7 +363,7 @@ class BncClient {
   }
 
   /**
-   * @param {String} mneomnic 
+   * @param {String} mneomnic
    * {
    * privateKey,
    * address
@@ -375,7 +379,7 @@ class BncClient {
   }
 
   /**
-   * @param {String} privateKey 
+   * @param {String} privateKey
    * {
    * privateKey,
    * address
@@ -394,3 +398,4 @@ class BncClient {
 module.exports = BncClient
 module.exports.crypto = crypto
 module.exports.amino = amino
+module.exports.ledger = Ledger

@@ -4,11 +4,17 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
+    "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
+    "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
+    "test:ledger:jest": "yarn test --runTestsByPath --verbose __tests__/ledger-node.test.js",
     "build": "rm -rf lib && npx babel src -d lib",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__"
   },
   "dependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^4.33.3",
+    "@ledgerhq/hw-transport-u2f": "^4.32.0",
+    "@ledgerhq/hw-transport-web-ble": "^4.32.0",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "base32-encode": "^1.1.0",
@@ -22,6 +28,7 @@
     "es2015": "^0.0.0",
     "jest": "^23.6.0",
     "lodash": "^4.17.11",
+    "node-hid": "^0.7.6",
     "safe-buffer": "^5.1.2",
     "secp256k1": "^3.5.2",
     "secure-random": "^1.1.1",
@@ -40,7 +47,10 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-preset-stage-2": "^6.24.1",
-    "eslint": "^5.11.1"
+    "browserify": "^16.2.3",
+    "eslint": "^5.11.1",
+    "http-server": "^0.11.1",
+    "qunit": "^2.9.1"
   },
   "babel": {
     "presets": [
