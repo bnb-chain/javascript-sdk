@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import * as encoder from "../src/encoder"
 import { UVarInt } from "../src/encoder/varint"
 
@@ -12,6 +13,14 @@ describe("encoder", () => {
     let encodedNumber = encoder.encodeNumber(100000)
     encodedNumber = encodedNumber.toString("hex")
     expect(encodedNumber).toBe("c09a0c")
+  })
+
+  it("encode big number", () => {
+    const bn1 = new BN(100000)
+    const bn2 = new BN(100000)
+    let encodedNumber = encoder.encodeNumber(bn1.mul(bn2))
+    encodedNumber = encodedNumber.toString("hex")
+    expect(encodedNumber).toBe("8090dfc04a")
   })
 
   it("UVarInt", () => {
