@@ -201,46 +201,6 @@ class BncClient {
     return await this._sendTx(txBytes, sync)
   }
 
-  /**
-   * send multiple transaction to binance chain
-   * @param {Array} concrete msg type array
-   * @param {Array} signature msg array
-   * @param {Boolean} sync
-   * @param {Number} sequence
-   * @return {Object} send transaction response(success or fail)
-   */
-  async _sendBatchTransaction(msgs, stdSignMsgs, address, sequence=null, memo="", sync=false ) {
-    if(!sequence && address) {
-      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
-      sequence = data.result.sequence
-      this.account_number = data.result.account_number
-    }
-
-    if(!this.account_number){
-      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
-      this.account_number = data.result.account_number
-    }
-
-    const batchBytes = []
-
-    msgs.forEach((msg, index)=>{
-      const options = {
-        account_number: parseInt(this.account_number),
-        chain_id: this.chainId,
-        memo: "",
-        msg,
-        sequence: parseInt(sequence),
-        type: msg.msgType,
-      }
-
-      const tx = new Transaction(options)
-
-      const txBytes = tx.sign(this.privateKey, stdSignMsgs[index]).serialize()
-    })
-
-    return await this._sendTx(batchBytes.join(","), sync)
-  }
-
   async _sendTx(tx, sync=true) {
     const opts = {
       data: tx,
@@ -392,7 +352,6 @@ class BncClient {
       address
     }
   }
-
 }
 
 module.exports = BncClient
