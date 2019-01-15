@@ -10,6 +10,8 @@ The Binance Chain JavaScript SDK allows browsers and node.js clients to interact
 
 # Installation
 
+For windows users, you should install [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) first.
+
 ```bash
 $ npm i @binance-chain/javascript-sdk
 ```
