@@ -7,6 +7,10 @@ const VarInt = (signed)=> {
   }
 
   function encode (n, buffer = Buffer.alloc(encodingLength(n)), offset = 0) {
+    if(n < 0){
+      throw Error("varint value is out of bounds")
+    }
+
     // n = safeParseInt(n)
     n = n.toString()
     let bn = new BN(n, 10)
@@ -30,7 +34,9 @@ const VarInt = (signed)=> {
 
   function encodingLength (n) {
     if (signed) n *= 2
-   
+    if(n < 0){
+      throw Error("varint value is out of bounds")
+    }
     let bits = Math.log2(n + 1)
     return Math.ceil(bits / 7) || 1
   }

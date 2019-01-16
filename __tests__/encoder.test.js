@@ -16,12 +16,9 @@ describe("encoder", () => {
   })
 
   it("encode negtive number", () => {
-    try{
+    expect(() => {
       encoder.encodeNumber(-100000)
-      expect(true).toBe(false)
-    }catch(err){
-      expect(true).toBe(true)
-    }
+    }).toThrow();
   })
 
   it("encode big number", () => {
