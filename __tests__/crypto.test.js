@@ -62,9 +62,15 @@ describe("crypto", () => {
   })
 
   it("verifySignature", () => {
-    const privateKey = "30c5e838578a29e3e9273edddd753d6c9b38aca2446dd84bdfe2e5988b0da0a1"
     const publicKey = crypto.getPublicKeyFromPrivateKey(privateKey)
     const msg = "7b226163636f756e745f6e756d626572223a2231222c22636861696e5f6964223a22626e62636861696e2d31303030222c226d656d6f223a22222c226d736773223a5b7b226964223a22423635363144434331303431333030353941374330384634384336343631304331463646393036342d3130222c226f7264657274797065223a322c227072696365223a3130303030303030302c227175616e74697479223a313230303030303030302c2273656e646572223a22626e63316b6574706d6e71736779637174786e7570723667636572707073306b6c797279687a36667a6c222c2273696465223a312c2273796d626f6c223a224254432d3543345f424e42222c2274696d65696e666f726365223a317d5d2c2273657175656e6365223a2239227d"
+    const sig = crypto.generateSignature(msg, privateKey).toString("hex")
+    expect(crypto.verifySignature(sig, msg, publicKey)).toBeTruthy()
+  })
+
+  it("generateSignature and verifySignature - utf8 memo", () => {
+    const publicKey = crypto.getPublicKeyFromPrivateKey(privateKey)
+    const msg = Buffer.from(`{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"smiley!☺","msgs":["msg"],"sequence":1,"source":1}`).toString("hex")
     const sig = crypto.generateSignature(msg, privateKey).toString("hex")
     expect(crypto.verifySignature(sig, msg, publicKey)).toBeTruthy()
   })
