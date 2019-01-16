@@ -363,6 +363,16 @@ class LedgerApp {
     }
     return response
   }
+
+  // convenience aliases
+
+  getPublicKey(hdPath) {
+    return this.publicKeySecp256k1(hdPath)
+  }
+
+  sign(txMsg, hdPath) {
+    return this.signSecp256k1(txMsg, hdPath)
+  }
 }
 
 module.exports = LedgerApp
