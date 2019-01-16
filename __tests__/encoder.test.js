@@ -15,12 +15,19 @@ describe("encoder", () => {
     expect(encodedNumber).toBe("c09a0c")
   })
 
+  it("encode negtive number", () => {
+    try{
+      encoder.encodeNumber(-100000)
+      expect(true).toBe(false)
+    }catch(err){
+      expect(true).toBe(true)
+    }
+  })
+
   it("encode big number", () => {
-    const bn1 = new BN(100000)
-    const bn2 = new BN(100000)
-    let encodedNumber = encoder.encodeNumber(bn1.mul(bn2))
+    let encodedNumber = encoder.encodeNumber(Math.pow(10, 18))
     encodedNumber = encodedNumber.toString("hex")
-    expect(encodedNumber).toBe("8090dfc04a")
+    expect(encodedNumber).toBe("8080a0f6f4acdbe01b")
   })
 
   it("UVarInt", () => {
