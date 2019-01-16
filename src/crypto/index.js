@@ -126,24 +126,28 @@ export const getAddressFromPrivateKey = privateKeyHex => {
 }
 
 /**
- * Generates a signature of the transaction based on given private key.
- * @param {string} hex - Serialized unsigned transaction. or hexstring.
- * @param {string} privateKey - Private Key.
+ * Generates a signature for a transaction based on given private key.
+ * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
+ * @param {string} privateKeyHex - The private key.
  * @return {Buffer} Signature. Does not include tx.
  */
-export const generateSignature = (hex, privateKey) => {
-  const msgHash = sha256(hex)
+export const generateSignature = (signBytesHex, privateKeyHex) => {
+  const msgHash = sha256(signBytesHex)
   const msgHashHex = Buffer.from(msgHash, "hex")
-  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, "hex"))
-  // const r = toDER(Buffer.from(sig.slice(0, 32), 'hex'));
-  // const s = toDER(Buffer.from(sig.slice(32), 'hex'));
-  // const signature = bip66.encode(r, s);
-
-  //prefix length and signature amino signature type(0x7FC4A495)
-  // const aminoPrefix = Buffer.from('7FC4A495', 'hex');
-  // const lengthPrefix = UVarInt.encode(signature.length);
-
+  const signature = ecc.sign(msgHashHex, Buffer.from(privateKeyHex, "hex"))
   return signature
+}
+
+/**
+ * Verifies a signature given the sign bytes and public key.
+ * @param {string} sigHex - The signature hexstring.
+ * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
+ * @param {string} publicKeyHex - The public key.
+ * @return {Buffer} Signature. Does not include tx.
+ */
+export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
+  const msgHash = sha256(signBytesHex)
+  return ecc.verify(Buffer.from(msgHash, "hex"), Buffer.from(publicKeyHex, "hex"), Buffer.from(sigHex, "hex"))
 }
 
 /**
