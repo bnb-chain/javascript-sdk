@@ -26,7 +26,6 @@
     "crypto-js": "^3.1.9-1",
     "lodash": "^4.17.11",
     "safe-buffer": "^5.1.2",
-    "secp256k1": "^3.5.2",
     "secure-random": "^1.1.1",
     "tiny-secp256k1": "^1.0.1",
     "uuid": "^3.3.2",
