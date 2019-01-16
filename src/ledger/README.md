@@ -124,7 +124,7 @@ All other packets/chunks should contain message to sign
 
 | Field   | Type         | Content       | Note                            |
 | ------- | ------------ | ------------- | ------------------------------- |
-| SIG     | byte (70|71) | Signature     |  |
+| SIG     | byte (~64)   | Signature     |  |
 | SW1-SW2 | byte (2)     | Return code   | see list of return codes        |
 
 ---------

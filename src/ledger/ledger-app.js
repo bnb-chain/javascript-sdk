@@ -272,7 +272,7 @@ class LedgerApp {
 
   // | Field   | Type      | Content       | Note                            |
   // | ------- | --------- | ------------- | ------------------------------- |
-  // | SIG     | byte (64) | Signature     |  |
+  // | SIG     | byte (~64) | Signature     |  |
   // | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
   _signGetChunks(data, hdPath) {
@@ -355,14 +355,29 @@ class LedgerApp {
       response["return_code"] = result.return_code
       response["error_message"] = result.error_message
 
-      // Ledger has encoded the sig in ASN1 DER format. we need a 64-byte buffer of <r,s> going forward.
+      // Ledger has encoded the sig in ASN1 DER format, but we need a 64-byte buffer of <r,s>
+      // DER-encoded signature from Ledger:
+      // 0 0x30: a header byte indicating a compound structure
+      // 1 A 1-byte length descriptor for all what follows (ignore)
+      // 2 0x02: a header byte indicating an integer
+      // 3 A 1-byte length descriptor for the R value
+      // 4 The R coordinate, as a big-endian integer
+      //   0x02: a header byte indicating an integer
+      //   A 1-byte length descriptor for the S value
+      //   The S coordinate, as a big-endian integer
+      //  = 7 bytes of overhead
       let signature = result.signature
-      // length assertion. ref: https://bitcoin.stackexchange.com/a/34049
-      if (signature.length != 32 + 32 + 7) { // 7 bytes of overhead
-        throw new Error("Ledger assertion failed: Expected a signature size of 71")
+      if (!signature || !signature.length) {
+        throw new Error('Ledger assertion failed: Expected a non-empty signature from the device')
       }
-      const sigR = signature.slice(5, 5 + 32) // skip e.g. 3045022100
-      const sigS = signature.slice(signature.length - 32)
+      if (signature[0] !== 0x30) {
+        throw new Error('Ledger assertion failed: Expected a signature header of 0x30')
+      }
+      let rOffset = 4
+      let rLen = signature[3]
+      let sLen = signature[4 + rLen + 1] // skip over following 0x02 type prefix for s
+      const sigR = signature.slice(rOffset, rOffset + rLen) // skip e.g. 3045022100
+      const sigS = signature.slice(signature.length - sLen)
 
       response["signature"] = Buffer.concat([sigR, sigS])
     } else {
