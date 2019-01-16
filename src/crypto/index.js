@@ -1,5 +1,4 @@
 import csprng from "secure-random"
-import WIF from "wif"
 import bech32 from "bech32"
 import cryp from "crypto-browserify"
 import uuid from "uuid"
@@ -57,18 +56,6 @@ export const generatePrivateKey = () => ab2hexstring(csprng(PRIVKEY_LEN))
  * @returns {ArrayBuffer}
  */
 export const generateRandomArray = length => csprng(length)
-
-/**
- * @param {string} privateKey
- * @return {string}
- */
-export const getWIFFromPrivateKey = privateKey => WIF.encode(128, Buffer.from(privateKey, "hex"), true)
-
-/**
- * @param {string} wif
- * @return {string}
- */
-export const getPrivateKeyFromWIF = wif => ab2hexstring(WIF.decode(wif, 128).privateKey)
 
 /**
  * @param {string} publicKey - Encoded public key
