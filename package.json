@@ -43,6 +43,7 @@
     "babel-jest": "^23.6.0",
     "babel-preset-stage-2": "^6.24.1",
     "browserify": "^16.2.3",
+    "buffer": "^5.2.1",
     "cross-env": "^5.2.0",
     "eslint": "^5.11.1",
     "http-server": "^0.11.1",

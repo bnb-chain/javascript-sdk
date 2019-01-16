@@ -1,7 +1,15 @@
 #!/bin/bash
 
-echo "Browserifying ledger sources"
-yarn browserify tests-ledger/index-browser.js --im --s=Ledger -o tests-ledger/ledger-bundle.js
+echo "Building SDK"
+yarn build
+echo ""
+
+echo "Browserifying Buffer polyfill"
+yarn browserify node_modules/buffer/index.js --im --s=Buffer -o tests-ledger/buffer-polyfill.js
+echo ""
+
+echo "Browserifying Ledger sources"
+yarn browserify tests-ledger/index-browser.js --im --s=SDK -o tests-ledger/ledger-bundle.js
 echo ""
 
 if [[ ! -e ./cert.pem ]]; then

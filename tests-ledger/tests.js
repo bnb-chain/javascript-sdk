@@ -16,6 +16,7 @@ if (typeof window !== "undefined") {
   isBrowser = true
   crypto = window.SDK.crypto
   Ledger = window.SDK.Ledger
+  window.Buffer = Buffer.Buffer // it's polyfilled
 } else {
   isBrowser = false // is node.js
   Ledger = require("../lib/ledger")
