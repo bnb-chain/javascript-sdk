@@ -15,12 +15,15 @@
  *  limitations under the License.
  ********************************************************************************/
 
+const isBrowser = typeof window !== "undefined"
 const Ledger = module.exports
 
 Ledger.app = require("./ledger-app")
 
 Ledger.transports = {
-  node: require("@ledgerhq/hw-transport-node-hid").default,
   u2f: require("@ledgerhq/hw-transport-u2f").default,
   wble: require("@ledgerhq/hw-transport-web-ble").default,
+
+  // requiring the node transport in the browser causes a bit of an issue with webpack!
+  node: !isBrowser ? require("@ledgerhq/hw-transport-node-hid").default : null,
 }
