@@ -49,7 +49,7 @@ class Transaction {
     if(!data.chain_id) {
       throw new Error("chain id should not be null")
     }
-    
+
     data = data || {}
 
     this.type = data.type
@@ -62,7 +62,7 @@ class Transaction {
 
   /**
    * serializes a public key in a 33-byte compressed format.
-   * @param {hex string} privateKey 
+   * @param {hex string} privateKey
    * @return {Buffer}
    */
   serializePubKey(privateKey){
@@ -73,7 +73,7 @@ class Transaction {
     }
 
     const pubKey = Buffer.concat([
-      UVarInt.encode(format), 
+      UVarInt.encode(format),
       unencodedPubKey.x.toArrayLike(Buffer, "be", 32)
     ])
 
@@ -101,7 +101,7 @@ class Transaction {
       "source": "1"
     }
 
-    const signMsgBytes = encoder.convertObjectToBytes(signMsg)
+    const signMsgBytes = encoder.convertObjectToSignBytes(signMsg)
     const signature = crypto.generateSignature(signMsgBytes.toString("hex"), privateKey)
     const pub_key = this.serializePubKey(privateKey)
     this.signatures = [{

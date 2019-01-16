@@ -50,7 +50,7 @@ export const encodeTime = (value) => {
  * @param obj -- {object}
  * @return bytes {Buffer}
  */
-export const convertObjectToBytes = (obj) => Buffer.from(JSON.stringify(obj))
+export const convertObjectToSignBytes = (obj) => Buffer.from(JSON.stringify(obj))
 
 /**
  * js amino MarshalBinary
