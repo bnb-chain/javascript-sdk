@@ -1,10 +1,8 @@
 import vstruct from "varstruct"
 import { Buffer } from "safe-buffer"
 import _ from "lodash"
-import bn from 'bn.js'
 
 import VarInt, { UVarInt } from "./varint"
-import VarBN from './varBN'
 import typeToTyp3 from "../utils/encoderHelper"
 import { typePrefix } from "../tx/"
 
@@ -14,7 +12,7 @@ const VarString = vstruct.VarString(UVarInt)
  * encode number
  * @param num
  */
-export const encodeNumber = (num) => bn.isBN(num) ? VarBN.encode(num) : VarInt.encode(num)
+export const encodeNumber = (num) => VarInt.encode(num)
 
 /**
  * encode bool
