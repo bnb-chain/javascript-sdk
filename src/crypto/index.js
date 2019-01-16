@@ -158,7 +158,7 @@ export const generateKeyStore = (privateKey, password) => {
   }
 
   const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256")
-  const cipher = cryp.createCipher(cipherAlg, derivedKey.slice(0, 16), iv)
+  const cipher = cryp.createCipheriv(cipherAlg, derivedKey.slice(0, 32), iv)
   if (!cipher) {
     throw new Error("Unsupported cipher")
   }
@@ -213,7 +213,7 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     throw new Error("Key derivation failed - possibly wrong password")
   }
 
-  const decipher = cryp.createDecipher(json.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, "hex"))
+  const decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 32), Buffer.from(json.crypto.cipherparams.iv, "hex"))
   const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("hex")
 
   return privateKey
