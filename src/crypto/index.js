@@ -126,7 +126,7 @@ export const getAddressFromPrivateKey = privateKeyHex => {
 }
 
 /**
- * Generates a signature for a transaction based on given private key.
+ * Generates a signature (64 byte <r,s>) for a transaction based on given private key.
  * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
  * @param {string} privateKeyHex - The private key.
  * @return {Buffer} Signature. Does not include tx.
@@ -139,7 +139,7 @@ export const generateSignature = (signBytesHex, privateKeyHex) => {
 }
 
 /**
- * Verifies a signature given the sign bytes and public key.
+ * Verifies a signature (64 byte <r,s>) given the sign bytes and public key.
  * @param {string} sigHex - The signature hexstring.
  * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
  * @param {string} publicKeyHex - The public key.
@@ -147,7 +147,9 @@ export const generateSignature = (signBytesHex, privateKeyHex) => {
  */
 export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
   const msgHash = sha256(signBytesHex)
-  return ecc.verify(Buffer.from(msgHash, "hex"), Buffer.from(publicKeyHex, "hex"), Buffer.from(sigHex, "hex"))
+  const publicKey = Buffer.from(publicKeyHex, "hex")
+  if (!ecc.isPoint(publicKey)) throw new Error("Invalid public key provided")
+  return ecc.verify(Buffer.from(msgHash, "hex"), publicKey, Buffer.from(sigHex, "hex"))
 }
 
 /**
