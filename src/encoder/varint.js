@@ -15,7 +15,7 @@ const VarInt = (signed)=> {
     n = n.toString()
     let bn = new BN(n, 10)
 
-    // amino signed varint is multiplied by 2 ¯\_(ツ)_/¯
+    // amino signed varint is multiplied by 2
     if (signed){
       bn = bn.muln(2)
     } 
