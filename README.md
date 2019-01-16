@@ -28,6 +28,13 @@ All new code changes should be covered with unit tests. You can run the tests wi
 $ npm run test
 ```
 
+Tests for the Ledger hardware wallet integration have their own suite that runs in both node and in the browser:
+
+```bash
+$ npm run test:ledger
+$ npm run test:ledger:browser
+```
+
 # Contributing
 
 Contributions to the Binance Chain JavaScript SDK are welcome. Please ensure that you have tested the changes with a local client and have added unit test coverage for your code.
