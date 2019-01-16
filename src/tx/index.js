@@ -110,7 +110,6 @@ class Transaction {
       account_number: this.account_number,
       sequence: this.sequence,
     }]
-    this.sig = signature.toString("hex")
     return this
   }
 

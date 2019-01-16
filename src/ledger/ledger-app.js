@@ -354,9 +354,18 @@ class LedgerApp {
       }
       response["return_code"] = result.return_code
       response["error_message"] = result.error_message
-      response["signature"] = result.signature
-    }
-    if (result.return_code !== 0x9000) {
+
+      // Ledger has encoded the sig in ASN1 DER format. we need a 64-byte buffer of <r,s> going forward.
+      let signature = result.signature
+      // length assertion. ref: https://bitcoin.stackexchange.com/a/34049
+      if (signature.length != 32 + 32 + 7) { // 7 bytes of overhead
+        throw new Error("Ledger assertion failed: Expected a signature size of 71")
+      }
+      const sigR = signature.slice(5, 5 + 32) // skip e.g. 3045022100
+      const sigS = signature.slice(signature.length - 32)
+
+      response["signature"] = Buffer.concat([sigR, sigS])
+    } else {
       throw new Error(
         "Unable to sign the transaction. Return code " + result.return_code
       )

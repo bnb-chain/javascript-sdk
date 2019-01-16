@@ -7,21 +7,22 @@ const EXPECTED_MAJOR = 1
 const EXPECTED_MINOR = 0
 const EXPECTED_PATCH = 1
 
-let app
-let response
+let isBrowser
+let Ledger, crypto
+let app, response
+
+// tests support both browser and node. find out which we're in
+if (typeof window !== "undefined") {
+  isBrowser = true
+  crypto = window.SDK.crypto
+  Ledger = window.SDK.Ledger
+} else {
+  isBrowser = false // is node.js
+  Ledger = require("../lib/ledger")
+  crypto = require("../lib/crypto")
+}
 
 const getApp = async function(timeout = LONG_TIMEOUT) {
-  let Ledger, isBrowser
-
-  // tests support both browser and node. find out which we're in
-  if (typeof window !== "undefined") {
-    isBrowser = true
-    Ledger = window.Ledger
-  } else {
-    isBrowser = false // is node.js
-    Ledger = require("../src/ledger/index")
-  }
-
   const transClass = isBrowser ? Ledger.transports.u2f : Ledger.transports.node
   const transport = await transClass.create(timeout)
   app = new Ledger.app(transport)
@@ -93,12 +94,14 @@ test("app has matching version", function(assert) {
 
 // PUBLIC_KEY_SECP256K1
 
+let pubKey
 QUnit.module("PUBLIC_KEY_SECP256K1", {
   before: async function() {
     try {
       const hdPath = [44, 714, 0, 0, 0]
-      response = await app.publicKeySecp256k1(hdPath)
+      response = await app.getPublicKey(hdPath)
       console.log(response)
+      pubKey = response.pk
     } catch (err) {
       console.error(
         "Error invoking PUBLIC_KEY_SECP256K1. Please connect it and open the app.",
@@ -117,7 +120,7 @@ test("has property pk", function(assert) {
 })
 
 test("pk is the correct size", function(assert) {
-  assert.equal(response.pk.length, 1 + 64, "Passed")
+  assert.equal(response.pk.length, 1 + 64, "Passed") // 1 byte PK prefix
 })
 
 // the 0x04 prefix represents an uncompressed pubkey
@@ -139,7 +142,7 @@ QUnit.module("PUBLIC_KEY_SECP256K1", {
   before: async function() {
     try {
       const hdPath = [44] // TOO SHORT
-      response = await app.publicKeySecp256k1(hdPath)
+      response = await app.getPublicKey(hdPath)
       badPkErrored = false
     } catch (err) {
       badPkErrored = true
@@ -209,7 +212,7 @@ QUnit.module("SIGN_SECP256K1", {
       // INCORRECT JSON in this tx (data is before chain_id, which is not the correct sort order.)
       // eslint-disable-next-line quotes
       const txMsg = `{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
-      response = await app.signSecp256k1(txMsg)
+      response = await app.sign(txMsg)
       badTxErrored = false
     } catch (err) {
       badTxErrored = true
@@ -233,10 +236,10 @@ QUnit.module("SIGN_SECP256K1", {
     try {
       // this tx msg is a real BNC TX (no fee, with source and data)
       // eslint-disable-next-line quotes
-      const txMsg = `{"account_number":"12","chain_id":"chain-bnb","data":null,"memo":"","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1600000000,"quantity":100000000,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
+      const txMsg = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"memo","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1600000000,"quantity":100000000,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
       const hdPath = [44, 714, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
-      response = await app.signSecp256k1(txMsg, hdPath)
+      response = await app.sign(txMsg, hdPath)
       console.log(response)
     } catch (err) {
       console.error(
@@ -256,23 +259,20 @@ test("has property signature", function(assert) {
 })
 
 test("signature is the correct size", function(assert) {
-  assert.ok(
-    response.signature.length === 70 || response.signature.length === 71,
-    "Passed"
-  )
+  assert.equal(response.signature.length, 64, "Passed")
 })
 
 // SIGN_SECP256K1 (good tx with data)
 
+// this tx msg follows the BNC structure (no fee, + source and data)
+// eslint-disable-next-line quotes
+const txMsg = `{"account_number":1,"chain_id":"bnbchain","data":"ABCD","memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
 QUnit.module("SIGN_SECP256K1", {
   before: async function() {
     try {
-      // this tx msg follows the BNC structure (no fee, + source and data)
-      // eslint-disable-next-line quotes
-      const txMsg = `{"account_number":1,"chain_id":"bnbchain","data":"ABCD","memo":"memo","msgs":["msg"],"sequence":1,"source":1}`
       const hdPath = [44, 714, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
-      response = await app.signSecp256k1(txMsg, hdPath)
+      response = await app.sign(txMsg, hdPath)
       console.log(response)
     } catch (err) {
       console.error(
@@ -292,8 +292,15 @@ test("has property signature", function(assert) {
 })
 
 test("signature is the correct size", function(assert) {
+  assert.equal(response.signature.length, 64, "Passed")
+})
+
+test("signature passes verification", function(assert) {
+  const sig = response.signature
+  console.log('sig length', sig.length)
+  const sigHex = sig.toString("hex")
   assert.ok(
-    response.signature.length === 70 || response.signature.length === 71,
-    "Passed"
+    crypto.verifySignature(sigHex, Buffer.from(txMsg).toString("hex"), pubKey.toString("hex")),
+    "Signature OK"
   )
 })
