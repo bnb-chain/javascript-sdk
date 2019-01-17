@@ -216,8 +216,8 @@ QUnit.module("SIGN_SECP256K1 - bad tx", {
     try {
       // INCORRECT JSON in this tx (data is before chain_id, which is not the correct sort order.)
       // eslint-disable-next-line quotes
-      const txMsg = `{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"smiley","msgs":["msg"],"sequence":1,"source":1}`
-      response = await app.sign(txMsg)
+      const signBytes = `{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"smiley!","msgs":["msg"],"sequence":1,"source":1}`
+      response = await app.sign(signBytes)
       badTxErrored = false
     } catch (err) {
       badTxErrored = true
@@ -241,10 +241,10 @@ QUnit.module("SIGN_SECP256K1 - good tx", {
     try {
       // this tx msg is a real BNC TX (no fee, with source and data)
       // eslint-disable-next-line quotes
-      const txMsg = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"smiley","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1600000000,"quantity":100000000,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
+      const signBytes = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"smiley!","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1600000000,"quantity":100000000,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
       const hdPath = [44, 714, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
-      response = await app.sign(txMsg, hdPath)
+      response = await app.sign(signBytes, hdPath)
       console.log(response)
     } catch (err) {
       console.error(
@@ -274,13 +274,14 @@ test("signature size is within range 63-65", function(assert) {
 
 // this tx msg follows the BNC structure (no fee, + source and data)
 // eslint-disable-next-line quotes
-const txMsg = `{"account_number":1,"chain_id":"bnbchain","data":"ABCD","memo":"smiley","msgs":["msg"],"sequence":1,"source":1}`
+const signBytes = `{"account_number":1,"chain_id":"bnbchain","data":"ABCD","memo":"smiley!","msgs":["msg"],"sequence":1,"source":1}`
 QUnit.module("SIGN_SECP256K1 - good tx with data", {
   before: async function() {
     try {
       const hdPath = [44, 714, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
-      response = await app.sign(txMsg, hdPath)
+      console.log('LE HEX', Buffer.from(signBytes).toString("hex"))
+      response = await app.sign(signBytes, hdPath)
       console.log(response)
     } catch (err) {
       console.error(
@@ -309,10 +310,11 @@ test("signature size is within range 63-65", function(assert) {
 test("signature passes verification", function(assert) {
   const sig = response.signature
   const sigHex = sig.toString("hex")
+  console.log('SIGNATURE', sigHex)
   assert.ok(
     crypto.verifySignature(
       sigHex,
-      Buffer.from(txMsg).toString("hex"),
+      Buffer.from(signBytes, "utf8").toString("hex"),
       pubKey.toString("hex")
     ),
     "Signature OK"

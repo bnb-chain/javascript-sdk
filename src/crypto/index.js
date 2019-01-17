@@ -133,10 +133,11 @@ export const generateSignature = (signBytesHex, privateKeyHex) => {
  * @return {Buffer} Signature. Does not include tx.
  */
 export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
-  const msgHash = sha256(signBytesHex)
   const publicKey = Buffer.from(publicKeyHex, "hex")
   if (!ecc.isPoint(publicKey)) throw new Error("Invalid public key provided")
-  return ecc.verify(Buffer.from(msgHash, "hex"), publicKey, Buffer.from(sigHex, "hex"))
+  const msgHash = sha256(signBytesHex)
+  const msgHashHex = Buffer.from(msgHash, "hex")
+  return ecc.verify(msgHashHex, publicKey, Buffer.from(sigHex, "hex"))
 }
 
 /**
