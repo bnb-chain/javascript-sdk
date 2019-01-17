@@ -1,4 +1,3 @@
-import hexEncoding from "crypto-js/enc-hex"
 import SHA256 from "crypto-js/sha256"
 import RIPEMD160 from "crypto-js/ripemd160"
 
@@ -202,11 +201,11 @@ export const ensureHex = str => {
  * @returns {string} hash output
  */
 export const sha256ripemd160 = (hex) => {
-  if (typeof hex !== "string") throw new Error("reverseHex expects a string")
-  if (hex.length % 2 !== 0) throw new Error(`Incorrect Length: ${hex}`)
-  let hexEncoded = hexEncoding.parse(hex)
-  let ProgramSha256 = SHA256(hexEncoded)
-  return RIPEMD160(ProgramSha256).toString()
+  if (typeof hex !== "string") throw new Error("sha256ripemd160 expects a hex string")
+  if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
+  const decoded = Buffer.from(hex, "hex").toString()
+  const sha256 = SHA256(decoded)
+  return RIPEMD160(sha256).toString()
 }
 
 /**
@@ -215,8 +214,8 @@ export const sha256ripemd160 = (hex) => {
  * @returns {string} hash output
  */
 export const sha256 = (hex) => {
-  if (typeof hex !== "string") throw new Error("reverseHex expects a string")
-  if (hex.length % 2 !== 0) throw new Error(`Incorrect Length: ${hex}`)
-  let hexEncoded = hexEncoding.parse(hex)
-  return SHA256(hexEncoded).toString()
+  if (typeof hex !== "string") throw new Error("sha256 expects a hex string")
+  if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
+  const decoded = Buffer.from(hex, "hex").toString()
+  return SHA256(decoded).toString()
 }
