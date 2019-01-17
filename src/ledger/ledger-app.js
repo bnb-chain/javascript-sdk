@@ -373,13 +373,24 @@ class LedgerApp {
       if (signature[0] !== 0x30) {
         throw new Error('Ledger assertion failed: Expected a signature header of 0x30')
       }
-      const rOffset = 4
+      // decode DER string format
+      let rOffset = 4
       let rLen = signature[3]
       let sLen = signature[4 + rLen + 1] // skip over following 0x02 type prefix for s
-      const sigR = signature.slice(rOffset, rOffset + rLen) // skip e.g. 3045022100
-      const sigS = signature.slice(signature.length - sLen)
+      let sOffset = signature.length - sLen
+      // we can safely ignore the first byte in the 33 bytes cases
+      if (rLen === 33) {
+        rOffset++ // chop off 0x00 padding
+        rLen--
+      }
+      if (sLen === 33) sOffset++ // as above
+      const sigR = signature.slice(rOffset, rOffset + rLen) // skip e.g. 3045022100 and pad
+      const sigS = signature.slice(sOffset)
 
-      response["signature"] = Buffer.concat([sigR, sigS])
+      signature = response["signature"] = Buffer.concat([sigR, sigS])
+      if (signature.length !== 64) {
+        throw new Error(`Ledger assertion failed: incorrect signature length ${signature.length}`)
+      }
     } else {
       throw new Error(
         "Unable to sign the transaction. Return code " + result.return_code
