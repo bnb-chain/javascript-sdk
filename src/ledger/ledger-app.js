@@ -319,9 +319,9 @@ class LedgerApp {
   }
 
   // default hdPath
-  async signSecp256k1(txMsg, hdPath = [44, 714, 0, 0, 0]) {
+  async signSecp256k1(signBytes, hdPath = [44, 714, 0, 0, 0]) {
     const response = {}
-    const chunks = this._signGetChunks(txMsg, hdPath)
+    const chunks = this._signGetChunks(signBytes, hdPath)
     console.log('chunks', chunks)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
     let result
@@ -373,7 +373,7 @@ class LedgerApp {
       if (signature[0] !== 0x30) {
         throw new Error('Ledger assertion failed: Expected a signature header of 0x30')
       }
-      let rOffset = 4
+      const rOffset = 4
       let rLen = signature[3]
       let sLen = signature[4 + rLen + 1] // skip over following 0x02 type prefix for s
       const sigR = signature.slice(rOffset, rOffset + rLen) // skip e.g. 3045022100
@@ -394,8 +394,8 @@ class LedgerApp {
     return this.publicKeySecp256k1(hdPath)
   }
 
-  sign(txMsg, hdPath) {
-    return this.signSecp256k1(txMsg, hdPath)
+  sign(signBytes, hdPath) {
+    return this.signSecp256k1(signBytes, hdPath)
   }
 }
 
