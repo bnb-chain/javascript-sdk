@@ -1,6 +1,7 @@
 {
   "name": "@binance-chain/javascript-sdk",
   "version": "2.2.0",
+  "description": "Binance Chain JavaScript SDK for node.js and browsers",
   "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
