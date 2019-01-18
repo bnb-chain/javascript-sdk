@@ -353,6 +353,14 @@ class BncClient {
       address
     }
   }
+
+  /**
+   * @param {String} address
+   * @return {Boolean}
+   */
+  checkAddress(address){
+    return crypto.checkAddress(address)
+  }
 }
 
 module.exports = BncClient

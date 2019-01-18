@@ -34,6 +34,23 @@ export const decodeAddress = (value) => {
 }
 
 /**
+ * checek address whether is valid
+ * @param {string} address the bech32 address to decode
+ */
+export const checkAddress = (address) => {
+  try {
+    const decodeAddress = bech32.decode(address)
+    if(decodeAddress.prefix === 'bnc') {
+      return true
+    }
+
+    return false;
+  } catch(err) {
+    return false
+  }
+}
+
+/**
  * Encodes an address from input data bytes.
  * @param {string} value the public key to encode
  * @param {*} prefix the address prefix
