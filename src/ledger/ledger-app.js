@@ -34,7 +34,7 @@ const INS_SIGN_SECP256K1 = 0x02
 
 // | Field   | Type     | Content                | Note |
 // |:------- |:-------- |:---------------------- | ---- |
-// | CLA     | byte (1) | Application Identifier | 0x55 |
+// | CLA     | byte (1) | Application Identifier | 0xBC |
 // | INS     | byte (1) | Instruction ID         |      |
 // | P1      | byte (1) | Parameter 1            |      |
 // | P2      | byte (1) | Parameter 2            |      |
@@ -161,7 +161,7 @@ class LedgerApp {
 
   // | Field | Type     | Content                | Expected |
   // | ----- | -------- | ---------------------- | -------- |
-  // | CLA   | byte (1) | Application Identifier | 0x55     |
+  // | CLA   | byte (1) | Application Identifier | 0xBC     |
   // | INS   | byte (1) | Instruction ID         | 0x00     |
   // | P1    | byte (1) | Parameter 1            | ignored  |
   // | P2    | byte (1) | Parameter 2            | ignored  |
@@ -216,7 +216,7 @@ class LedgerApp {
 
   // | Field | Type     | Content                 | Expected |
   // | ----- | -------- | ----------------------  | -------- |
-  // | CLA   | byte (1) | Application Identifier  | 0x55     |
+  // | CLA   | byte (1) | Application Identifier  | 0xBC     |
   // | INS   | byte (1) | Instruction ID          | 0x01     |
   // | P1    | byte (1) | Parameter 1             | ignored  |
   // | P2    | byte (1) | Parameter 2             | ignored  |
@@ -273,7 +273,7 @@ class LedgerApp {
 
   // | Field | Type     | Content                | Expected |
   // | ----- | -------- | ---------------------- | -------- |
-  // | CLA   | byte (1) | Application Identifier | 0x55     |
+  // | CLA   | byte (1) | Application Identifier | 0xBC     |
   // | INS   | byte (1) | Instruction ID         | 0x02     |
   // | P1    | byte (1) | Packet Current Index   |   |
   // | P2    | byte (1) | Packet Total Count     |
