@@ -109,7 +109,7 @@ class BncClient {
       symbol: symbol
     }
 
-    return this._sendTransaction(msg, signMsg, fromAddress, sequence + index, "")
+    return this._sendTransaction(msg, signMsg, fromAddress, sequence, "")
   }
 
   /**
