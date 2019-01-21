@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import * as encoder from "../src/encoder"
 import { UVarInt } from "../src/encoder/varint"
 
