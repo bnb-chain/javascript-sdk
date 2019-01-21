@@ -91,29 +91,25 @@ class BncClient {
     return await this._sendTransaction(msg, signMsg, fromAddress, sequence, memo, true)
   }
 
-  async cancelOrder(fromAddress, symbols, orderIds, refids, sequence) {
+  async cancelOrder(fromAddress, symbol, orderId, refid, sequence) {
     const accCode = crypto.decodeAddress(fromAddress)
-    const requests = []
-    orderIds.forEach((orderId, index) => {
-      const msg = {
-        sender: accCode,
-        symbol: symbols[index],
-        id: orderId,
-        refid: refids[index],
-        msgType: "CancelOrderMsg"
-      }
 
-      const signMsg = {
-        id: orderId,
-        refid: refids[index],
-        sender: fromAddress,
-        symbol: symbols[index]
-      }
+    const msg = {
+      sender: accCode,
+      symbol: symbol,
+      id: orderId,
+      refid: refid,
+      msgType: "CancelOrderMsg"
+    }
 
-      requests.push(this._sendTransaction(msg, signMsg, fromAddress, sequence+index, ""))
-    })
+    const signMsg = {
+      id: orderId,
+      refid: refid,
+      sender: fromAddress,
+      symbol: symbol
+    }
 
-    return Promise.all(requests)
+    return this._sendTransaction(msg, signMsg, fromAddress, sequence + index, "")
   }
 
   /**
@@ -173,17 +169,11 @@ class BncClient {
    * @param {Boolean} sync
    * @return {Object} response (success or fail)
    */
-  async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=false ){
-    let data
+  async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=true) {
 
-    if(!sequence && address) {
-      data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+    if((!sequence || !this.account_number) && address) {
+      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
       sequence = data.result.sequence
-      this.account_number = data.result.account_number
-    }
-
-    if(!this.account_number){
-      if (!data) data = await this._httpClient.request("get", `/api/v1/account/${address}`)
       this.account_number = data.result.account_number
     }
 
@@ -199,18 +189,15 @@ class BncClient {
     const tx = new Transaction(options)
 
     const txBytes = tx.sign(this.privateKey, stdSignMsg).serialize()
-    return await this._sendTx(txBytes, sync)
-  }
 
-  async _sendTx(tx, sync=true) {
     const opts = {
-      data: tx,
+      data: txBytes,
       headers: {
         "content-type": "text/plain",
       }
     }
-    const data = await this._httpClient.request("post", `${api.broadcast}?sync=${sync}`, null, opts)
-    return data
+
+    return await this._httpClient.request("post", `${api.broadcast}?sync=${sync}`, null, opts)
   }
 
   /**
