@@ -2,7 +2,6 @@
  *   Binance Chain Ledger App Interface
  *   (c) 2018-2019 Binance
  *   (c) 2018 ZondaX GmbH
- *   (c) 2016-2017 Ledger
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +15,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
+
+const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 45000
+const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000
+
+const CLA = 0xBC
+const SCRAMBLE_KEY = "CSM"
+const ACCEPT_STATUSES = [0x9000] // throw if not
+const CHUNK_SIZE = 250
+
+const INS_GET_VERSION = 0x00
+const INS_PUBLIC_KEY_SECP256K1 = 0x01
+const INS_SIGN_SECP256K1 = 0x02
 
 // The general structure of commands and responses is as follows:
 
@@ -37,17 +48,29 @@
 // | ANSWER  | byte (?) | Answer      | depends on the command   |
 // | SW1-SW2 | byte (2) | Return code | see list of return codes |
 
-const CLA = 0x55
-const ACCEPT_STATUSES = [0x9000] // throws if not
-const CHUNK_SIZE = 250
-const INS_GET_VERSION = 0x00
-const INS_PUBLIC_KEY_SECP256K1 = 0x01
-const INS_SIGN_SECP256K1 = 0x02
-
 class LedgerApp {
-  constructor(transport) {
+  /**
+   * Constructs a new LedgerApp.
+   * @param {Transport} transport Ledger Transport, a subclass of ledgerjs Transport.
+   * @param {number} interactiveTimeout The interactive (user input) timeout in ms. Default 45s.
+   * @param {number} nonInteractiveTimeout The non-interactive timeout in ms. Default 3s.
+   */
+  constructor(
+    transport,
+    interactiveTimeout = DEFAULT_LEDGER_INTERACTIVE_TIMEOUT,
+    nonInteractiveTimeout = DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT
+  ) {
+    if (!transport || !transport.send) {
+      throw new Error("LedgerApp expected a Transport")
+    }
     this._transport = transport
-    this._transport.setScrambleKey("CSM")
+    if (typeof interactiveTimeout === "number") {
+      this._interactiveTimeout = interactiveTimeout
+    }
+    if (typeof nonInteractiveTimeout === "number") {
+      this._nonInteractiveTimeout = nonInteractiveTimeout
+    }
+    this._transport.setScrambleKey(SCRAMBLE_KEY)
   }
 
   _serialize(CLA, INS, p1 = 0, p2 = 0, data = null) {
@@ -154,9 +177,14 @@ class LedgerApp {
   // | PATCH   | byte (1) | Version Patch |                                 |
   // | SW1-SW2 | byte (2) | Return code   | see list of return codes        |
 
+  /**
+   * Gets the version of the Ledger app that is currently open on the device.
+   * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
+   */
   async getVersion() {
     const result = {}
     try {
+      this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
       let apduResponse = await this._transport.send(
         CLA,
         INS_GET_VERSION,
@@ -208,10 +236,15 @@ class LedgerApp {
   // | PK      | byte (65) | Public Key    |  |
   // | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
-  // default hdPath from Cosmos
+  /**
+   * Gets the public key from the Ledger app that is currently open on the device.
+   * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
+   * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
+   */
   async publicKeySecp256k1(hdPath = [44, 714, 0, 0, 0]) {
     const result = {}
     try {
+      this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
       let apduResponse = await this._transport.send(
         CLA,
         INS_PUBLIC_KEY_SECP256K1,
@@ -272,7 +305,7 @@ class LedgerApp {
 
   // | Field   | Type      | Content       | Note                            |
   // | ------- | --------- | ------------- | ------------------------------- |
-  // | SIG     | byte (~64) | Signature     |  |
+  // | SIG     | byte (~71) | Signature     | DER encoded (length prefixed parts) |
   // | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
   _signGetChunks(data, hdPath) {
@@ -289,14 +322,14 @@ class LedgerApp {
     return chunks
   }
 
-  async _signSendChunk(chunkIdx, chunkNum, chunk) {
+  async _signSendChunk(chunkIdx, chunksCount, chunk) {
     const result = {}
     try {
       let apduResponse = await this._transport.send(
         CLA,
         INS_SIGN_SECP256K1,
         chunkIdx,
-        chunkNum,
+        chunksCount,
         chunk
       )
       apduResponse = Buffer.from(apduResponse, "hex")
@@ -318,7 +351,12 @@ class LedgerApp {
     return result
   }
 
-  // default hdPath
+  /**
+   * Sends a transaction sign doc to the Ledger app to be signed.
+   * @param {Buffer} signBytes The TX sign doc bytes to sign
+   * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
+   * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
+   */
   async signSecp256k1(signBytes, hdPath = [44, 714, 0, 0, 0]) {
     const response = {}
     const chunks = this._signGetChunks(signBytes, hdPath)
@@ -326,6 +364,12 @@ class LedgerApp {
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
     let result
     try {
+      if (chunks.length <= 1) {
+        this._transport.setExchangeTimeout(this._interactiveTimeout)
+      } else {
+        // more to come, non-interactive
+        this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
+      }
       result = await this._signSendChunk(1, chunks.length, chunks[0])
       response["return_code"] = result.return_code
       response["error_message"] = result.error_message
@@ -339,6 +383,9 @@ class LedgerApp {
     if (result.return_code === 0x9000) {
       for (let i = 1; i < chunks.length; i++) {
         try {
+          if (i === chunks.length - 1) { // last?
+            this._transport.setExchangeTimeout(this._interactiveTimeout)
+          }
           result = await this._signSendChunk(1 + i, chunks.length, chunks[i])
           response["return_code"] = result.return_code
           response["error_message"] = result.error_message
@@ -401,10 +448,21 @@ class LedgerApp {
 
   // convenience aliases
 
+  /**
+   * Gets the public key from the Ledger app that is currently open on the device.
+   * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
+   * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
+   */
   getPublicKey(hdPath) {
     return this.publicKeySecp256k1(hdPath)
   }
 
+  /**
+   * Sends a transaction sign doc to the Ledger app to be signed.
+   * @param {Buffer} signBytes The TX sign doc bytes to sign
+   * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
+   * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
+   */
   sign(signBytes, hdPath) {
     return this.signSecp256k1(signBytes, hdPath)
   }
