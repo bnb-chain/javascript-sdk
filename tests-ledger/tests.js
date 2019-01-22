@@ -274,12 +274,12 @@ test("signature size is within range 64-65", function(assert) {
   )
 })
 
-// SIGN_SECP256K1 (good tx with data)
+// SIGN_SECP256K1 (good multi-send tx with data)
 
 // this tx msg follows the BNC structure (no fee, + source and data)
 // eslint-disable-next-line quotes
-const signBytes = `{"account_number":1,"chain_id":"bnbchain","data":"ABCD","memo":"smiley!☺","msgs":["msg"],"sequence":1,"source":1}`
-QUnit.module("SIGN_SECP256K1 - good tx with data", {
+const signBytes = `{"account_number":"12","chain_id":"chain-bnb","data":"DATASTUFF","memo":"OMEMSTUFF","msgs":[{"inputs":[{"address":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","coins":[{"amount":"200000000","denom":"BNB"},{"amount":"2000000","denom":"NNB-0AB"}]}],"outputs":[{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":"200000000","denom":"BNB"}]},{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":"2000000","denom":"NNB-0AB"}]}]}],"sequence":"64","source":"1"}`
+QUnit.module("SIGN_SECP256K1 - good multi-send tx with data", {
   before: async function() {
     try {
       const hdPath = [44, 714, 0, 0, 0]
