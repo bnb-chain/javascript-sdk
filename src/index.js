@@ -9,8 +9,7 @@ import Ledger from "./ledger"
 const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
-  getAccount: "/api/v1/account",
-  getSimulateAccount: "/api/v1/simulate/account/"
+  getAccount: "/api/v1/account"
 }
 
 class BncClient {
@@ -120,10 +119,15 @@ class BncClient {
    * @param {Number} price
    * @param {Number} quantity
    * @param {Number} sequence
+   * @param {Number} timeinforce (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel))
    */
-  async placeOrder(address, symbol, side, price, quantity, sequence) {
+  async placeOrder(address, symbol, side, price, quantity, sequence, timeinforce=1) {
     if(side !== 1 && side !== 2){
       throw new Error("side can only be 1 or 2")
+    }
+
+    if(timeinforce !== 1 && timeinforce !== 3){
+      throw new Error("timeinforce can only be 1 or 3")
     }
 
     const accCode = crypto.decodeAddress(address)
@@ -141,7 +145,7 @@ class BncClient {
       side,
       price: Math.floor(price * Math.pow(10, 8)),
       quantity: Math.floor(quantity * Math.pow(10, 8)),
-      timeinforce: 1,
+      timeinforce: timeinforce,
       msgType: "NewOrderMsg",
     }
 
