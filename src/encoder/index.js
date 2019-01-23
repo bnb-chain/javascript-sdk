@@ -13,14 +13,9 @@ const sortObject = obj => {
   if (typeof obj !== "object") return obj
   // arrays have typeof "object" in js!
   if (Array.isArray(obj))
-    return obj.map(
-      item =>
-        typeof item === "object" && !Array.isArray(item)
-          ? sortObject(item)
-          : item // no need to handle nested arrays.
-    )
-  const result = {}
+    return obj.map(sortObject)
   const sortedKeys = Object.keys(obj).sort()
+  const result = {}
   sortedKeys.forEach(key => {
     result[key] = sortObject(obj[key])
   })
