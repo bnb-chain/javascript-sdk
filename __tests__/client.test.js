@@ -69,14 +69,26 @@ describe("BncClient test", async () => {
     expect(res.length).toBeGreaterThanOrEqual(0)
   })
 
-  // it("transfer bnb to other wallet", async () => {
-  //   const client = await getClient()
-  //   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
-  //   const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
-  //   const sequence = account.result && account.result.sequence
-  //   const res = await client.transfer(addr, targetAddress, 100, "BNB", "hello world", +sequence)
-  //   expect(res.result[0].code).toBe(0)
-  // })
+  it("transfer placeOrder cancelOrder", async () => {
+    const client = await getClient()
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const accCode = crypto.decodeAddress(addr)
+    const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+    const sequence = account.result && account.result.sequence
+
+    const res = await client.transfer(addr, targetAddress, 100, "BNB", "hello world", sequence)
+    console.log(res)
+    expect(res.result[0].code).toBe(0)
+
+    const res1 = await client.placeOrder(addr, 'NNB-338_BNB', 1, 11, 12, sequence + 1)
+    console.log(res1)
+    expect(res1.result[0].code).toBe(0)
+
+    const orderId = `${accCode.toString('hex')}-${sequence + 2}`.toUpperCase()
+    const res2 = await client.cancelOrder(addr, 'NNB-338_BNB', orderId, orderId, sequence + 2)
+    console.log(res2)
+    expect(res2.result[0].code).toBe(0)
+  })
 
   it("get account", async () => {
     const client = await getClient()
