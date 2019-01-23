@@ -17,6 +17,7 @@ module.exports = {
     quotes: ["warn", "double"],
     semi: ["warn", "never"],
     "no-buffer-constructor": 1,
-    indent: ["error", 2, { SwitchCase: 1 }]
+    indent: ["error", 2, { SwitchCase: 1 }],
+    "no-console": ["warn"]
   }
 }

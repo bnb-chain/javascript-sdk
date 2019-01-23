@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import "babel-polyfill"
 import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import * as utils from "./utils"

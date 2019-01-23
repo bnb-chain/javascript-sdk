@@ -17,7 +17,7 @@ describe("encoder", () => {
   it("encode negtive number", () => {
     expect(() => {
       encoder.encodeNumber(-100000)
-    }).toThrow();
+    }).toThrow()
   })
 
   it("encode big number", () => {
@@ -57,7 +57,7 @@ describe("encoder", () => {
       address: 1
     }
     const str = encoder.convertObjectToSignBytes(jsonObj)
-    expect(str.toString()).toBe('{"address":1,"sender":2,"symbol":3,"zlast":[{"a":"z","z":"z"},{"a":"z","z":"a"}]}')
+    expect(str.toString()).toBe("{\"address\":1,\"sender\":2,\"symbol\":3,\"zlast\":[{\"a\":\"z\",\"z\":\"z\"},{\"a\":\"z\",\"z\":\"a\"}]}")
   })
 
   it("marshalBinary", () => {

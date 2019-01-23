@@ -360,7 +360,7 @@ class LedgerApp {
   async signSecp256k1(signBytes, hdPath = [44, 714, 0, 0, 0]) {
     const response = {}
     const chunks = this._signGetChunks(signBytes, hdPath)
-    console.log('chunks', chunks)
+    console.log("chunks", chunks)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
     let result
     try {
@@ -415,10 +415,10 @@ class LedgerApp {
       //  = 7 bytes of overhead
       let signature = result.signature
       if (!signature || !signature.length) {
-        throw new Error('Ledger assertion failed: Expected a non-empty signature from the device')
+        throw new Error("Ledger assertion failed: Expected a non-empty signature from the device")
       }
       if (signature[0] !== 0x30) {
-        throw new Error('Ledger assertion failed: Expected a signature header of 0x30')
+        throw new Error("Ledger assertion failed: Expected a signature header of 0x30")
       }
       // decode DER string format
       let rOffset = 4

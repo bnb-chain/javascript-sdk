@@ -2,7 +2,7 @@
 const BN = require("bn.js")
 
 const VarInt = (signed)=> {
-  function decode (buffer, start = 0, end = buffer.length) {
+  function decode () {
     throw Error("not implemented")
   }
 
@@ -18,7 +18,7 @@ const VarInt = (signed)=> {
     // amino signed varint is multiplied by 2
     if (signed){
       bn = bn.muln(2)
-    } 
+    }
 
     let i = 0
     while (bn.gten(0x80)) {
@@ -26,7 +26,7 @@ const VarInt = (signed)=> {
       bn = bn.shrn(7)
       i++
     }
-  
+
     buffer[offset + i] = bn.andln(0xff)
     encode.bytes = i + 1
     return buffer

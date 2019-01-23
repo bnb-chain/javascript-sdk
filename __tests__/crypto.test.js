@@ -1,5 +1,5 @@
 // import * as crypto from "../src/crypto"
-import { crypto } from '../src'
+import { crypto } from "../src"
 import bip39 from "bip39"
 
 const privateKey = crypto.generatePrivateKey()
@@ -70,7 +70,7 @@ describe("crypto", () => {
 
   it("generateSignature and verifySignature - utf8 memo", () => {
     const publicKey = crypto.getPublicKeyFromPrivateKey(privateKey)
-    const msg = Buffer.from(`{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"smiley!☺","msgs":["msg"],"sequence":1,"source":1}`).toString("hex")
+    const msg = Buffer.from("{\"account_number\":1,\"data\":\"ABCD\",\"chain_id\":\"bnbchain\",\"memo\":\"smiley!☺\",\"msgs\":[\"msg\"],\"sequence\":1,\"source\":1}").toString("hex")
     const sig = crypto.generateSignature(msg, privateKey).toString("hex")
     expect(crypto.verifySignature(sig, msg, publicKey)).toBeTruthy()
   })
