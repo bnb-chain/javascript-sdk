@@ -76,7 +76,7 @@ describe("BncClient test", async () => {
     const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
     const sequence = account.result && account.result.sequence
 
-    const res = await client.transfer(addr, targetAddress, 100, "BNB", "hello world", sequence)
+    const res = await client.transfer(addr, targetAddress, 1, "BNB", "hello world", sequence)
     console.log(res)
     expect(res.result[0].code).toBe(0)
 
