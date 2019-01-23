@@ -49,13 +49,15 @@ describe("encoder", () => {
   })
 
   it("convertObjectToSignBytes", () => {
+    // unsorted, expect convertObjectToSignBytes to sort it
     const jsonObj = {
-      address: 1,
       sender: 2,
       symbol: 3,
+      zlast: [{z: "z", a: "z"}, {z: "a", a: "z"}],
+      address: 1
     }
     const str = encoder.convertObjectToSignBytes(jsonObj)
-    expect(str.toString("hex")).toBe("7b2261646472657373223a312c2273656e646572223a322c2273796d626f6c223a337d")
+    expect(str.toString()).toBe('{"address":1,"sender":2,"symbol":3,"zlast":[{"a":"z","z":"z"},{"a":"z","z":"a"}]}')
   })
 
   it("marshalBinary", () => {

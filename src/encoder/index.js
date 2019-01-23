@@ -8,6 +8,25 @@ import { typePrefix } from "../tx/"
 
 const VarString = vstruct.VarString(UVarInt)
 
+const sortObject = obj => {
+  if (obj === null) return null
+  if (typeof obj !== "object") return obj
+  // arrays have typeof "object" in js!
+  if (Array.isArray(obj))
+    return obj.map(
+      item =>
+        typeof item === "object" && !Array.isArray(item)
+          ? sortObject(item)
+          : item // no need to handle nested arrays.
+    )
+  const result = {}
+  const sortedKeys = Object.keys(obj).sort()
+  sortedKeys.forEach(key => {
+    result[key] = sortObject(obj[key])
+  })
+  return result
+}
+
 /**
  * encode number
  * @param num
@@ -50,7 +69,8 @@ export const encodeTime = (value) => {
  * @param obj -- {object}
  * @return bytes {Buffer}
  */
-export const convertObjectToSignBytes = (obj) => Buffer.from(JSON.stringify(obj))
+export const convertObjectToSignBytes = obj =>
+  Buffer.from(JSON.stringify(sortObject(obj)))
 
 /**
  * js amino MarshalBinary
