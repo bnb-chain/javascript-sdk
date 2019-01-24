@@ -5,7 +5,7 @@ const { test } = QUnit
 const LONG_TIMEOUT = 15000
 const EXPECTED_MAJOR = 1
 const EXPECTED_MINOR = 0
-const EXPECTED_PATCH = 1
+const EXPECTED_PATCH = 0
 
 let isBrowser
 let Ledger, crypto
