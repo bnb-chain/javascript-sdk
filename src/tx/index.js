@@ -82,15 +82,14 @@ class Transaction {
   }
 
   /**
-   * sign transaction with a given private key and msg
-   * @param {string} privateKey
+   * generate the sign bytes for a transaction, given a msg
    * @param {Object} concrete msg object
+   * @return {Buffer}
    **/
-  sign(privateKey, msg) {
+  getSignBytes(msg) {
     if(!msg){
       throw new Error("msg should be an object")
     }
-
     const signMsg = {
       "account_number": this.account_number.toString(),
       "chain_id": this.chain_id,
@@ -100,16 +99,36 @@ class Transaction {
       "sequence": this.sequence.toString(),
       "source": "1"
     }
+    return encoder.convertObjectToSignBytes(signMsg)
+  }
 
-    const signMsgBytes = encoder.convertObjectToSignBytes(signMsg)
-    const signature = crypto.generateSignature(signMsgBytes.toString("hex"), privateKey)
-    const pub_key = this.serializePubKey(privateKey)
+  /**
+   * attaches a signature to the transaction
+   * @param {Buffer} pubKey
+   * @param {Buffer} signature
+   * @return {Transaction}
+   **/
+  addSignature(pubKey, signature) {
     this.signatures = [{
-      pub_key: Buffer.concat([Buffer.from("EB5AE987", "hex"), pub_key]),
+      pub_key: Buffer.concat([Buffer.from("EB5AE987", "hex"), pubKey]),
       signature: signature,
       account_number: this.account_number,
       sequence: this.sequence,
     }]
+    return this
+  }
+
+  /**
+   * sign transaction with a given private key and msg
+   * @param {string} privateKey
+   * @param {Object} concrete msg object
+   * @return {Transaction}
+   **/
+  sign(privateKey, msg) {
+    const signBytes = this.getSignBytes(msg)
+    const pubKey = this.serializePubKey(privateKey)
+    const signature = crypto.generateSignature(signBytes.toString("hex"), privateKey)
+    this.addSignature(pubKey, signature)
     return this
   }
 
