@@ -360,7 +360,6 @@ class LedgerApp {
   async signSecp256k1(signBytes, hdPath = [44, 714, 0, 0, 0]) {
     const response = {}
     const chunks = this._signGetChunks(signBytes, hdPath)
-    console.log("chunks", chunks)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
     let result
     try {
