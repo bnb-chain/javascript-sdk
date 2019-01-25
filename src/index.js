@@ -12,8 +12,33 @@ const api = {
   getAccount: "/api/v1/account"
 }
 
-class BncClient {
+/**
+ * The default signing delegate which uses the local private key.
+ * @param  {Transaction} tx      the transaction
+ * @param  {Object}      signMsg the canonical sign bytes for the msg
+ * @return {Transaction}
+ */
+export const DefaultSigningDelegate = async function(tx, signMsg) {
+  return tx.sign(this.privateKey, signMsg)
+}
 
+/**
+ * The Ledger signing delegate.
+ * @param  {LedgerApp}  ledgerApp
+ * @param  {preSignCb}  function
+ * @param  {postSignCb} function
+ * @return {function}
+ */
+export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb) => async function(tx, signMsg) {
+  const signBytes = tx.getSignBytes(signMsg)
+  preSignCb && preSignCb(signBytes)
+  const pubKeyResp = await ledgerApp.getPublicKey()
+  const sigResp = await ledgerApp.sign(signBytes)
+  postSignCb && postSignCb(pubKeyResp, sigResp)
+  return tx.addSignature(pubKeyResp.pk, sigResp.signature)
+}
+
+class BncClient {
   /**
    * @param {string} Binance Chain public url
    */
@@ -21,8 +46,8 @@ class BncClient {
     if(!server) {
       throw new Error("Binance chain server should not be null")
     }
-
     this._httpClient = new HttpRequest(server)
+    this._signingDelegate = DefaultSigningDelegate
   }
 
   async initChain() {
@@ -30,13 +55,21 @@ class BncClient {
       const data = await this._httpClient.request("get", api.nodeInfo)
       this.chainId = data.node_info && data.node_info.network || "chain-bnb"
     }
-
     return this
   }
 
   setPrivateKey(privateKey) {
     this.privateKey = privateKey
     return this
+  }
+
+  setSigningDelegate(delegate) {
+    if (typeof delegate !== "function") throw new Error("delegate must be a function")
+    this._signingDelegate = delegate
+  }
+
+  useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb) {
+    this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb)
   }
 
   /**
@@ -174,7 +207,6 @@ class BncClient {
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=true) {
-
     if((!sequence || !this.account_number) && address) {
       const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
       sequence = data.result.sequence
@@ -191,11 +223,11 @@ class BncClient {
     }
 
     const tx = new Transaction(options)
-
-    const txBytes = tx.sign(this.privateKey, stdSignMsg).serialize()
+    const signedTx = await this._signingDelegate.call(this, tx, stdSignMsg)
+    const signedBz = signedTx.serialize()
 
     const opts = {
-      data: txBytes,
+      data: signedBz,
       headers: {
         "content-type": "text/plain",
       }
