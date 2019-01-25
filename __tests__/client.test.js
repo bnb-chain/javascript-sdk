@@ -16,6 +16,14 @@ const getClient = async () => {
   return client
 }
 
+const wait = ms => {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve()
+    }, ms)
+  })
+}
+
 describe("BncClient test", async () => {
 
   it("create account", async () => {
@@ -70,6 +78,8 @@ describe("BncClient test", async () => {
   })
 
   it("transfer placeOrder cancelOrder", async () => {
+    jest.setTimeout(10000)
+
     const client = await getClient()
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
     const accCode = crypto.decodeAddress(addr)
@@ -83,6 +93,8 @@ describe("BncClient test", async () => {
     const res1 = await client.placeOrder(addr, "NNB-338_BNB", 1, 11, 12, sequence + 1)
     console.log(res1)
     expect(res1.result[0].code).toBe(0)
+
+    await wait(3000)
 
     const orderId = `${accCode.toString("hex")}-${sequence + 2}`.toUpperCase()
     const res2 = await client.cancelOrder(addr, "NNB-338_BNB", orderId, orderId, sequence + 2)
