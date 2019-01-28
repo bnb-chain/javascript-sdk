@@ -61,27 +61,6 @@ class Transaction {
   }
 
   /**
-   * serializes a public key in a 33-byte compressed format.
-   * @param {hex string} privateKey
-   * @return {Buffer}
-   */
-  serializePubKey(privateKey){
-    let unencodedPubKey = crypto.generatePubKey(privateKey)
-    let format = 0x2
-    if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
-      format |= 0x1
-    }
-
-    const pubKey = Buffer.concat([
-      UVarInt.encode(format),
-      unencodedPubKey.x.toArrayLike(Buffer, "be", 32)
-    ])
-
-    //prefixed with length;
-    return encoder.encodeBinaryByteArray(pubKey)
-  }
-
-  /**
    * generate the sign bytes for a transaction, given a msg
    * @param {Object} concrete msg object
    * @return {Buffer}
@@ -104,13 +83,14 @@ class Transaction {
 
   /**
    * attaches a signature to the transaction
-   * @param {Buffer} pubKey
+   * @param {Elliptic.PublicKey} pubKey
    * @param {Buffer} signature
    * @return {Transaction}
    **/
   addSignature(pubKey, signature) {
+    pubKey = this._serializePubKey(pubKey) // => Buffer
     this.signatures = [{
-      pub_key: Buffer.concat([Buffer.from("EB5AE987", "hex"), pubKey]),
+      pub_key: pubKey,
       signature: signature,
       account_number: this.account_number,
       sequence: this.sequence,
@@ -120,15 +100,15 @@ class Transaction {
 
   /**
    * sign transaction with a given private key and msg
-   * @param {string} privateKey
+   * @param {string} privateKey private key hex string
    * @param {Object} concrete msg object
    * @return {Transaction}
    **/
   sign(privateKey, msg) {
     const signBytes = this.getSignBytes(msg)
-    const pubKey = this.serializePubKey(privateKey)
-    const signature = crypto.generateSignature(signBytes.toString("hex"), privateKey)
-    this.addSignature(pubKey, signature)
+    const privKeyBuf = Buffer.from(privateKey, "hex")
+    const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
+    this.addSignature(crypto.generatePubKey(privKeyBuf), signature)
     return this
   }
 
@@ -154,6 +134,27 @@ class Transaction {
 
     const bytes = encoder.marshalBinary(stdTx)
     return bytes.toString("hex")
+  }
+
+  /**
+   * serializes a public key in a 33-byte compressed format.
+   * @param {Elliptic.PublicKey} unencodedPubKey
+   * @return {Buffer}
+   */
+  _serializePubKey(unencodedPubKey){
+    let format = 0x2
+    if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
+      format |= 0x1
+    }
+    let pubBz = Buffer.concat([
+      UVarInt.encode(format),
+      unencodedPubKey.x.toArrayLike(Buffer, "be", 32)
+    ])
+    // prefixed with length
+    pubBz = encoder.encodeBinaryByteArray(pubBz)
+    // add the amino prefix
+    pubBz = Buffer.concat([Buffer.from("EB5AE987", "hex"), pubBz])
+    return pubBz
   }
 }
 

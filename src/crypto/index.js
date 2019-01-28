@@ -76,11 +76,11 @@ export const generateRandomArray = length => csprng(length)
 
 /**
  * @param {string} publicKey - Encoded public key
- * @return {string} decoded public key
+ * @return {Elliptic.PublicKey} public key
  */
 export const getPublicKey = publicKey => {
   let keyPair = ec.keyFromPublic(publicKey, "hex")
-  return keyPair.getPublic().encode("hex")
+  return keyPair.getPublic()
 }
 
 /**
@@ -98,12 +98,12 @@ export const getPublicKeyFromPrivateKey = privateKeyHex => {
 /**
  * PubKey performs the point-scalar multiplication from the privKey on the
  * generator point to get the pubkey.
- * @param {string} privateKey
- * @return {array-bn} PubKey
+ * @param {Buffer} privateKey
+ * @return {Elliptic.PublicKey} PubKey
  * */
-export const generatePubKey = privateKey =>{
+export const generatePubKey = privateKey => {
   const curve = new EC(CURVE)
-  const keypair = curve.keyFromPrivate(privateKey, "hex")
+  const keypair = curve.keyFromPrivate(privateKey)
   return keypair.getPublic()
 }
 
@@ -132,13 +132,13 @@ export const getAddressFromPrivateKey = privateKeyHex => {
 /**
  * Generates a signature (64 byte <r,s>) for a transaction based on given private key.
  * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
- * @param {string} privateKeyHex - The private key.
+ * @param {string | Buffer} privateKey - The private key.
  * @return {Buffer} Signature. Does not include tx.
  */
-export const generateSignature = (signBytesHex, privateKeyHex) => {
+export const generateSignature = (signBytesHex, privateKey) => {
   const msgHash = sha256(signBytesHex)
   const msgHashHex = Buffer.from(msgHash, "hex")
-  const signature = ecc.sign(msgHashHex, Buffer.from(privateKeyHex, "hex"))
+  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, "hex")) // enc ignored if buffer
   return signature
 }
 

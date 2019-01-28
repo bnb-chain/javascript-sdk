@@ -44,7 +44,11 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) =
     console.warn("LedgerSigningDelegate error", err)
     errCb && errCb(err)
   }
-  return sigResp ? tx.addSignature(pubKeyResp.pk, sigResp.signature) : tx
+  if (sigResp && sigResp.signature) {
+    const pubKey = crypto.getPublicKey(pubKeyResp.pk.toString("hex"))
+    return tx.addSignature(pubKey, sigResp.signature)
+  }
+  return tx
 }
 
 class BncClient {
