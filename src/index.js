@@ -77,8 +77,8 @@ class BncClient {
     this._signingDelegate = delegate
   }
 
-  useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb) {
-    this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb)
+  useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb) {
+    this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)
   }
 
   /**
