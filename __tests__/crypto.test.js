@@ -42,9 +42,9 @@ describe("crypto", () => {
   })
 
   it("decodeAddress", ()=>{
-    let address = "cosmosaccaddr1wqrn76z0v36pr3vx3sgue4y5rv4pzpu6ffnjj0"
+    let address = "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh"
     const decod = crypto.decodeAddress(address)
-    expect(decod.toString("hex")).toBe("70073f684f647411c5868c11ccd4941b2a11079a")
+    expect(decod.toString("hex")).toBe("ba36f0fad74d8f41045463e4774f328f4af779e5")
   })
 
   it("generate address from mnemonic", () => {
