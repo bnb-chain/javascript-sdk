@@ -11,7 +11,7 @@ describe("encoder", () => {
   it("encode number", () => {
     let encodedNumber = encoder.encodeNumber(100000)
     encodedNumber = encodedNumber.toString("hex")
-    expect(encodedNumber).toBe("c09a0c")
+    expect(encodedNumber).toBe("a08d06")
   })
 
   it("encode negtive number", () => {
@@ -23,7 +23,7 @@ describe("encoder", () => {
   it("encode big number", () => {
     let encodedNumber = encoder.encodeNumber(Math.pow(10, 18))
     encodedNumber = encodedNumber.toString("hex")
-    expect(encodedNumber).toBe("8080a0f6f4acdbe01b")
+    expect(encodedNumber).toBe("808090bbbad6adf00d")
   })
 
   it("UVarInt", () => {
@@ -35,7 +35,7 @@ describe("encoder", () => {
   it("encode bool", () => {
     let encodedTrue = encoder.encodeBool(true)
     encodedTrue = encodedTrue.toString("hex")
-    expect(encodedTrue).toBe("02")
+    expect(encodedTrue).toBe("01")
 
     let encodedFalse = encoder.encodeBool(false)
     encodedFalse = encodedFalse.toString("hex")
