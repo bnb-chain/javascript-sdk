@@ -66,7 +66,7 @@ class BncClient {
   async initChain() {
     if(!this.chainId) {
       const data = await this._httpClient.request("get", api.nodeInfo)
-      this.chainId = data.node_info && data.node_info.network || "chain-bnb"
+      this.chainId = data.result.node_info && data.result.node_info.network || "chain-bnb"
     }
     return this
   }
