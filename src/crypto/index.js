@@ -40,7 +40,7 @@ export const decodeAddress = (value) => {
 export const checkAddress = (address) => {
   try {
     const decodeAddress = bech32.decode(address)
-    if(decodeAddress.prefix === "bnc") {
+    if(decodeAddress.prefix === "tbnb") {
       return true
     }
 
@@ -56,7 +56,7 @@ export const checkAddress = (address) => {
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
  */
-export const encodeAddress = (value, prefix = "bnc", type = "hex") => {
+export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
   const words = bech32.toWords(Buffer.from(value, type))
   return bech32.encode(prefix, words)
 }

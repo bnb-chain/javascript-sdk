@@ -136,19 +136,19 @@ class BncClient {
     return await this._sendTransaction(msg, signMsg, fromAddress, sequence, memo, true)
   }
 
-  async cancelOrder(fromAddress, symbol, orderId, refid, sequence) {
+  async cancelOrder(fromAddress, symbol, refid, sequence) {
     const accCode = crypto.decodeAddress(fromAddress)
 
     const msg = {
       sender: accCode,
       symbol: symbol,
-      id: orderId,
+      // id: orderId,
       refid: refid,
       msgType: "CancelOrderMsg"
     }
 
     const signMsg = {
-      id: orderId,
+      // id: orderId,
       refid: refid,
       sender: fromAddress,
       symbol: symbol
