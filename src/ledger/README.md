@@ -127,8 +127,3 @@ All other packets/chunks should contain message to sign
 | SIG     | byte (~71)   | Signature     | DER encoded (length prefixed) |
 | SW1-SW2 | byte (2)     | Return code   | see list of return codes        |
 
----------
-
-# Acknowledgement
-
-Thank you to @ZondaX for excellent work on the open source [Ledger app for Cosmos]((https://github.com/ZondaX/ledger-cosmos-app).
