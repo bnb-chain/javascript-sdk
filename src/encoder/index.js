@@ -1,3 +1,7 @@
+/**
+ * @module amino
+ */
+
 import vstruct from "varstruct"
 import { Buffer } from "safe-buffer"
 import _ from "lodash"

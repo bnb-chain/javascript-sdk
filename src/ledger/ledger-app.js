@@ -1,3 +1,6 @@
+/**
+ * @module ledger
+ */
 /********************************************************************************
  *   Binance Chain Ledger App Interface
  *   (c) 2018-2019 Binance
@@ -14,7 +17,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ********************************************************************************/
+ *******************************************************************************
+ */
 
 const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 45000
 const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000
@@ -48,6 +52,10 @@ const INS_SIGN_SECP256K1 = 0x02
 // | ANSWER  | byte (?) | Answer      | depends on the command   |
 // | SW1-SW2 | byte (2) | Return code | see list of return codes |
 
+/**
+ * Ledger app interface.
+ * @static
+ */
 class LedgerApp {
   /**
    * Constructs a new LedgerApp.

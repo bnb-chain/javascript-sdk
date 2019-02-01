@@ -1,5 +1,8 @@
 import axios from "axios"
 
+/**
+ * @alias utils.HttpRequest
+ */
 class HttpRequest {
   constructor(baseURL){
     this.httpClient = axios.create({ baseURL })

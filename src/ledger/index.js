@@ -18,7 +18,7 @@
 const isBrowser = typeof window !== "undefined"
 const Ledger = module.exports
 
-Ledger.app = require("./ledger-app")
+Ledger.app = Ledger.LedgerApp = require("./ledger-app")
 
 Ledger.transports = {
   u2f: require("@ledgerhq/hw-transport-u2f").default,
@@ -27,3 +27,5 @@ Ledger.transports = {
   // requiring the node transport in the browser causes a bit of an issue with webpack!
   node: !isBrowser ? require("@ledgerhq/hw-transport-node-hid").default : null,
 }
+
+module.exports = Ledger

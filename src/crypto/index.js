@@ -1,3 +1,7 @@
+/**
+ * @module crypto
+ */
+
 import csprng from "secure-random"
 import bech32 from "bech32"
 import cryp from "crypto-browserify"
@@ -13,7 +17,6 @@ import {
   sha256,
   sha256ripemd160,
 } from "../utils"
-
 
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
