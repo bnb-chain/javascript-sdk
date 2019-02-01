@@ -7,6 +7,7 @@
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
     "build": "rm -rf lib && npx babel src -d lib",
+    "build:docs": "npx jsdoc-to-markdown -f src/**/*.js > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__"
   },
@@ -46,6 +47,7 @@
     "eslint": "^5.11.1",
     "http-server": "^0.11.1",
     "jest": "^23.6.0",
+    "jsdoc-to-markdown": "^4.0.1",
     "qunit": "^2.9.1"
   },
   "babel": {
