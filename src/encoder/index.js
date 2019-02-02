@@ -30,7 +30,7 @@ const sortObject = obj => {
  * encode number
  * @param num
  */
-export const encodeNumber = (num) => VarInt.encode(num)
+export const encodeNumber = (num) => UVarInt.encode(num)
 
 /**
  * encode bool
