@@ -10,20 +10,20 @@ describe("crypto", () => {
   it("generate a random address", () => {
     const privateKey = crypto.generatePrivateKey()
     const address = crypto.getAddressFromPrivateKey(privateKey)
-    expect(address.length).toBe(42)
+    expect(address.length).toBe(43)
   })
 
   it("generate an address from privateKey", () => {
     const privateKey = "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
     const address = crypto.getAddressFromPrivateKey(privateKey)
-    expect(address).toBe("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+    expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
   it("generate an address from publicKey", () => {
     const privateKey = "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
     const publicKey = crypto.getPublicKeyFromPrivateKey(privateKey)
     const address = crypto.getAddressFromPublicKey(publicKey)
-    expect(address).toBe("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+    expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
   it("generate private key from keyStore", () => {
@@ -42,7 +42,7 @@ describe("crypto", () => {
   })
 
   it("decodeAddress", ()=>{
-    let address = "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh"
+    let address = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const decod = crypto.decodeAddress(address)
     expect(decod.toString("hex")).toBe("ba36f0fad74d8f41045463e4774f328f4af779e5")
   })
@@ -51,7 +51,7 @@ describe("crypto", () => {
     const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic)
     const address = crypto.getAddressFromPrivateKey(pk)
-    expect(address).toBe("bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh")
+    expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
   it("generateSignature", () => {

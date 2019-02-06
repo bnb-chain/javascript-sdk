@@ -1,6 +1,6 @@
 {
   "params": {
-    "address": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+    "address": "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
     "to": "bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720",
     "amount": 1000,
     "asset": "BNB",
@@ -15,7 +15,7 @@
       {
         "inputs": [
           {
-            "address": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+            "address": "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
             "coins": [
               {
                 "amount": "100000000000",

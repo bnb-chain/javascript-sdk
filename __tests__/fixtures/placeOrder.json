@@ -1,6 +1,6 @@
 {
   "params": {
-    "address": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+    "address": "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
     "symbol": "NNB-338_BNB",
     "side": 1,
     "price": 11,
@@ -18,7 +18,7 @@
         "ordertype": 2,
         "price": 1100000000,
         "quantity": 1200000000,
-        "sender": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+        "sender": "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
         "side": 1,
         "symbol": "NNB-338_BNB",
         "timeinforce": 1

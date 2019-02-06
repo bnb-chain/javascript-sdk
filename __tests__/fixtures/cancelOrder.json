@@ -1,6 +1,6 @@
 {
   "params": {
-    "fromAddress": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+    "fromAddress": "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
     "symbol": "NNB-338_BNB",
     "orderId": "BA36F0FAD74D8F41045463E4774F328F4AF779E5-89",
     "refid": "BA36F0FAD74D8F41045463E4774F328F4AF779E5-89",
@@ -15,7 +15,7 @@
       {
         "id": "BA36F0FAD74D8F41045463E4774F328F4AF779E5-89",
         "refid": "BA36F0FAD74D8F41045463E4774F328F4AF779E5-89",
-        "sender": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+        "sender": "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
         "symbol": "NNB-338_BNB"
       }
     ],
