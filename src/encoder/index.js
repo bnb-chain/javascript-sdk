@@ -27,6 +27,12 @@ const sortObject = obj => {
 }
 
 /**
+ * encode int8
+ * @param num
+ */
+export const encodeInt8 = (num) => VarInt.encode(num)
+
+/**
  * encode number
  * @param num
  */
@@ -164,11 +170,18 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
 
     if (isDefaultValue(obj[key])) return
 
-    if (_.isArray(obj[key]) && obj[key].length > 0) {
-      bufferArr.push(encodeArrayBinary(index, obj[key]))
-    } else {
+    // TODO: temporary fix for int8 fields which are still varints after the go-amino change.
+    // https://git.io/fh96k
+    if (key === "timeinforce" || key === "side" || key === "ordertype") {
       bufferArr.push(encodeTypeAndField(index, obj[key]))
-      bufferArr.push(encodeBinary(obj[key], index, true))
+      bufferArr.push(encodeInt8(obj[key]))
+    } else {
+      if (_.isArray(obj[key]) && obj[key].length > 0) {
+        bufferArr.push(encodeArrayBinary(index, obj[key]))
+      } else {
+        bufferArr.push(encodeTypeAndField(index, obj[key]))
+        bufferArr.push(encodeBinary(obj[key], index, true))
+      }
     }
   })
 
