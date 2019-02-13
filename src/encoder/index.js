@@ -27,12 +27,6 @@ const sortObject = obj => {
 }
 
 /**
- * encode int8
- * @param num
- */
-export const encodeInt8 = (num) => VarInt.encode(num)
-
-/**
  * encode number
  * @param num
  */
