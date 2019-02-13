@@ -158,30 +158,16 @@ export const encodeBinaryByteArray = (bytes) => {
 export const encodeObjectBinary = (obj, isByteLenPrefix) => {
   const bufferArr = []
 
-  // add version 0x1
-  // remove version field
-  //  if(obj.version === 1){
-  //   bufferArr.push(encodeTypeAndField(0, 1))
-  //   bufferArr.push(UVarInt.encode(1))
-  //  }
-
   Object.keys(obj).forEach((key, index) => {
     if (key === "msgType" || key === "version") return
 
     if (isDefaultValue(obj[key])) return
 
-    // TODO: temporary fix for int8 fields which are still varints after the go-amino change.
-    // https://git.io/fh96k
-    if (key === "timeinforce" || key === "side" || key === "ordertype") {
-      bufferArr.push(encodeTypeAndField(index, obj[key]))
-      bufferArr.push(encodeInt8(obj[key]))
+    if (_.isArray(obj[key]) && obj[key].length > 0) {
+      bufferArr.push(encodeArrayBinary(index, obj[key]))
     } else {
-      if (_.isArray(obj[key]) && obj[key].length > 0) {
-        bufferArr.push(encodeArrayBinary(index, obj[key]))
-      } else {
-        bufferArr.push(encodeTypeAndField(index, obj[key]))
-        bufferArr.push(encodeBinary(obj[key], index, true))
-      }
+      bufferArr.push(encodeTypeAndField(index, obj[key]))
+      bufferArr.push(encodeBinary(obj[key], index, true))
     }
   })
 
