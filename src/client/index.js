@@ -68,7 +68,7 @@ export class BncClient {
   async initChain() {
     if(!this.chainId) {
       const data = await this._httpClient.request("get", api.nodeInfo)
-      this.chainId = data.result.node_info && data.result.node_info.network || "chain-bnb"
+      this.chainId = data.result.node_info && data.result.node_info.network
     }
     return this
   }
@@ -122,14 +122,14 @@ export class BncClient {
       inputs: [{
         address: fromAddress,
         coins: [{
-          amount: amount.toString(),
+          amount: amount,
           denom: asset
         }]
       }],
       outputs: [{
         address: toAddress,
         coins: [{
-          amount: amount.toString(),
+          amount: amount,
           denom: asset
         }]
       }]
@@ -144,13 +144,11 @@ export class BncClient {
     const msg = {
       sender: accCode,
       symbol: symbol,
-      // id: orderId,
       refid: refid,
       msgType: "CancelOrderMsg"
     }
 
     const signMsg = {
-      // id: orderId,
       refid: refid,
       sender: fromAddress,
       symbol: symbol
