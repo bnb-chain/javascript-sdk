@@ -245,7 +245,7 @@ QUnit.module("SIGN_SECP256K1 - good tx", {
     try {
       // this tx msg is a real BNC TX (no fee, with source and data)
       // eslint-disable-next-line quotes
-      const signBytes = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"smiley!☺","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":"1612345678","quantity":"123456","sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
+      const signBytes = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"smiley!☺","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1612345678,"quantity":123456,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":1}],"sequence":"3","source":"1"}`
       const hdPath = [44, 714, 0, 0, 0]
       // app = await getApp(LONG_TIMEOUT)
       response = await app.sign(signBytes, hdPath)
@@ -278,7 +278,7 @@ test("signature size is within range 64-65", function(assert) {
 
 // this tx msg follows the BNC structure (no fee, + source and data)
 // eslint-disable-next-line quotes
-const signBytes = `{"account_number":"12","chain_id":"chain-bnb","data":"DATASTUFF","memo":"MEMOSTUFF","msgs":[{"inputs":[{"address":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","coins":[{"amount":"200000000","denom":"BNB"},{"amount":"2000000","denom":"NNB-0AB"}]}],"outputs":[{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":"200000000","denom":"BNB"}]},{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":"2000000","denom":"NNB-0AB"}]}]}],"sequence":"64","source":"1"}`
+const signBytes = `{"account_number":"12","chain_id":"chain-bnb","data":"DATASTUFF","memo":"MEMOSTUFF","msgs":[{"inputs":[{"address":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","coins":[{"amount":200000000,"denom":"BNB"},{"amount":2000000,"denom":"NNB-0AB"}]}],"outputs":[{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":200000000,"denom":"BNB"}]},{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":2000000,"denom":"NNB-0AB"}]}]}],"sequence":"64","source":"1"}`
 QUnit.module("SIGN_SECP256K1 - good multi-send tx with data", {
   before: async function() {
     try {
