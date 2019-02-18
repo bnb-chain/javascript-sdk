@@ -288,7 +288,7 @@ export class BncClient {
   }
 
   /**
-   *
+   * Creates a private key.
    * @return {Object}
    * {
    *  address,
@@ -400,5 +400,14 @@ export class BncClient {
    */
   checkAddress(address){
     return crypto.checkAddress(address)
+  }
+
+  /**
+   * Returns the address for the current account if setPrivateKey has been called on this client.
+   * @return {String}
+   */
+  getClientKeyAddress(){
+    if (!this.privateKey) throw new Error('No private key set on client.')
+    return crypto.getAddressFromPrivateKey(this.privateKey)
   }
 }
