@@ -99,7 +99,7 @@ export class BncClient {
   async transfer(fromAddress, toAddress, amount, asset, memo, sequence) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
-    amount = amount * Math.pow(10, 8)
+    amount = parseInt(amount * Math.pow(10, 8))
 
     const coin = {
       denom: asset,
