@@ -40,6 +40,7 @@
         * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
         * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
         * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
+        * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
     * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
     * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
 
@@ -64,6 +65,7 @@ The Binance Chain client.
     * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
     * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
     * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
+    * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
 
 <a name="new_module_client.BncClient_new"></a>
 
@@ -146,6 +148,8 @@ get account
 <a name="module_client.BncClient+createAccount"></a>
 
 #### bncClient.createAccount() ⇒ <code>Object</code>
+Creates a private key.
+
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 **Returns**: <code>Object</code> - {
  address,
@@ -206,6 +210,12 @@ get account
 | --- | --- |
 | address | <code>String</code> | 
 
+<a name="module_client.BncClient+getClientKeyAddress"></a>
+
+#### bncClient.getClientKeyAddress() ⇒ <code>String</code>
+Returns the address for the current account if setPrivateKey has been called on this client.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 <a name="module_client.DefaultSigningDelegate"></a>
 
 ### client.DefaultSigningDelegate ⇒ [<code>Transaction</code>](#Transaction)
