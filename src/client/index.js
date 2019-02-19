@@ -4,6 +4,7 @@
 import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
+import Big from 'big.js'
 
 const api = {
   broadcast: "/api/v1/broadcast",
@@ -183,14 +184,17 @@ export class BncClient {
       sequence = data.result && data.result.sequence
     }
 
+    const bigPrice = new Big(price)
+    const bigQuantity = new Big(quantity)
+
     const placeOrderMsg = {
       sender: accCode,
       id: `${accCode.toString("hex")}-${sequence+1}`.toUpperCase(),
       symbol: symbol,
       ordertype: 2,
       side,
-      price: Math.floor(price * Math.pow(10, 8)),
-      quantity: Math.floor(quantity * Math.pow(10, 8)),
+      price: parseFloat(bigPrice.mul(Math.pow(10, 8)).toString(), 10),
+      quantity: parseFloat(bigQuantity.mul(Math.pow(10, 8)).toString(), 10),
       timeinforce: timeinforce,
       msgType: "NewOrderMsg",
     }
