@@ -3,9 +3,8 @@
 const { test } = QUnit
 
 const LONG_TIMEOUT = 15000
-const EXPECTED_MAJOR = 1
-const EXPECTED_MINOR = 0
-const EXPECTED_PATCH = 0
+const EXPECTED_VERSION_MAJOR = 1
+const EXPECTED_VERSION_MINOR = 0
 
 let isBrowser
 let Ledger, crypto
@@ -88,9 +87,8 @@ test("has property patch", function(assert) {
 })
 
 test("app has matching version", function(assert) {
-  assert.ok(response.major === EXPECTED_MAJOR, "Passed")
-  assert.ok(response.minor === EXPECTED_MINOR, "Passed")
-  assert.ok(response.patch === EXPECTED_PATCH, "Passed")
+  assert.ok(response.major === EXPECTED_VERSION_MAJOR, "Passed")
+  assert.ok(response.minor === EXPECTED_VERSION_MINOR, "Passed")
 })
 
 // PUBLIC_KEY_SECP256K1
