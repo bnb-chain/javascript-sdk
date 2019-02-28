@@ -306,7 +306,12 @@ Encodes an address from input data bytes.
 Generates 32 bytes of random entropy
 
 **Kind**: static constant of [<code>crypto</code>](#module_crypto)  
-**Returns**: <code>string</code> - entropy hexstring  
+**Returns**: <code>string</code> - entropy bytes hexstring  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| len | <code>number</code> | output length (default: 32 bytes) |
+
 <a name="module_crypto.generateRandomArray"></a>
 
 ### crypto.generateRandomArray ⇒ <code>ArrayBuffer</code>
@@ -455,7 +460,7 @@ Get a private key from mnemonic words.
 | Param | Type | Description |
 | --- | --- | --- |
 | mnemonic | <code>string</code> | the mnemonic phrase words |
-| derive | <code>bool</code> | derive a private key using the default HD path, default: true |
+| derive | <code>bool</code> | derive a private key using the default HD path (default: true) |
 
 <a name="module_amino"></a>
 
