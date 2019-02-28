@@ -247,9 +247,17 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
 export const generateMnemonic = () => bip39.generateMnemonic(MNEMONIC_LEN)
 
 /**
+ * Validates mnemonic phrase words.
+ * @param {string} mnemonic the mnemonic phrase words
+ * @return {bool} validation result
+ */
+export const validateMnemonic = bip39.validateMnemonic
+
+/**
  * Get a private key from mnemonic words.
  * @param {string} mnemonic the mnemonic phrase words
  * @param {bool} derive derive a private key using the default HD path, default: true
+ * @return {string} hexstring
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
   if(!bip39.validateMnemonic(mnemonic)){
