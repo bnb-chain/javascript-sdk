@@ -67,9 +67,10 @@ export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
 
 /**
  * Generates 32 bytes of random entropy
- * @returns {string} entropy hexstring
+ * @param {number} len output length (default: 32 bytes)
+ * @returns {string} entropy bytes hexstring
  */
-export const generatePrivateKey = () => ab2hexstring(csprng(PRIVKEY_LEN))
+export const generatePrivateKey = (len = PRIVKEY_LEN) => ab2hexstring(csprng(len))
 
 /**
  * Generates an arrayBuffer filled with random bits.
@@ -256,7 +257,7 @@ export const validateMnemonic = bip39.validateMnemonic
 /**
  * Get a private key from mnemonic words.
  * @param {string} mnemonic the mnemonic phrase words
- * @param {bool} derive derive a private key using the default HD path, default: true
+ * @param {bool} derive derive a private key using the default HD path (default: true)
  * @return {string} hexstring
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
