@@ -20,6 +20,7 @@ import {
 
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
+const MNEMONIC_LEN = 256
 const CURVE = "secp256k1"
 
 //hdpath
@@ -65,8 +66,8 @@ export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
 }
 
 /**
- * Generates a random private key
- * @returns {string}
+ * Generates 32 bytes of random entropy
+ * @returns {string} entropy hexstring
  */
 export const generatePrivateKey = () => ab2hexstring(csprng(PRIVKEY_LEN))
 
@@ -79,7 +80,7 @@ export const generateRandomArray = length => csprng(length)
 
 /**
  * @param {string} publicKey - Encoded public key
- * @return {Elliptic.PublicKey} public key
+ * @return {Elliptic.PublicKey} public key hexstring
  */
 export const getPublicKey = publicKey => {
   let keyPair = ec.keyFromPublic(publicKey, "hex")
@@ -89,7 +90,7 @@ export const getPublicKey = publicKey => {
 /**
  * Calculates the public key from a given private key.
  * @param {string} privateKeyHex the private key hexstring
- * @return {string}
+ * @return {string} public key hexstring
  */
 export const getPublicKeyFromPrivateKey = privateKeyHex => {
   const curve = new EC(CURVE)
@@ -161,9 +162,9 @@ export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
 }
 
 /**
- * Generates a keystore file based on given private key and password.
- * @param {string} privateKey - Private Key.
- * @param {string} password - Password.
+ * Generates a keystore based on given private key and password.
+ * @param {string} privateKey the private key
+ * @param {string} password the password
  */
 export const generateKeyStore = (privateKey, password) => {
   const address = getAddressFromPrivateKey(privateKey)
@@ -208,9 +209,9 @@ export const generateKeyStore = (privateKey, password) => {
 }
 
 /**
- * Generates privatekey based on keystore and password
- * @param {string} keystore - keystore file json format.
- * @param {string} password - Password.
+ * Gets a private key from a keystore given its password.
+ * @param {string} keystore the keystore in json format
+ * @param {string} password the password.
  */
 export const getPrivateKeyFromKeyStore = (keystore, password) => {
 
@@ -241,26 +242,24 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
 }
 
 /**
- * Gets Mnemonic from a private key.
- * @param {string} privateKey the private key hexstring
+ * Generates mnemonic phrase words using random entropy.
  */
-export const getMnemonicFromPrivateKey = privateKey => bip39.entropyToMnemonic(privateKey)
+export const generateMnemonic = () => bip39.generateMnemonic(MNEMONIC_LEN)
 
 /**
- * Generate Mnemonic (length=== 15)
+ * Get a private key from mnemonic words.
+ * @param {string} mnemonic the mnemonic phrase words
+ * @param {bool} derive derive a private key using the default HD path, default: true
  */
-export const generateMnemonic = () => bip39.generateMnemonic(256)
-
-/**
- * Get privatekey from mnemonic.
- * @param {mnemonic}
- */
-export const getPrivateKeyFromMnemonic = mnemonic => {
+export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
   if(!bip39.validateMnemonic(mnemonic)){
     throw new Error("wrong mnemonic format")
   }
   const seed = bip39.mnemonicToSeed(mnemonic)
-  const master = bip32.fromSeed(seed)
-  const child = master.derivePath(HDPATH)
-  return child.privateKey.toString("hex")
+  if (derive) {
+    const master = bip32.fromSeed(seed)
+    const child = master.derivePath(HDPATH)
+    return child.privateKey.toString("hex")
+  }
+  return seed.toString("hex")
 }
