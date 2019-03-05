@@ -3,6 +3,7 @@
  */
 
 import hexEncoding from "crypto-js/enc-hex"
+import SHA3 from "crypto-js/sha3"
 import SHA256 from "crypto-js/sha256"
 import RIPEMD160 from "crypto-js/ripemd160"
 
@@ -201,8 +202,20 @@ export const ensureHex = str => {
 }
 
 /**
- * Performs a SHA256 followed by a RIPEMD160.
- * @param {string} hex - String to hash
+ * Computes a single SHA3 (Keccak) digest.
+ * @param {string} hex message to hash
+ * @returns {string} hash output
+ */
+export const sha3 = (hex) => {
+  if (typeof hex !== "string") throw new Error("sha3 expects a hex string")
+  if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
+  const hexEncoded = hexEncoding.parse(hex)
+  return SHA3(hexEncoded).toString()
+}
+
+/**
+ * Computes a SHA256 followed by a RIPEMD160.
+ * @param {string} hex message to hash
  * @returns {string} hash output
  */
 export const sha256ripemd160 = (hex) => {
@@ -214,8 +227,8 @@ export const sha256ripemd160 = (hex) => {
 }
 
 /**
- * Performs a single SHA256.
- * @param {string} hex - String to hash
+ * Computes a single SHA256 digest.
+ * @param {string} hex message to hash
  * @returns {string} hash output
  */
 export const sha256 = (hex) => {
@@ -224,4 +237,3 @@ export const sha256 = (hex) => {
   const hexEncoded = hexEncoding.parse(hex)
   return SHA256(hexEncoded).toString()
 }
-
