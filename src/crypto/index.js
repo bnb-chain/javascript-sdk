@@ -164,15 +164,16 @@ export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
 
 /**
  * Generates a keystore based on given private key and password.
- * @param {string} privateKey the private key
- * @param {string} password the password
+ * @param {string} privateKeyHex the private key hexstring.
+ * @param {string} password the password.
+ * @return {object} the keystore object.
  */
-export const generateKeyStore = (privateKey, password) => {
-  const address = getAddressFromPrivateKey(privateKey)
+export const generateKeyStore = (privateKeyHex, password) => {
   const salt = cryp.randomBytes(32)
   const iv = cryp.randomBytes(16)
   const cipherAlg = "aes-256-ctr"
 
+  const kdf = "pbkdf2"
   const kdfparams = {
     dklen: 32,
     salt: salt.toString("hex"),
@@ -186,25 +187,23 @@ export const generateKeyStore = (privateKey, password) => {
     throw new Error("Unsupported cipher")
   }
 
-  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKey, "hex")), cipher.final()])
+  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKeyHex, "hex")), cipher.final()])
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, "hex")])
-  const mac = sha256(bufferValue.toString("hex"))
 
   return {
     version: 1,
     id: uuid.v4({
       random: cryp.randomBytes(16)
     }),
-    address: address.toLowerCase(),
     crypto: {
       ciphertext: ciphertext.toString("hex"),
       cipherparams: {
         iv: iv.toString("hex")
       },
       cipher: cipherAlg,
-      kdf: "pbkdf2",
+      kdf,
       kdfparams: kdfparams,
-      mac: mac
+      mac: sha256(bufferValue.toString("hex"))
     }
   }
 }
