@@ -4,7 +4,7 @@
 import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
-import Big from 'big.js'
+import Big from "big.js"
 
 const api = {
   broadcast: "/api/v1/broadcast",
@@ -82,6 +82,10 @@ export class BncClient {
   setSigningDelegate(delegate) {
     if (typeof delegate !== "function") throw new Error("delegate must be a function")
     this._signingDelegate = delegate
+  }
+
+  useDefaultSigningDelegate() {
+    this._signingDelegate = DefaultSigningDelegate
   }
 
   useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb) {
@@ -169,7 +173,7 @@ export class BncClient {
    * Place an order.
    * @param {String} address
    * @param {String} symbol the market pair
-   * @param {String} side
+   * @param {Number} side (1-Buy, 2-Sell)
    * @param {Number} price
    * @param {Number} quantity
    * @param {Number} sequence
