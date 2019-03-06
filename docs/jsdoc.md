@@ -29,8 +29,9 @@
     * [.BncClient](#module_client.BncClient)
         * [new exports.BncClient(server)](#new_module_client.BncClient_new)
         * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
+        * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
         * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
-        * [._sendTransaction(concrete, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
+        * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
         * [.getBalance(address)](#module_client.BncClient+getBalance)
         * [.getAccount(address)](#module_client.BncClient+getAccount)
         * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
@@ -54,8 +55,9 @@ The Binance Chain client.
 * [.BncClient](#module_client.BncClient)
     * [new exports.BncClient(server)](#new_module_client.BncClient_new)
     * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
+    * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
     * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
-    * [._sendTransaction(concrete, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
+    * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
     * [.getBalance(address)](#module_client.BncClient+getBalance)
     * [.getAccount(address)](#module_client.BncClient+getAccount)
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
@@ -78,6 +80,8 @@ The Binance Chain client.
 <a name="module_client.BncClient+transfer"></a>
 
 #### bncClient.transfer(fromAddress, toAddress, amount, asset, memo, sequence)
+Transfer tokens from one address to another.
+
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 
 | Param | Type |
@@ -89,17 +93,31 @@ The Binance Chain client.
 | memo | <code>String</code> | 
 | sequence | <code>Number</code> | 
 
+<a name="module_client.BncClient+cancelOrder"></a>
+
+#### bncClient.cancelOrder(fromAddress, symbol, refid, sequence)
+Cancel an order.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fromAddress | <code>String</code> |  |
+| symbol | <code>String</code> | the market pair |
+| refid | <code>String</code> | the order ID of the order to cancel |
+| sequence | <code>Number</code> |  |
+
 <a name="module_client.BncClient+placeOrder"></a>
 
 #### bncClient.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)
-placeOrder
+Place an order.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | address | <code>String</code> |  |  |
-| symbol | <code>String</code> |  |  |
+| symbol | <code>String</code> |  | the market pair |
 | side | <code>String</code> |  |  |
 | price | <code>Number</code> |  |  |
 | quantity | <code>Number</code> |  |  |
@@ -108,20 +126,20 @@ placeOrder
 
 <a name="module_client.BncClient+_sendTransaction"></a>
 
-#### bncClient.\_sendTransaction(concrete, stdSignMsg, address, sequence, memo, sync) ⇒ <code>Object</code>
-send single transaction to binance chain
+#### bncClient.\_sendTransaction(msg, stdSignMsg, address, sequence, memo, sync) ⇒ <code>Object</code>
+Broadcast a raw transaction to the blockchain.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 **Returns**: <code>Object</code> - response (success or fail)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| concrete | <code>Object</code> | msg type |
-| stdSignMsg | <code>Object</code> |  |
-| address | <code>String</code> |  |
-| sequence | <code>Number</code> |  |
-| memo | <code>String</code> |  |
-| sync | <code>Boolean</code> |  |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| msg | <code>Object</code> |  | the msg object |
+| stdSignMsg | <code>Object</code> |  | the sign doc object used to generate a signature |
+| address | <code>String</code> |  |  |
+| sequence | <code>Number</code> | <code></code> | the account sequence (optional, fetched if not given) |
+| memo | <code>String</code> |  | transaction memo, optional |
+| sync | <code>Boolean</code> | <code>true</code> | use synchronous mode, optional |
 
 <a name="module_client.BncClient+getBalance"></a>
 
