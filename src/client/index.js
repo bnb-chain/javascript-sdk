@@ -89,7 +89,7 @@ export class BncClient {
   }
 
   /**
-   *
+   * Transfer tokens from one address to another.
    * @param {String} fromAddress
    * @param {String} toAddress
    * @param {Number} amount
@@ -139,6 +139,13 @@ export class BncClient {
     return await this._sendTransaction(msg, signMsg, fromAddress, sequence, memo, true)
   }
 
+  /**
+   * Cancel an order.
+   * @param {String} fromAddress
+   * @param {String} symbol the market pair
+   * @param {String} refid the order ID of the order to cancel
+   * @param {Number} sequence
+   */
   async cancelOrder(fromAddress, symbol, refid, sequence) {
     const accCode = crypto.decodeAddress(fromAddress)
 
@@ -159,9 +166,9 @@ export class BncClient {
   }
 
   /**
-   * placeOrder
+   * Place an order.
    * @param {String} address
-   * @param {String} symbol
+   * @param {String} symbol the market pair
    * @param {String} side
    * @param {Number} price
    * @param {Number} quantity
@@ -214,13 +221,13 @@ export class BncClient {
   }
 
   /**
-   * send single transaction to binance chain
-   * @param {Object} concrete msg type
-   * @param {Object} stdSignMsg
+   * Broadcast a raw transaction to the blockchain.
+   * @param {Object} msg the msg object
+   * @param {Object} stdSignMsg the sign doc object used to generate a signature
    * @param {String} address
-   * @param {Number} sequence
-   * @param {String} memo
-   * @param {Boolean} sync
+   * @param {Number} sequence the account sequence (optional, fetched if not given)
+   * @param {String} memo transaction memo, optional
+   * @param {Boolean} sync use synchronous mode, optional
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=true) {
