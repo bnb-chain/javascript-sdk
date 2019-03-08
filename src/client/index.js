@@ -218,7 +218,7 @@ export class BncClient {
       sender: address,
       side: placeOrderMsg.side,
       symbol: placeOrderMsg.symbol,
-      timeinforce: 1,
+      timeinforce: timeinforce,
     }
 
     return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "", true)
