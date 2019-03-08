@@ -52,6 +52,16 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) =
 }
 
 /**
+ * validate the input number which maybe transfer amount, place order price etc.
+ * @param {Number} value 
+ */
+const checkNumber = (value)=>{
+  if(Math.pow(2, 63) < value){
+    throw new Error("number should be less than 2^63")
+  }
+}
+
+/**
  * The Binance Chain client.
  */
 export class BncClient {
@@ -105,6 +115,8 @@ export class BncClient {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
     amount = parseInt(amount * Math.pow(10, 8))
+
+    checkNumber(amount)
 
     const coin = {
       denom: asset,
@@ -221,6 +233,9 @@ export class BncClient {
       timeinforce: timeinforce,
     }
 
+    checkNumber(placeOrderMsg.price)
+    checkNumber(placeOrderMsg.quantity)
+
     return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "", true)
   }
 
@@ -235,14 +250,15 @@ export class BncClient {
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=true) {
-    if((!sequence || !this.account_number) && address) {
+    let account_number
+    if(address) {
       const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
       sequence = data.result.sequence
-      this.account_number = data.result.account_number
+      account_number = data.result.account_number
     }
 
     const options = {
-      account_number: parseInt(this.account_number),
+      account_number: parseInt(account_number),
       chain_id: this.chainId,
       memo: memo,
       msg,
