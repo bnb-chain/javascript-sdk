@@ -52,7 +52,7 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) =
 }
 
 /**
- * validate the input number which maybe transfer amount, place order price etc.
+ * validate the input number.
  * @param {Number} value 
  */
 const checkNumber = (value)=>{
@@ -84,7 +84,12 @@ export class BncClient {
     return this
   }
 
-  setPrivateKey(privateKey) {
+  async setPrivateKey(privateKey) {
+    if(privateKey !== this.privateKey) {
+      const address = crypto.getAddressFromPrivateKey(privateKey)
+      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      this.account_number = data.result.account_number
+    }
     this.privateKey = privateKey
     return this
   }
@@ -250,15 +255,14 @@ export class BncClient {
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=true) {
-    let account_number
-    if(address) {
-      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+    if(!sequence && address) {
+      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
       sequence = data.result.sequence
-      account_number = data.result.account_number
+      this.account_number = data.result.account_number
     }
 
     const options = {
-      account_number: parseInt(account_number),
+      account_number: parseInt(this.account_number),
       chain_id: this.chainId,
       memo: memo,
       msg,
@@ -434,7 +438,7 @@ export class BncClient {
    * @return {String}
    */
   getClientKeyAddress(){
-    if (!this.privateKey) throw new Error('No private key set on client.')
+    if (!this.privateKey) throw new Error("No private key set on client.")
     return crypto.getAddressFromPrivateKey(this.privateKey)
   }
 }

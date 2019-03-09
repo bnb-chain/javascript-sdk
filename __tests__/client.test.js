@@ -85,7 +85,7 @@ describe("BncClient test", async () => {
 
   it("transfer placeOrder cancelOrder", async () => {
     jest.setTimeout(50000)
-    const symbol = 'BNB_USDT.B-B7C'
+    const symbol = "BNB_USDT.B-B7C"
     const client = await getClient()
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
     const accCode = crypto.decodeAddress(addr)
@@ -108,7 +108,7 @@ describe("BncClient test", async () => {
   })
 
   it("get account", async () => {
-    const client = await getClient(``)
+    const client = await getClient("")
     const res = await client.getAccount("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
     if(res.status === 200){
       expect(res.status).toBe(200)
