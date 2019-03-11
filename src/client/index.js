@@ -101,8 +101,9 @@ export class BncClient {
       if (address === this.address) return this // safety
       this.privateKey = privateKey
       this.address = address
-      const data = this._setPkPromise =  // _setPkPromise used in _sendTransaction for non-await calls
-        await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      // _setPkPromise used in _sendTransaction for non-await calls
+      const promise = this._setPkPromise = this._httpClient.request("get", `${api.getAccount}/${address}`)
+      const data = await promise
       this.account_number = data.result.account_number
     }
     return this
