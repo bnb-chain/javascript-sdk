@@ -6,6 +6,8 @@ import Transaction from "../tx"
 import HttpRequest from "../utils/request"
 import Big from "big.js"
 
+const MAX_INT64 = Math.pow(2, 63)
+
 const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
@@ -52,6 +54,16 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) =
 }
 
 /**
+ * validate the input number.
+ * @param {Number} value
+ */
+const checkNumber = (value, name = "input number")=>{
+  if (MAX_INT64 < value) {
+    throw new Error(`${name} should be less than 2^63`)
+  }
+}
+
+/**
  * The Binance Chain client.
  */
 export class BncClient {
@@ -66,6 +78,10 @@ export class BncClient {
     this._signingDelegate = DefaultSigningDelegate
   }
 
+  /**
+   * Initialize the client with the chain's ID. Asynchronous.
+   * @return {Promise}
+   */
   async initChain() {
     if(!this.chainId) {
       const data = await this._httpClient.request("get", api.nodeInfo)
@@ -74,20 +90,47 @@ export class BncClient {
     return this
   }
 
-  setPrivateKey(privateKey) {
-    this.privateKey = privateKey
+  /**
+   * Sets the client's private key for calls made by this client. Asynchronous.
+   * @return {Promise}
+   */
+  async setPrivateKey(privateKey) {
+    if (privateKey !== this.privateKey) {
+      const address = crypto.getAddressFromPrivateKey(privateKey)
+      if (!address) throw new Error("address is falsy: ${address}. invalid private key?")
+      if (address === this.address) return this // safety
+      this.privateKey = privateKey
+      this.address = address
+      const data = this._setPkPromise =  // _setPkPromise used in _sendTransaction for non-await calls
+        await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      this.account_number = data.result.account_number
+    }
     return this
   }
 
+  /**
+   * Sets the signing delegate (for wallet integrations).
+   * @param {function} delegate
+   */
   setSigningDelegate(delegate) {
     if (typeof delegate !== "function") throw new Error("delegate must be a function")
     this._signingDelegate = delegate
   }
 
+  /**
+   * Applies the default signing delegate.
+   */
   useDefaultSigningDelegate() {
     this._signingDelegate = DefaultSigningDelegate
   }
 
+  /**
+   * Applies the Ledger signing delegate.
+   * @param {function} ledgerApp
+   * @param {function} preSignCb
+   * @param {function} postSignCb
+   * @param {function} errCb
+   */
   useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb) {
     this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)
   }
@@ -98,13 +141,15 @@ export class BncClient {
    * @param {String} toAddress
    * @param {Number} amount
    * @param {String} asset
-   * @param {String} memo
-   * @param {Number} sequence
+   * @param {String} memo optional memo
+   * @param {Number} sequence optional sequence
    */
-  async transfer(fromAddress, toAddress, amount, asset, memo, sequence) {
+  async transfer(fromAddress, toAddress, amount, asset, memo="", sequence=null) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
     amount = parseInt(amount * Math.pow(10, 8))
+
+    checkNumber(amount, "amount")
 
     const coin = {
       denom: asset,
@@ -148,9 +193,9 @@ export class BncClient {
    * @param {String} fromAddress
    * @param {String} symbol the market pair
    * @param {String} refid the order ID of the order to cancel
-   * @param {Number} sequence
+   * @param {Number} sequence optional sequence
    */
-  async cancelOrder(fromAddress, symbol, refid, sequence) {
+  async cancelOrder(fromAddress, symbol, refid, sequence=null) {
     const accCode = crypto.decodeAddress(fromAddress)
 
     const msg = {
@@ -176,14 +221,19 @@ export class BncClient {
    * @param {Number} side (1-Buy, 2-Sell)
    * @param {Number} price
    * @param {Number} quantity
-   * @param {Number} sequence
+   * @param {Number} sequence optional sequence
    * @param {Number} timeinforce (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel))
    */
-  async placeOrder(address, symbol, side, price, quantity, sequence, timeinforce=1) {
+  async placeOrder(address=this.address, symbol, side, price, quantity, sequence=null, timeinforce=1) {
+    if (!address) {
+      throw new Error("address should not be falsy")
+    }
+    if (!symbol) {
+      throw new Error("symbol should not be falsy")
+    }
     if(side !== 1 && side !== 2){
       throw new Error("side can only be 1 or 2")
     }
-
     if(timeinforce !== 1 && timeinforce !== 3){
       throw new Error("timeinforce can only be 1 or 3")
     }
@@ -221,6 +271,9 @@ export class BncClient {
       timeinforce: timeinforce,
     }
 
+    checkNumber(placeOrderMsg.price, "price")
+    checkNumber(placeOrderMsg.quantity, "quantity")
+
     return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "", true)
   }
 
@@ -229,16 +282,19 @@ export class BncClient {
    * @param {Object} msg the msg object
    * @param {Object} stdSignMsg the sign doc object used to generate a signature
    * @param {String} address
-   * @param {Number} sequence the account sequence (optional, fetched if not given)
-   * @param {String} memo transaction memo, optional
+   * @param {Number} sequence optional sequence
+   * @param {String} memo optional memo
    * @param {Boolean} sync use synchronous mode, optional
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=true) {
-    if((!sequence || !this.account_number) && address) {
-      const data = await this._httpClient.request("get", `/api/v1/account/${address}`)
+    if (!sequence && address) {
+      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
       sequence = data.result.sequence
       this.account_number = data.result.account_number
+    // if user has not used `await` in its call to setPrivateKey (old API), we should wait for the promise here
+    } else if (this._setPkPromise) {
+      await this._setPkPromise
     }
 
     const options = {
@@ -265,36 +321,31 @@ export class BncClient {
   }
 
   /**
-   * get balance
-   * @param {String} address
-   */
-  async getBalance(address) {
-    if(!address) {
-      throw new Error("address should not be null")
-    }
-
-    try {
-      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
-      return data.result.balances
-    } catch(err) {
-      return []
-    }
-  }
-
-  /**
    * get account
    * @param {String} address
    */
-  async getAccount(address) {
+  async getAccount(address=this.address) {
     if(!address) {
-      throw new Error("address should not be null")
+      throw new Error("address should not be falsy")
     }
-
     try {
       const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
       return data
     } catch(err) {
       return null
+    }
+  }
+
+  /**
+   * get balances
+   * @param {String} address optional address
+   */
+  async getBalance(address=this.address) {
+    try {
+      const data = await this.getAccount(address)
+      return data.result.balances
+    } catch(err) {
+      return []
     }
   }
 
@@ -325,9 +376,8 @@ export class BncClient {
    */
   createAccountWithKeystore(password){
     if(!password){
-      throw new Error("password should not be null")
+      throw new Error("password should not be falsy")
     }
-
     const privateKey = crypto.generatePrivateKey()
     const address = crypto.getAddressFromPrivateKey(privateKey)
     const keystore = crypto.generateKeyStore(privateKey, password)
@@ -418,7 +468,9 @@ export class BncClient {
    * @return {String}
    */
   getClientKeyAddress(){
-    if (!this.privateKey) throw new Error('No private key set on client.')
-    return crypto.getAddressFromPrivateKey(this.privateKey)
+    if (!this.privateKey) throw new Error("no private key is set on this client")
+    const address = crypto.getAddressFromPrivateKey(this.privateKey)
+    this.address = address
+    return address
   }
 }
