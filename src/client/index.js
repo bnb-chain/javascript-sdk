@@ -53,7 +53,7 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) =
 
 /**
  * validate the input number.
- * @param {Number} value 
+ * @param {Number} value
  */
 const checkNumber = (value)=>{
   if(Math.pow(2, 63) < value){

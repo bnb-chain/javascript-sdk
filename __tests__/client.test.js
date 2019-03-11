@@ -16,8 +16,8 @@ const getClient = async () => {
   }
   client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
-  const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic).toString("hex")
-  client.setPrivateKey(privateKey)
+  const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
+  await client.setPrivateKey(privateKey)
   return client
 }
 
@@ -49,7 +49,6 @@ describe("BncClient test", async () => {
   it("create account with mneomnic", async () => {
     const client = await getClient()
     const res = client.createAccountWithMneomnic()
-    console.log(res)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
     expect(res.mnemonic).toBeTruthy()
@@ -85,6 +84,7 @@ describe("BncClient test", async () => {
 
   it("transfer placeOrder cancelOrder", async () => {
     jest.setTimeout(50000)
+
     const symbol = "BNB_USDT.B-B7C"
     const client = await getClient()
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
@@ -92,12 +92,13 @@ describe("BncClient test", async () => {
     const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
     const sequence = account.result && account.result.sequence
 
-    const res = await client.transfer(addr, targetAddress, 0.1, "BNB", "hello world", sequence)
+    const res = await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
     expect(res.status).toBe(200)
 
     await wait(3000)
 
-    const res1 = await client.placeOrder(addr, symbol, 1, 0.1, 12, sequence + 1)
+    // acc needs .004 BNB to lock
+    const res1 = await client.placeOrder(addr, symbol, 2, 40, 0.0001, sequence + 1)
     expect(res1.status).toBe(200)
 
     await wait(5000)
