@@ -10,14 +10,18 @@ const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
 let client
 
-const getClient = async () => {
-  if(client && client.chainId){
+const getClient = async (useAwaitSetPrivateKey = true) => {
+  if(client && client.chainId && client.account_number){
     return client
   }
   client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
-  await client.setPrivateKey(privateKey)
+  if (useAwaitSetPrivateKey) {
+    await client.setPrivateKey(privateKey)
+  } else {
+    client.setPrivateKey(privateKey) // test without `await`
+  }
   return client
 }
 
@@ -32,14 +36,14 @@ const wait = ms => {
 describe("BncClient test", async () => {
 
   it("create account", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const res = client.createAccount()
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("create account with keystore", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const res = client.createAccountWithKeystore("12345678")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
@@ -47,7 +51,7 @@ describe("BncClient test", async () => {
   })
 
   it("create account with mneomnic", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const res = client.createAccountWithMneomnic()
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
@@ -55,21 +59,21 @@ describe("BncClient test", async () => {
   })
 
   it("recover account from keystore", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const res = client.recoverAccountFromKeystore(keystore, "12345qwert!S")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("recover account from mneomnic", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const res = client.recoverAccountFromMneomnic(mnemonic)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("recover account from privatekey", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const pk = crypto.generatePrivateKey()
     const res = client.recoverAccountFromPrivateKey(pk)
     expect(res.address).toBeTruthy()
@@ -77,7 +81,7 @@ describe("BncClient test", async () => {
   })
 
   it("get balance", async () => {
-    const client = await getClient()
+    const client = await getClient(false)
     const res = await client.getBalance(targetAddress)
     expect(res.length).toBeGreaterThanOrEqual(0)
   })
@@ -86,7 +90,7 @@ describe("BncClient test", async () => {
     jest.setTimeout(50000)
 
     const symbol = "BNB_USDT.B-B7C"
-    const client = await getClient()
+    const client = await getClient(true)
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
     const accCode = crypto.decodeAddress(addr)
     const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
@@ -108,13 +112,32 @@ describe("BncClient test", async () => {
     expect(res2.status).toBe(200)
   })
 
+  it("transfer placeOrder cancelOrder (no await on set privkey)", async () => {
+    jest.setTimeout(25000)
+
+    const symbol = "BNB_USDT.B-B7C"
+    const client = await getClient(false)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+
+    // acc needs .004 BNB to lock
+    // IOC - auto cancels
+    const res1 = await client.placeOrder(addr, symbol, 2, 40, 0.0001, null, 3)
+    expect(res1.status).toBe(200)
+  })
+
   it("get account", async () => {
-    const client = await getClient("")
-    const res = await client.getAccount("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
-    if(res.status === 200){
+    const client = await getClient(false)
+    const res = await client.getAccount(targetAddress)
+    if (res.status === 200) {
       expect(res.status).toBe(200)
-    }else {
+    } else {
       expect(res.status).toBe(204)
     }
+  })
+
+  it("get balance no arg", async () => {
+    const client = await getClient(false)
+    const balances = await client.getBalance()
+    expect(balances.length).toBeGreaterThan(0)
   })
 })
