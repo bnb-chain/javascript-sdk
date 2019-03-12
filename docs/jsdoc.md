@@ -26,24 +26,32 @@
 ## client
 
 * [client](#module_client)
-    * [.BncClient](#module_client.BncClient)
-        * [new exports.BncClient(server)](#new_module_client.BncClient_new)
-        * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
-        * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
-        * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
-        * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
-        * [.getBalance(address)](#module_client.BncClient+getBalance)
-        * [.getAccount(address)](#module_client.BncClient+getAccount)
-        * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
-        * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
-        * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
-        * [.recoverAccountFromKeystore(keystore, password)](#module_client.BncClient+recoverAccountFromKeystore)
-        * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
-        * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
-        * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
-        * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
-    * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
-    * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
+    * _static_
+        * [.BncClient](#module_client.BncClient)
+            * [new exports.BncClient(server)](#new_module_client.BncClient_new)
+            * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
+            * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+            * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate)
+            * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate)
+            * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate)
+            * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
+            * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
+            * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
+            * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
+            * [.getAccount(address)](#module_client.BncClient+getAccount)
+            * [.getBalance(address)](#module_client.BncClient+getBalance)
+            * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
+            * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
+            * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
+            * [.recoverAccountFromKeystore(keystore, password)](#module_client.BncClient+recoverAccountFromKeystore)
+            * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
+            * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
+            * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
+            * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
+        * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
+        * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
+    * _inner_
+        * [~checkNumber(value)](#module_client..checkNumber)
 
 <a name="module_client.BncClient"></a>
 
@@ -54,12 +62,17 @@ The Binance Chain client.
 
 * [.BncClient](#module_client.BncClient)
     * [new exports.BncClient(server)](#new_module_client.BncClient_new)
+    * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
+    * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+    * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate)
+    * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate)
+    * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate)
     * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
     * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
     * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
     * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
-    * [.getBalance(address)](#module_client.BncClient+getBalance)
     * [.getAccount(address)](#module_client.BncClient+getAccount)
+    * [.getBalance(address)](#module_client.BncClient+getBalance)
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
@@ -77,6 +90,49 @@ The Binance Chain client.
 | --- | --- | --- |
 | server | <code>string</code> | Binance Chain public url |
 
+<a name="module_client.BncClient+initChain"></a>
+
+#### bncClient.initChain() ⇒ <code>Promise</code>
+Initialize the client with the chain's ID. Asynchronous.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+<a name="module_client.BncClient+setPrivateKey"></a>
+
+#### bncClient.setPrivateKey() ⇒ <code>Promise</code>
+Sets the client's private key for calls made by this client. Asynchronous.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+<a name="module_client.BncClient+setSigningDelegate"></a>
+
+#### bncClient.setSigningDelegate(delegate)
+Sets the signing delegate (for wallet integrations).
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+
+| Param | Type |
+| --- | --- |
+| delegate | <code>function</code> | 
+
+<a name="module_client.BncClient+useDefaultSigningDelegate"></a>
+
+#### bncClient.useDefaultSigningDelegate()
+Applies the default signing delegate.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+<a name="module_client.BncClient+useLedgerSigningDelegate"></a>
+
+#### bncClient.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)
+Applies the Ledger signing delegate.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+
+| Param | Type |
+| --- | --- |
+| ledgerApp | <code>function</code> | 
+| preSignCb | <code>function</code> | 
+| postSignCb | <code>function</code> | 
+| errCb | <code>function</code> | 
+
 <a name="module_client.BncClient+transfer"></a>
 
 #### bncClient.transfer(fromAddress, toAddress, amount, asset, memo, sequence)
@@ -84,14 +140,14 @@ Transfer tokens from one address to another.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| toAddress | <code>String</code> | 
-| amount | <code>Number</code> | 
-| asset | <code>String</code> | 
-| memo | <code>String</code> | 
-| sequence | <code>Number</code> | 
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fromAddress | <code>String</code> |  |  |
+| toAddress | <code>String</code> |  |  |
+| amount | <code>Number</code> |  |  |
+| asset | <code>String</code> |  |  |
+| memo | <code>String</code> |  | optional memo |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
 
 <a name="module_client.BncClient+cancelOrder"></a>
 
@@ -100,12 +156,12 @@ Cancel an order.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| fromAddress | <code>String</code> |  |
-| symbol | <code>String</code> | the market pair |
-| refid | <code>String</code> | the order ID of the order to cancel |
-| sequence | <code>Number</code> |  |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fromAddress | <code>String</code> |  |  |
+| symbol | <code>String</code> |  | the market pair |
+| refid | <code>String</code> |  | the order ID of the order to cancel |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
 
 <a name="module_client.BncClient+placeOrder"></a>
 
@@ -118,10 +174,10 @@ Place an order.
 | --- | --- | --- | --- |
 | address | <code>String</code> |  |  |
 | symbol | <code>String</code> |  | the market pair |
-| side | <code>String</code> |  |  |
+| side | <code>Number</code> |  | (1-Buy, 2-Sell) |
 | price | <code>Number</code> |  |  |
 | quantity | <code>Number</code> |  |  |
-| sequence | <code>Number</code> |  |  |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
 | timeinforce | <code>Number</code> | <code>1</code> | (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel)) |
 
 <a name="module_client.BncClient+_sendTransaction"></a>
@@ -137,20 +193,9 @@ Broadcast a raw transaction to the blockchain.
 | msg | <code>Object</code> |  | the msg object |
 | stdSignMsg | <code>Object</code> |  | the sign doc object used to generate a signature |
 | address | <code>String</code> |  |  |
-| sequence | <code>Number</code> | <code></code> | the account sequence (optional, fetched if not given) |
-| memo | <code>String</code> |  | transaction memo, optional |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
+| memo | <code>String</code> |  | optional memo |
 | sync | <code>Boolean</code> | <code>true</code> | use synchronous mode, optional |
-
-<a name="module_client.BncClient+getBalance"></a>
-
-#### bncClient.getBalance(address)
-get balance
-
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-
-| Param | Type |
-| --- | --- |
-| address | <code>String</code> | 
 
 <a name="module_client.BncClient+getAccount"></a>
 
@@ -162,6 +207,17 @@ get account
 | Param | Type |
 | --- | --- |
 | address | <code>String</code> | 
+
+<a name="module_client.BncClient+getBalance"></a>
+
+#### bncClient.getBalance(address)
+get balances
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>String</code> | optional address |
 
 <a name="module_client.BncClient+createAccount"></a>
 
@@ -260,6 +316,17 @@ The Ledger signing delegate.
 | function | <code>postSignCb</code> | 
 | function | <code>errCb</code> | 
 
+<a name="module_client..checkNumber"></a>
+
+### client~checkNumber(value)
+validate the input number.
+
+**Kind**: inner method of [<code>client</code>](#module_client)  
+
+| Param | Type |
+| --- | --- |
+| value | <code>Number</code> | 
+
 <a name="module_crypto"></a>
 
 ## crypto
@@ -277,7 +344,7 @@ The Ledger signing delegate.
     * [.getAddressFromPrivateKey](#module_crypto.getAddressFromPrivateKey)
     * [.generateSignature](#module_crypto.generateSignature) ⇒ <code>Buffer</code>
     * [.verifySignature](#module_crypto.verifySignature) ⇒ <code>Buffer</code>
-    * [.generateKeyStore](#module_crypto.generateKeyStore)
+    * [.generateKeyStore](#module_crypto.generateKeyStore) ⇒ <code>object</code>
     * [.getPrivateKeyFromKeyStore](#module_crypto.getPrivateKeyFromKeyStore)
     * [.generateMnemonic](#module_crypto.generateMnemonic)
     * [.validateMnemonic](#module_crypto.validateMnemonic) ⇒ <code>bool</code>
@@ -427,15 +494,16 @@ Verifies a signature (64 byte <r,s>) given the sign bytes and public key.
 
 <a name="module_crypto.generateKeyStore"></a>
 
-### crypto.generateKeyStore
+### crypto.generateKeyStore ⇒ <code>object</code>
 Generates a keystore based on given private key and password.
 
 **Kind**: static constant of [<code>crypto</code>](#module_crypto)  
+**Returns**: <code>object</code> - the keystore object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| privateKey | <code>string</code> | the private key |
-| password | <code>string</code> | the password |
+| privateKeyHex | <code>string</code> | the private key hexstring. |
+| password | <code>string</code> | the password. |
 
 <a name="module_crypto.getPrivateKeyFromKeyStore"></a>
 
