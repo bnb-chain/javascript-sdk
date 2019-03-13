@@ -33,13 +33,13 @@ export const typePrefix = {
  * };
  * var tx = new Transaction(rawTx);
  * @property {Buffer} raw The raw vstruct encoded transaction
- * @param {number} data.account_number account number
- * @param {string} data.chain_id bnbChain Id
- * @param {string} data.memo transaction memo
- * @param {string} type transaction type
- * @param {object} data.msg object data of tx type
- * @param {number} data.sequence transaction counts
- * */
+ * @param {Number} data.account_number account number
+ * @param {String} data.chain_id bnbChain Id
+ * @param {String} data.memo transaction memo
+ * @param {String} type transaction type
+ * @param {Object} data.msg object data of tx type
+ * @param {Number} data.sequence transaction counts
+ */
 class Transaction {
   constructor(data) {
     if(!txType[data.type]) {

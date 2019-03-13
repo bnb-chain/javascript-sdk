@@ -96,8 +96,8 @@ export const marshalBinaryBare = (obj) => {
 /**
  * This is the main entrypoint for encoding all types in binary form.
  * @param {*} js data type (not null, not undefined)
- * @param {number} field index of object
- * @param {bool} isByteLenPrefix
+ * @param {Number} field index of object
+ * @param {Boolean} isByteLenPrefix
  * @return {Buffer} binary of object.
  */
 export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
@@ -183,9 +183,9 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
 }
 
 /**
- * @param {number} fieldNum object field index
+ * @param {Number} fieldNum object field index
  * @param {Array} arr
- * @param {bool} isByteLenPrefix
+ * @param {Boolean} isByteLenPrefix
  * @return {Buffer} bytes of array
  */
 export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {

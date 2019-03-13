@@ -77,7 +77,7 @@ export const hexstring2str = hexstring => ab2str(hexstring2ab(hexstring))
 
 /**
  * convert an integer to big endian hex and add leading zeros
- * @param {number} num
+ * @param {Number} num
  * @returns {string}
  */
 export const int2hex = num => {
@@ -90,9 +90,9 @@ export const int2hex = num => {
 
 /**
  * Converts a number to a big endian hexstring of a suitable size, optionally little endian
- * @param {number} num
- * @param {number} size - The required size in bytes, eg 1 for Uint8, 2 for Uint16. Defaults to 1.
- * @param {boolean} littleEndian - Encode the hex in little endian form
+ * @param {Number} num
+ * @param {Number} size - The required size in bytes, eg 1 for Uint8, 2 for Uint16. Defaults to 1.
+ * @param {Boolean} littleEndian - Encode the hex in little endian form
  * @return {string}
  */
 export const num2hexstring = (num, size = 1, littleEndian = false) => {
@@ -109,7 +109,7 @@ export const num2hexstring = (num, size = 1, littleEndian = false) => {
 
 /**
  * Converts a number to a variable length Int. Used for array length header
- * @param {number} num - The number
+ * @param {Number} num - The number
  * @returns {string} hexstring of the variable Int.
  */
 export const num2VarInt = (num) => {
