@@ -60,8 +60,8 @@ class LedgerApp {
   /**
    * Constructs a new LedgerApp.
    * @param {Transport} transport Ledger Transport, a subclass of ledgerjs Transport.
-   * @param {number} interactiveTimeout The interactive (user input) timeout in ms. Default 45s.
-   * @param {number} nonInteractiveTimeout The non-interactive timeout in ms. Default 3s.
+   * @param {Number} interactiveTimeout The interactive (user input) timeout in ms. Default 45s.
+   * @param {Number} nonInteractiveTimeout The non-interactive timeout in ms. Default 3s.
    */
   constructor(
     transport,

@@ -256,7 +256,7 @@ export const validateMnemonic = bip39.validateMnemonic
 /**
  * Get a private key from mnemonic words.
  * @param {string} mnemonic the mnemonic phrase words
- * @param {bool} derive derive a private key using the default HD path (default: true)
+ * @param {Boolean} derive derive a private key using the default HD path (default: true)
  * @return {string} hexstring
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
