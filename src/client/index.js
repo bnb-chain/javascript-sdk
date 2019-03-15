@@ -164,7 +164,7 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Object} response (success or fail)
    */
-  async transfer(fromAddress, toAddress, amount, asset, memo="", sequence=null) {
+  async transfer(fromAddress, toAddress, amount, asset, memo="", sequence=null, broadcast=true) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
     amount = parseInt(amount * Math.pow(10, 8))
@@ -205,7 +205,10 @@ export class BncClient {
       }]
     }
 
-    return await this._sendTransaction(msg, signMsg, fromAddress, sequence, memo)
+    if(broadcast)
+      return this._sendTransaction(msg, signMsg, fromAddress, sequence, memo)
+    else
+      return this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
   }
 
   /**
@@ -216,7 +219,7 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Object} response (success or fail)
    */
-  async cancelOrder(fromAddress, symbol, refid, sequence=null) {
+  async cancelOrder(fromAddress, symbol, refid, sequence=null, broadcast=true) {
     const accCode = crypto.decodeAddress(fromAddress)
 
     const msg = {
@@ -232,7 +235,10 @@ export class BncClient {
       symbol: symbol
     }
 
-    return this._sendTransaction(msg, signMsg, fromAddress, sequence, "")
+    if(broadcast)
+      return this._sendTransaction(msg, signMsg, fromAddress, sequence, "")
+    else
+      return this._prepareTransaction(msg, signMsg, fromAddress, sequence, "")
   }
 
   /**
@@ -246,7 +252,7 @@ export class BncClient {
    * @param {Number} timeinforce (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel))
    * @return {Object} response (success or fail)
    */
-  async placeOrder(address=this.address, symbol, side, price, quantity, sequence=null, timeinforce=1) {
+  async placeOrder(address=this.address, symbol, side, price, quantity, sequence=null, timeinforce=1, broadcast=true) {
     if (!address) {
       throw new Error("address should not be falsy")
     }
@@ -296,7 +302,10 @@ export class BncClient {
     checkNumber(placeOrderMsg.price, "price")
     checkNumber(placeOrderMsg.quantity, "quantity")
 
-    return await this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "")
+    if(broadcast)
+      return this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "")
+    else
+      return this._prepareTransaction(placeOrderMsg, signMsg, address, sequence, "")
   }
 
   /**
