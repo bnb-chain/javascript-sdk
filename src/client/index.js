@@ -25,6 +25,14 @@ export const DefaultSigningDelegate = async function(tx, signMsg) {
 }
 
 /**
+ * The default broadcast delegate which immediately broadcasts a transaction.
+ * @param {string} rawTx 
+ */
+export const DefaultBroadcastDelegate = async function(rawTx) {
+  return this.sendRawTransaction(rawTx)
+}
+
+/**
  * The Ledger signing delegate.
  * @param  {LedgerApp}  ledgerApp
  * @param  {preSignCb}  function
@@ -77,6 +85,7 @@ export class BncClient {
     }
     this._httpClient = new HttpRequest(server)
     this._signingDelegate = DefaultSigningDelegate
+    this._broadcastDelegate = DefaultBroadcastDelegate
     this._useAsyncBroadcast = useAsyncBroadcast
   }
 
@@ -127,8 +136,19 @@ export class BncClient {
    * @return {BncClient} this instance (for chaining)
    */
   setSigningDelegate(delegate) {
-    if (typeof delegate !== "function") throw new Error("delegate must be a function")
+    if (typeof delegate !== "function") throw new Error("signing delegate must be a function")
     this._signingDelegate = delegate
+    return this
+  }
+
+  /**
+   * Sets the broadcast delegate (for wallet integrations).
+   * @param {function} delegate
+   * @return {BncClient} this instance (for chaining)
+   */
+  setBroadcastDelegate(delegate) {
+    if (typeof delegate !== "function") throw new Error("broadcast delegate must be a function")
+    this._broadcastDelegate = delegate
     return this
   }
 
@@ -138,6 +158,15 @@ export class BncClient {
    */
   useDefaultSigningDelegate() {
     this._signingDelegate = DefaultSigningDelegate
+    return this
+  }
+
+  /** 
+   * Applies the default broadcast delegate.
+   * @return {BncClient} this instance (for chaining)
+   */
+  useDefaultBroadcastDelegate() {
+    this._broadcastDelegate = DefaultBroadcastDelegate
     return this
   }
 
@@ -164,7 +193,7 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Object} response (success or fail)
    */
-  async transfer(fromAddress, toAddress, amount, asset, memo="", sequence=null, broadcast=true) {
+  async transfer(fromAddress, toAddress, amount, asset, memo="", sequence=null) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
     amount = parseInt(amount * Math.pow(10, 8))
@@ -205,10 +234,8 @@ export class BncClient {
       }]
     }
 
-    if(broadcast)
-      return this._sendTransaction(msg, signMsg, fromAddress, sequence, memo)
-    else
-      return this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    const rawTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    return this._broadcastDelegate(rawTx)
   }
 
   /**
@@ -219,7 +246,7 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Object} response (success or fail)
    */
-  async cancelOrder(fromAddress, symbol, refid, sequence=null, broadcast=true) {
+  async cancelOrder(fromAddress, symbol, refid, sequence=null) {
     const accCode = crypto.decodeAddress(fromAddress)
 
     const msg = {
@@ -235,10 +262,8 @@ export class BncClient {
       symbol: symbol
     }
 
-    if(broadcast)
-      return this._sendTransaction(msg, signMsg, fromAddress, sequence, "")
-    else
-      return this._prepareTransaction(msg, signMsg, fromAddress, sequence, "")
+    const rawTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, "")
+    return this._broadcastDelegate(rawTx)
   }
 
   /**
@@ -252,7 +277,7 @@ export class BncClient {
    * @param {Number} timeinforce (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel))
    * @return {Object} response (success or fail)
    */
-  async placeOrder(address=this.address, symbol, side, price, quantity, sequence=null, timeinforce=1, broadcast=true) {
+  async placeOrder(address=this.address, symbol, side, price, quantity, sequence=null, timeinforce=1) {
     if (!address) {
       throw new Error("address should not be falsy")
     }
@@ -302,10 +327,8 @@ export class BncClient {
     checkNumber(placeOrderMsg.price, "price")
     checkNumber(placeOrderMsg.quantity, "quantity")
 
-    if(broadcast)
-      return this._sendTransaction(placeOrderMsg, signMsg, address, sequence, "")
-    else
-      return this._prepareTransaction(placeOrderMsg, signMsg, address, sequence, "")
+    const rawTx = await this._prepareTransaction(placeOrderMsg, signMsg, address, sequence, "")
+    return this._broadcastDelegate(rawTx)
   }
 
   /**
@@ -357,7 +380,7 @@ export class BncClient {
     return this._httpClient.request("post", `${api.broadcast}?sync=${sync}`, null, opts)
   }
 
-   /**
+  /**
    * Broadcast a raw transaction to the blockchain.
    * @param {Object} msg the msg object
    * @param {Object} stdSignMsg the sign doc object used to generate a signature
