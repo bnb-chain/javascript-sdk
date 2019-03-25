@@ -1,5 +1,6 @@
 import BncClient from "../src"
 import * as crypto from "../src/crypto"
+import { Account } from "../src/account"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -36,46 +37,40 @@ const wait = ms => {
 describe("BncClient test", async () => {
 
   it("create account", async () => {
-    const client = await getClient(false)
-    const res = client.createAccount()
+    const res = Account.createAccount()
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("create account with keystore", async () => {
-    const client = await getClient(false)
-    const res = client.createAccountWithKeystore("12345678")
+    const res = Account.createAccountWithKeystore("12345678")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
     expect(res.keystore).toBeTruthy()
   })
 
   it("create account with mneomnic", async () => {
-    const client = await getClient(false)
-    const res = client.createAccountWithMneomnic()
+    const res = Account.createAccountWithMneomnic()
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
     expect(res.mnemonic).toBeTruthy()
   })
 
   it("recover account from keystore", async () => {
-    const client = await getClient(false)
-    const res = client.recoverAccountFromKeystore(keystore, "12345qwert!S")
+    const res = Account.recoverAccountFromKeystore(keystore, "12345qwert!S")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("recover account from mneomnic", async () => {
-    const client = await getClient(false)
-    const res = client.recoverAccountFromMneomnic(mnemonic)
+    const res = Account.recoverAccountFromMneomnic(mnemonic)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("recover account from privatekey", async () => {
-    const client = await getClient(false)
     const pk = crypto.generatePrivateKey()
-    const res = client.recoverAccountFromPrivateKey(pk)
+    const res = Account.recoverAccountFromPrivateKey(pk)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
