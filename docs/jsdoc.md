@@ -22,7 +22,85 @@
 </dl>
 
 <a name="module_client"></a>
+## account
 
+* [Account](#modules_account)
+    * _static_
+         * [Account](#module_account.Account)
+              * [.createAccount()](#module_account.Account+createAccount) ⇒ <code>Object</code>
+              * [.createAccountWithKeystore(password)](#module_account.Account+createAccountWithKeystore)
+              * [.createAccountWithMneomnic()](#module_account.Account+createAccountWithMneomnic) ⇒ <code>Object</code>
+              * [.recoverAccountFromKeystore(keystore, password)](#module_account.Account+recoverAccountFromKeystore)
+              * [.recoverAccountFromMneomnic(mneomnic)](#module_account.Account+recoverAccountFromMneomnic)
+              * [.recoverAccountFromPrivateKey(privateKey)](#module_account.Account+recoverAccountFromPrivateKey)
+              * [.checkAddress(address)](#module_account.Account+checkAddress) ⇒ <code>Boolean</code>
+              
+#### Account.createAccount() ⇒ <code>Object</code>
+Creates a private key.
+
+**Kind**: instance method of [<code>Account</code>](#module_account.Account) 
+**Returns**: <code>Object</code> - {
+ address,
+ privateKey
+}  
+<a name="module_client.BncClient+createAccountWithKeystore"></a>
+
+#### Account.createAccountWithKeystore(password)
+**Kind**: instance method of [<code>Account</code>](#module_account.Account) 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| password | <code>String</code> | {  privateKey,  address,  keystore } |
+
+<a name="module_client.BncClient+createAccountWithMneomnic"></a>
+
+#### Account.createAccountWithMneomnic() ⇒ <code>Object</code>
+**Kind**: instance method of [<code>Account</code>](#module_account.Account) 
+**Returns**: <code>Object</code> - {
+ privateKey,
+ address,
+ mnemonic
+}  
+<a name="module_client.BncClient+recoverAccountFromKeystore"></a>
+
+#### Account.recoverAccountFromKeystore(keystore, password)
+**Kind**: instance method of [<code>Account</code>](#module_account.Account) 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| keystore | <code>String</code> |  |
+| password | <code>String</code> | { privateKey, address } |
+
+<a name="module_client.BncClient+recoverAccountFromMneomnic"></a>
+
+#### Account.recoverAccountFromMneomnic(mneomnic)
+**Kind**: instance method of [<code>Account</code>](#module_account.Account)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| mneomnic | <code>String</code> | { privateKey, address } |
+
+<a name="module_client.BncClient+recoverAccountFromPrivateKey"></a>
+
+#### Account.recoverAccountFromPrivateKey(privateKey)
+**Kind**: instance method of [<code>Account</code>](#module_account.Account)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| privateKey | <code>String</code> | { privateKey, address } |
+
+<a name="module_client.BncClient+checkAddress"></a>
+
+#### Account.checkAddress(address) ⇒ <code>Boolean</code>
+**Kind**: instance method of [<code>Account</code>](#module_account.Account)  
+
+| Param | Type |
+| --- | --- |
+| address | <code>String</code> | 
+
+<a name="module_client.BncClient+getClientKeyAddress"></a>
+       
+         
 ## client
 
 * [client](#module_client)
@@ -40,13 +118,6 @@
             * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
             * [.getAccount(address)](#module_client.BncClient+getAccount)
             * [.getBalance(address)](#module_client.BncClient+getBalance)
-            * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
-            * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
-            * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
-            * [.recoverAccountFromKeystore(keystore, password)](#module_client.BncClient+recoverAccountFromKeystore)
-            * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
-            * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
-            * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
             * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
         * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
         * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
@@ -73,13 +144,6 @@ The Binance Chain client.
     * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
     * [.getAccount(address)](#module_client.BncClient+getAccount)
     * [.getBalance(address)](#module_client.BncClient+getBalance)
-    * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
-    * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
-    * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
-    * [.recoverAccountFromKeystore(keystore, password)](#module_client.BncClient+recoverAccountFromKeystore)
-    * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
-    * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
-    * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
     * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
 
 <a name="new_module_client.BncClient_new"></a>
@@ -221,70 +285,6 @@ get balances
 
 <a name="module_client.BncClient+createAccount"></a>
 
-#### bncClient.createAccount() ⇒ <code>Object</code>
-Creates a private key.
-
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-**Returns**: <code>Object</code> - {
- address,
- privateKey
-}  
-<a name="module_client.BncClient+createAccountWithKeystore"></a>
-
-#### bncClient.createAccountWithKeystore(password)
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| password | <code>String</code> | {  privateKey,  address,  keystore } |
-
-<a name="module_client.BncClient+createAccountWithMneomnic"></a>
-
-#### bncClient.createAccountWithMneomnic() ⇒ <code>Object</code>
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-**Returns**: <code>Object</code> - {
- privateKey,
- address,
- mnemonic
-}  
-<a name="module_client.BncClient+recoverAccountFromKeystore"></a>
-
-#### bncClient.recoverAccountFromKeystore(keystore, password)
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| keystore | <code>String</code> |  |
-| password | <code>String</code> | { privateKey, address } |
-
-<a name="module_client.BncClient+recoverAccountFromMneomnic"></a>
-
-#### bncClient.recoverAccountFromMneomnic(mneomnic)
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| mneomnic | <code>String</code> | { privateKey, address } |
-
-<a name="module_client.BncClient+recoverAccountFromPrivateKey"></a>
-
-#### bncClient.recoverAccountFromPrivateKey(privateKey)
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| privateKey | <code>String</code> | { privateKey, address } |
-
-<a name="module_client.BncClient+checkAddress"></a>
-
-#### bncClient.checkAddress(address) ⇒ <code>Boolean</code>
-**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
-
-| Param | Type |
-| --- | --- |
-| address | <code>String</code> | 
-
-<a name="module_client.BncClient+getClientKeyAddress"></a>
 
 #### bncClient.getClientKeyAddress() ⇒ <code>String</code>
 Returns the address for the current account if setPrivateKey has been called on this client.
