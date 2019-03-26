@@ -28,18 +28,24 @@
 * [client](#module_client)
     * _static_
         * [.BncClient](#module_client.BncClient)
-            * [new exports.BncClient(server)](#new_module_client.BncClient_new)
+            * [new exports.BncClient(server, useAsyncBroadcast)](#new_module_client.BncClient_new)
             * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
             * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
-            * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate)
-            * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate)
-            * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate)
-            * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
-            * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
-            * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
+            * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
+            * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
+            * [.setBroadcastDelegate(delegate)](#module_client.BncClient+setBroadcastDelegate) ⇒ <code>BncClient</code>
+            * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate) ⇒ <code>BncClient</code>
+            * [.useDefaultBroadcastDelegate()](#module_client.BncClient+useDefaultBroadcastDelegate) ⇒ <code>BncClient</code>
+            * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate) ⇒ <code>BncClient</code>
+            * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer) ⇒ <code>Object</code>
+            * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Object</code>
+            * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Object</code>
+            * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
+            * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Object</code>
+            * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Object</code>
             * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
-            * [.getAccount(address)](#module_client.BncClient+getAccount)
-            * [.getBalance(address)](#module_client.BncClient+getBalance)
+            * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Object</code>
+            * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Object</code>
             * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
             * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
             * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
@@ -49,6 +55,7 @@
             * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
             * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
         * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
+        * [.DefaultBroadcastDelegate](#module_client.DefaultBroadcastDelegate)
         * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
     * _inner_
         * [~checkNumber(value)](#module_client..checkNumber)
@@ -61,18 +68,24 @@ The Binance Chain client.
 **Kind**: static class of [<code>client</code>](#module_client)  
 
 * [.BncClient](#module_client.BncClient)
-    * [new exports.BncClient(server)](#new_module_client.BncClient_new)
+    * [new exports.BncClient(server, useAsyncBroadcast)](#new_module_client.BncClient_new)
     * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
     * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
-    * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate)
-    * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate)
-    * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate)
-    * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer)
-    * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder)
-    * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder)
+    * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
+    * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
+    * [.setBroadcastDelegate(delegate)](#module_client.BncClient+setBroadcastDelegate) ⇒ <code>BncClient</code>
+    * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate) ⇒ <code>BncClient</code>
+    * [.useDefaultBroadcastDelegate()](#module_client.BncClient+useDefaultBroadcastDelegate) ⇒ <code>BncClient</code>
+    * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate) ⇒ <code>BncClient</code>
+    * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer) ⇒ <code>Object</code>
+    * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Object</code>
+    * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Object</code>
+    * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
+    * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Object</code>
+    * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Object</code>
     * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Object</code>
-    * [.getAccount(address)](#module_client.BncClient+getAccount)
-    * [.getBalance(address)](#module_client.BncClient+getBalance)
+    * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Object</code>
+    * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Object</code>
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>Object</code>
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>Object</code>
@@ -84,11 +97,12 @@ The Binance Chain client.
 
 <a name="new_module_client.BncClient_new"></a>
 
-#### new exports.BncClient(server)
+#### new exports.BncClient(server, useAsyncBroadcast)
 
-| Param | Type | Description |
-| --- | --- | --- |
-| server | <code>string</code> | Binance Chain public url |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| server | <code>string</code> |  | Binance Chain public url |
+| useAsyncBroadcast | <code>Boolean</code> | <code>false</code> | use async broadcast mode, faster but less guarantees (default off) |
 
 <a name="module_client.BncClient+initChain"></a>
 
@@ -102,12 +116,37 @@ Initialize the client with the chain's ID. Asynchronous.
 Sets the client's private key for calls made by this client. Asynchronous.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+<a name="module_client.BncClient+useAsyncBroadcast"></a>
+
+#### bncClient.useAsyncBroadcast(useAsyncBroadcast) ⇒ <code>BncClient</code>
+Use async broadcast mode. Broadcasts faster with less guarantees (default off)
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| useAsyncBroadcast | <code>Boolean</code> | <code>true</code> | 
+
 <a name="module_client.BncClient+setSigningDelegate"></a>
 
-#### bncClient.setSigningDelegate(delegate)
+#### bncClient.setSigningDelegate(delegate) ⇒ <code>BncClient</code>
 Sets the signing delegate (for wallet integrations).
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
+
+| Param | Type |
+| --- | --- |
+| delegate | <code>function</code> | 
+
+<a name="module_client.BncClient+setBroadcastDelegate"></a>
+
+#### bncClient.setBroadcastDelegate(delegate) ⇒ <code>BncClient</code>
+Sets the broadcast delegate (for wallet integrations).
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
 
 | Param | Type |
 | --- | --- |
@@ -115,16 +154,25 @@ Sets the signing delegate (for wallet integrations).
 
 <a name="module_client.BncClient+useDefaultSigningDelegate"></a>
 
-#### bncClient.useDefaultSigningDelegate()
+#### bncClient.useDefaultSigningDelegate() ⇒ <code>BncClient</code>
 Applies the default signing delegate.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
+<a name="module_client.BncClient+useDefaultBroadcastDelegate"></a>
+
+#### bncClient.useDefaultBroadcastDelegate() ⇒ <code>BncClient</code>
+Applies the default broadcast delegate.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
 <a name="module_client.BncClient+useLedgerSigningDelegate"></a>
 
-#### bncClient.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)
+#### bncClient.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb) ⇒ <code>BncClient</code>
 Applies the Ledger signing delegate.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
 
 | Param | Type |
 | --- | --- |
@@ -135,10 +183,11 @@ Applies the Ledger signing delegate.
 
 <a name="module_client.BncClient+transfer"></a>
 
-#### bncClient.transfer(fromAddress, toAddress, amount, asset, memo, sequence)
+#### bncClient.transfer(fromAddress, toAddress, amount, asset, memo, sequence) ⇒ <code>Object</code>
 Transfer tokens from one address to another.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - response (success or fail)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -151,10 +200,11 @@ Transfer tokens from one address to another.
 
 <a name="module_client.BncClient+cancelOrder"></a>
 
-#### bncClient.cancelOrder(fromAddress, symbol, refid, sequence)
+#### bncClient.cancelOrder(fromAddress, symbol, refid, sequence) ⇒ <code>Object</code>
 Cancel an order.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - response (success or fail)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -165,10 +215,11 @@ Cancel an order.
 
 <a name="module_client.BncClient+placeOrder"></a>
 
-#### bncClient.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)
+#### bncClient.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce) ⇒ <code>Object</code>
 Place an order.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - response (success or fail)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -179,6 +230,48 @@ Place an order.
 | quantity | <code>Number</code> |  |  |
 | sequence | <code>Number</code> | <code></code> | optional sequence |
 | timeinforce | <code>Number</code> | <code>1</code> | (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel)) |
+
+<a name="module_client.BncClient+_prepareTransaction"></a>
+
+#### bncClient.\_prepareTransaction(msg, stdSignMsg, address, sequence, memo) ⇒ [<code>Transaction</code>](#Transaction)
+Prepare a serialized raw transaction for sending to the blockchain.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: [<code>Transaction</code>](#Transaction) - signed transaction  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| msg | <code>Object</code> |  | the msg object |
+| stdSignMsg | <code>Object</code> |  | the sign doc object used to generate a signature |
+| address | <code>String</code> |  |  |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
+| memo | <code>String</code> |  | optional memo |
+
+<a name="module_client.BncClient+sendTransaction"></a>
+
+#### bncClient.sendTransaction(tx, sync) ⇒ <code>Object</code>
+Broadcast a transaction to the blockchain.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - response (success or fail)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| tx | <code>signedTx</code> | signed Transaction object |
+| sync | <code>Boolean</code> | use synchronous mode, optional |
+
+<a name="module_client.BncClient+sendRawTransaction"></a>
+
+#### bncClient.sendRawTransaction(signedBz, sync) ⇒ <code>Object</code>
+Broadcast a raw transaction to the blockchain.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - response (success or fail)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signedBz | <code>String</code> | signed and serialized raw transaction |
+| sync | <code>Boolean</code> | use synchronous mode, optional |
 
 <a name="module_client.BncClient+_sendTransaction"></a>
 
@@ -195,14 +288,15 @@ Broadcast a raw transaction to the blockchain.
 | address | <code>String</code> |  |  |
 | sequence | <code>Number</code> | <code></code> | optional sequence |
 | memo | <code>String</code> |  | optional memo |
-| sync | <code>Boolean</code> | <code>true</code> | use synchronous mode, optional |
+| sync | <code>Boolean</code> |  | use synchronous mode, optional |
 
 <a name="module_client.BncClient+getAccount"></a>
 
-#### bncClient.getAccount(address)
+#### bncClient.getAccount(address) ⇒ <code>Object</code>
 get account
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - http response  
 
 | Param | Type |
 | --- | --- |
@@ -210,10 +304,11 @@ get account
 
 <a name="module_client.BncClient+getBalance"></a>
 
-#### bncClient.getBalance(address)
+#### bncClient.getBalance(address) ⇒ <code>Object</code>
 get balances
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Object</code> - http response  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -301,6 +396,17 @@ The default signing delegate which uses the local private key.
 | --- | --- | --- |
 | tx | [<code>Transaction</code>](#Transaction) | the transaction |
 | signMsg | <code>Object</code> | the canonical sign bytes for the msg |
+
+<a name="module_client.DefaultBroadcastDelegate"></a>
+
+### client.DefaultBroadcastDelegate
+The default broadcast delegate which immediately broadcasts a transaction.
+
+**Kind**: static constant of [<code>client</code>](#module_client)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signedTx | [<code>Transaction</code>](#Transaction) | the signed transaction |
 
 <a name="module_client.LedgerSigningDelegate"></a>
 
@@ -546,7 +652,7 @@ Get a private key from mnemonic words.
 | Param | Type | Description |
 | --- | --- | --- |
 | mnemonic | <code>string</code> | the mnemonic phrase words |
-| derive | <code>bool</code> | derive a private key using the default HD path (default: true) |
+| derive | <code>Boolean</code> | derive a private key using the default HD path (default: true) |
 
 <a name="module_amino"></a>
 
@@ -652,8 +758,8 @@ This is the main entrypoint for encoding all types in binary form.
 | Param | Type | Description |
 | --- | --- | --- |
 | js | <code>\*</code> | data type (not null, not undefined) |
-| field | <code>number</code> | index of object |
-| isByteLenPrefix | <code>bool</code> |  |
+| field | <code>Number</code> | index of object |
+| isByteLenPrefix | <code>Boolean</code> |  |
 
 <a name="module_amino.encodeBinaryByteArray"></a>
 
@@ -685,9 +791,9 @@ prefixed with bytes length
 
 | Param | Type | Description |
 | --- | --- | --- |
-| fieldNum | <code>number</code> | object field index |
+| fieldNum | <code>Number</code> | object field index |
 | arr | <code>Array</code> |  |
-| isByteLenPrefix | <code>bool</code> |  |
+| isByteLenPrefix | <code>Boolean</code> |  |
 
 <a name="module_ledger"></a>
 
@@ -726,8 +832,8 @@ Constructs a new LedgerApp.
 | Param | Type | Description |
 | --- | --- | --- |
 | transport | <code>Transport</code> | Ledger Transport, a subclass of ledgerjs Transport. |
-| interactiveTimeout | <code>number</code> | The interactive (user input) timeout in ms. Default 45s. |
-| nonInteractiveTimeout | <code>number</code> | The non-interactive timeout in ms. Default 3s. |
+| interactiveTimeout | <code>Number</code> | The interactive (user input) timeout in ms. Default 45s. |
+| nonInteractiveTimeout | <code>Number</code> | The non-interactive timeout in ms. Default 3s. |
 
 <a name="module_ledger.LedgerApp+getVersion"></a>
 
@@ -890,7 +996,7 @@ convert an integer to big endian hex and add leading zeros
 
 | Param | Type |
 | --- | --- |
-| num | <code>number</code> | 
+| num | <code>Number</code> | 
 
 <a name="module_utils.num2hexstring"></a>
 
@@ -901,9 +1007,9 @@ Converts a number to a big endian hexstring of a suitable size, optionally littl
 
 | Param | Type | Description |
 | --- | --- | --- |
-| num | <code>number</code> |  |
-| size | <code>number</code> | The required size in bytes, eg 1 for Uint8, 2 for Uint16. Defaults to 1. |
-| littleEndian | <code>boolean</code> | Encode the hex in little endian form |
+| num | <code>Number</code> |  |
+| size | <code>Number</code> | The required size in bytes, eg 1 for Uint8, 2 for Uint16. Defaults to 1. |
+| littleEndian | <code>Boolean</code> | Encode the hex in little endian form |
 
 <a name="module_utils.num2VarInt"></a>
 
@@ -915,7 +1021,7 @@ Converts a number to a variable length Int. Used for array length header
 
 | Param | Type | Description |
 | --- | --- | --- |
-| num | <code>number</code> | The number |
+| num | <code>Number</code> | The number |
 
 <a name="module_utils.hexXor"></a>
 
@@ -1036,12 +1142,12 @@ Creates a new transaction object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data.account_number | <code>number</code> | account number |
-| data.chain_id | <code>string</code> | bnbChain Id |
-| data.memo | <code>string</code> | transaction memo |
-| type | <code>string</code> | transaction type |
-| data.msg | <code>object</code> | object data of tx type |
-| data.sequence | <code>number</code> | transaction counts |
+| data.account_number | <code>Number</code> | account number |
+| data.chain_id | <code>String</code> | bnbChain Id |
+| data.memo | <code>String</code> | transaction memo |
+| type | <code>String</code> | transaction type |
+| data.msg | <code>Object</code> | object data of tx type |
+| data.sequence | <code>Number</code> | transaction counts |
 
 **Example**  
 ```js
