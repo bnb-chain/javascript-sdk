@@ -1,5 +1,6 @@
 import BncClient from "../src"
 import * as crypto from "../src/crypto"
+import Transaction from "../src/tx"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -8,13 +9,8 @@ const keystore = {"version":1,"id":"dfb09873-f16f-48c6-a6b8-bb5a705c47a7","addre
 
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
-let client
-
 const getClient = async (useAwaitSetPrivateKey = true) => {
-  if(client && client.chainId && client.account_number){
-    return client
-  }
-  client = new BncClient("https://testnet-dex.binance.org")
+  const client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (useAwaitSetPrivateKey) {
@@ -22,6 +18,9 @@ const getClient = async (useAwaitSetPrivateKey = true) => {
   } else {
     client.setPrivateKey(privateKey) // test without `await`
   }
+  // use default delegates (signing, broadcast)
+  client.useDefaultSigningDelegate()
+  client.useDefaultBroadcastDelegate()
   return client
 }
 
@@ -84,6 +83,42 @@ describe("BncClient test", async () => {
     const client = await getClient(false)
     const res = await client.getBalance(targetAddress)
     expect(res.length).toBeGreaterThanOrEqual(0)
+  })
+
+  it("works with a custom signing delegate", async () => {
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+    const sequence = account.result && account.result.sequence
+
+    client.setSigningDelegate((tx, signMsg) => {
+      expect(tx instanceof Transaction).toBeTruthy()
+      expect(!tx.signatures.length).toBeTruthy()
+      expect(signMsg.inputs.length).toBeTruthy()
+      return tx
+    })
+
+    try {
+      await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
+    } catch (err) {
+      // will throw because a signature was not added by the signing delegate.
+    }
+  })
+
+  it("works with a custom broadcast delegate", async () => {
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+    const sequence = account.result && account.result.sequence
+
+    client.setBroadcastDelegate(signedTx => {
+      expect(signedTx instanceof Transaction).toBeTruthy()
+      expect(signedTx.signatures.length).toBeTruthy()
+      return "broadcastDelegateResult"
+    })
+
+    const res = await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
+    expect(res).toBe("broadcastDelegateResult")
   })
 
   it("transfer placeOrder cancelOrder", async () => {
