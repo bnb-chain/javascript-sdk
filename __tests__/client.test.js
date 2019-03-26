@@ -1,7 +1,6 @@
 import BncClient from "../src"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
-import { isHex } from "../src/utils"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -94,6 +93,7 @@ describe("BncClient test", async () => {
 
     client.setSigningDelegate((tx, signMsg) => {
       expect(tx instanceof Transaction).toBeTruthy()
+      expect(!tx.signatures.length).toBeTruthy()
       expect(signMsg.inputs.length).toBeTruthy()
       return tx
     })
@@ -111,9 +111,9 @@ describe("BncClient test", async () => {
     const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
     const sequence = account.result && account.result.sequence
 
-    client.setBroadcastDelegate(rawTx => {
-      expect(isHex(rawTx)).toBeTruthy()
-      expect(rawTx.length).toBeTruthy()
+    client.setBroadcastDelegate(signedTx => {
+      expect(signedTx instanceof Transaction).toBeTruthy()
+      expect(signedTx.signatures.length).toBeTruthy()
       return "broadcastDelegateResult"
     })
 
