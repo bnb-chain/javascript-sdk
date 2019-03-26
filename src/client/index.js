@@ -26,10 +26,10 @@ export const DefaultSigningDelegate = async function(tx, signMsg) {
 
 /**
  * The default broadcast delegate which immediately broadcasts a transaction.
- * @param {string} rawTx 
+ * @param {Transaction} signedTx the signed transaction
  */
-export const DefaultBroadcastDelegate = async function(rawTx) {
-  return this.sendRawTransaction(rawTx)
+export const DefaultBroadcastDelegate = async function(signedTx) {
+  return this.sendTransaction(signedTx)
 }
 
 /**
@@ -234,8 +234,8 @@ export class BncClient {
       }]
     }
 
-    const rawTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
-    return this._broadcastDelegate(rawTx)
+    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    return this._broadcastDelegate(signedTx)
   }
 
   /**
@@ -262,8 +262,8 @@ export class BncClient {
       symbol: symbol
     }
 
-    const rawTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, "")
-    return this._broadcastDelegate(rawTx)
+    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, "")
+    return this._broadcastDelegate(signedTx)
   }
 
   /**
@@ -327,8 +327,8 @@ export class BncClient {
     checkNumber(placeOrderMsg.price, "price")
     checkNumber(placeOrderMsg.quantity, "quantity")
 
-    const rawTx = await this._prepareTransaction(placeOrderMsg, signMsg, address, sequence, "")
-    return this._broadcastDelegate(rawTx)
+    const signedTx = await this._prepareTransaction(placeOrderMsg, signMsg, address, sequence, "")
+    return this._broadcastDelegate(signedTx)
   }
 
   /**
@@ -338,7 +338,7 @@ export class BncClient {
    * @param {String} address
    * @param {Number} sequence optional sequence
    * @param {String} memo optional memo
-   * @return {String} signed and serialized raw transaction
+   * @return {Transaction} signed transaction
    */
 
   async _sendTransaction(msg, stdSignMsg, address, sequence = null, memo = "", sync = !this._useAsyncBroadcast) {
@@ -362,8 +362,18 @@ export class BncClient {
     }
 
     const tx = new Transaction(options)
-    const signedTx = await this._signingDelegate.call(this, tx, stdSignMsg)
-    return signedTx.serialize()
+    return this._signingDelegate.call(this, tx, stdSignMsg)
+  }
+
+  /**
+   * Broadcast a transaction to the blockchain.
+   * @param {signedTx} tx signed Transaction object
+   * @param {Boolean} sync use synchronous mode, optional
+   * @return {Object} response (success or fail)
+   */
+  async sendTransaction(signedTx, sync) {
+    const signedBz = signedTx.serialize()
+    return this.sendRawTransaction(signedBz, sync)
   }
 
   /**
@@ -393,8 +403,8 @@ export class BncClient {
    * @return {Object} response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=!this._useAsyncBroadcast) {
-    const signedBz = await this._prepareTransaction(msg, stdSignMsg, address, sequence, memo)
-    return this.sendRawTransaction(signedBz, sync)
+    const signedTx = await this._prepareTransaction(msg, stdSignMsg, address, sequence, memo)
+    return this.sendTransaction(signedTx, sync)
   }
 
   /**
