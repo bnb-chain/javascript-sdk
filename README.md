@@ -13,7 +13,7 @@ The Binance Chain JavaScript SDK allows browsers and node.js clients to interact
 
 Windows users: Please install [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) first.
 
-Linux users: You may need some dev packages to be installed on your system for USB support. For Debian-based systems (Ubuntu):
+Linux users: Note that Ubuntu Xenial and newer distributions are recommended, especially when using Travis or other CI systems. You may need some dev packages to be installed on your system for USB support. On Debian-based distributions (like Ubuntu) you should install them with this command:
 ```bash
 $ sudo apt-get install libudev-dev libusb-dev usbutils
 ```
