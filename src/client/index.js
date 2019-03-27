@@ -14,6 +14,11 @@ const api = {
   getAccount: "/api/v1/account"
 }
 
+const NETWORK_PREFIX_MAPPING = {
+  'testnet': 'tbnb',
+  'mainnet': 'bnb'
+}
+
 /**
  * The default signing delegate which uses the local private key.
  * @param  {Transaction} tx      the transaction
@@ -102,12 +107,20 @@ export class BncClient {
   }
 
   /**
+   * @param {String} network Indicate testnet or mainnet
+   */
+  chooseNetwork(network){
+    this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || 'tbnb'
+    this.network = NETWORK_PREFIX_MAPPING[network] ? network : 'testnet'
+  }
+
+  /**
    * Sets the client's private key for calls made by this client. Asynchronous.
    * @return {Promise}
    */
   async setPrivateKey(privateKey) {
     if (privateKey !== this.privateKey) {
-      const address = crypto.getAddressFromPrivateKey(privateKey)
+      const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
       if (!address) throw new Error("address is falsy: ${address}. invalid private key?")
       if (address === this.address) return this // safety
       this.privateKey = privateKey
@@ -448,7 +461,7 @@ export class BncClient {
     const privateKey = crypto.generatePrivateKey()
     return {
       privateKey,
-      address: crypto.getAddressFromPrivateKey(privateKey)
+      address: crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     }
   }
 
@@ -466,7 +479,7 @@ export class BncClient {
       throw new Error("password should not be falsy")
     }
     const privateKey = crypto.generatePrivateKey()
-    const address = crypto.getAddressFromPrivateKey(privateKey)
+    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     const keystore = crypto.generateKeyStore(privateKey, password)
     return {
       privateKey,
@@ -486,7 +499,7 @@ export class BncClient {
   createAccountWithMneomnic() {
     const mnemonic = crypto.generateMnemonic()
     const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
-    const address = crypto.getAddressFromPrivateKey(privateKey)
+    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     return {
       privateKey,
       address,
@@ -504,7 +517,7 @@ export class BncClient {
    */
   recoverAccountFromKeystore(keystore, password){
     const privateKey = crypto.getPrivateKeyFromKeyStore(keystore, password)
-    const address = crypto.getAddressFromPrivateKey(privateKey)
+    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     return {
       privateKey,
       address
@@ -520,7 +533,7 @@ export class BncClient {
    */
   recoverAccountFromMneomnic(mneomnic){
     const privateKey = crypto.getPrivateKeyFromMnemonic(mneomnic)
-    const address = crypto.getAddressFromPrivateKey(privateKey)
+    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     return {
       privateKey,
       address
@@ -535,7 +548,7 @@ export class BncClient {
    * }
    */
   recoverAccountFromPrivateKey(privateKey){
-    const address = crypto.getAddressFromPrivateKey(privateKey)
+    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     return {
       privateKey,
       address
@@ -556,7 +569,7 @@ export class BncClient {
    */
   getClientKeyAddress(){
     if (!this.privateKey) throw new Error("no private key is set on this client")
-    const address = crypto.getAddressFromPrivateKey(this.privateKey)
+    const address = crypto.getAddressFromPrivateKey(this.privateKey, this.addressPrefix)
     this.address = address
     return address
   }
