@@ -186,4 +186,12 @@ describe("BncClient test", async () => {
     const res1 = client.createAccountWithKeystore("12345678")
     expect(res1.address.includes('bnb')).toBeTruthy()
   })
+
+  it("get markets works", async () => {
+    const client = await getClient(false)
+    const { result: markets, status } = await client.getMarkets()
+
+    expect(markets.length).toBe(100)
+    expect(status).toBe(200)
+  })
 })

@@ -11,7 +11,8 @@ const MAX_INT64 = Math.pow(2, 63)
 const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
-  getAccount: "/api/v1/account"
+  getAccount: "/api/v1/account",
+  getMarkets: "/api/v1/markets"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -444,6 +445,19 @@ export class BncClient {
     try {
       const data = await this.getAccount(address)
       return data.result.balances
+    } catch(err) {
+      return []
+    }
+  }
+
+  /**
+   * get markets
+   * @return {Object} http response
+   */
+  async getMarkets() {
+    try {
+      const data = await this._httpClient.request("get", `${api.getMarkets}`)
+      return data
     } catch(err) {
       return []
     }
