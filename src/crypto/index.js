@@ -44,7 +44,8 @@ export const decodeAddress = (value) => {
 export const checkAddress = (address) => {
   try {
     const decodeAddress = bech32.decode(address)
-    if(decodeAddress.prefix === "tbnb") {
+    if(decodeAddress.prefix === "tbnb" || 
+       decodeAddress.prefix === "bnb") {
       return true
     }
 
