@@ -456,9 +456,9 @@ export class BncClient {
    * @param {Number} limit, max 1000 is default
    * @return {Object} http response
    */
-  async getMarkets(offset=0,limit=1000) {
+  async getMarkets(limit=1000, offset=0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getMarkets}?offset=${offset}&limit=${limit}`)
+      const data = await this._httpClient.request("get", `${api.getMarkets}?limit=${limit}&offset=${offset}`)
       return data
     } catch(err) {
       return []

@@ -189,9 +189,9 @@ describe("BncClient test", async () => {
 
   it("get markets works", async () => {
     const client = await getClient(false)
-    const { result: markets, status } = await client.getMarkets()
+    const { result: markets, status } = await client.getMarkets(150)
 
-    expect(markets.length).toBe(266)
+    expect(markets.length).toBe(150)
     expect(status).toBe(200)
   })
 })
