@@ -44,7 +44,8 @@ export const decodeAddress = (value) => {
 export const checkAddress = (address) => {
   try {
     const decodeAddress = bech32.decode(address)
-    if(decodeAddress.prefix === "tbnb") {
+    if(decodeAddress.prefix === "tbnb" || 
+       decodeAddress.prefix === "bnb") {
       return true
     }
 
@@ -115,14 +116,15 @@ export const generatePubKey = privateKey => {
 /**
  * Gets an address from a public key hex.
  * @param {string} publicKeyHex the public key hexstring
+ * @param {string} prefix the address prefix
  */
-export const getAddressFromPublicKey = publicKeyHex => {
+export const getAddressFromPublicKey = (publicKeyHex, prefix) => {
   const pubKey = ec.keyFromPublic(publicKeyHex, "hex")
   const pubPoint = pubKey.getPublic()
   const compressed = pubPoint.encodeCompressed()
   const hexed = ab2hexstring(compressed)
   const hash = sha256ripemd160(hexed) // https://git.io/fAn8N
-  const address = encodeAddress(hash)
+  const address = encodeAddress(hash, prefix)
   return address
 }
 
@@ -130,8 +132,8 @@ export const getAddressFromPublicKey = publicKeyHex => {
  * Gets an address from a private key.
  * @param {string} privateKeyHex the private key hexstring
  */
-export const getAddressFromPrivateKey = privateKeyHex => {
-  return getAddressFromPublicKey(getPublicKeyFromPrivateKey(privateKeyHex))
+export const getAddressFromPrivateKey = (privateKeyHex, prefix) => {
+  return getAddressFromPublicKey(getPublicKeyFromPrivateKey(privateKeyHex), prefix)
 }
 
 /**

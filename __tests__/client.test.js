@@ -171,4 +171,15 @@ describe("BncClient test", async () => {
     const balances = await client.getBalance()
     expect(balances.length).toBeGreaterThan(0)
   })
+
+  it("choose network", async () => {
+    const client = await getClient(false)
+    client.chooseNetwork('testnet')
+    const res = client.createAccountWithKeystore("12345678")
+    expect(res.address.includes('tbnb')).toBeTruthy()
+
+    client.chooseNetwork('mainnet')
+    const res1 = client.createAccountWithKeystore("12345678")
+    expect(res1.address.includes('bnb')).toBeTruthy()
+  })
 })
