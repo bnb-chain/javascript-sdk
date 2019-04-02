@@ -461,6 +461,7 @@ export class BncClient {
       const data = await this._httpClient.request("get", `${api.getMarkets}?limit=${limit}&offset=${offset}`)
       return data
     } catch(err) {
+      console.warn("getMarkets error", err)
       return []
     }
   }

@@ -190,8 +190,12 @@ describe("BncClient test", async () => {
   it("get markets works", async () => {
     const client = await getClient(false)
     const { result: markets, status } = await client.getMarkets(150)
-
-    expect(markets.length).toBe(150)
     expect(status).toBe(200)
+    expect(markets.length).toBeGreaterThan(0)
+    expect(markets[0]).toHaveProperty('base_asset_symbol');
+    expect(markets[0]).toHaveProperty('quote_asset_symbol');
+    expect(markets[0]).toHaveProperty('price');
+    expect(markets[0]).toHaveProperty('tick_size');
+    expect(markets[0]).toHaveProperty('lot_size');
   })
 })
