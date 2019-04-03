@@ -138,7 +138,7 @@ export const getAddressFromPrivateKey = (privateKeyHex, prefix) => {
 
 /**
  * Generates a signature (64 byte <r,s>) for a transaction based on given private key.
- * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
+ * @param {string} signBytesHex - Unsigned transaction signer bytes hexstring.
  * @param {string | Buffer} privateKey - The private key.
  * @return {Buffer} Signature. Does not include tx.
  */
@@ -150,9 +150,9 @@ export const generateSignature = (signBytesHex, privateKey) => {
 }
 
 /**
- * Verifies a signature (64 byte <r,s>) given the sign bytes and public key.
+ * Verifies a signature (64 byte <r,s>) given the signer bytes and public key.
  * @param {string} sigHex - The signature hexstring.
- * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
+ * @param {string} signBytesHex - Unsigned transaction signer bytes hexstring.
  * @param {string} publicKeyHex - The public key.
  * @return {Buffer} Signature. Does not include tx.
  */

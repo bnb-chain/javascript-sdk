@@ -61,7 +61,7 @@ class Transaction {
   }
 
   /**
-   * generate the sign bytes for a transaction, given a msg
+   * generate the signer bytes for a transaction, given a msg
    * @param {Object} concrete msg object
    * @return {Buffer}
    **/
@@ -99,7 +99,7 @@ class Transaction {
   }
 
   /**
-   * sign transaction with a given private key and msg
+   * signer transaction with a given private key and msg
    * @param {string} privateKey private key hex string
    * @param {Object} concrete msg object
    * @return {Transaction}

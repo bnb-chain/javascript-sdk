@@ -290,7 +290,7 @@ class LedgerApp {
 
   // The first packet/chunk includes only the derivation path
 
-  // All other packets/chunks should contain message to sign
+  // All other packets/chunks should contain message to signer
 
   // *First Packet*
 
@@ -360,8 +360,8 @@ class LedgerApp {
   }
 
   /**
-   * Sends a transaction sign doc to the Ledger app to be signed.
-   * @param {Buffer} signBytes The TX sign doc bytes to sign
+   * Sends a transaction signer doc to the Ledger app to be signed.
+   * @param {Buffer} signBytes The TX signer doc bytes to signer
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
@@ -447,7 +447,7 @@ class LedgerApp {
       }
     } else {
       throw new Error(
-        "Unable to sign the transaction. Return code " + result.return_code
+        "Unable to signer the transaction. Return code " + result.return_code
       )
     }
     return response
@@ -465,8 +465,8 @@ class LedgerApp {
   }
 
   /**
-   * Sends a transaction sign doc to the Ledger app to be signed.
-   * @param {Buffer} signBytes The TX sign doc bytes to sign
+   * Sends a transaction signer doc to the Ledger app to be signed.
+   * @param {Buffer} signBytes The TX signer doc bytes to signer
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
