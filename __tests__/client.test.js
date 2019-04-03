@@ -1,4 +1,5 @@
 import BncClient from "../src"
+import { checkNumber } from "../src/client"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 
@@ -31,6 +32,17 @@ const wait = ms => {
     }, ms)
   })
 }
+
+describe("checkNumber", async () => {
+  it("ensures that the number is positive", async () => {
+    expect(() => checkNumber(-100, "-100")).toThrowError("-100 should be a positive number")
+  })
+
+  it("ensures that the number is less than 2^63", async () => {
+    expect(() => checkNumber(Math.pow(2,63), "2^63")).toThrowError("2^63 should be less than 2^63")
+    expect(() => checkNumber(Math.pow(2,63) + 1, "2^63")).toThrowError("2^63 should be less than 2^63")
+  })
+})
 
 describe("BncClient test", async () => {
 
@@ -197,5 +209,43 @@ describe("BncClient test", async () => {
     expect(markets[0]).toHaveProperty('price');
     expect(markets[0]).toHaveProperty('tick_size');
     expect(markets[0]).toHaveProperty('lot_size');
+  })
+
+  it("check number when transfer", async () => {
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+
+    const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+    const sequence = account.result && account.result.sequence
+
+    try{
+      await client.transfer(addr, targetAddress, -1, "BNB", "hello world", sequence)
+    } catch(err) {
+      expect(err.message).toBe(`amount should be a positive number`)
+    }
+
+    try{
+      await client.transfer(addr, targetAddress, Math.pow(2, 63), "BNB", "hello world", sequence)
+    } catch(err) {
+      expect(err.message).toBe(`amount should be less than 2^63`)
+    }
+  })
+
+  it("check number when place order", async () => {
+    const symbol = "BNB_USDT.B-B7C"
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+
+    try{
+      await client.placeOrder(addr, symbol, 2, -40, 0.0001, 1)
+    } catch(err) {
+      expect(err.message).toBe(`price should be a positive number`)
+    }
+
+    try{
+      await client.placeOrder(addr, symbol, 2, Math.pow(2,63), 2, 1)
+    } catch(err) {
+      expect(err.message).toBe(`price should be less than 2^63`)
+    }
   })
 })
