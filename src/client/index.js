@@ -5,82 +5,8 @@ import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
 import Big from "big.js"
-
-const MAX_INT64 = Math.pow(2, 63)
-
-const api = {
-  broadcast: "/api/v1/broadcast",
-  nodeInfo: "/api/v1/node-info",
-  getAccount: "/api/v1/account",
-  getMarkets: "/api/v1/markets"
-}
-
-const NETWORK_PREFIX_MAPPING = {
-  'testnet': 'tbnb',
-  'mainnet': 'bnb'
-}
-
-/**
- * The default signing delegate which uses the local private key.
- * @param  {Transaction} tx      the transaction
- * @param  {Object}      signMsg the canonical sign bytes for the msg
- * @return {Transaction}
- */
-export const DefaultSigningDelegate = async function(tx, signMsg) {
-  return tx.sign(this.privateKey, signMsg)
-}
-
-/**
- * The default broadcast delegate which immediately broadcasts a transaction.
- * @param {Transaction} signedTx the signed transaction
- */
-export const DefaultBroadcastDelegate = async function(signedTx) {
-  return this.sendTransaction(signedTx)
-}
-
-/**
- * The Ledger signing delegate.
- * @param  {LedgerApp}  ledgerApp
- * @param  {preSignCb}  function
- * @param  {postSignCb} function
- * @param  {errCb} function
- * @return {function}
- */
-export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) => async function (
-  tx, signMsg
-) {
-  const signBytes = tx.getSignBytes(signMsg)
-  preSignCb && preSignCb(signBytes)
-  let pubKeyResp, sigResp
-  try {
-    pubKeyResp = await ledgerApp.getPublicKey()
-    sigResp = await ledgerApp.sign(signBytes)
-    postSignCb && postSignCb(pubKeyResp, sigResp)
-  } catch (err) {
-    console.warn("LedgerSigningDelegate error", err)
-    errCb && errCb(err)
-  }
-  if (sigResp && sigResp.signature) {
-    const pubKey = crypto.getPublicKey(pubKeyResp.pk.toString("hex"))
-    return tx.addSignature(pubKey, sigResp.signature)
-  }
-  return tx
-}
-
-/**
- * validate the input number.
- * @param {Number} value
- */
-export const checkNumber = (value, name = "input number")=>{
-  if(value <= 0) {
-    throw new Error(`${name} should be a positive number`)
-  }
-
-  if (MAX_INT64 <= value) {
-    throw new Error(`${name} should be less than 2^63`)
-  }
-}
-
+import {DefaultSigningDelegate , DefaultBroadcastDelegate , LedgerSigningDelegate} from "../signer"
+import { api , NETWORK_PREFIX_MAPPING  , checkNumber} from "../utils/constants"
 /**
  * The Binance Chain client.
  */
@@ -115,8 +41,8 @@ export class BncClient {
    * @param {String} network Indicate testnet or mainnet
    */
   chooseNetwork(network){
-    this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || 'tbnb'
-    this.network = NETWORK_PREFIX_MAPPING[network] ? network : 'testnet'
+    this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || "tbnb"
+    this.network = NETWORK_PREFIX_MAPPING[network] ? network : "testnet"
   }
 
   /**
@@ -352,7 +278,7 @@ export class BncClient {
   /**
    * Prepare a serialized raw transaction for sending to the blockchain.
    * @param {Object} msg the msg object
-   * @param {Object} stdSignMsg the sign doc object used to generate a signature
+   * @param {Object} stdSignMsg the signer doc object used to generate a signature
    * @param {String} address
    * @param {Number} sequence optional sequence
    * @param {String} memo optional memo
@@ -411,7 +337,7 @@ export class BncClient {
   /**
    * Broadcast a raw transaction to the blockchain.
    * @param {Object} msg the msg object
-   * @param {Object} stdSignMsg the sign doc object used to generate a signature
+   * @param {Object} stdSignMsg the signer doc object used to generate a signature
    * @param {String} address
    * @param {Number} sequence optional sequence
    * @param {String} memo optional memo
