@@ -7,8 +7,8 @@ import bech32 from "bech32"
 import cryp from "crypto-browserify"
 import uuid from "uuid"
 import _ from "lodash"
-import bip39 from "bip39"
 import bip32 from "bip32"
+import  * as bip39  from 'bip39'
 import { ec as EC } from "elliptic"
 import ecc from "tiny-secp256k1"
 
@@ -265,7 +265,7 @@ export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
   if(!bip39.validateMnemonic(mnemonic)){
     throw new Error("wrong mnemonic format")
   }
-  const seed = bip39.mnemonicToSeed(mnemonic)
+  const seed = bip39.mnemonicToSeedSync(mnemonic)
   if (derive) {
     const master = bip32.fromSeed(seed)
     const child = master.derivePath(HDPATH)
