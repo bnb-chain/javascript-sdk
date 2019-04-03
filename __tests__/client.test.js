@@ -187,6 +187,18 @@ describe("BncClient test", async () => {
     expect(res1.address.includes('bnb')).toBeTruthy()
   })
 
+  it("get markets works", async () => {
+    const client = await getClient(false)
+    const { result: markets, status } = await client.getMarkets(150)
+    expect(status).toBe(200)
+    expect(markets.length).toBeGreaterThan(0)
+    expect(markets[0]).toHaveProperty('base_asset_symbol');
+    expect(markets[0]).toHaveProperty('quote_asset_symbol');
+    expect(markets[0]).toHaveProperty('price');
+    expect(markets[0]).toHaveProperty('tick_size');
+    expect(markets[0]).toHaveProperty('lot_size');
+  })
+
   it("check number when transfer", async () => {
     const client = await getClient(true)
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
