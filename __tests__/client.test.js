@@ -1,4 +1,5 @@
 import BncClient from "../src"
+import { checkNumber } from "../src/client"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 
@@ -31,6 +32,17 @@ const wait = ms => {
     }, ms)
   })
 }
+
+describe("checkNumber", async () => {
+  it("ensures that the number is positive", async () => {
+    expect(() => checkNumber(-100, "-100")).toThrowError("-100 should be a positive number")
+  })
+
+  it("ensures that the number is less than 2^63", async () => {
+    expect(() => checkNumber(Math.pow(2,63), "2^63")).toThrowError("2^63 should be less than 2^63")
+    expect(() => checkNumber(Math.pow(2,63) + 1, "2^63")).toThrowError("2^63 should be less than 2^63")
+  })
+})
 
 describe("BncClient test", async () => {
 
@@ -209,7 +221,7 @@ describe("BncClient test", async () => {
     try{
       await client.transfer(addr, targetAddress, -1, "BNB", "hello world", sequence)
     } catch(err) {
-      expect(err.message).toBe(`amount should be positive number`)
+      expect(err.message).toBe(`amount should be a positive number`)
     }
 
     try{
@@ -224,17 +236,14 @@ describe("BncClient test", async () => {
     const client = await getClient(true)
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
 
-    const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
-    const sequence = account.result && account.result.sequence
-
     try{
-      await client.placeOrder(addr, symbol, 2, -40, 0.0001, sequence + 1)
+      await client.placeOrder(addr, symbol, 2, -40, 0.0001, 1)
     } catch(err) {
-      expect(err.message).toBe(`price should be positive number`)
+      expect(err.message).toBe(`price should be a positive number`)
     }
 
     try{
-      await client.placeOrder(addr, symbol, 2, Math.pow(2,63), 2, sequence + 1)
+      await client.placeOrder(addr, symbol, 2, Math.pow(2,63), 2, 1)
     } catch(err) {
       expect(err.message).toBe(`price should be less than 2^63`)
     }
