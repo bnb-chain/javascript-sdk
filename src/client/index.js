@@ -72,7 +72,11 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) =
  * @param {Number} value
  */
 const checkNumber = (value, name = "input number")=>{
-  if (MAX_INT64 < value) {
+  if(value <= 0) { 
+    throw new Error(`${name} should be positive number`)
+  }
+
+  if (MAX_INT64 <= value) {
     throw new Error(`${name} should be less than 2^63`)
   }
 }
