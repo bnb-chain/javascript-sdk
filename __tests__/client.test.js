@@ -1,5 +1,5 @@
 import BncClient from "../src"
-import { checkNumber } from "../src/client"
+import { checkNumber } from "../src/utils/constants"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 
