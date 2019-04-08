@@ -58,6 +58,7 @@ The general structure of Ledger commands and responses is as follows:
 | MAJOR   | byte (1) | Version Major |                                 |
 | MINOR   | byte (1) | Version Minor |                                 |
 | PATCH   | byte (1) | Version Patch |                                 |
+| LOCKED  | byte (1) | Device Locked | boolean                         |
 | SW1-SW2 | byte (2) | Return code   | see list of return codes        |
 
 ### PUBLIC_KEY_SECP256K1

@@ -126,6 +126,16 @@ class LedgerApp {
 
   _errorMessage(code) {
     switch (code) {
+      case 1:
+        return "U2F: Unknown"
+      case 2:
+        return "U2F: Bad request"
+      case 3:
+        return "U2F: Configuration unsupported"
+      case 4:
+        return "U2F: Device Ineligible"
+      case 5:
+        return "U2F: Timeout"
       case 14:
         return "Timeout"
       case 0x9000:
@@ -145,18 +155,18 @@ class LedgerApp {
       case 0x6985:
         return "Conditions not satisfied"
       case 0x6986:
-        return "Command not allowed"
-      case 0x6a80:
+        return "Transaction rejected"
+      case 0x6A80:
         return "Bad key handle"
-      case 0x6b00:
+      case 0x6B00:
         return "Invalid P1/P2"
-      case 0x6d00:
+      case 0x6D00:
         return "Instruction not supported"
-      case 0x6e00:
-        return "CLA not supported"
-      case 0x6f00:
+      case 0x6E00:
+        return "The app does not seem to be open"
+      case 0x6F00:
         return "Unknown error"
-      case 0x6f01:
+      case 0x6F01:
         return "Sign/verify error"
       default:
         return "Unknown error code"
@@ -183,6 +193,7 @@ class LedgerApp {
   // | MAJOR   | byte (1) | Version Major |                                 |
   // | MINOR   | byte (1) | Version Minor |                                 |
   // | PATCH   | byte (1) | Version Patch |                                 |
+  // | LOCKED  | byte (1) | Device Locked | boolean                         |
   // | SW1-SW2 | byte (2) | Return code   | see list of return codes        |
 
   /**
@@ -207,6 +218,7 @@ class LedgerApp {
       result["major"] = apduResponse[1]
       result["minor"] = apduResponse[2]
       result["patch"] = apduResponse[3]
+      result["device_locked"] = apduResponse[4] === 1
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
     } catch (err) {
