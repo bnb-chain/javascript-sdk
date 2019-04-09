@@ -4,7 +4,7 @@
 
 import vstruct from "varstruct"
 import { Buffer } from "safe-buffer"
-import _ from "lodash"
+import is from 'is_js'
 
 import VarInt, { UVarInt } from "./varint"
 import typeToTyp3 from "../utils/encoderHelper"
@@ -76,7 +76,7 @@ export const convertObjectToSignBytes = obj =>
  * @param {Object} obj
  *  */
 export const marshalBinary = (obj) => {
-  if (!_.isObject(obj))
+  if (!is.object(obj))
     throw new TypeError("data must be an object")
 
   return encodeBinary(obj, null, true).toString("hex")
@@ -87,7 +87,7 @@ export const marshalBinary = (obj) => {
  * @param {Object} obj
  *  */
 export const marshalBinaryBare = (obj) => {
-  if (!_.isObject(obj))
+  if (!is.object(obj))
     throw new TypeError("data must be an object")
 
   return encodeBinary(obj).toString("hex")
@@ -111,25 +111,26 @@ export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
     return val
   }
 
-  if(_.isPlainObject(val)){
-    return encodeObjectBinary(val, isByteLenPrefix)
-  }
-
-  if(_.isArray(val)){
+  if(is.array(val)){
     return encodeArrayBinary(fieldNum, val, isByteLenPrefix)
   }
 
-  if(_.isNumber(val)){
+  if(is.number(val)){
     return encodeNumber(val)
   }
 
-  if(_.isBoolean(val)){
+  if(is.boolean(val)){
     return encodeBool(val)
   }
 
-  if(_.isString(val)){
+  if(is.string(val)){
     return encodeString(val)
   }
+
+  if(is.object(val)){
+    return encodeObjectBinary(val, isByteLenPrefix)
+  }
+
 
   return
 }
@@ -157,7 +158,7 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
 
     if (isDefaultValue(obj[key])) return
 
-    if (_.isArray(obj[key]) && obj[key].length > 0) {
+    if (is.array(obj[key]) && obj[key].length > 0) {
       bufferArr.push(encodeArrayBinary(index, obj[key]))
     } else {
       bufferArr.push(encodeTypeAndField(index, obj[key]))
@@ -220,8 +221,7 @@ const encodeTypeAndField = (index, field) => {
 const isDefaultValue = (obj) => {
   if(obj === null) return false
 
-  return (_.isNumber(obj) && obj === 0)
-        || (_.isString(obj) && obj === "")
-        || (_.isArray(obj) && obj.length === 0)
-
+  return (is.number(obj) && obj === 0)
+        || (is.string(obj) && obj === "")
+        || (is.array(obj) && obj.length === 0)
 }
