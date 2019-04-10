@@ -6,7 +6,7 @@ import csprng from "secure-random"
 import bech32 from "bech32"
 import cryp from "crypto-browserify"
 import uuid from "uuid"
-import _ from "lodash"
+import is from "is_js"
 import bip32 from "bip32"
 import  * as bip39  from 'bip39'
 import { ec as EC } from "elliptic"
@@ -217,11 +217,11 @@ export const generateKeyStore = (privateKeyHex, password) => {
  */
 export const getPrivateKeyFromKeyStore = (keystore, password) => {
 
-  if (!_.isString(password)) {
+  if (!is.string(password)) {
     throw new Error("No password given.")
   }
 
-  const json = _.isObject(keystore) ? keystore : JSON.parse(keystore)
+  const json = is.object(keystore) ? keystore : JSON.parse(keystore)
   const kdfparams = json.crypto.kdfparams
 
   if (kdfparams.prf !== "hmac-sha256") {

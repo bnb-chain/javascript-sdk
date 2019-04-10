@@ -133,7 +133,7 @@ describe("BncClient test", async () => {
     expect(res).toBe("broadcastDelegateResult")
   })
 
-  it("transfer placeOrder cancelOrder", async () => {
+  it("transfer placeOrder cancelOrder only", async () => {
     jest.setTimeout(50000)
 
     const symbol = "BNB_USDT.B-B7C"
@@ -142,7 +142,6 @@ describe("BncClient test", async () => {
     const accCode = crypto.decodeAddress(addr)
     const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
     const sequence = account.result && account.result.sequence
-
     const res = await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
     expect(res.status).toBe(200)
 
