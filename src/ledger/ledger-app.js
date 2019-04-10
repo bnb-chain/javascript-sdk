@@ -32,7 +32,7 @@ const INS_GET_VERSION = 0x00
 const INS_PUBLIC_KEY_SECP256K1 = 0x01
 const INS_SIGN_SECP256K1 = 0x02
 const INS_SHOW_ADDR_SECP256K1 = 0x03
-const INS_GET_ADDR_SECP256K1 = 0x04
+// const INS_GET_ADDR_SECP256K1 = 0x04
 
 // The general structure of commands and responses is as follows:
 
@@ -111,10 +111,10 @@ class LedgerApp {
     if (hrp == null || hrp.length < 3 || hrp.length > 83) {
       throw new Error("Invalid HRP")
     }
-    let buf = Buffer.alloc(1 + hrp.length);
-    buf.writeUInt8(hrp.length, 0);
-    buf.write(hrp, 1);
-    return buf;
+    let buf = Buffer.alloc(1 + hrp.length)
+    buf.writeUInt8(hrp.length, 0)
+    buf.write(hrp, 1)
+    return buf
   }
 
   _serializeHDPath(path) {
