@@ -189,13 +189,13 @@ describe("BncClient test", async () => {
 
   it("choose network", async () => {
     const client = await getClient(false)
-    client.chooseNetwork('testnet')
+    client.chooseNetwork("testnet")
     const res = client.createAccountWithKeystore("12345678")
-    expect(res.address.includes('tbnb')).toBeTruthy()
+    expect(res.address.includes("tbnb")).toBeTruthy()
 
-    client.chooseNetwork('mainnet')
+    client.chooseNetwork("mainnet")
     const res1 = client.createAccountWithKeystore("12345678")
-    expect(res1.address.includes('bnb')).toBeTruthy()
+    expect(res1.address.includes("bnb")).toBeTruthy()
   })
 
   it("get markets works", async () => {
@@ -203,11 +203,11 @@ describe("BncClient test", async () => {
     const { result: markets, status } = await client.getMarkets(150)
     expect(status).toBe(200)
     expect(markets.length).toBeGreaterThan(0)
-    expect(markets[0]).toHaveProperty('base_asset_symbol');
-    expect(markets[0]).toHaveProperty('quote_asset_symbol');
-    expect(markets[0]).toHaveProperty('price');
-    expect(markets[0]).toHaveProperty('tick_size');
-    expect(markets[0]).toHaveProperty('lot_size');
+    expect(markets[0]).toHaveProperty("base_asset_symbol")
+    expect(markets[0]).toHaveProperty("quote_asset_symbol")
+    expect(markets[0]).toHaveProperty("price")
+    expect(markets[0]).toHaveProperty("tick_size")
+    expect(markets[0]).toHaveProperty("lot_size")
   })
 
   it("check number when transfer", async () => {
@@ -220,13 +220,13 @@ describe("BncClient test", async () => {
     try{
       await client.transfer(addr, targetAddress, -1, "BNB", "hello world", sequence)
     } catch(err) {
-      expect(err.message).toBe(`amount should be a positive number`)
+      expect(err.message).toBe("amount should be a positive number")
     }
 
     try{
       await client.transfer(addr, targetAddress, Math.pow(2, 63), "BNB", "hello world", sequence)
     } catch(err) {
-      expect(err.message).toBe(`amount should be less than 2^63`)
+      expect(err.message).toBe("amount should be less than 2^63")
     }
   })
 
@@ -238,13 +238,13 @@ describe("BncClient test", async () => {
     try{
       await client.placeOrder(addr, symbol, 2, -40, 0.0001, 1)
     } catch(err) {
-      expect(err.message).toBe(`price should be a positive number`)
+      expect(err.message).toBe("price should be a positive number")
     }
 
     try{
       await client.placeOrder(addr, symbol, 2, Math.pow(2,63), 2, 1)
     } catch(err) {
-      expect(err.message).toBe(`price should be less than 2^63`)
+      expect(err.message).toBe("price should be less than 2^63")
     }
   })
 })

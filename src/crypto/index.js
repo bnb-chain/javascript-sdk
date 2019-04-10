@@ -8,7 +8,7 @@ import cryp from "crypto-browserify"
 import uuid from "uuid"
 import is from "is_js"
 import bip32 from "bip32"
-import  * as bip39  from 'bip39'
+import  * as bip39  from "bip39"
 import { ec as EC } from "elliptic"
 import ecc from "tiny-secp256k1"
 

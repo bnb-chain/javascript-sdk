@@ -16,8 +16,8 @@ const api = {
 }
 
 const NETWORK_PREFIX_MAPPING = {
-  'testnet': 'tbnb',
-  'mainnet': 'bnb'
+  "testnet": "tbnb",
+  "mainnet": "bnb"
 }
 
 /**
@@ -115,8 +115,8 @@ export class BncClient {
    * @param {String} network Indicate testnet or mainnet
    */
   chooseNetwork(network){
-    this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || 'tbnb'
-    this.network = NETWORK_PREFIX_MAPPING[network] ? network : 'testnet'
+    this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || "tbnb"
+    this.network = NETWORK_PREFIX_MAPPING[network] ? network : "testnet"
   }
 
   /**
