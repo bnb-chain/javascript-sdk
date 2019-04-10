@@ -31,6 +31,8 @@ const CHUNK_SIZE = 250
 const INS_GET_VERSION = 0x00
 const INS_PUBLIC_KEY_SECP256K1 = 0x01
 const INS_SIGN_SECP256K1 = 0x02
+const INS_SHOW_ADDR_SECP256K1 = 0x03
+const INS_GET_ADDR_SECP256K1 = 0x04
 
 // The general structure of commands and responses is as follows:
 
@@ -105,7 +107,17 @@ class LedgerApp {
     return buffer
   }
 
-  _serializeHdPath(path) {
+  _serializeHRP(hrp) {
+    if (hrp == null || hrp.length < 3 || hrp.length > 83) {
+      throw new Error("Invalid HRP")
+    }
+    let buf = Buffer.alloc(1 + hrp.length);
+    buf.writeUInt8(hrp.length, 0);
+    buf.write(hrp, 1);
+    return buf;
+  }
+
+  _serializeHDPath(path) {
     if (path == null || path.length < 3) {
       throw new Error("Invalid path.")
     }
@@ -270,7 +282,7 @@ class LedgerApp {
         INS_PUBLIC_KEY_SECP256K1,
         0,
         0,
-        this._serializeHdPath(hdPath),
+        this._serializeHDPath(hdPath),
         ACCEPT_STATUSES
       )
       apduResponse = Buffer.from(apduResponse, "hex")
@@ -330,7 +342,7 @@ class LedgerApp {
 
   _signGetChunks(data, hdPath) {
     const chunks = []
-    chunks.push(this._serializeHdPath(hdPath))
+    chunks.push(this._serializeHDPath(hdPath))
     let buffer = Buffer.from(data)
     for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
       let end = i + CHUNK_SIZE
@@ -353,9 +365,9 @@ class LedgerApp {
         chunk
       )
       apduResponse = Buffer.from(apduResponse, "hex")
-      let error_code_data = apduResponse.slice(-2)
+      let returnCode = apduResponse.slice(-2)
 
-      result["return_code"] = error_code_data[0] * 256 + error_code_data[1]
+      result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
 
       result["signature"] = null
@@ -378,10 +390,10 @@ class LedgerApp {
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
   async signSecp256k1(signBytes, hdPath = [44, 714, 0, 0, 0]) {
-    const response = {}
+    const result = {}
     const chunks = this._signGetChunks(signBytes, hdPath)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
-    let result
+    let response
     try {
       if (chunks.length <= 1) {
         this._transport.setExchangeTimeout(this._interactiveTimeout)
@@ -389,37 +401,37 @@ class LedgerApp {
         // more to come, non-interactive
         this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
       }
-      result = await this._signSendChunk(1, chunks.length, chunks[0])
-      response["return_code"] = result.return_code
-      response["error_message"] = result.error_message
-      response["signature"] = null
+      response = await this._signSendChunk(1, chunks.length, chunks[0])
+      result["return_code"] = response.return_code
+      result["error_message"] = response.error_message
+      result["signature"] = null
     } catch (err) {
       const { statusCode, statusText, message, stack } = err
       console.warn("Ledger signSecp256k1 error (chunk 1):",
         this._errorMessage(statusCode), message, statusText, stack)
       throw err
     }
-    if (result.return_code === 0x9000) {
+    if (response.return_code === 0x9000) {
       for (let i = 1; i < chunks.length; i++) {
         try {
           if (i === chunks.length - 1) { // last?
             this._transport.setExchangeTimeout(this._interactiveTimeout)
           }
-          result = await this._signSendChunk(1 + i, chunks.length, chunks[i])
-          response["return_code"] = result.return_code
-          response["error_message"] = result.error_message
+          response = await this._signSendChunk(1 + i, chunks.length, chunks[i])
+          result["return_code"] = response.return_code
+          result["error_message"] = response.error_message
         } catch (err) {
           const { statusCode, statusText, message, stack } = err
           console.warn("Ledger signSecp256k1 error (chunk 2):",
             this._errorMessage(statusCode), message, statusText, stack)
           throw err
         }
-        if (result.return_code !== 0x9000) {
+        if (response.return_code !== 0x9000) {
           break
         }
       }
-      response["return_code"] = result.return_code
-      response["error_message"] = result.error_message
+      result["return_code"] = response.return_code
+      result["error_message"] = response.error_message
 
       // Ledger has encoded the sig in ASN1 DER format, but we need a 64-byte buffer of <r,s>
       // DER-encoded signature from Ledger:
@@ -432,7 +444,7 @@ class LedgerApp {
       //   A 1-byte length descriptor for the S value
       //   The S coordinate, as a big-endian integer
       //  = 7 bytes of overhead
-      let signature = result.signature
+      let signature = response.signature
       if (!signature || !signature.length) {
         throw new Error("Ledger assertion failed: Expected a non-empty signature from the device")
       }
@@ -453,16 +465,65 @@ class LedgerApp {
       const sigR = signature.slice(rOffset, rOffset + rLen) // skip e.g. 3045022100 and pad
       const sigS = signature.slice(sOffset)
 
-      signature = response["signature"] = Buffer.concat([sigR, sigS])
+      signature = result["signature"] = Buffer.concat([sigR, sigS])
       if (signature.length !== 64) {
         throw new Error(`Ledger assertion failed: incorrect signature length ${signature.length}`)
       }
     } else {
       throw new Error(
-        "Unable to sign the transaction. Return code " + result.return_code
+        "Unable to sign the transaction. Return code " + response.return_code
       )
     }
-    return response
+    return result
+  }
+
+  /* INS_SHOW_ADDR_SECP256K1 */
+
+  // #### Command
+
+  // | Field      | Type           | Content                | Expected       |
+  // | ---------- | -------------- | ---------------------- | -------------- |
+  // | CLA        | byte (1)       | Application Identifier | 0xBC           |
+  // | INS        | byte (1)       | Instruction ID         | 0x03           |
+  // | P1         | byte (1)       | Parameter 1            | ignored        |
+  // | P2         | byte (1)       | Parameter 2            | ignored        |
+  // | L          | byte (1)       | Bytes in payload       | (depends)      |
+  // | HRP_LEN    | byte(1)        | Bech32 HRP Length      | 1<=HRP_LEN<=83 |
+  // | HRP        | byte (HRP_LEN) | Bech32 HRP             |                |
+  // | PL         | byte (1)       | Derivation Path Length | 3<=PL<=5       |
+  // | Path[0]    | byte (4)       | Derivation Path Data   | 44             |
+  // | Path[1]    | byte (4)       | Derivation Path Data   | 714            |
+  // | ..         | byte (4)       | Derivation Path Data   |                |
+  // | Path[PL-1] | byte (4)       | Derivation Path Data   |                |
+
+  // First three items in the derivation path will be automatically hardened
+
+  /**
+   * Shows the user's address for the given HD path on the device display.
+   * @param {string} hrp The bech32 human-readable prefix
+   * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
+   * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
+   */
+  async showAddress(hrp = "bnb", hdPath = [44, 714, 0, 0, 0]) {
+    const result = {}
+    let data = Buffer.concat([this._serializeHRP(hrp), this._serializeHDPath(hdPath)])
+    this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
+    let apduResponse = await this._transport.send(
+      CLA,
+      INS_SHOW_ADDR_SECP256K1,
+      0,
+      0,
+      data,
+      ACCEPT_STATUSES
+    )
+    apduResponse = Buffer.from(apduResponse, "hex")
+    let returnCode = apduResponse.slice(-2)
+    result["return_code"] = returnCode[0] * 256 + returnCode[1]
+    result["error_message"] = this._errorMessage(result["return_code"])
+    if (result.return_code === 0x6A80) {
+      result["error_message"] = apduResponse.slice(0, apduResponse.length - 2).toString("ascii")
+    }
+    return result
   }
 
   // convenience aliases

@@ -128,3 +128,52 @@ All other packets/chunks should contain message to sign
 | SIG     | byte (~71)   | Signature     | DER encoded (length prefixed) |
 | SW1-SW2 | byte (2)     | Return code   | see list of return codes        |
 
+### INS_SHOW_ADDR_SECP256K1
+
+#### Payload
+
+| Field      | Type           | Content                | Expected       |
+| ---------- | -------------- | ---------------------- | -------------- |
+| CLA        | byte (1)       | Application Identifier | 0xBC           |
+| INS        | byte (1)       | Instruction ID         | 0x03           |
+| P1         | byte (1)       | Parameter 1            | ignored        |
+| P2         | byte (1)       | Parameter 2            | ignored        |
+| L          | byte (1)       | Bytes in payload       | (depends)      |
+| HRP_LEN    | byte(1)        | Bech32 HRP Length      | 1<=HRP_LEN<=83 |
+| HRP        | byte (HRP_LEN) | Bech32 HRP             |                |
+| PL         | byte (1)       | Derivation Path Length | 3<=PL<=5       |
+| Path[0]    | byte (4)       | Derivation Path Data   | 44             |
+| Path[1]    | byte (4)       | Derivation Path Data   | 714            |
+| ..         | byte (4)       | Derivation Path Data   |                |
+| Path[PL-1] | byte (4)       | Derivation Path Data   |                |
+
+First three items in the derivation path will be automatically hardened
+
+### INS_GET_ADDR_SECP256K1
+
+#### Payload
+
+| Field      | Type           | Content                | Expected       |
+| ---------- | -------------- | ---------------------- | -------------- |
+| CLA        | byte (1)       | Application Identifier | 0xBC           |
+| INS        | byte (1)       | Instruction ID         | 0x04           |
+| P1         | byte (1)       | Parameter 1            | ignored        |
+| P2         | byte (1)       | Parameter 2            | ignored        |
+| L          | byte (1)       | Bytes in payload       | (depends)      |
+| HRP_LEN    | byte(1)        | Bech32 HRP Length      | 1<=HRP_LEN<=83 |
+| HRP        | byte (HRP_LEN) | Bech32 HRP             |                |
+| PL         | byte (1)       | Derivation Path Length | 3<=PL<=5       |
+| Path[0]    | byte (4)       | Derivation Path Data   | 44             |
+| Path[1]    | byte (4)       | Derivation Path Data   | 714            |
+| ..         | byte (4)       | Derivation Path Data   |                |
+| Path[PL-1] | byte (4)       | Derivation Path Data   |                |
+
+First three items in the derivation path will be hardened automatically hardened
+
+#### Response
+
+| Field   | Type      | Content               | Note                     |
+| ------- | --------- | --------------------- | ------------------------ |
+| PK      | byte (33) | Compressed Public Key |                          |
+| ADDR    | byte (65) | Bech 32 addr          |                          |
+| SW1-SW2 | byte (2)  | Return code           | see list of return codes |
