@@ -213,7 +213,7 @@ test("status code is 0x6984", function(assert) {
 
 //#endregion
 
-//#region INS_SHOW_ADDR_SECP256K1
+//#region INS_SHOW_ADDR_SECP256K1 (index 0)
 
 QUnit.module("INS_SHOW_ADDR_SECP256K1", {
   before: async function() {
@@ -237,15 +237,78 @@ test("status code is 0x9000", function(assert) {
 
 //#endregion
 
+//#region INS_SHOW_ADDR_SECP256K1 (other index)
+
+QUnit.module("INS_SHOW_ADDR_SECP256K1 - other index", {
+  before: async function() {
+    response = {} // clear
+    try {
+      const hdPath = [44, 714, 0, 0, 714]
+      response = await app.showAddress("tbnb", hdPath)
+      console.log(response)
+    } catch (err) {
+      console.error(
+        "Error invoking INS_SHOW_ADDR_SECP256K1. Please connect it and open the app.",
+        err
+      )
+    }
+  }
+})
+
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
+})
+
+//#endregion
+
 //#region INS_SHOW_ADDR_SECP256K1 (bad hdPath throws)
 
 let badShowAddrErrored, badShowAddrErrorMsg, badShowAddrErrorCode
-QUnit.module("INS_SHOW_ADDR_SECP256K1", {
+QUnit.module("INS_SHOW_ADDR_SECP256K1 - bad path", {
   before: async function() {
     response = {} // clear
     try {
       const hdPath = [44, 714, 0, 1, 0]
       response = await app.showAddress("tbnb", hdPath)
+      console.log(response)
+      badShowAddrErrored = false
+    } catch (err) {
+      badShowAddrErrored = true
+      badShowAddrErrorMsg = err.message
+      badShowAddrErrorCode = err.statusCode
+      console.error(
+        "Error invoking INS_SHOW_ADDR_SECP256K1. Please connect it and open the app.",
+        err
+      )
+    }
+  }
+})
+
+test("did throw an error", function(assert) {
+  assert.ok(badShowAddrErrored, "Passed")
+})
+
+test("error message is 'Ledger device: UNKNOWN_ERROR (0x6984)'", function(assert) {
+  assert.equal(
+    badShowAddrErrorMsg,
+    "Ledger device: UNKNOWN_ERROR (0x6984)",
+    "Error message is 'Ledger device: UNKNOWN_ERROR (0x6984)'"
+  )
+})
+
+test("status code is 0x6984", function(assert) {
+  assert.equal(badShowAddrErrorCode, 0x6984, "Status code is 0x6984")
+})
+
+//#endregion
+
+//#region INS_SHOW_ADDR_SECP256K1 (too long hrp throws)
+
+QUnit.module("INS_SHOW_ADDR_SECP256K1 - hrp too long", {
+  before: async function() {
+    response = {} // clear
+    try {
+      response = await app.showAddress("tbnbxx")
       console.log(response)
       badShowAddrErrored = false
     } catch (err) {
