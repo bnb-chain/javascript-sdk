@@ -46,15 +46,15 @@ export const DefaultBroadcastDelegate = async function(signedTx) {
  * @param  {errCb} function
  * @return {function}
  */
-export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb) => async function (
+export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb, hdPath) => async function (
   tx, signMsg
 ) {
   const signBytes = tx.getSignBytes(signMsg)
   preSignCb && preSignCb(signBytes)
   let pubKeyResp, sigResp
   try {
-    pubKeyResp = await ledgerApp.getPublicKey()
-    sigResp = await ledgerApp.sign(signBytes)
+    pubKeyResp = await ledgerApp.getPublicKey(hdPath)
+    sigResp = await ledgerApp.sign(signBytes, hdPath)
     postSignCb && postSignCb(pubKeyResp, sigResp)
   } catch (err) {
     console.warn("LedgerSigningDelegate error", err)
@@ -196,8 +196,8 @@ export class BncClient {
    * @param {function} errCb
    * @return {BncClient} this instance (for chaining)
    */
-  useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb) {
-    this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)
+  useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb, hdPath) {
+    this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb, hdPath)
     return this
   }
 
