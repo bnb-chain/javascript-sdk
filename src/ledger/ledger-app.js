@@ -20,7 +20,7 @@
  *******************************************************************************
  */
 
-const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 45000
+const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 50000
 const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000
 
 const CLA = 0xBC
@@ -507,7 +507,7 @@ class LedgerApp {
   async showAddress(hrp = "bnb", hdPath = [44, 714, 0, 0, 0]) {
     const result = {}
     let data = Buffer.concat([this._serializeHRP(hrp), this._serializeHDPath(hdPath)])
-    this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
+    this._transport.setExchangeTimeout(this._interactiveTimeout)
     let apduResponse = await this._transport.send(
       CLA,
       INS_SHOW_ADDR_SECP256K1,
