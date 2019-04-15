@@ -426,11 +426,62 @@ test("signature size is within range 64-65", function(assert) {
 
 //#endregion
 
-//#region SIGN_SECP256K1 (good multi-send tx with data)
+//#region SIGN_SECP256K1 (good transfer tx with data)
 
 // this tx msg follows the BNC structure (no fee, + source and data)
 // eslint-disable-next-line quotes
-const signBytes = `{"account_number":"12","chain_id":"chain-bnb","data":"DATASTUFF","memo":"MEMOSTUFF","msgs":[{"inputs":[{"address":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","coins":[{"amount":20012345678,"denom":"BNB"},{"amount":212345678,"denom":"NNB-0AB"},{"amount":1,"denom":"NNB-0AB"}]}],"outputs":[{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl720","coins":[{"amount":20012345678,"denom":"BNB"}]},{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl721","coins":[{"amount":212345678,"denom":"NNB-0AB"}]},{"address":"bnc1cku54wwn66w2rkgs3h6v5zxrwtzyew8chcl722","coins":[{"amount":1,"denom":"NNB-0AB"}]}]}],"sequence":"64","source":"1"}`
+let signBytes = `{"account_number":"1","chain_id":"Binance-Chain-Test","data":"DATA","memo":"","msgs":[{"inputs":[{"address":"tbnb1hlly02l6ahjsgxw9wlcswnlwdhg4xhx3f309d9","coins":[{"amount":10000000000,"denom":"BNB"}]}],"outputs":[{"address":"tbnb1hlly02l6ahjsgxw9wlcswnlwdhg4xhx3f309d9","coins":[{"amount":10000000000,"denom":"BNB"}]}]}],"sequence":"2","source":"1"}`
+QUnit.module("SIGN_SECP256K1 - good multi-send tx with data", {
+  before: async function() {
+    response = {} // clear
+    try {
+      const hdPathSign = [44, 714, 0, 0, 0]
+      await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
+      response = await app.sign(signBytes, hdPathSign)
+      console.log(response)
+    } catch (err) {
+      console.error(
+        "Error invoking SIGN_SECP256K1. Please connect it and open the app.",
+        err
+      )
+    }
+  }
+})
+
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
+})
+
+test("has property signature", function(assert) {
+  assert.ok(response.signature !== undefined, "Passed")
+})
+
+test("signature size is within range 64-65", function(assert) {
+  assert.ok(
+    64 <= response.signature.length && response.signature.length <= 65,
+    "Passed"
+  )
+})
+
+test("signature passes verification", function(assert) {
+  const sig = response.signature
+  assert.ok(
+    crypto.verifySignature(
+      sig,
+      Buffer.from(signBytes, "utf8").toString("hex"),
+      pubKey.toString("hex")
+    ),
+    "Signature OK"
+  )
+})
+
+//#endregion
+
+//#region SIGN_SECP256K1 (cancel order tx)
+
+// this tx msg follows the BNC structure (no fee, + source and data)
+// eslint-disable-next-line quotes
+signBytes = `{"account_number":"1","chain_id":"Binance-Chain-Test","data":null,"memo":"MEMO","msgs":[{"refid":"B71E119324558ABA3AE3F5BC854F1225132465A0-0","sender":"tbnb1hlly02l6ahjsgxw9wlcswnlwdhg4xhx3f309d9","symbol":"BTC-0AB_BNB"}],"sequence":"2","source":"1"}`
 QUnit.module("SIGN_SECP256K1 - good multi-send tx with data", {
   before: async function() {
     response = {} // clear
