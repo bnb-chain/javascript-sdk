@@ -99,7 +99,6 @@ test("app has matching version", function(assert) {
 
 //#region PUBLIC_KEY_SECP256K1
 
-let pubKey
 QUnit.module("PUBLIC_KEY_SECP256K1", {
   before: async function() {
     response = {} // clear
@@ -107,7 +106,6 @@ QUnit.module("PUBLIC_KEY_SECP256K1", {
       const hdPath = [44, 714, 0, 0, 0]
       response = await app.getPublicKey(hdPath)
       console.log(response)
-      pubKey = response.pk
     } catch (err) {
       console.error(
         "Error invoking PUBLIC_KEY_SECP256K1. Please connect it and open the app.",
@@ -243,7 +241,7 @@ QUnit.module("INS_SHOW_ADDR_SECP256K1 - other index", {
   before: async function() {
     response = {} // clear
     try {
-      const hdPath = [44, 714, 0, 0, 714]
+      const hdPath = [44, 714, 714, 0, 714]
       response = await app.showAddress("tbnb", hdPath)
       console.log(response)
     } catch (err) {
@@ -431,12 +429,14 @@ test("signature size is within range 64-65", function(assert) {
 // this tx msg follows the BNC structure (no fee, + source and data)
 // eslint-disable-next-line quotes
 let signBytes = `{"account_number":"1","chain_id":"Binance-Chain-Test","data":"DATA","memo":"","msgs":[{"inputs":[{"address":"tbnb1hlly02l6ahjsgxw9wlcswnlwdhg4xhx3f309d9","coins":[{"amount":10000000000,"denom":"BNB"}]}],"outputs":[{"address":"tbnb1hlly02l6ahjsgxw9wlcswnlwdhg4xhx3f309d9","coins":[{"amount":10000000000,"denom":"BNB"}]}]}],"sequence":"2","source":"1"}`
-QUnit.module("SIGN_SECP256K1 - good multi-send tx with data", {
+let pubKey
+QUnit.module("SIGN_SECP256K1 - good transfer tx with data", {
   before: async function() {
     response = {} // clear
     try {
-      const hdPathSign = [44, 714, 0, 0, 0]
-      await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
+      const hdPathSign = [44, 714, 0, 0, 10]
+      const pkResp = await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
+      pubKey = pkResp.pk
       response = await app.sign(signBytes, hdPathSign)
       console.log(response)
     } catch (err) {
