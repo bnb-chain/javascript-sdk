@@ -205,7 +205,7 @@ describe("BncClient test", async () => {
     expect(markets.length).toBeGreaterThan(0)
     expect(markets[0]).toHaveProperty("base_asset_symbol")
     expect(markets[0]).toHaveProperty("quote_asset_symbol")
-    expect(markets[0]).toHaveProperty("price")
+    expect(markets[0]).toHaveProperty("list_price")
     expect(markets[0]).toHaveProperty("tick_size")
     expect(markets[0]).toHaveProperty("lot_size")
   })
