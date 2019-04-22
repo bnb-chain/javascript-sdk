@@ -233,10 +233,16 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
   const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c, kdfparams.dklen, "sha256")
   const ciphertext = Buffer.from(json.crypto.ciphertext, "hex")
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext])
-  const mac = sha3(bufferValue.toString("hex"))
 
+  // try sha3 (new / ethereum keystore) mac first
+  const mac = sha3(bufferValue.toString("hex"))
   if (mac !== json.crypto.mac) {
-    throw new Error("Keystore mac check failed - wrong password?")
+    // the legacy (sha256) mac is next to be checked. pre-testnet keystores used a sha256 digest for the mac.
+    // the sha256 mac was not compatible with ethereum keystores, so it was changed to sha3 for mainnet.
+    const macLegacy = sha256(bufferValue.toString("hex"))
+    if (macLegacy !== json.crypto.mac) {
+      throw new Error("Keystore mac check failed (sha3 & sha256) - wrong password?")
+    }
   }
 
   const decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 32), Buffer.from(json.crypto.cipherparams.iv, "hex"))

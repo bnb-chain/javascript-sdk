@@ -202,18 +202,6 @@ export const ensureHex = str => {
 }
 
 /**
- * Computes a single SHA3 (Keccak) digest.
- * @param {string} hex message to hash
- * @returns {string} hash output
- */
-export const sha3 = (hex) => {
-  if (typeof hex !== "string") throw new Error("sha3 expects a hex string")
-  if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
-  const hexEncoded = hexEncoding.parse(hex)
-  return SHA3(hexEncoded).toString()
-}
-
-/**
  * Computes a SHA256 followed by a RIPEMD160.
  * @param {string} hex message to hash
  * @returns {string} hash output
@@ -236,4 +224,16 @@ export const sha256 = (hex) => {
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)
   return SHA256(hexEncoded).toString()
+}
+
+/**
+ * Computes a single SHA3 (Keccak) digest.
+ * @param {string} hex message to hash
+ * @returns {string} hash output
+ */
+export const sha3 = (hex) => {
+  if (typeof hex !== "string") throw new Error("sha3 expects a hex string")
+  if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
+  const hexEncoded = hexEncoding.parse(hex)
+  return SHA3(hexEncoded).toString()
 }
