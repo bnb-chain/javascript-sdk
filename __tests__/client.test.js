@@ -6,18 +6,27 @@ import Transaction from "../src/tx"
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
 
-const keystore = {"version":1,"id":"73a811d0-5e31-4a0e-9b3a-a2a457ccbd7b","crypto":{"ciphertext":"3b","cipherparams":{"iv":"56d59d999578a0364c59934128dd215d"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"781849b3477252928cfbe5d62180a755dce1e5b2569b02f6f14e7f46a0740687","c":262144,"prf":"hmac-sha256"},"mac":"6a967b9dad5062eac3dbc9db4e30a8f2efa60f60403aa9ea0345e50cdfb5e9d86343f5808b7e2f51b062f7c7f24189723acd4a94568e6a72bb63e6345e988c0f"}}
+const keystores = {
+  // keystore with sha3 mac
+  new: {"version":1,"id":"73a811d0-5e31-4a0e-9b3a-a2a457ccbd7b","crypto":{"ciphertext":"3b","cipherparams":{"iv":"56d59d999578a0364c59934128dd215d"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"781849b3477252928cfbe5d62180a755dce1e5b2569b02f6f14e7f46a0740687","c":262144,"prf":"hmac-sha256"},"mac":"6a967b9dad5062eac3dbc9db4e30a8f2efa60f60403aa9ea0345e50cdfb5e9d86343f5808b7e2f51b062f7c7f24189723acd4a94568e6a72bb63e6345e988c0f"}},
+  // keystore with sha256 mac
+  legacy: {"version":1,"id":"dfb09873-f16f-48c6-a6b8-bb5a705c47a7","address":"bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk","crypto":{"ciphertext":"33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b","cipherparams":{"iv":"88c726d70cd0437bfdb2312dc60103fc"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9","c":262144,"prf":"hmac-sha256"},"mac":"f7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e"}},
+  // keystore with bad mac
+  badMac: {"version":1,"id":"dfb09873-f16f-48c6-a6b8-bb5a705c47a7","address":"bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk","crypto":{"ciphertext":"33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b","cipherparams":{"iv":"88c726d70cd0437bfdb2312dc60103fc"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9","c":262144,"prf":"hmac-sha256"},"mac":"x7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e"}},
+}
 
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
-const getClient = async (useAwaitSetPrivateKey = true) => {
+const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = false) => {
   const client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
-  if (useAwaitSetPrivateKey) {
-    await client.setPrivateKey(privateKey)
-  } else {
-    client.setPrivateKey(privateKey) // test without `await`
+  if (!doNotSetPrivateKey) {
+    if (useAwaitSetPrivateKey) {
+      await client.setPrivateKey(privateKey)
+    } else {
+      client.setPrivateKey(privateKey) // test without `await`
+    }
   }
   // use default delegates (signing, broadcast)
   client.useDefaultSigningDelegate()
@@ -54,7 +63,7 @@ describe("BncClient test", async () => {
   })
 
   it("create account with keystore", async () => {
-    const client = await getClient(false)
+    const client = await getClient(false, true)
     const res = client.createAccountWithKeystore("12345678")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
@@ -70,10 +79,24 @@ describe("BncClient test", async () => {
   })
 
   it("recover account from keystore", async () => {
-    const client = await getClient(false)
-    const res = client.recoverAccountFromKeystore(keystore, "12345qwert!S")
+    const client = await getClient(false, true)
+    const res = client.recoverAccountFromKeystore(keystores.new, "12345qwert!S")
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
+  })
+
+  it("recover account from legacy (sha256) keystore", async () => {
+    const client = await getClient(false, true)
+    const res = client.recoverAccountFromKeystore(keystores.legacy, "12345qwert!S")
+    expect(res.address).toBeTruthy()
+    expect(res.privateKey).toBeTruthy()
+  })
+
+  it("recover account from bad mac keystore", async () => {
+    const client = await getClient(false, true)
+    expect(() => {
+      client.recoverAccountFromKeystore(keystores.badMac, "12345qwert!S")
+    }).toThrowError()
   })
 
   it("recover account from mneomnic", async () => {
