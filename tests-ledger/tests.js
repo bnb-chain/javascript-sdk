@@ -562,6 +562,58 @@ test("signature passes verification", function(assert) {
 
 //#endregion
 
+//#region SIGN_SECP256K1 (list proposal tx)
+
+// eslint-disable-next-line quotes
+const listSignBytes = `{"account_number":"1","chain_id":"test-chain-8TXwNl","data":null,"memo":"MEMO","msgs":[{"description":"{\\"base_asset_symbol\\":\\"ETH-DA3\\",\\"quote_asset_symbol\\":\\"BNB\\",\\"init_price\\":1000000000,\\"description\\":\\"list ETH-DA3/BNB\\",\\"expire_time\\":\\"2019-08-10T00:23:26+08:00\\"}","initial_deposit":[{"amount":"200000000000","denom":"BNB"}],"proposal_type":"ListTradingPair","proposer":"bnb1wt5jhwn7tqxfsycmgdfcq4a63h3uckdc03zjgx","title":"list ETH-DA3/BNB","voting_period":"60000000000"}],"sequence":"6","source":"0"}`
+QUnit.module("SIGN_SECP256K1 - list proposal tx", {
+  before: async function() {
+    response = {} // clear
+    try {
+      const hdPathSign = [44, 714, 0, 0, 0]  // already "seen" in the above test
+      const pkResp = await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
+      await app.showAddress("bnb", hdPathSign)  // prime the device with this hd path
+      response = await app.sign(listSignBytes, hdPathSign)
+      pubKey = pkResp.pk
+      console.log(response)
+    } catch (err) {
+      console.error(
+        "Error invoking SIGN_SECP256K1. Please connect it and open the app.",
+        err
+      )
+    }
+  }
+})
+
+test("status code is 0x9000", function(assert) {
+  assert.equal(response.return_code, 0x9000, "Status code is 0x9000")
+})
+
+test("has property signature", function(assert) {
+  assert.ok(response.signature !== undefined, "Passed")
+})
+
+test("signature size is within range 64-65", function(assert) {
+  assert.ok(
+    64 <= response.signature.length && response.signature.length <= 65,
+    "Passed"
+  )
+})
+
+test("signature passes verification", function(assert) {
+  const sig = response.signature
+  assert.ok(
+    crypto.verifySignature(
+      sig,
+      Buffer.from(listSignBytes, "utf8").toString("hex"),
+      pubKey.toString("hex")
+    ),
+    "Signature OK"
+  )
+})
+
+//#endregion
+
 //#region SIGN_SECP256K1 (bad tx throws)
 
 let badTxErrored, badTxErrorCode
