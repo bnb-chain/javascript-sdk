@@ -37,11 +37,16 @@ class HttpRequest {
         return { result: response.data, status: response.status }
       }).catch(err => {
         // TODO: what if it's not json?
-        console.error("error in HttpRequest#request", err)
-        const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message)
-        let error = new Error(msgObj.message)
-        error.code = msgObj.code
-        error.abci_code = msgObj.abci_code
+        console.error("error in HttpRequest#request", err, err.statusCode)
+        let error = err
+        try {
+          const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message)
+          error = new Error(msgObj.message)
+          error.code = msgObj.code
+          error.abci_code = msgObj.abci_code
+        } catch (err) {
+          throw error
+        }
         throw error
       })
   }
