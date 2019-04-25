@@ -112,6 +112,7 @@ export class BncClient {
   }
 
   /**
+   * Sets the client network (testnet or mainnet).
    * @param {String} network Indicate testnet or mainnet
    */
   chooseNetwork(network){
@@ -209,7 +210,7 @@ export class BncClient {
    * @param {String} asset
    * @param {String} memo optional memo
    * @param {Number} sequence optional sequence
-   * @return {Object} response (success or fail)
+   * @return {Promise} resolves with response (success or fail)
    */
   async transfer(fromAddress, toAddress, amount, asset, memo="", sequence=null) {
     const accCode = crypto.decodeAddress(fromAddress)
@@ -262,7 +263,7 @@ export class BncClient {
    * @param {String} symbol the market pair
    * @param {String} refid the order ID of the order to cancel
    * @param {Number} sequence optional sequence
-   * @return {Object} response (success or fail)
+   * @return {Promise} resolves with response (success or fail)
    */
   async cancelOrder(fromAddress, symbol, refid, sequence=null) {
     const accCode = crypto.decodeAddress(fromAddress)
@@ -293,7 +294,7 @@ export class BncClient {
    * @param {Number} quantity
    * @param {Number} sequence optional sequence
    * @param {Number} timeinforce (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel))
-   * @return {Object} response (success or fail)
+   * @return {Promise} resolves with response (success or fail)
    */
   async placeOrder(address=this.address, symbol, side, price, quantity, sequence=null, timeinforce=1) {
     if (!address) {
@@ -385,7 +386,7 @@ export class BncClient {
    * Broadcast a transaction to the blockchain.
    * @param {signedTx} tx signed Transaction object
    * @param {Boolean} sync use synchronous mode, optional
-   * @return {Object} response (success or fail)
+   * @return {Promise} resolves with response (success or fail)
    */
   async sendTransaction(signedTx, sync) {
     const signedBz = signedTx.serialize()
@@ -396,7 +397,7 @@ export class BncClient {
    * Broadcast a raw transaction to the blockchain.
    * @param {String} signedBz signed and serialized raw transaction
    * @param {Boolean} sync use synchronous mode, optional
-   * @return {Object} response (success or fail)
+   * @return {Promise} resolves with response (success or fail)
    */
   async sendRawTransaction(signedBz, sync=!this._useAsyncBroadcast) {
     const opts = {
@@ -416,7 +417,7 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @param {String} memo optional memo
    * @param {Boolean} sync use synchronous mode, optional
-   * @return {Object} response (success or fail)
+   * @return {Promise} resolves with response (success or fail)
    */
   async _sendTransaction(msg, stdSignMsg, address, sequence=null, memo="", sync=!this._useAsyncBroadcast) {
     const signedTx = await this._prepareTransaction(msg, stdSignMsg, address, sequence, memo)
@@ -426,7 +427,7 @@ export class BncClient {
   /**
    * get account
    * @param {String} address
-   * @return {Object} http response
+   * @return {Promise} resolves with http response
    */
   async getAccount(address=this.address) {
     if(!address) {
@@ -443,7 +444,7 @@ export class BncClient {
   /**
    * get balances
    * @param {String} address optional address
-   * @return {Object} http response
+   * @return {Promise} resolves with http response
    */
   async getBalance(address=this.address) {
     try {
@@ -458,7 +459,7 @@ export class BncClient {
    * get markets
    * @param {Number} offset from beggining, default 0
    * @param {Number} limit, max 1000 is default
-   * @return {Object} http response
+   * @return {Promise} resolves with http response
    */
   async getMarkets(limit=1000, offset=0) {
     try {
@@ -471,8 +472,8 @@ export class BncClient {
   }
 
   /**
-   * Creates a private key.
-   * @return {Object}
+   * Creates a private key and returns it and its address.
+   * @return {object} the private key and address in an object.
    * {
    *  address,
    *  privateKey
@@ -487,7 +488,7 @@ export class BncClient {
   }
 
   /**
-   *
+   * Creates an account keystore object, and returns the private key and address.
    * @param {String} password
    *  {
    *  privateKey,
@@ -510,7 +511,8 @@ export class BncClient {
   }
 
   /**
-   * @return {Object}
+   * Creates an account from mnemonic seed phrase.
+   * @return {object}
    * {
    *  privateKey,
    *  address,
@@ -529,8 +531,9 @@ export class BncClient {
   }
 
   /**
-   * @param {String} keystore
-   * @param {String} password
+   * Recovers an account from a keystore object.
+   * @param {object} keystore object.
+   * @param {string} keystore password.
    * {
    * privateKey,
    * address
@@ -546,7 +549,8 @@ export class BncClient {
   }
 
   /**
-   * @param {String} mneomnic
+   * Recovers an account from a mnemonic seed phrase.
+   * @param {string} mneomnic
    * {
    * privateKey,
    * address
@@ -562,6 +566,7 @@ export class BncClient {
   }
 
   /**
+   * Recovers an account using private key.
    * @param {String} privateKey
    * {
    * privateKey,
@@ -577,6 +582,7 @@ export class BncClient {
   }
 
   /**
+   * Validates an address.
    * @param {String} address
    * @return {Boolean}
    */
