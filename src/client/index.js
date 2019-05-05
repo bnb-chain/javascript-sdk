@@ -81,6 +81,15 @@ export const checkNumber = (value, name = "input number")=>{
   }
 }
 
+const checkTransfers = (transfers) => {
+  for(let i=0,len=transfers.length;i<len;i++) {
+    const coins = transfers[i].coins
+    for( let j=0;j<coins.length;j++){
+      checkNumber(coins[j].amount)
+    }
+  }
+}
+
 /**
  * The Binance Chain client.
  */
@@ -251,6 +260,87 @@ export class BncClient {
           denom: asset
         }]
       }]
+    }
+
+    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    return this._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * Create and sign a multi send tx
+   * @param {String} fromAddress
+   * @param {Array} transfers
+   * @example
+   * const transfers = [
+   * {
+   *   "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+   *   "coins": [{
+   *     "denom": "BNB",
+   *     "amount": 10
+   *   }]
+   * },
+   * {
+   *   "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+   *   "coins": [{
+   *     "denom": "BTC",
+   *     "amount": 10
+   *   }]
+   * }]
+   * @param {String} memo optional memo
+   * @param {Number} sequence optional sequence
+   * @return {Promise} resolves with response (success or fail)
+   */
+  async multiSend(fromAddress, transfers, memo="", sequence=null) {
+    if(!fromAddress) {
+      throw new Error("fromAddress should not be falsy")
+    }
+
+    if(!Array.isArray(transfers)) {
+      throw new Error("transfers should be array")
+    }
+
+    checkTransfers(transfers)
+
+    transfers.forEach(item=>{
+      item.coins.forEach(coin=>{
+        coin.amount = Number(coin.amount * Math.pow(10, 8))
+      })
+    })
+
+    const fromAddrCode = crypto.decodeAddress(fromAddress)
+    const inputs = [{ address: fromAddrCode, coins: [] }]
+    const outputs = []
+
+    transfers.forEach((item)=>{
+      const toAddcCode = crypto.decodeAddress(item.to)
+      inputs[0].coins = inputs[0].coins.concat(item.coins)
+      outputs.push({address: toAddcCode, coins: item.coins})
+    })
+
+    const msg = {
+      inputs,
+      outputs,
+      msgType: "MsgSend"
+    }
+
+    const signInputs = [{ address: fromAddress, coins: [] }]
+    const signOutputs = []
+    transfers.forEach((item, index)=>{
+      signOutputs.push({ address: item.to, coins: [] })
+      item.coins.forEach(c=>{
+        const coin = {
+          denom: c.denom,
+          amount: c.amount
+        }
+
+        signInputs[0].coins.push(coin)
+        signOutputs[index].coins.push(coin)
+      })
+    })
+
+    const signMsg = {
+      inputs: signInputs,
+      outputs: signOutputs
     }
 
     const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)

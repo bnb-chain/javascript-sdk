@@ -2,6 +2,7 @@ import BncClient from "../src"
 import { checkNumber } from "../src/client"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
+import { createInflate } from "zlib";
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -269,5 +270,27 @@ describe("BncClient test", async () => {
     } catch(err) {
       expect(err.message).toBe("price should be less than 2^63")
     }
+  })
+
+  it("multiSend", async () => {
+    const client = await getClient(true)
+    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
+    const transfers = [{
+        "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+        "coins": [{
+          "denom": "BNB",
+          "amount": 0.01
+        }]
+      },
+      {
+        "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+        "coins": [{
+          "denom": "USDT.B-B7C",
+          "amount": 0.15
+        }]
+      }]
+
+    const { status } = await client.multiSend(addr, transfers)
+    expect(status).toBe(200)
   })
 })
