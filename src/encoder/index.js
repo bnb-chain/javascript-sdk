@@ -36,7 +36,7 @@ export const encodeNumber = (num) => UVarInt.encode(num)
  * encode bool
  * @param b
  */
-export const encodeBool = (b) => b ? VarInt.encode(1): VarInt.encode(0)
+export const encodeBool = (b) => b ? UVarInt.encode(1): UVarInt.encode(0)
 
 /**
  * encode string

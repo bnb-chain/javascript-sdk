@@ -35,7 +35,7 @@ describe("encoder", () => {
   it("encode bool", () => {
     let encodedTrue = encoder.encodeBool(true)
     encodedTrue = encodedTrue.toString("hex")
-    expect(encodedTrue).toBe("02")
+    expect(encodedTrue).toBe("01")
 
     let encodedFalse = encoder.encodeBool(false)
     encodedFalse = encodedFalse.toString("hex")

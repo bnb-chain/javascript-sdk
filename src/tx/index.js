@@ -6,6 +6,12 @@ export const txType = {
   MsgSend: "MsgSend",
   NewOrderMsg: "NewOrderMsg",
   CancelOrderMsg: "CancelOrderMsg",
+  IssueMsg: 'IssueMsg',
+  BurnMsg: 'BurnMsg', 
+  FreezeMsg: 'FreezeMsg',
+  UnfreezeMsg: 'UnfreezeMsg',
+  MintMsg: 'MintMsg',
+  ListMsg: 'ListMsg',
   StdTx: "StdTx",
   PubKeySecp256k1: "PubKeySecp256k1",
   SignatureSecp256k1: "SignatureSecp256k1",
@@ -15,6 +21,12 @@ export const typePrefix = {
   MsgSend: "2A2C87FA",
   NewOrderMsg: "CE6DC043",
   CancelOrderMsg: "166E681B",
+  IssueMsg: '17EFAB80',
+  BurnMsg: '7ED2D2A0',
+  FreezeMsg: 'E774B32D',
+  UnfreezeMsg: '6515FF0D',
+  MintMsg: '467E0829',
+  ListMsg: 'B41DE13F',
   StdTx: "F0625DEE",
   PubKeySecp256k1: "EB5AE987",
   SignatureSecp256k1: "7FC4A495",
@@ -78,6 +90,7 @@ class Transaction {
       "sequence": this.sequence.toString(),
       "source": "1"
     }
+
     return encoder.convertObjectToSignBytes(signMsg)
   }
 
@@ -106,6 +119,7 @@ class Transaction {
    **/
   sign(privateKey, msg) {
     const signBytes = this.getSignBytes(msg)
+    console.log(signBytes.toString('hex'))
     const privKeyBuf = Buffer.from(privateKey, "hex")
     const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
     this.addSignature(crypto.generatePubKey(privKeyBuf), signature)

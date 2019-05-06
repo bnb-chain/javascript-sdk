@@ -4,11 +4,12 @@
 import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
+import TokenManagement from '../token/'
 import Big from "big.js"
 
 const MAX_INT64 = Math.pow(2, 63)
 
-const api = {
+export const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
@@ -106,6 +107,7 @@ export class BncClient {
     this._signingDelegate = DefaultSigningDelegate
     this._broadcastDelegate = DefaultBroadcastDelegate
     this._useAsyncBroadcast = useAsyncBroadcast
+    this.token = new TokenManagement(this)
   }
 
   /**
@@ -124,7 +126,7 @@ export class BncClient {
    * Sets the client network (testnet or mainnet).
    * @param {String} network Indicate testnet or mainnet
    */
-  chooseNetwork(network){
+  chooseNetwork(network) {
     this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || "tbnb"
     this.network = NETWORK_PREFIX_MAPPING[network] ? network : "testnet"
   }
