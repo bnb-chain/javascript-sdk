@@ -4,7 +4,7 @@
 import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
-import TokenManagement from '../token/'
+import TokenManagement from "../token/"
 import Big from "big.js"
 
 const MAX_INT64 = Math.pow(2, 63)
@@ -83,12 +83,10 @@ export const checkNumber = (value, name = "input number")=>{
 }
 
 const checkTransfers = (transfers) => {
-  for(let i=0,len=transfers.length;i<len;i++) {
-    const coins = transfers[i].coins
-    for( let j=0;j<coins.length;j++){
-      checkNumber(coins[j].amount)
-    }
-  }
+  transfers.forEach(transfer => {
+    const coins = transfer.coins || []
+    coins.forEach(coin => checkNumber(coin.amount))
+  })
 }
 
 /**

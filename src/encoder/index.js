@@ -6,7 +6,7 @@ import vstruct from "varstruct"
 import { Buffer } from "safe-buffer"
 import is from "is_js"
 
-import VarInt, { UVarInt } from "./varint"
+import { UVarInt } from "./varint"
 import typeToTyp3 from "../utils/encoderHelper"
 import { typePrefix } from "../tx/"
 

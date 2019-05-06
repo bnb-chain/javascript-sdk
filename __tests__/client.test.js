@@ -56,8 +56,8 @@ describe("checkNumber", async () => {
 describe("BncClient test", async () => {
 
   beforeEach(() => {
-    jest.setTimeout(50000);
-  });
+    jest.setTimeout(50000)
+  })
 
 
   it("create account", async () => {
@@ -278,21 +278,21 @@ describe("BncClient test", async () => {
 
   it("multiSend", async () => {
     const client = await getClient(true)
-    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const transfers = [{
-        "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
-        "coins": [{
-          "denom": "BNB",
-          "amount": 0.01
-        }]
-      },
-      {
-        "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
-        "coins": [{
-          "denom": "USDT.B-B7C",
-          "amount": 0.15
-        }]
+      "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+      "coins": [{
+        "denom": "BNB",
+        "amount": 0.01
       }]
+    },
+    {
+      "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+      "coins": [{
+        "denom": "USDT.B-B7C",
+        "amount": 0.15
+      }]
+    }]
 
     const { status } = await client.multiSend(addr, transfers)
     expect(status).toBe(200)
@@ -300,9 +300,9 @@ describe("BncClient test", async () => {
 
   it("issue token", async () => {
     const client = await getClient(true)
-    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
-    const symbol = 'MINT'
-    const tokenName = 'test issue token'
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "MINT"
+    const tokenName = "test issue token"
     const totalSupply = 21000000
 
     const res = await client.token.issue(addr, tokenName, symbol, totalSupply, true)
@@ -312,8 +312,8 @@ describe("BncClient test", async () => {
 
   it("freeze token", async () => {
     const client = await getClient(true)
-    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
-    const symbol = 'XZJ-D9A'
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "XZJ-D9A"
     const amount = 10000
 
     const { status } = await client.token.freeze(addr, symbol, amount)
@@ -322,21 +322,21 @@ describe("BncClient test", async () => {
 
   it("unfreeze token", async () => {
     const client = await getClient(true)
-    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
-    const symbol = 'XZJ-D9A'
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "XZJ-D9A"
     const amount = 100
     try{
       const { status } = await client.token.unfreeze(addr, symbol, amount)
       expect(status).toBe(200)
     }catch(err){
-      expect(err.message).toBe('do not have enough token to unfreeze')
+      expect(err.message).toBe("do not have enough token to unfreeze")
     }
   })
 
   it("burn token", async () => {
     const client = await getClient(true)
-    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
-    const symbol = 'XZJ-D9A'
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "XZJ-D9A"
     const amount = 10000
     const { status } = await client.token.burn(addr, symbol, amount)
     expect(status).toBe(200)
@@ -344,8 +344,8 @@ describe("BncClient test", async () => {
 
   it("mint token", async () => {
     const client = await getClient(true)
-    const addr = 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd'
-    const symbol = 'MINT-04F'
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "MINT-04F"
     const amount = 10000000
     const res = await client.token.mint(addr, symbol, amount)
     console.log(res)
