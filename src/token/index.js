@@ -1,3 +1,4 @@
+import Big from 'big.js'
 import { txType } from '../tx/'
 import * as crypto from '../crypto/'
 import { api } from '../client/'
@@ -16,7 +17,7 @@ const validateSymbol = (symbol)=>{
   }
 }
 
-const validateAmount = async (amount, symbol, fromAddress, httpClient, type="free") => {
+const validateNonZeroAmount = async (amount, symbol, fromAddress, httpClient, type="free") => {
   if(amount <= 0 || amount > MAXTOTALSUPPLY){
     throw new Error("invalid amount")
   }
@@ -76,7 +77,8 @@ class TokenManagement {
       throw new Error("invalid supply amount")
     }
 
-    totalSupply = Math.pow(10,8) * totalSupply
+    totalSupply = new Big(totalSupply)
+    totalSupply = Number(totalSupply.mul(Math.pow(10,8)).toString())
   
     const issueMsg = {
       from: crypto.decodeAddress(senderAddress),
@@ -111,9 +113,11 @@ class TokenManagement {
 
     validateSymbol(symbol)
 
-    validateAmount(amount, symbol, fromAddress, this._bncClient._httpClient, 'free')
+    validateNonZeroAmount(amount, symbol, fromAddress, this._bncClient._httpClient, 'free')
 
-    amount = Math.pow(10,8) * amount
+    amount = new Big(amount)
+    amount = Number(amount.mul(Math.pow(10,8)).toString())
+
     const freezeMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
@@ -140,9 +144,11 @@ class TokenManagement {
   async unfreeze(fromAddress, symbol, amount){
     validateSymbol(symbol)
 
-    validateAmount(amount, symbol, fromAddress, this._bncClient._httpClient, 'frozen')
+    validateNonZeroAmount(amount, symbol, fromAddress, this._bncClient._httpClient, 'frozen')
 
-    amount = Math.pow(10,8) * amount
+    amount = new Big(amount)
+    amount = Number(amount.mul(Math.pow(10,8)).toString())
+
     const unfreezeMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
@@ -169,9 +175,11 @@ class TokenManagement {
   async burn(fromAddress, symbol, amount) {
     validateSymbol(symbol)
 
-    validateAmount(amount, symbol, fromAddress, this._bncClient._httpClient)
+    validateNonZeroAmount(amount, symbol, fromAddress, this._bncClient._httpClient)
 
-    amount = Math.pow(10,8) * amount
+    amount = new Big(amount)
+    amount = Number(amount.mul(Math.pow(10,8)).toString())
+
     const burnMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
@@ -202,7 +210,9 @@ class TokenManagement {
       throw new Error("invalid amount")
     }
 
-    amount = Math.pow(10,8) * amount
+    amount = new Big(amount)
+    amount = Number(amount.mul(Math.pow(10,8)).toString())
+    
     const mintMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,

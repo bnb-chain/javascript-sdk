@@ -119,7 +119,6 @@ class Transaction {
    **/
   sign(privateKey, msg) {
     const signBytes = this.getSignBytes(msg)
-    console.log(signBytes.toString("hex"))
     const privKeyBuf = Buffer.from(privateKey, "hex")
     const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
     this.addSignature(crypto.generatePubKey(privKeyBuf), signature)

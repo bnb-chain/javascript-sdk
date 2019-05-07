@@ -82,10 +82,36 @@ export const checkNumber = (value, name = "input number")=>{
   }
 }
 
-const checkTransfers = (transfers) => {
-  transfers.forEach(transfer => {
+/**
+ * validate the input number.
+ * @param {Array} outputs 
+ */
+const checkOutputs = (outputs) => {
+  outputs.forEach(transfer => {
     const coins = transfer.coins || []
-    coins.forEach(coin => checkNumber(coin.amount))
+    coins.forEach(coin => { 
+      checkNumber(coin.amount)
+      if(!coin.denom){
+        throw new Error(`invalid denmon`)
+      }
+    })
+  })
+}
+
+/**
+ * sum corresponding input coin
+ * @param {Array} inputs 
+ * @param {Array} coins 
+ */
+const calInputCoins = (inputs, coins) => {
+  coins.forEach((coin) => {
+    const existCoin = inputs[0].coins.find(c=>c.denom === coin.denom)
+    if(existCoin) {
+      const existAmount = new Big(existCoin.amount)
+      existCoin.amount = Number(existAmount.plus(coin.amount).toString())
+    } else {
+      inputs[0].coins.push({...coin})
+    }
   })
 }
 
@@ -105,7 +131,7 @@ export class BncClient {
     this._signingDelegate = DefaultSigningDelegate
     this._broadcastDelegate = DefaultBroadcastDelegate
     this._useAsyncBroadcast = useAsyncBroadcast
-    this.token = new TokenManagement(this)
+    this.tokens = new TokenManagement(this)
   }
 
   /**
@@ -269,73 +295,78 @@ export class BncClient {
   /**
    * Create and sign a multi send tx
    * @param {String} fromAddress
-   * @param {Array} transfers
+   * @param {Array} outputs
    * @example
-   * const transfers = [
+   * const outputs = [
    * {
    *   "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
    *   "coins": [{
    *     "denom": "BNB",
    *     "amount": 10
-   *   }]
+   *   },{
+    *     "denom": "BTC",
+    *     "amount": 10
+    *   }]
    * },
    * {
    *   "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
    *   "coins": [{
    *     "denom": "BTC",
    *     "amount": 10
-   *   }]
+   *   },{
+    *     "denom": "BNB",
+    *     "amount": 10
+    *   }]
    * }]
    * @param {String} memo optional memo
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
-  async multiSend(fromAddress, transfers, memo="", sequence=null) {
+  async multiSend(fromAddress, outputs, memo="", sequence=null) {
     if(!fromAddress) {
       throw new Error("fromAddress should not be falsy")
     }
 
-    if(!Array.isArray(transfers)) {
-      throw new Error("transfers should be array")
+    if(!Array.isArray(outputs)) {
+      throw new Error("outputs should be array")
     }
 
-    checkTransfers(transfers)
+    checkOutputs(outputs)
 
-    transfers.forEach(item=>{
+    //sort denom by alphbet and init amount
+    outputs.forEach(item=>{
+      item.coins = item.coins.sort((a,b)=> a.denom.localeCompare(b.denom))
       item.coins.forEach(coin=>{
-        coin.amount = Number(coin.amount * Math.pow(10, 8))
+        const amount = new Big(coin.amount)
+        coin.amount = Number(amount.mul(Math.pow(10, 8)).toString())
       })
     })
 
     const fromAddrCode = crypto.decodeAddress(fromAddress)
     const inputs = [{ address: fromAddrCode, coins: [] }]
-    const outputs = []
+    const transfers = []
 
-    transfers.forEach((item)=>{
+    outputs.forEach((item) => {
       const toAddcCode = crypto.decodeAddress(item.to)
-      inputs[0].coins = inputs[0].coins.concat(item.coins)
-      outputs.push({address: toAddcCode, coins: item.coins})
+      calInputCoins(inputs, item.coins)
+      transfers.push({address: toAddcCode, coins: item.coins})
     })
 
     const msg = {
       inputs,
-      outputs,
+      outputs: transfers,
       msgType: "MsgSend"
     }
 
     const signInputs = [{ address: fromAddress, coins: [] }]
     const signOutputs = []
-    transfers.forEach((item, index)=>{
+
+    outputs.forEach((item, index)=>{
       signOutputs.push({ address: item.to, coins: [] })
       item.coins.forEach(c=>{
-        const coin = {
-          denom: c.denom,
-          amount: c.amount
-        }
-
-        signInputs[0].coins.push(coin)
-        signOutputs[index].coins.push(coin)
+        signOutputs[index].coins.push(c)
       })
+      calInputCoins(signInputs, item.coins)
     })
 
     const signMsg = {

@@ -284,13 +284,19 @@ describe("BncClient test", async () => {
       "coins": [{
         "denom": "BNB",
         "amount": 0.01
+      },{
+        "denom": "USDT.B-B7C",
+        "amount": 0.01
       }]
     },
     {
       "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
       "coins": [{
         "denom": "USDT.B-B7C",
-        "amount": 0.15
+        "amount": 0.02
+      },{
+        "denom": "BNB",
+        "amount": 0.3
       }]
     }]
 
@@ -305,7 +311,7 @@ describe("BncClient test", async () => {
     const tokenName = "test issue token"
     const totalSupply = 21000000
 
-    const res = await client.token.issue(addr, tokenName, symbol, totalSupply, true)
+    const res = await client.tokens.issue(addr, tokenName, symbol, totalSupply, true)
     console.log(res)
     expect(res.status).toBe(200)
   })
@@ -316,7 +322,7 @@ describe("BncClient test", async () => {
     const symbol = "XZJ-D9A"
     const amount = 10000
 
-    const { status } = await client.token.freeze(addr, symbol, amount)
+    const { status } = await client.tokens.freeze(addr, symbol, amount)
     expect(status).toBe(200)
   })
 
@@ -326,7 +332,7 @@ describe("BncClient test", async () => {
     const symbol = "XZJ-D9A"
     const amount = 100
     try{
-      const { status } = await client.token.unfreeze(addr, symbol, amount)
+      const { status } = await client.tokens.unfreeze(addr, symbol, amount)
       expect(status).toBe(200)
     }catch(err){
       expect(err.message).toBe("do not have enough token to unfreeze")
@@ -338,7 +344,7 @@ describe("BncClient test", async () => {
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "XZJ-D9A"
     const amount = 10000
-    const { status } = await client.token.burn(addr, symbol, amount)
+    const { status } = await client.tokens.burn(addr, symbol, amount)
     expect(status).toBe(200)
   })
 
@@ -347,8 +353,7 @@ describe("BncClient test", async () => {
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "MINT-04F"
     const amount = 10000000
-    const res = await client.token.mint(addr, symbol, amount)
-    console.log(res)
+    const res = await client.tokens.mint(addr, symbol, amount)
     expect(res.status).toBe(200)
   })
 
