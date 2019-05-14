@@ -37,7 +37,7 @@ export class Coin {
 export class BaseAccount {
   constructor(opts) {
     opts = opts || {}
-    this.address = opts.address || ''
+    this.address = opts.address || Buffer.alloc(0)
     this.coins = opts.coins || [new Coin()]
     this.public_key = opts.public_key || Buffer.alloc(0)
     this.account_number = opts.account_number || 0
@@ -50,8 +50,8 @@ export class AppAccount {
     opts = opts || {}
     this.base = opts.base || new BaseAccount()
     this.name = opts.name || ''
-    this.frozen = opts.frozen || [new Coin()]
     this.locked = opts.locked || [new Coin()]
+    this.frozen = opts.frozen || [new Coin()]
   }
 }
 
