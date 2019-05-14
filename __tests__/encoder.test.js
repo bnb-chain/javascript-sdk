@@ -29,6 +29,7 @@ describe("encoder", () => {
   it("UVarInt", () => {
     let encodedNumber = UVarInt.encode(17)
     encodedNumber = encodedNumber.toString("hex")
+    console.log(UVarInt.encode(50).toString("hex"))
     expect(encodedNumber).toBe("11")
   })
 
@@ -43,7 +44,8 @@ describe("encoder", () => {
   })
 
   it("encode string", () => {
-    let encodedString = encoder.encodeString("You are beautiful")
+    const str = "You are beautiful"
+    let encodedString = encoder.encodeString(str)
     encodedString = encodedString.toString("hex")
     expect(encodedString).toBe("11596f75206172652062656175746966756c")
   })

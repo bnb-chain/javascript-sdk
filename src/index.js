@@ -2,7 +2,7 @@ import * as client from "./client"
 import * as crypto from "./crypto"
 import * as amino from "./encoder"
 import * as utils from "./utils"
-import rpcClient from "./rpc/rpcClient"
+import rpcClient from "./rpc/client"
 import Ledger from "./ledger"
 
 const { BncClient } = client

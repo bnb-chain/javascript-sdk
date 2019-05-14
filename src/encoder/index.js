@@ -1,5 +1,5 @@
 /**
- * @module amino
+ * @module amino-encode
  */
 
 import vstruct from "varstruct"
@@ -79,7 +79,7 @@ export const marshalBinary = (obj) => {
   if (!is.object(obj))
     throw new TypeError("data must be an object")
 
-  return encodeBinary(obj, null, true).toString("hex")
+  return encodeBinary(obj, -1, true).toString("hex")
 }
 
 /**
@@ -105,32 +105,31 @@ export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
     throw new TypeError("unsupported type")
 
   if(Buffer.isBuffer(val)) {
-    if(isByteLenPrefix){
+    if(isByteLenPrefix) {
       return Buffer.concat([UVarInt.encode(val.length), val])
     }
     return val
   }
 
-  if(is.array(val)){
+  if(is.array(val)) {
     return encodeArrayBinary(fieldNum, val, isByteLenPrefix)
   }
 
-  if(is.number(val)){
+  if(is.number(val)) {
     return encodeNumber(val)
   }
 
-  if(is.boolean(val)){
+  if(is.boolean(val)) {
     return encodeBool(val)
   }
 
-  if(is.string(val)){
+  if(is.string(val)) {
     return encodeString(val)
   }
 
-  if(is.object(val)){
+  if(is.object(val)) {
     return encodeObjectBinary(val, isByteLenPrefix)
   }
-
 
   return
 }

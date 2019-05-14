@@ -1,5 +1,6 @@
 "use strict"
 
+import is from 'is_js'
 const EventEmitter = require("events")
 const axios = require("axios")
 const url = require("url")
@@ -9,15 +10,19 @@ const ndjson = require("ndjson")
 const pumpify = require("pumpify").obj
 const methods = require("./methods.js")
 
-function convertHttpArgs (args) {
+function convertHttpArgs (url, args) {
   args = args || {}
+  const search = []
   for (let k in args) {
-    let v = args[k]
-    if (typeof v === "number") {
-      args[k] = `"${v}"`
+    if(is.string(args[k])) {
+      search.push(`${k}="${args[k]}"`)
+    } else if(Buffer.isBuffer(args[k])){
+      search.push(`${k}=0x${args[k].toString('hex')}`)
+    } else {
+      search.push(`${k}=${args[k]}`)
     }
   }
-  return args
+  return `${url}?${search.join('&')}`
 }
 
 function convertWsArgs (args) {
@@ -39,7 +44,7 @@ const wsProtocols = [ "ws:", "wss:" ]
 const httpProtocols = [ "http:", "https:" ]
 const allProtocols = wsProtocols.concat(httpProtocols)
 
-class RpcClient extends EventEmitter {
+class BaseRpc extends EventEmitter {
   constructor (uriString = "localhost:27146") {
     super()
 
@@ -58,7 +63,7 @@ class RpcClient extends EventEmitter {
 
     if (wsProtocols.includes(protocol)) {
       this.websocket = true
-      this.uri = `${this.uri}/websocket`
+      this.uri = `${this.uri}websocket`
       this.call = this.callWs
       this.connectWs()
     } else if (httpProtocols.includes(protocol)) {
@@ -71,6 +76,7 @@ class RpcClient extends EventEmitter {
       ndjson.stringify(),
       websocket(this.uri)
     )
+
     this.ws.on("error", (err) => this.emit("error", err))
     this.ws.on("close", () => {
       if (this.closed) return
@@ -84,12 +90,13 @@ class RpcClient extends EventEmitter {
   }
 
   callHttp (method, args) {
-    console.log(this.uri + method)
-    console.log(convertHttpArgs(args))
+    let url = this.uri + method
+    url = convertHttpArgs(url, args)
     return axios({
-      url: this.uri + method,
-      params: convertHttpArgs(args)
-    }).then(function ({ data }) {
+      url: url
+    }).then(function (res) {
+      // console.log(res)
+      const data = res.data
       if (data.error) {
         let err = Error(data.error.message)
         Object.assign(err, data.error)
@@ -130,7 +137,7 @@ class RpcClient extends EventEmitter {
           resolve(res)
         })
       }
-
+      
       this.ws.write({ jsonrpc: "2.0", id, method, params })
     })
   }
@@ -140,35 +147,11 @@ class RpcClient extends EventEmitter {
     if (!this.ws) return
     this.ws.destroy()
   }
-
-  /**
-   * 
-   * @param {String} symbol - required
-   */
-  async getTokenInfo(symbol){
-    if(!symbol) {
-      throw new Error('symbol should not be null')
-    }
-
-    const splitSymbols = symbol.split('-')
-
-    if(!/^[a-zA-z\d]{3,10}$/.test(splitSymbols[0])) {
-      throw new Error("symbol length is limited to 3~10")
-    }
-
-    const path = `/tokens/info/${symbol}`
-
-    const res = await this.abciQuery({path})
-    return res
-  }
-
 }
-
-
 
 // add methods to Client class based on methods defined in './methods.js'
 for (let name of methods) {
-  RpcClient.prototype[camel(name)] = function (args, listener) {
+  BaseRpc.prototype[camel(name)] = function (args, listener) {
     return this.call(name, args, listener)
       .then((res) => {
         return res
@@ -176,4 +159,4 @@ for (let name of methods) {
   }
 }
 
-module.exports = RpcClient
+module.exports = BaseRpc
