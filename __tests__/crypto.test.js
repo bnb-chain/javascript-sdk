@@ -54,9 +54,9 @@ describe("crypto", () => {
     expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
-  it.only("generate address from mnemonic with index 1", () => {
+  it("generate address from mnemonic with index 1", () => {
     const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
-    const pk = crypto.getPrivateKeyFromMnemonic(mnemonic, 1)
+    const pk = crypto.getPrivateKeyFromMnemonic(mnemonic, true, 1)
     const address = crypto.getAddressFromPrivateKey(pk)
     expect(address).toBe("tbnb1egswqkszzfc2uq78zjslc6u2uky4pw46gq25tu")
   })

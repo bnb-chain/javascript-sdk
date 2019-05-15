@@ -270,7 +270,7 @@ export const validateMnemonic = bip39.validateMnemonic
  * @param {Boolean} derive derive a private key using the default HD path (default: true)
  * @return {string} hexstring
  */
-export const getPrivateKeyFromMnemonic = (mnemonic, index = 0, derive = true) => {
+export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0) => {
   if(!bip39.validateMnemonic(mnemonic)){
     throw new Error("wrong mnemonic format")
   }
