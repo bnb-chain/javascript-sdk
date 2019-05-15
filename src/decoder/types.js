@@ -5,9 +5,9 @@ const addMsgType = (type, msgTypeName)=>{
 export class Token {
   constructor(opts) {
     opts = opts || {}
-    this.name = opts.name || ''
-    this.symbol = opts.symbol || ''
-    this.original_symbol = opts.original_symbol || ''
+    this.name = opts.name || ""
+    this.symbol = opts.symbol || ""
+    this.original_symbol = opts.original_symbol || ""
     this.total_supply = opts.total_supply || 0
     this.owner = opts.owner || Buffer.alloc(0)
     this.mintable = opts.mintable || false
@@ -17,9 +17,9 @@ export class Token {
 export class TokenOfList {
   constructor(opts) {
     opts = opts || {}
-    this.name = opts.name || ''
-    this.symbol = opts.symbol || ''
-    this.original_symbol = opts.original_symbol || ''
+    this.name = opts.name || ""
+    this.symbol = opts.symbol || ""
+    this.original_symbol = opts.original_symbol || ""
     this.total_supply = opts.total_supply || 0
     this.owner = opts.owner || Buffer.alloc(0)
     this.mintable = opts.mintable || false
@@ -29,7 +29,7 @@ export class TokenOfList {
 export class Coin {
   constructor(opts) {
     opts = opts || {}
-    this.denom = opts.denom || ''
+    this.denom = opts.denom || ""
     this.amount = opts.amount || 0
   }
 }
@@ -49,7 +49,7 @@ export class AppAccount {
   constructor(opts) {
     opts = opts || {}
     this.base = opts.base || new BaseAccount()
-    this.name = opts.name || ''
+    this.name = opts.name || ""
     this.locked = opts.locked || [new Coin()]
     this.frozen = opts.frozen || [new Coin()]
   }
@@ -58,7 +58,7 @@ export class AppAccount {
 export class TokenBalance {
   constructor(opts){
     opts = opts || {}
-    this.symbol = opts.symbol || ''
+    this.symbol = opts.symbol || ""
     this.free = opts.free || 0
     this.locked = opts.locked || 0
     this.frozen = opts.frozen || 0
@@ -68,8 +68,8 @@ export class TokenBalance {
 export class OpenOrder {
   constructor(opts){
     opts = opts || {}
-    this.id = opts.id || ''
-    this.symbol = opts.symbol || ''
+    this.id = opts.id || ""
+    this.symbol = opts.symbol || ""
     this.price = opts.price || 0
     this.quantity = opts.quantity || 0
     this.cumQty = opts.cumQty || 0
@@ -83,8 +83,8 @@ export class OpenOrder {
 export class TradingPair{
   constructor(opts){
     opts = opts || {}
-    this.base_asset_symbol = opts.base_asset_symbol ||  ''
-    this.quote_asset_symbol = opts.quote_asset_symbol || ''
+    this.base_asset_symbol = opts.base_asset_symbol ||  ""
+    this.quote_asset_symbol = opts.quote_asset_symbol || ""
     this.list_price = opts.list_price || 0
     this.tick_size = opts.tick_size || 0
     this.lot_size = opts.lot_size || 0
@@ -109,5 +109,5 @@ export class OrderBook {
   }
 }
 
-addMsgType(Token, 'Token')
-addMsgType(AppAccount, 'bnbchain/Account')
+addMsgType(Token, "Token")
+addMsgType(AppAccount, "bnbchain/Account")

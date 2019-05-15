@@ -1,6 +1,6 @@
 "use strict"
 
-import is from 'is_js'
+import is from "is_js"
 const EventEmitter = require("events")
 const axios = require("axios")
 const url = require("url")
@@ -17,12 +17,12 @@ function convertHttpArgs (url, args) {
     if(is.string(args[k])) {
       search.push(`${k}="${args[k]}"`)
     } else if(Buffer.isBuffer(args[k])){
-      search.push(`${k}=0x${args[k].toString('hex')}`)
+      search.push(`${k}=0x${args[k].toString("hex")}`)
     } else {
       search.push(`${k}=${args[k]}`)
     }
   }
-  return `${url}?${search.join('&')}`
+  return `${url}?${search.join("&")}`
 }
 
 function convertWsArgs (args) {

@@ -5,11 +5,11 @@ import {
   TradingPair,
   OrderBook,
   TokenOfList 
-} from '../decoder/types'
-import * as decoder from '../decoder'
-import * as crypto from '../crypto'
-import BaseRpc from '.'
-import big from 'big.js'
+} from "../decoder/types"
+import * as decoder from "../decoder"
+import * as crypto from "../crypto"
+import BaseRpc from "."
+import big from "big.js"
 
 const validateSymbol = (symbol)=>{
   if(!symbol) {
@@ -23,9 +23,9 @@ const validateSymbol = (symbol)=>{
 }
 
 const validateTradingPair = (pair)=>{
-  const symbols = pair.split('_')
+  const symbols = pair.split("_")
   if(symbols.length !== 2){
-    throw new Error('the pair should in format "symbol1_symbol2"')
+    throw new Error("the pair should in format \"symbol1_symbol2\"")
   }
 
   validateSymbol(symbols[0])
@@ -68,10 +68,10 @@ class Client extends BaseRpc{
     const path = "/tokens/info/" + symbol
 
     const res = await this.abciQuery({path})
-    const bytes = Buffer.from(res.response.value, 'base64')
+    const bytes = Buffer.from(res.response.value, "base64")
     const result = new Token()
     const { val: tokenInfo } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
-    tokenInfo.owner = crypto.encodeAddress(tokenInfo.owner, 'tbnb')
+    tokenInfo.owner = crypto.encodeAddress(tokenInfo.owner, "tbnb")
     return tokenInfo
   }
 
@@ -79,11 +79,11 @@ class Client extends BaseRpc{
     validateOffsetLimit(offset, limit)
     const path = `tokens/list/${offset}/${limit}`
     const res = await this.abciQuery({path})
-    const bytes = Buffer.from(res.response.value, 'base64')
+    const bytes = Buffer.from(res.response.value, "base64")
     const result = [new TokenOfList()]
     const { val: tokenList } =decoder.unMarshalBinaryLengthPrefixed(bytes, result)
     tokenList.forEach((item)=>{
-      item.owner = crypto.encodeAddress(item.owner, 'tbnb')
+      item.owner = crypto.encodeAddress(item.owner, "tbnb")
     })
     return tokenList
   }
@@ -93,27 +93,27 @@ class Client extends BaseRpc{
    */
   async getAccount(address) {
     const addr = crypto.decodeAddress(address)
-    const addrHex = Buffer.concat([Buffer.from('account:'), addr])
+    const addrHex = Buffer.concat([Buffer.from("account:"), addr])
 
     const res = await this.abciQuery({
-      path: `/store/acc/key`, 
+      path: "/store/acc/key", 
       data: addrHex
     })
 
     const result = new AppAccount()
-    const bytes = Buffer.from(res.response.value, 'base64')
+    const bytes = Buffer.from(res.response.value, "base64")
     const { val: accountInfo }  = decoder.unMarshalBinaryBare(bytes, result)
-    accountInfo.base.address = crypto.encodeAddress(accountInfo.base.address, 'tbnb')
+    accountInfo.base.address = crypto.encodeAddress(accountInfo.base.address, "tbnb")
     return accountInfo
   }
 
   async getOpenOrders(address, symbol) {
     const path = `/dex/openorders/${symbol}/${address}`
     const res = await this.abciQuery({path})
-    const bytes = Buffer.from(res.response.value, 'base64')
+    const bytes = Buffer.from(res.response.value, "base64")
     const result = [new OpenOrder()]
     const { val: openOrders }  = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
-    convertObjectArrayNum(openOrders, ['price', 'quantity', 'cumQty'])
+    convertObjectArrayNum(openOrders, ["price", "quantity", "cumQty"])
     return openOrders
   }
 
@@ -121,10 +121,10 @@ class Client extends BaseRpc{
     validateOffsetLimit(offset, limit)        
     const path = `/dex/pairs/${offset}/${limit}`
     const res = await this.abciQuery({path})
-    const bytes = Buffer.from(res.response.value, 'base64')
+    const bytes = Buffer.from(res.response.value, "base64")
     const result = [new TradingPair()]
     const { val: tradingPairs }  = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
-    convertObjectArrayNum(tradingPairs, ['list_price', 'tick_size', 'lot_size'])
+    convertObjectArrayNum(tradingPairs, ["list_price", "tick_size", "lot_size"])
     return tradingPairs
   }
 
@@ -132,10 +132,10 @@ class Client extends BaseRpc{
     validateTradingPair(tradePair)
     const path = `dex/orderbook/${tradePair}`
     const res = await this.abciQuery({path})
-    const bytes = Buffer.from(res.response.value, 'base64')
+    const bytes = Buffer.from(res.response.value, "base64")
     const result = new OrderBook()
     const { val: depth }  = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
-    convertObjectArrayNum(depth.levels, ['buyQty', 'buyPrice', 'sellQty', 'sellPrice'])
+    convertObjectArrayNum(depth.levels, ["buyQty", "buyPrice", "sellQty", "sellPrice"])
     return depth
   }
 }
