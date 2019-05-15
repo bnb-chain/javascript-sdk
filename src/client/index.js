@@ -556,13 +556,17 @@ export class BncClient {
    * address
    * }
    */
-  recoverAccountFromMneomnic(mneomnic){
-    const privateKey = crypto.getPrivateKeyFromMnemonic(mneomnic)
+  recoverAccountFromMnemonic(mnemonic){
+    const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
     const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
     return {
       privateKey,
       address
     }
+  }
+  // support an old method name containing a typo
+  recoverAccountFromMneomnic(mnemonic){
+    return this.recoverAccountFromMnemonic(mnemonic)
   }
 
   /**
