@@ -105,16 +105,20 @@ describe("BncClient test", async () => {
   })
 
   it("recover account from mneomnic", async () => {
+    jest.setTimeout(50000)
     const client = await getClient(false)
     const res = client.recoverAccountFromMneomnic(mnemonic)
+    await(1500)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
 
   it("recover account from privatekey", async () => {
+    jest.setTimeout(50000)
     const client = await getClient(false)
     const pk = crypto.generatePrivateKey()
     const res = client.recoverAccountFromPrivateKey(pk)
+    await(1500)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })

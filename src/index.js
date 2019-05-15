@@ -1,4 +1,3 @@
-import "babel-polyfill"
 import * as client from "./client"
 import * as crypto from "./crypto"
 import * as amino from "./encoder"

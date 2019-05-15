@@ -25,7 +25,7 @@ const MNEMONIC_LEN = 256
 const CURVE = "secp256k1"
 
 //hdpath
-const HDPATH = "44'/714'/0'/0/0"
+const HDPATH = "44'/714'/0'/0/"
 
 const ec = new EC(CURVE)
 
@@ -39,8 +39,9 @@ export const decodeAddress = (value) => {
 }
 
 /**
- * checek address whether is valid
+ * Checks whether an address is valid.
  * @param {string} address the bech32 address to decode
+ * @return {boolean}
  */
 export const checkAddress = (address) => {
   try {
@@ -267,16 +268,17 @@ export const validateMnemonic = bip39.validateMnemonic
  * Get a private key from mnemonic words.
  * @param {string} mnemonic the mnemonic phrase words
  * @param {Boolean} derive derive a private key using the default HD path (default: true)
+ * @param {number} index the bip44 address index (default: 0)
  * @return {string} hexstring
  */
-export const getPrivateKeyFromMnemonic = (mnemonic, derive = true) => {
+export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0) => {
   if(!bip39.validateMnemonic(mnemonic)){
     throw new Error("wrong mnemonic format")
   }
   const seed = bip39.mnemonicToSeedSync(mnemonic)
   if (derive) {
     const master = bip32.fromSeed(seed)
-    const child = master.derivePath(HDPATH)
+    const child = master.derivePath(HDPATH + index)
     return child.privateKey.toString("hex")
   }
   return seed.toString("hex")
