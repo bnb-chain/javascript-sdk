@@ -2,14 +2,15 @@ import rpcClient from "../src/rpc/client"
 
 
 const getClient = (type)=>{
-  let uri = "https://data-seed-pre-0-s1.binance.org"
+  let uri = "https://data-seed-pre-0-s3.binance.org"
   if(type === "wss"){
-    uri = "wss://data-seed-pre-0-s1.binance.org"
+    uri = "wss://data-seed-pre-0-s3.binance.org"
   }
   return new rpcClient(uri)
 }
 
 const address = "tbnb1cyl8v7mzh9s9gx5q9e5q0jpq7njlfpy53f2nrn"
+const symbol = "BNB"
 const tradePair = "BNB_USDT.B-B7C"
 
 describe("rpcClient test", async () => {
@@ -119,7 +120,22 @@ describe("rpcClient test", async () => {
     client.close()
   })
 
-  it("rest getOpenOrders", async ()=>{
+  it("rest getBalances", async () => {
+    const client = getClient("https")
+    const result = await client.getBalances(address)
+    expect(result).toBeTruthy()
+    expect(result.length).toBeGreaterThanOrEqual(0)
+  })
+
+  it("only rest getBalance", async () => {
+    const client = getClient("https")
+    const result = await client.getBalance(address, symbol)
+    if(result){
+      expect(result.free + result.locked + result.frozen).toBeGreaterThanOrEqual(0)
+    }
+  })
+
+  it("rest getOpenOrders", async () => {
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
@@ -164,6 +180,17 @@ describe("rpcClient test", async () => {
     expect(result.height).toBeTruthy()
     expect(result.levels.length).toBeGreaterThanOrEqual(0)
     client.close()
+  })
+
+  it("subscribe", async ()=>{
+    const client = getClient("wss")
+    client.subscribe({query: "tx.height=14787931"}, (events)=>{
+      console.log(events)
+    })
+    
+    client.on('error', (err)=>{
+      console.log(err)
+    })
   })
 
 })

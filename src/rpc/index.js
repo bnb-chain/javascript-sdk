@@ -114,7 +114,7 @@ class BaseRpc extends EventEmitter {
     return new Promise((resolve, reject) => {
       let id = Math.random().toString(36)
       let params = convertWsArgs(args)
-
+      console.log(params)
       if (method === "subscribe") {
         if (typeof listener !== "function") {
           throw Error("Must provide listener function")
@@ -122,6 +122,8 @@ class BaseRpc extends EventEmitter {
 
         // events get passed to listener
         this.on(id + "#event", (err, res) => {
+          console.log(err)
+          console.log(res)
           if (err) return self.emit("error", err)
           listener(res.data.value)
         })
@@ -138,7 +140,7 @@ class BaseRpc extends EventEmitter {
           resolve(res)
         })
       }
-      
+      console.log(JSON.stringify({ jsonrpc: "2.0", id, method, params }))
       this.ws.write({ jsonrpc: "2.0", id, method, params })
     })
   }

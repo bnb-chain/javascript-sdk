@@ -4,7 +4,8 @@ import {
   OpenOrder,
   TradingPair,
   OrderBook,
-  TokenOfList 
+  TokenOfList,
+  TokenBalance 
 } from "../decoder/types"
 import * as decoder from "../decoder"
 import * as crypto from "../crypto"
@@ -105,6 +106,38 @@ class Client extends BaseRpc{
     const { val: accountInfo }  = decoder.unMarshalBinaryBare(bytes, result)
     accountInfo.base.address = crypto.encodeAddress(accountInfo.base.address, "tbnb")
     return accountInfo
+  }
+
+  async getBalances(address) {
+    const account = await this.getAccount(address)
+    let coins = []
+    const balances = []
+    if(account) {
+      coins = account.base && account.base.coins || []
+      convertObjectArrayNum(coins, ["amount"])
+      convertObjectArrayNum(account.locked, ["amount"])
+      convertObjectArrayNum(account.frozen, ["amount"])
+    }
+
+    coins.forEach(item=>{
+      const locked = account.locked.find(lockedItem=>item.denom === lockedItem.denom) || {}
+      const frozen = account.frozen.find(frozenItem=>item.denom === frozenItem.denom) || {}
+      const bal = new TokenBalance()
+      bal.symbol = item.denom
+      bal.free = item.amount
+      bal.locked = locked.amount || 0
+      bal.frozen = frozen.amount || 0
+      balances.push(bal)
+    })
+
+    return balances
+  }
+
+  async getBalance(address, symbol){
+    validateSymbol(symbol)
+    const balances = await this.getBalances(address)
+    const bal = balances.find(item=>item.symbol.toUpperCase() === symbol.toUpperCase())
+    return bal
   }
 
   async getOpenOrders(address, symbol) {
