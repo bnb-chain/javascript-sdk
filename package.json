@@ -25,7 +25,6 @@
     "camelcase": "^5.3.1",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^3.1.9-1",
-    "debug": "^4.1.1",
     "events": "^3.0.0",
     "is_js": "^0.9.0",
     "ndjson": "^1.5.0",

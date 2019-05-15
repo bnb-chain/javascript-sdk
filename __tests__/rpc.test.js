@@ -22,25 +22,30 @@ describe("rpcClient test", async () => {
     const client = getClient("https")
     const res = await client.status()
     expect(res).toBeTruthy()
+    expect(res.node_info.network).toBe('Binance-Chain-Nile')
   })
 
   it("wss status", async ()=>{
     const client = getClient("wss")
     const res = await client.status()
     expect(res).toBeTruthy()
+    expect(res.node_info.network).toBe('Binance-Chain-Nile')
     client.close()
   })
 
   it("rest net_info", async () => {
     const client = getClient("https")
     const res = await client.netInfo()
+    console.log(res)
     expect(res).toBeTruthy()
+    expect(res.peers.length).toBeGreaterThanOrEqual(0)
   })
 
   it("wss net_info", async ()=>{
     const client = getClient("wss")
     const res = await client.netInfo()
     expect(res).toBeTruthy()
+    expect(res.peers.length).toBeGreaterThanOrEqual(0)
     client.close()
   })
 
@@ -56,18 +61,22 @@ describe("rpcClient test", async () => {
     const symbol = "BNB" // mint is false
     const res = await client.getTokenInfo(symbol)
     expect(res.symbol).toBe(symbol)
+    client.close()
   })
 
   it("rest listAllTokens", async () => {
     const client = getClient("https")
     const res = await client.listAllTokens(1, 2)
     expect(res).toBeTruthy()
+    expect(res.length).toBe(2)
   })
 
   it("wss listAllTokens", async () => {
     const client = getClient("https")
     const res = await client.listAllTokens(1, 2)
     expect(res).toBeTruthy()
+    expect(res.length).toBe(2)
+    client.close()
   })
 
   it("rest txSearch", async ()=>{
@@ -94,6 +103,7 @@ describe("rpcClient test", async () => {
 
     const result = await client.txSearch(params)
     expect(result.txs).toBeTruthy()
+    client.close()
   })
 
   it("rest getAccount", async () => {
@@ -106,42 +116,54 @@ describe("rpcClient test", async () => {
     const client = getClient("https")
     const result = await client.getAccount(address)
     expect(result.base.address).toBe(address)
+    client.close()
   })
 
   it("rest getOpenOrders", async ()=>{
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
+    expect(result.length).toBe(2)
   })
 
   it("wss getOpenOrders", async ()=>{
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
+    expect(result.length).toBe(2)
+    client.close()
   })
 
   it("rest getTradingPairs", async ()=>{
     const client = getClient("https")
     const result = await client.getTradingPairs(1, 2)
     expect(result).toBeTruthy()
+    expect(result.length).toBe(2)
   })
 
   it("wss getTradingPairs", async ()=>{
     const client = getClient("https")
     const result = await client.getTradingPairs(1, 2)
     expect(result).toBeTruthy()
+    expect(result.length).toBe(2)
+    client.close()
   })
     
   it("rest getDepth", async ()=>{
     const client = getClient("https")
     const result = await client.getDepth(tradePair)
     expect(result).toBeTruthy()
+    expect(result.height).toBeTruthy()
+    expect(result.levels.length).toBeGreaterThanOrEqual(0)
   })
 
   it("wss getDepth", async ()=>{
     const client = getClient("https")
     const result = await client.getDepth(tradePair)
     expect(result).toBeTruthy()
+    expect(result.height).toBeTruthy()
+    expect(result.levels.length).toBeGreaterThanOrEqual(0)
+    client.close()
   })
 
 })

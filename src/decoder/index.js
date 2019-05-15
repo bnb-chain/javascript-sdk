@@ -116,11 +116,6 @@ const decodeObjectBinary = (bytes, type, isLengthPrefixed) => {
     } else {
       const { fieldNum, typ } = decodeFieldNumberAndTyp3(bytes)
 
-      // console.log('current field >>>' + key)
-      // console.log('get field number >>>' + fieldNum)
-      // console.log('get field val >>>' + typ)
-      // console.log('current field number >>>'+ (index+1))
-     
       //if this field is default value, continue
       if(index+1 < fieldNum || fieldNum < 0) return
 
@@ -163,8 +158,6 @@ const decodeArrayBinary = (bytes, type) => {
   while(true) {
     const { fieldNum } = decodeFieldNumberAndTyp3(bytes)
 
-    // console.log('fieldNum ' + fieldNum)
-    // console.log('fieldNumber ' + fieldNumber)
     if(fieldNum !== fieldNumber || fieldNum < 0) break
     
     //remove 1 byte of encoded field number and type

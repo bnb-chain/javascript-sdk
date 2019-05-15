@@ -2,6 +2,10 @@
 const BN = require("bn.js")
 
 const VarInt = (signed)=> {
+  /**
+   * https://github.com/golang/go/blob/master/src/encoding/binary/varint.go#L60
+   * @param {*} bytes 
+   */
   function decode (bytes) {
     let x = 0
     let s = 0

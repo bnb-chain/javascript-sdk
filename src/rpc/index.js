@@ -1,6 +1,9 @@
+/**
+ * https://github.com/nomic-io/js-tendermint/blob/master/src/rpc.js
+ */
 "use strict"
 
-import is from "is_js"
+const is = require("is_js")
 const EventEmitter = require("events")
 const axios = require("axios")
 const url = require("url")
@@ -94,9 +97,7 @@ class BaseRpc extends EventEmitter {
     url = convertHttpArgs(url, args)
     return axios({
       url: url
-    }).then(function (res) {
-      // console.log(res)
-      const data = res.data
+    }).then(function ({ data }) {
       if (data.error) {
         let err = Error(data.error.message)
         Object.assign(err, data.error)

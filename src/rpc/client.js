@@ -43,7 +43,7 @@ const validateOffsetLimit = (offset, limit) =>{
 }
 
 const divide = (num)=>{
-  return new big(num).div(Math.pow(10,8)).toString()
+  return +(new big(num).div(Math.pow(10,8)).toString())
 }
 
 const convertObjectArrayNum = (objArr, keys)=>{
