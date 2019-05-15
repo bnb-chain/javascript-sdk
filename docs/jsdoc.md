@@ -478,7 +478,7 @@ validate the input number.
 
 * [crypto](#module_crypto)
     * [.decodeAddress](#module_crypto.decodeAddress)
-    * [.checkAddress](#module_crypto.checkAddress)
+    * [.checkAddress](#module_crypto.checkAddress) ⇒ <code>boolean</code>
     * [.encodeAddress](#module_crypto.encodeAddress)
     * [.generatePrivateKey](#module_crypto.generatePrivateKey) ⇒ <code>string</code>
     * [.generateRandomArray](#module_crypto.generateRandomArray) ⇒ <code>ArrayBuffer</code>
@@ -508,8 +508,8 @@ Decodes an address in bech32 format.
 
 <a name="module_crypto.checkAddress"></a>
 
-### crypto.checkAddress
-checek address whether is valid
+### crypto.checkAddress ⇒ <code>boolean</code>
+Checks whether an address is valid.
 
 **Kind**: static constant of [<code>crypto</code>](#module_crypto)  
 
@@ -693,6 +693,7 @@ Get a private key from mnemonic words.
 | --- | --- | --- |
 | mnemonic | <code>string</code> | the mnemonic phrase words |
 | derive | <code>Boolean</code> | derive a private key using the default HD path (default: true) |
+| index | <code>number</code> | the bip44 address index (default: 0) |
 
 <a name="module_amino"></a>
 
@@ -840,7 +841,7 @@ prefixed with bytes length
 ## ledger
 
 * [ledger](#module_ledger)
-    * [.LedgerApp](#module_ledger.LedgerApp)
+    * [~LedgerApp](#module_ledger.LedgerApp)
         * [new LedgerApp(transport, interactiveTimeout, nonInteractiveTimeout)](#new_module_ledger.LedgerApp_new)
         * [.getVersion()](#module_ledger.LedgerApp+getVersion)
         * [.publicKeySecp256k1(hdPath)](#module_ledger.LedgerApp+publicKeySecp256k1)
@@ -851,12 +852,12 @@ prefixed with bytes length
 
 <a name="module_ledger.LedgerApp"></a>
 
-### ledger.LedgerApp
+### ledger~LedgerApp
 Ledger app interface.
 
-**Kind**: static class of [<code>ledger</code>](#module_ledger)  
+**Kind**: inner class of [<code>ledger</code>](#module_ledger)  
 
-* [.LedgerApp](#module_ledger.LedgerApp)
+* [~LedgerApp](#module_ledger.LedgerApp)
     * [new LedgerApp(transport, interactiveTimeout, nonInteractiveTimeout)](#new_module_ledger.LedgerApp_new)
     * [.getVersion()](#module_ledger.LedgerApp+getVersion)
     * [.publicKeySecp256k1(hdPath)](#module_ledger.LedgerApp+publicKeySecp256k1)
