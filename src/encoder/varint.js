@@ -2,8 +2,26 @@
 const BN = require("bn.js")
 
 const VarInt = (signed)=> {
-  function decode () {
-    throw Error("not implemented")
+  /**
+   * https://github.com/golang/go/blob/master/src/encoding/binary/varint.go#L60
+   * @param {*} bytes 
+   */
+  function decode (bytes) {
+    let x = 0
+    let s = 0
+    for(let i=0,len=bytes.length;i<len;i++) {
+      const b = bytes[i]
+      if(b<0x80) {
+        if(i > 9 || i===9 && b>1) {
+          return 0
+        }
+        return x|b<<s
+      }
+      x |=(b&0x7f) << s
+      s += 7
+    }
+
+    return 0
   }
 
   function encode (n, buffer = Buffer.alloc(encodingLength(n)), offset = 0) {

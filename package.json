@@ -23,14 +23,21 @@
     "bip32": "^1.0.2",
     "bip39": "^3.0.0",
     "bn.js": "^4.11.8",
+    "camelcase": "^5.3.1",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^3.1.9-1",
+    "events": "^3.0.0",
     "is_js": "^0.9.0",
+    "ndjson": "^1.5.0",
+    "protocol-buffers-encodings": "^1.1.0",
+    "pumpify": "^1.5.1",
     "safe-buffer": "^5.1.2",
     "secure-random": "^1.1.1",
     "tiny-secp256k1": "^1.0.1",
+    "url": "^0.11.0",
     "uuid": "^3.3.2",
-    "varstruct": "^6.1.2"
+    "varstruct": "^6.1.2",
+    "websocket-stream": "^5.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
