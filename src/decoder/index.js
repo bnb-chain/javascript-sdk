@@ -13,7 +13,7 @@ import is from "is_js"
 
 import typeToTyp3 from "../utils/encoderHelper"
 
-export const decoder = (bytes, varType) => {
+const decoder = (bytes, varType) => {
   const val = varType.decode(bytes, 0)
   const offset = varType.encodingLength(val)
   return { val, offset }
