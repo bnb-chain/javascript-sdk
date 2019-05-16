@@ -55,9 +55,22 @@ const convertObjectArrayNum = (objArr, keys)=>{
   })
 }
 
-class Client extends BaseRpc{
-  constructor (uriString="localhost:27146") {
+class Client extends BaseRpc {
+  constructor (uriString="localhost:27146", netWork) {
     super(uriString)
+    this.netWork = netWork || 'mainnet'
+  }
+
+  getBech32Prefix(){
+    if(this.netWork === 'mainnet') {
+      return 'bnb'
+    }
+  
+    if(this.netWork === 'testnet'){
+      return 'tbnb'
+    }
+  
+    return ''
   }
 
   /**
@@ -72,7 +85,8 @@ class Client extends BaseRpc{
     const bytes = Buffer.from(res.response.value, "base64")
     const result = new Token()
     const { val: tokenInfo } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
-    tokenInfo.owner = crypto.encodeAddress(tokenInfo.owner, "tbnb")
+    const bech32Prefix = this.getBech32Prefix()
+    tokenInfo.owner = crypto.encodeAddress(tokenInfo.owner, bech32Prefix)
     return tokenInfo
   }
 
@@ -83,8 +97,9 @@ class Client extends BaseRpc{
     const bytes = Buffer.from(res.response.value, "base64")
     const result = [new TokenOfList()]
     const { val: tokenList } =decoder.unMarshalBinaryLengthPrefixed(bytes, result)
+    const bech32Prefix = this.getBech32Prefix()
     tokenList.forEach((item)=>{
-      item.owner = crypto.encodeAddress(item.owner, "tbnb")
+      item.owner = crypto.encodeAddress(item.owner, bech32Prefix)
     })
     return tokenList
   }
@@ -104,7 +119,8 @@ class Client extends BaseRpc{
     const result = new AppAccount()
     const bytes = Buffer.from(res.response.value, "base64")
     const { val: accountInfo }  = decoder.unMarshalBinaryBare(bytes, result)
-    accountInfo.base.address = crypto.encodeAddress(accountInfo.base.address, "tbnb")
+    const bech32Prefix = this.getBech32Prefix()
+    accountInfo.base.address = crypto.encodeAddress(accountInfo.base.address, bech32Prefix)
     return accountInfo
   }
 

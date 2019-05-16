@@ -1,12 +1,12 @@
 import rpcClient from "../src/rpc/client"
 
-
+const NETWORK = 'testnet'
 const getClient = (type)=>{
   let uri = "https://data-seed-pre-0-s3.binance.org"
   if(type === "wss"){
     uri = "wss://data-seed-pre-0-s3.binance.org"
   }
-  return new rpcClient(uri)
+  return new rpcClient(uri, NETWORK)
 }
 
 const address = "tbnb1cyl8v7mzh9s9gx5q9e5q0jpq7njlfpy53f2nrn"
@@ -23,14 +23,14 @@ describe("rpcClient test", async () => {
     const client = getClient("https")
     const res = await client.status()
     expect(res).toBeTruthy()
-    expect(res.node_info.network).toBe('Binance-Chain-Nile')
+    expect(res.node_info.network).toBe("Binance-Chain-Nile")
   })
 
   it("wss status", async ()=>{
     const client = getClient("wss")
     const res = await client.status()
     expect(res).toBeTruthy()
-    expect(res.node_info.network).toBe('Binance-Chain-Nile')
+    expect(res.node_info.network).toBe("Binance-Chain-Nile")
     client.close()
   })
 
@@ -184,13 +184,12 @@ describe("rpcClient test", async () => {
 
   it("subscribe", async ()=>{
     const client = getClient("wss")
-    client.subscribe({query: "tx.height=14787931"}, (events)=>{
-      console.log(events)
-    })
-    
-    client.on('error', (err)=>{
-      console.log(err)
+    await new Promise((resolve)=>{
+      client.subscribe({query: "tm.event = 'CompleteProposal'"}, (events)=>{
+        resolve(events)
+        expect(events).toBeTruthy()
+        expect(events.step).toBe('RoundStepPropose')
+      })
     })
   })
-
 })
