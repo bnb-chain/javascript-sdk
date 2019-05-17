@@ -139,14 +139,14 @@ describe("rpcClient test", async () => {
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
-    expect(result.length).toBe(2)
+    expect(result.length).toBeGreaterThan(0)
   })
 
   it("wss getOpenOrders", async ()=>{
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
-    expect(result.length).toBe(2)
+    expect(result.length).toBeGreaterThan(0)
     client.close()
   })
 
@@ -164,7 +164,7 @@ describe("rpcClient test", async () => {
     expect(result.length).toBe(2)
     client.close()
   })
-    
+
   it("rest getDepth", async ()=>{
     const client = getClient("https")
     const result = await client.getDepth(tradePair)
