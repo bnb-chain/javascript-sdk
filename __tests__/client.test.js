@@ -18,7 +18,7 @@ const keystores = {
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
 const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = false) => {
-  const client = new BncClient("https://testnet-dex.binance.org")
+  const client = new BncClient("https://testnet-dex-asiapacific.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (!doNotSetPrivateKey) {
@@ -54,6 +54,11 @@ describe("checkNumber", async () => {
 })
 
 describe("BncClient test", async () => {
+
+  beforeEach(() => {
+    jest.setTimeout(50000)
+  })
+
 
   it("create account", async () => {
     const client = await getClient(false)
@@ -274,4 +279,86 @@ describe("BncClient test", async () => {
       expect(err.message).toBe("price should be less than 2^63")
     }
   })
+
+  it("multiSend", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const transfers = [{
+      "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+      "coins": [{
+        "denom": "BNB",
+        "amount": 0.01
+      },{
+        "denom": "USDT.B-B7C",
+        "amount": 0.01
+      }]
+    },
+    {
+      "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+      "coins": [{
+        "denom": "USDT.B-B7C",
+        "amount": 0.02
+      },{
+        "denom": "BNB",
+        "amount": 0.3
+      }]
+    }]
+
+    const { status } = await client.multiSend(addr, transfers)
+    expect(status).toBe(200)
+  })
+
+  it("issue token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "MINT"
+    const tokenName = "test issue token"
+    const totalSupply = 21000000
+
+    const res = await client.tokens.issue(addr, tokenName, symbol, totalSupply, true)
+    console.log(res)
+    expect(res.status).toBe(200)
+  })
+
+  it("freeze token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "XZJ-D9A"
+    const amount = 10000
+
+    const { status } = await client.tokens.freeze(addr, symbol, amount)
+    expect(status).toBe(200)
+  })
+
+  it("unfreeze token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "XZJ-D9A"
+    const amount = 100
+    try{
+      const { status } = await client.tokens.unfreeze(addr, symbol, amount)
+      expect(status).toBe(200)
+    }catch(err){
+      expect(err.message).toBe("do not have enough token to unfreeze")
+    }
+  })
+
+  it("burn token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "XZJ-D9A"
+    const amount = 10000
+    const { status } = await client.tokens.burn(addr, symbol, amount)
+    expect(status).toBe(200)
+  })
+
+  it("mint token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "MINT-04F"
+    const amount = 10000000
+    const res = await client.tokens.mint(addr, symbol, amount)
+    expect(res.status).toBe(200)
+  })
+
 })

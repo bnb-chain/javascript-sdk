@@ -4,11 +4,12 @@
 import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
+import TokenManagement from "../token/"
 import Big from "big.js"
 
 const MAX_INT64 = Math.pow(2, 63)
 
-const api = {
+export const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
@@ -82,6 +83,39 @@ export const checkNumber = (value, name = "input number")=>{
 }
 
 /**
+ * validate the input number.
+ * @param {Array} outputs 
+ */
+const checkOutputs = (outputs) => {
+  outputs.forEach(transfer => {
+    const coins = transfer.coins || []
+    coins.forEach(coin => { 
+      checkNumber(coin.amount)
+      if(!coin.denom){
+        throw new Error(`invalid denmon`)
+      }
+    })
+  })
+}
+
+/**
+ * sum corresponding input coin
+ * @param {Array} inputs 
+ * @param {Array} coins 
+ */
+const calInputCoins = (inputs, coins) => {
+  coins.forEach((coin) => {
+    const existCoin = inputs[0].coins.find(c=>c.denom === coin.denom)
+    if(existCoin) {
+      const existAmount = new Big(existCoin.amount)
+      existCoin.amount = Number(existAmount.plus(coin.amount).toString())
+    } else {
+      inputs[0].coins.push({...coin})
+    }
+  })
+}
+
+/**
  * The Binance Chain client.
  */
 export class BncClient {
@@ -97,6 +131,7 @@ export class BncClient {
     this._signingDelegate = DefaultSigningDelegate
     this._broadcastDelegate = DefaultBroadcastDelegate
     this._useAsyncBroadcast = useAsyncBroadcast
+    this.tokens = new TokenManagement(this)
   }
 
   /**
@@ -115,7 +150,7 @@ export class BncClient {
    * Sets the client network (testnet or mainnet).
    * @param {String} network Indicate testnet or mainnet
    */
-  chooseNetwork(network){
+  chooseNetwork(network) {
     this.addressPrefix = NETWORK_PREFIX_MAPPING[network] || "tbnb"
     this.network = NETWORK_PREFIX_MAPPING[network] ? network : "testnet"
   }
@@ -251,6 +286,92 @@ export class BncClient {
           denom: asset
         }]
       }]
+    }
+
+    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    return this._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * Create and sign a multi send tx
+   * @param {String} fromAddress
+   * @param {Array} outputs
+   * @example
+   * const outputs = [
+   * {
+   *   "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+   *   "coins": [{
+   *     "denom": "BNB",
+   *     "amount": 10
+   *   },{
+    *     "denom": "BTC",
+    *     "amount": 10
+    *   }]
+   * },
+   * {
+   *   "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+   *   "coins": [{
+   *     "denom": "BTC",
+   *     "amount": 10
+   *   },{
+    *     "denom": "BNB",
+    *     "amount": 10
+    *   }]
+   * }]
+   * @param {String} memo optional memo
+   * @param {Number} sequence optional sequence
+   * @return {Promise} resolves with response (success or fail)
+   */
+  async multiSend(fromAddress, outputs, memo="", sequence=null) {
+    if(!fromAddress) {
+      throw new Error("fromAddress should not be falsy")
+    }
+
+    if(!Array.isArray(outputs)) {
+      throw new Error("outputs should be array")
+    }
+
+    checkOutputs(outputs)
+
+    //sort denom by alphbet and init amount
+    outputs.forEach(item=>{
+      item.coins = item.coins.sort((a,b)=> a.denom.localeCompare(b.denom))
+      item.coins.forEach(coin=>{
+        const amount = new Big(coin.amount)
+        coin.amount = Number(amount.mul(Math.pow(10, 8)).toString())
+      })
+    })
+
+    const fromAddrCode = crypto.decodeAddress(fromAddress)
+    const inputs = [{ address: fromAddrCode, coins: [] }]
+    const transfers = []
+
+    outputs.forEach((item) => {
+      const toAddcCode = crypto.decodeAddress(item.to)
+      calInputCoins(inputs, item.coins)
+      transfers.push({address: toAddcCode, coins: item.coins})
+    })
+
+    const msg = {
+      inputs,
+      outputs: transfers,
+      msgType: "MsgSend"
+    }
+
+    const signInputs = [{ address: fromAddress, coins: [] }]
+    const signOutputs = []
+
+    outputs.forEach((item, index)=>{
+      signOutputs.push({ address: item.to, coins: [] })
+      item.coins.forEach(c=>{
+        signOutputs[index].coins.push(c)
+      })
+      calInputCoins(signInputs, item.coins)
+    })
+
+    const signMsg = {
+      inputs: signInputs,
+      outputs: signOutputs
     }
 
     const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)

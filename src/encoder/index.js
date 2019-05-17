@@ -6,7 +6,7 @@ import vstruct from "varstruct"
 import { Buffer } from "safe-buffer"
 import is from "is_js"
 
-import VarInt, { UVarInt } from "./varint"
+import { UVarInt } from "./varint"
 import typeToTyp3 from "../utils/encoderHelper"
 import { typePrefix } from "../tx/"
 
@@ -36,7 +36,7 @@ export const encodeNumber = (num) => UVarInt.encode(num)
  * encode bool
  * @param b
  */
-export const encodeBool = (b) => b ? VarInt.encode(1): VarInt.encode(0)
+export const encodeBool = (b) => b ? UVarInt.encode(1): UVarInt.encode(0)
 
 /**
  * encode string
