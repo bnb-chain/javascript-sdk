@@ -5,7 +5,9 @@
 <dd></dd>
 <dt><a href="#module_crypto">crypto</a></dt>
 <dd></dd>
-<dt><a href="#module_amino">amino</a></dt>
+<dt><a href="#module_amino-decode">amino-decode</a></dt>
+<dd></dd>
+<dt><a href="#module_amino-encode">amino-encode</a></dt>
 <dd></dd>
 <dt><a href="#module_ledger">ledger</a></dt>
 <dd></dd>
@@ -26,39 +28,44 @@
 ## client
 
 * [client](#module_client)
-    * [.BncClient](#module_client.BncClient)
-        * [new exports.BncClient(server, useAsyncBroadcast)](#new_module_client.BncClient_new)
-        * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
-        * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
-        * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
-        * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
-        * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
-        * [.setBroadcastDelegate(delegate)](#module_client.BncClient+setBroadcastDelegate) ⇒ <code>BncClient</code>
-        * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate) ⇒ <code>BncClient</code>
-        * [.useDefaultBroadcastDelegate()](#module_client.BncClient+useDefaultBroadcastDelegate) ⇒ <code>BncClient</code>
-        * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate) ⇒ <code>BncClient</code>
-        * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer) ⇒ <code>Promise</code>
-        * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
-        * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
-        * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
-        * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Promise</code>
-        * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Promise</code>
-        * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Promise</code>
-        * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Promise</code>
-        * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
-        * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
-        * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
-        * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
-        * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
-        * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
-        * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
-        * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
-        * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
-        * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
-    * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
-    * [.DefaultBroadcastDelegate](#module_client.DefaultBroadcastDelegate)
-    * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
-    * [.checkNumber](#module_client.checkNumber)
+    * _static_
+        * [.BncClient](#module_client.BncClient)
+            * [new exports.BncClient(server, useAsyncBroadcast)](#new_module_client.BncClient_new)
+            * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
+            * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
+            * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+            * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
+            * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
+            * [.setBroadcastDelegate(delegate)](#module_client.BncClient+setBroadcastDelegate) ⇒ <code>BncClient</code>
+            * [.useDefaultSigningDelegate()](#module_client.BncClient+useDefaultSigningDelegate) ⇒ <code>BncClient</code>
+            * [.useDefaultBroadcastDelegate()](#module_client.BncClient+useDefaultBroadcastDelegate) ⇒ <code>BncClient</code>
+            * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate) ⇒ <code>BncClient</code>
+            * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer) ⇒ <code>Promise</code>
+            * [.multiSend(fromAddress, outputs, memo, sequence)](#module_client.BncClient+multiSend) ⇒ <code>Promise</code>
+            * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
+            * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
+            * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
+            * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Promise</code>
+            * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Promise</code>
+            * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Promise</code>
+            * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Promise</code>
+            * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
+            * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
+            * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
+            * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
+            * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
+            * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
+            * [.recoverAccountFromMnemonic(mneomnic)](#module_client.BncClient+recoverAccountFromMnemonic)
+            * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
+            * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
+            * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
+        * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
+        * [.DefaultBroadcastDelegate](#module_client.DefaultBroadcastDelegate)
+        * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
+        * [.checkNumber](#module_client.checkNumber)
+    * _inner_
+        * [~checkOutputs(outputs)](#module_client..checkOutputs)
+        * [~calInputCoins(inputs, coins)](#module_client..calInputCoins)
 
 <a name="module_client.BncClient"></a>
 
@@ -79,6 +86,7 @@ The Binance Chain client.
     * [.useDefaultBroadcastDelegate()](#module_client.BncClient+useDefaultBroadcastDelegate) ⇒ <code>BncClient</code>
     * [.useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb)](#module_client.BncClient+useLedgerSigningDelegate) ⇒ <code>BncClient</code>
     * [.transfer(fromAddress, toAddress, amount, asset, memo, sequence)](#module_client.BncClient+transfer) ⇒ <code>Promise</code>
+    * [.multiSend(fromAddress, outputs, memo, sequence)](#module_client.BncClient+multiSend) ⇒ <code>Promise</code>
     * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
     * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
     * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
@@ -92,7 +100,7 @@ The Binance Chain client.
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
     * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
-    * [.recoverAccountFromMneomnic(mneomnic)](#module_client.BncClient+recoverAccountFromMneomnic)
+    * [.recoverAccountFromMnemonic(mneomnic)](#module_client.BncClient+recoverAccountFromMnemonic)
     * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
     * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
     * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
@@ -211,6 +219,45 @@ Transfer tokens from one address to another.
 | memo | <code>String</code> |  | optional memo |
 | sequence | <code>Number</code> | <code></code> | optional sequence |
 
+<a name="module_client.BncClient+multiSend"></a>
+
+#### bncClient.multiSend(fromAddress, outputs, memo, sequence) ⇒ <code>Promise</code>
+Create and sign a multi send tx
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fromAddress | <code>String</code> |  |  |
+| outputs | <code>Array</code> |  |  |
+| memo | <code>String</code> |  | optional memo |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
+
+**Example**  
+```js
+const outputs = [
+{
+  "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+  "coins": [{
+    "denom": "BNB",
+    "amount": 10
+  },{
+    "denom": "BTC",
+    "amount": 10
+  }]
+},
+{
+  "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+  "coins": [{
+    "denom": "BTC",
+    "amount": 10
+  },{
+    "denom": "BNB",
+    "amount": 10
+  }]
+}]
+```
 <a name="module_client.BncClient+cancelOrder"></a>
 
 #### bncClient.cancelOrder(fromAddress, symbol, refid, sequence) ⇒ <code>Promise</code>
@@ -385,9 +432,9 @@ Recovers an account from a keystore object.
 | keystore | <code>object</code> | object. |
 | keystore | <code>string</code> | password. { privateKey, address } |
 
-<a name="module_client.BncClient+recoverAccountFromMneomnic"></a>
+<a name="module_client.BncClient+recoverAccountFromMnemonic"></a>
 
-#### bncClient.recoverAccountFromMneomnic(mneomnic)
+#### bncClient.recoverAccountFromMnemonic(mneomnic)
 Recovers an account from a mnemonic seed phrase.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
@@ -471,6 +518,29 @@ validate the input number.
 | Param | Type |
 | --- | --- |
 | value | <code>Number</code> | 
+
+<a name="module_client..checkOutputs"></a>
+
+### client~checkOutputs(outputs)
+validate the input number.
+
+**Kind**: inner method of [<code>client</code>](#module_client)  
+
+| Param | Type |
+| --- | --- |
+| outputs | <code>Array</code> | 
+
+<a name="module_client..calInputCoins"></a>
+
+### client~calInputCoins(inputs, coins)
+sum corresponding input coin
+
+**Kind**: inner method of [<code>client</code>](#module_client)  
+
+| Param | Type |
+| --- | --- |
+| inputs | <code>Array</code> | 
+| coins | <code>Array</code> | 
 
 <a name="module_crypto"></a>
 
@@ -695,105 +765,137 @@ Get a private key from mnemonic words.
 | derive | <code>Boolean</code> | derive a private key using the default HD path (default: true) |
 | index | <code>number</code> | the bip44 address index (default: 0) |
 
-<a name="module_amino"></a>
+<a name="module_amino-decode"></a>
 
-## amino
+## amino-decode
 
-* [amino](#module_amino)
-    * [.encodeNumber](#module_amino.encodeNumber)
-    * [.encodeBool](#module_amino.encodeBool)
-    * [.encodeString](#module_amino.encodeString)
-    * [.encodeTime](#module_amino.encodeTime)
-    * [.convertObjectToSignBytes](#module_amino.convertObjectToSignBytes) ⇒ <code>Buffer</code>
-    * [.marshalBinary](#module_amino.marshalBinary)
-    * [.marshalBinaryBare](#module_amino.marshalBinaryBare)
-    * [.encodeBinary](#module_amino.encodeBinary) ⇒ <code>Buffer</code>
-    * [.encodeBinaryByteArray](#module_amino.encodeBinaryByteArray) ⇒ <code>Buffer</code>
-    * [.encodeObjectBinary](#module_amino.encodeObjectBinary) ⇒ <code>Buffer</code>
-    * [.encodeArrayBinary](#module_amino.encodeArrayBinary) ⇒ <code>Buffer</code>
+* [amino-decode](#module_amino-decode)
+    * [.unMarshalBinaryLengthPrefixed](#module_amino-decode.unMarshalBinaryLengthPrefixed)
+    * [.unMarshalBinaryBare](#module_amino-decode.unMarshalBinaryBare)
 
-<a name="module_amino.encodeNumber"></a>
+<a name="module_amino-decode.unMarshalBinaryLengthPrefixed"></a>
 
-### amino.encodeNumber
+### amino-decode.unMarshalBinaryLengthPrefixed
+js amino UnmarshalBinaryLengthPrefixed
+
+**Kind**: static constant of [<code>amino-decode</code>](#module_amino-decode)  
+
+| Param | Type |
+| --- | --- |
+| bytes | <code>Buffer</code> | 
+| type | <code>Object</code> | 
+
+<a name="module_amino-decode.unMarshalBinaryBare"></a>
+
+### amino-decode.unMarshalBinaryBare
+js amino UnmarshalBinaryBare
+
+**Kind**: static constant of [<code>amino-decode</code>](#module_amino-decode)  
+
+| Param | Type |
+| --- | --- |
+| bytes | <code>Buffer</code> | 
+| type | <code>Object</code> | 
+
+<a name="module_amino-encode"></a>
+
+## amino-encode
+
+* [amino-encode](#module_amino-encode)
+    * [.encodeNumber](#module_amino-encode.encodeNumber)
+    * [.encodeBool](#module_amino-encode.encodeBool)
+    * [.encodeString](#module_amino-encode.encodeString)
+    * [.encodeTime](#module_amino-encode.encodeTime)
+    * [.convertObjectToSignBytes](#module_amino-encode.convertObjectToSignBytes) ⇒ <code>Buffer</code>
+    * [.marshalBinary](#module_amino-encode.marshalBinary)
+    * [.marshalBinaryBare](#module_amino-encode.marshalBinaryBare)
+    * [.encodeBinary](#module_amino-encode.encodeBinary) ⇒ <code>Buffer</code>
+    * [.encodeBinaryByteArray](#module_amino-encode.encodeBinaryByteArray) ⇒ <code>Buffer</code>
+    * [.encodeObjectBinary](#module_amino-encode.encodeObjectBinary) ⇒ <code>Buffer</code>
+    * [.encodeArrayBinary](#module_amino-encode.encodeArrayBinary) ⇒ <code>Buffer</code>
+
+<a name="module_amino-encode.encodeNumber"></a>
+
+### amino-encode.encodeNumber
 encode number
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 
 | Param |
 | --- |
 | num | 
 
-<a name="module_amino.encodeBool"></a>
+<a name="module_amino-encode.encodeBool"></a>
 
-### amino.encodeBool
+### amino-encode.encodeBool
 encode bool
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 
 | Param |
 | --- |
 | b | 
 
-<a name="module_amino.encodeString"></a>
+<a name="module_amino-encode.encodeString"></a>
 
-### amino.encodeString
+### amino-encode.encodeString
 encode string
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 
 | Param |
 | --- |
 | str | 
 
-<a name="module_amino.encodeTime"></a>
+<a name="module_amino-encode.encodeTime"></a>
 
-### amino.encodeTime
+### amino-encode.encodeTime
 encode time
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 
 | Param |
 | --- |
 | value | 
 
-<a name="module_amino.convertObjectToSignBytes"></a>
+<a name="module_amino-encode.convertObjectToSignBytes"></a>
 
-### amino.convertObjectToSignBytes ⇒ <code>Buffer</code>
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+### amino-encode.convertObjectToSignBytes ⇒ <code>Buffer</code>
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 **Returns**: <code>Buffer</code> - bytes  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | obj | <code>object</code> | - |
 
-<a name="module_amino.marshalBinary"></a>
+<a name="module_amino-encode.marshalBinary"></a>
 
-### amino.marshalBinary
+### amino-encode.marshalBinary
 js amino MarshalBinary
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 
 | Param | Type |
 | --- | --- |
 | obj | <code>Object</code> | 
 
-<a name="module_amino.marshalBinaryBare"></a>
+<a name="module_amino-encode.marshalBinaryBare"></a>
 
-### amino.marshalBinaryBare
+### amino-encode.marshalBinaryBare
 js amino MarshalBinaryBare
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 
 | Param | Type |
 | --- | --- |
 | obj | <code>Object</code> | 
 
-<a name="module_amino.encodeBinary"></a>
+<a name="module_amino-encode.encodeBinary"></a>
 
-### amino.encodeBinary ⇒ <code>Buffer</code>
+### amino-encode.encodeBinary ⇒ <code>Buffer</code>
 This is the main entrypoint for encoding all types in binary form.
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 **Returns**: <code>Buffer</code> - binary of object.  
 
 | Param | Type | Description |
@@ -802,32 +904,32 @@ This is the main entrypoint for encoding all types in binary form.
 | field | <code>Number</code> | index of object |
 | isByteLenPrefix | <code>Boolean</code> |  |
 
-<a name="module_amino.encodeBinaryByteArray"></a>
+<a name="module_amino-encode.encodeBinaryByteArray"></a>
 
-### amino.encodeBinaryByteArray ⇒ <code>Buffer</code>
+### amino-encode.encodeBinaryByteArray ⇒ <code>Buffer</code>
 prefixed with bytes length
 
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 **Returns**: <code>Buffer</code> - with bytes length prefixed  
 
 | Param | Type |
 | --- | --- |
 | bytes | <code>Buffer</code> | 
 
-<a name="module_amino.encodeObjectBinary"></a>
+<a name="module_amino-encode.encodeObjectBinary"></a>
 
-### amino.encodeObjectBinary ⇒ <code>Buffer</code>
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+### amino-encode.encodeObjectBinary ⇒ <code>Buffer</code>
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 **Returns**: <code>Buffer</code> - with bytes length prefixed  
 
 | Param | Type |
 | --- | --- |
 | obj | <code>Object</code> | 
 
-<a name="module_amino.encodeArrayBinary"></a>
+<a name="module_amino-encode.encodeArrayBinary"></a>
 
-### amino.encodeArrayBinary ⇒ <code>Buffer</code>
-**Kind**: static constant of [<code>amino</code>](#module_amino)  
+### amino-encode.encodeArrayBinary ⇒ <code>Buffer</code>
+**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
 **Returns**: <code>Buffer</code> - bytes of array  
 
 | Param | Type | Description |
