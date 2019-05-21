@@ -40,10 +40,9 @@ class HttpRequest {
         console.error("error in HttpRequest#request", err, err.statusCode)
         let error = err
         try {
-          const msgObj = err.response && err.response.data && JSON.parse(err.response.data.message)
+          const msgObj = err.response && err.response.data
           error = new Error(msgObj.message)
           error.code = msgObj.code
-          error.abci_code = msgObj.abci_code
         } catch (err) {
           throw error
         }
