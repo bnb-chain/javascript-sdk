@@ -5,11 +5,15 @@
 <dd></dd>
 <dt><a href="#module_crypto">crypto</a></dt>
 <dd></dd>
-<dt><a href="#module_amino-decode">amino-decode</a></dt>
+<dt><a href="#amino.module_decode">decode</a></dt>
 <dd></dd>
-<dt><a href="#module_amino-encode">amino-encode</a></dt>
+<dt><a href="#amino.module_encode">encode</a></dt>
 <dd></dd>
 <dt><a href="#module_ledger">ledger</a></dt>
+<dd></dd>
+<dt><a href="#module_rpc">rpc</a></dt>
+<dd></dd>
+<dt><a href="#module_Token">Token</a></dt>
 <dd></dd>
 <dt><a href="#module_utils">utils</a></dt>
 <dd></dd>
@@ -765,137 +769,137 @@ Get a private key from mnemonic words.
 | derive | <code>Boolean</code> | derive a private key using the default HD path (default: true) |
 | index | <code>number</code> | the bip44 address index (default: 0) |
 
-<a name="module_amino-decode"></a>
+<a name="amino.module_decode"></a>
 
-## amino-decode
+## decode
 
-* [amino-decode](#module_amino-decode)
-    * [.unMarshalBinaryLengthPrefixed](#module_amino-decode.unMarshalBinaryLengthPrefixed)
-    * [.unMarshalBinaryBare](#module_amino-decode.unMarshalBinaryBare)
+* [decode](#amino.module_decode)
+    * [.unMarshalBinaryLengthPrefixed](#amino.module_decode.unMarshalBinaryLengthPrefixed) ⇒ <code>Object</code>
+    * [.unMarshalBinaryBare](#amino.module_decode.unMarshalBinaryBare) ⇒ <code>Object</code>
 
-<a name="module_amino-decode.unMarshalBinaryLengthPrefixed"></a>
+<a name="amino.module_decode.unMarshalBinaryLengthPrefixed"></a>
 
-### amino-decode.unMarshalBinaryLengthPrefixed
+### decode.unMarshalBinaryLengthPrefixed ⇒ <code>Object</code>
 js amino UnmarshalBinaryLengthPrefixed
 
-**Kind**: static constant of [<code>amino-decode</code>](#module_amino-decode)  
+**Kind**: static constant of [<code>decode</code>](#amino.module_decode)  
 
 | Param | Type |
 | --- | --- |
 | bytes | <code>Buffer</code> | 
 | type | <code>Object</code> | 
 
-<a name="module_amino-decode.unMarshalBinaryBare"></a>
+<a name="amino.module_decode.unMarshalBinaryBare"></a>
 
-### amino-decode.unMarshalBinaryBare
+### decode.unMarshalBinaryBare ⇒ <code>Object</code>
 js amino UnmarshalBinaryBare
 
-**Kind**: static constant of [<code>amino-decode</code>](#module_amino-decode)  
+**Kind**: static constant of [<code>decode</code>](#amino.module_decode)  
 
 | Param | Type |
 | --- | --- |
 | bytes | <code>Buffer</code> | 
 | type | <code>Object</code> | 
 
-<a name="module_amino-encode"></a>
+<a name="amino.module_encode"></a>
 
-## amino-encode
+## encode
 
-* [amino-encode](#module_amino-encode)
-    * [.encodeNumber](#module_amino-encode.encodeNumber)
-    * [.encodeBool](#module_amino-encode.encodeBool)
-    * [.encodeString](#module_amino-encode.encodeString)
-    * [.encodeTime](#module_amino-encode.encodeTime)
-    * [.convertObjectToSignBytes](#module_amino-encode.convertObjectToSignBytes) ⇒ <code>Buffer</code>
-    * [.marshalBinary](#module_amino-encode.marshalBinary)
-    * [.marshalBinaryBare](#module_amino-encode.marshalBinaryBare)
-    * [.encodeBinary](#module_amino-encode.encodeBinary) ⇒ <code>Buffer</code>
-    * [.encodeBinaryByteArray](#module_amino-encode.encodeBinaryByteArray) ⇒ <code>Buffer</code>
-    * [.encodeObjectBinary](#module_amino-encode.encodeObjectBinary) ⇒ <code>Buffer</code>
-    * [.encodeArrayBinary](#module_amino-encode.encodeArrayBinary) ⇒ <code>Buffer</code>
+* [encode](#amino.module_encode)
+    * [.encodeNumber](#amino.module_encode.encodeNumber)
+    * [.encodeBool](#amino.module_encode.encodeBool)
+    * [.encodeString](#amino.module_encode.encodeString)
+    * [.encodeTime](#amino.module_encode.encodeTime)
+    * [.convertObjectToSignBytes](#amino.module_encode.convertObjectToSignBytes) ⇒ <code>Buffer</code>
+    * [.marshalBinary](#amino.module_encode.marshalBinary)
+    * [.marshalBinaryBare](#amino.module_encode.marshalBinaryBare)
+    * [.encodeBinary](#amino.module_encode.encodeBinary) ⇒ <code>Buffer</code>
+    * [.encodeBinaryByteArray](#amino.module_encode.encodeBinaryByteArray) ⇒ <code>Buffer</code>
+    * [.encodeObjectBinary](#amino.module_encode.encodeObjectBinary) ⇒ <code>Buffer</code>
+    * [.encodeArrayBinary](#amino.module_encode.encodeArrayBinary) ⇒ <code>Buffer</code>
 
-<a name="module_amino-encode.encodeNumber"></a>
+<a name="amino.module_encode.encodeNumber"></a>
 
-### amino-encode.encodeNumber
+### encode.encodeNumber
 encode number
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 
 | Param |
 | --- |
 | num | 
 
-<a name="module_amino-encode.encodeBool"></a>
+<a name="amino.module_encode.encodeBool"></a>
 
-### amino-encode.encodeBool
+### encode.encodeBool
 encode bool
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 
 | Param |
 | --- |
 | b | 
 
-<a name="module_amino-encode.encodeString"></a>
+<a name="amino.module_encode.encodeString"></a>
 
-### amino-encode.encodeString
+### encode.encodeString
 encode string
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 
 | Param |
 | --- |
 | str | 
 
-<a name="module_amino-encode.encodeTime"></a>
+<a name="amino.module_encode.encodeTime"></a>
 
-### amino-encode.encodeTime
+### encode.encodeTime
 encode time
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 
 | Param |
 | --- |
 | value | 
 
-<a name="module_amino-encode.convertObjectToSignBytes"></a>
+<a name="amino.module_encode.convertObjectToSignBytes"></a>
 
-### amino-encode.convertObjectToSignBytes ⇒ <code>Buffer</code>
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+### encode.convertObjectToSignBytes ⇒ <code>Buffer</code>
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 **Returns**: <code>Buffer</code> - bytes  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | obj | <code>object</code> | - |
 
-<a name="module_amino-encode.marshalBinary"></a>
+<a name="amino.module_encode.marshalBinary"></a>
 
-### amino-encode.marshalBinary
+### encode.marshalBinary
 js amino MarshalBinary
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 
 | Param | Type |
 | --- | --- |
 | obj | <code>Object</code> | 
 
-<a name="module_amino-encode.marshalBinaryBare"></a>
+<a name="amino.module_encode.marshalBinaryBare"></a>
 
-### amino-encode.marshalBinaryBare
+### encode.marshalBinaryBare
 js amino MarshalBinaryBare
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 
 | Param | Type |
 | --- | --- |
 | obj | <code>Object</code> | 
 
-<a name="module_amino-encode.encodeBinary"></a>
+<a name="amino.module_encode.encodeBinary"></a>
 
-### amino-encode.encodeBinary ⇒ <code>Buffer</code>
+### encode.encodeBinary ⇒ <code>Buffer</code>
 This is the main entrypoint for encoding all types in binary form.
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 **Returns**: <code>Buffer</code> - binary of object.  
 
 | Param | Type | Description |
@@ -904,32 +908,32 @@ This is the main entrypoint for encoding all types in binary form.
 | field | <code>Number</code> | index of object |
 | isByteLenPrefix | <code>Boolean</code> |  |
 
-<a name="module_amino-encode.encodeBinaryByteArray"></a>
+<a name="amino.module_encode.encodeBinaryByteArray"></a>
 
-### amino-encode.encodeBinaryByteArray ⇒ <code>Buffer</code>
+### encode.encodeBinaryByteArray ⇒ <code>Buffer</code>
 prefixed with bytes length
 
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 **Returns**: <code>Buffer</code> - with bytes length prefixed  
 
 | Param | Type |
 | --- | --- |
 | bytes | <code>Buffer</code> | 
 
-<a name="module_amino-encode.encodeObjectBinary"></a>
+<a name="amino.module_encode.encodeObjectBinary"></a>
 
-### amino-encode.encodeObjectBinary ⇒ <code>Buffer</code>
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+### encode.encodeObjectBinary ⇒ <code>Buffer</code>
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 **Returns**: <code>Buffer</code> - with bytes length prefixed  
 
 | Param | Type |
 | --- | --- |
 | obj | <code>Object</code> | 
 
-<a name="module_amino-encode.encodeArrayBinary"></a>
+<a name="amino.module_encode.encodeArrayBinary"></a>
 
-### amino-encode.encodeArrayBinary ⇒ <code>Buffer</code>
-**Kind**: static constant of [<code>amino-encode</code>](#module_amino-encode)  
+### encode.encodeArrayBinary ⇒ <code>Buffer</code>
+**Kind**: static constant of [<code>encode</code>](#amino.module_encode)  
 **Returns**: <code>Buffer</code> - bytes of array  
 
 | Param | Type | Description |
@@ -1067,6 +1071,238 @@ Sends a transaction sign doc to the Ledger app to be signed.
 | --- | --- | --- |
 | signBytes | <code>Buffer</code> | The TX sign doc bytes to sign |
 | hdPath | <code>array</code> | The HD path to use to get the public key. Default is [44, 714, 0, 0, 0] |
+
+<a name="module_rpc"></a>
+
+## rpc
+
+* [rpc](#module_rpc)
+    * [~Client](#module_rpc..Client)
+        * [new Client(uriString, netWork)](#new_module_rpc..Client_new)
+        * [.getTokenInfo(symbol)](#module_rpc..Client+getTokenInfo) ⇒ <code>Object</code>
+        * [.listAllTokens(offset, limit)](#module_rpc..Client+listAllTokens) ⇒ <code>Array</code>
+        * [.getAccount(address)](#module_rpc..Client+getAccount) ⇒ <code>Object</code>
+        * [.getBalances(balances)](#module_rpc..Client+getBalances)
+        * [.getBalance(address, symbol)](#module_rpc..Client+getBalance) ⇒ <code>Object</code>
+        * [.getOpenOrders(address, symbol)](#module_rpc..Client+getOpenOrders) ⇒ <code>Object</code>
+        * [.getTradingPairs(offset, limit)](#module_rpc..Client+getTradingPairs) ⇒ <code>Array</code>
+        * [.getDepth(tradePair)](#module_rpc..Client+getDepth) ⇒ <code>Array</code>
+
+<a name="module_rpc..Client"></a>
+
+### rpc~Client
+The Binance Chain Node rpc client
+
+**Kind**: inner class of [<code>rpc</code>](#module_rpc)  
+
+* [~Client](#module_rpc..Client)
+    * [new Client(uriString, netWork)](#new_module_rpc..Client_new)
+    * [.getTokenInfo(symbol)](#module_rpc..Client+getTokenInfo) ⇒ <code>Object</code>
+    * [.listAllTokens(offset, limit)](#module_rpc..Client+listAllTokens) ⇒ <code>Array</code>
+    * [.getAccount(address)](#module_rpc..Client+getAccount) ⇒ <code>Object</code>
+    * [.getBalances(balances)](#module_rpc..Client+getBalances)
+    * [.getBalance(address, symbol)](#module_rpc..Client+getBalance) ⇒ <code>Object</code>
+    * [.getOpenOrders(address, symbol)](#module_rpc..Client+getOpenOrders) ⇒ <code>Object</code>
+    * [.getTradingPairs(offset, limit)](#module_rpc..Client+getTradingPairs) ⇒ <code>Array</code>
+    * [.getDepth(tradePair)](#module_rpc..Client+getDepth) ⇒ <code>Array</code>
+
+<a name="new_module_rpc..Client_new"></a>
+
+#### new Client(uriString, netWork)
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uriString | <code>String</code> | <code>localhost:27146</code> | dataseed address |
+| netWork | <code>String</code> |  | Binance Chain network |
+
+<a name="module_rpc..Client+getTokenInfo"></a>
+
+#### client.getTokenInfo(symbol) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+**Returns**: <code>Object</code> - token detail info  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| symbol | <code>String</code> | required |
+
+<a name="module_rpc..Client+listAllTokens"></a>
+
+#### client.listAllTokens(offset, limit) ⇒ <code>Array</code>
+get tokens by offset and limit
+
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+**Returns**: <code>Array</code> - token list  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>Number</code> | 
+| limit | <code>Number</code> | 
+
+<a name="module_rpc..Client+getAccount"></a>
+
+#### client.getAccount(address) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+**Returns**: <code>Object</code> - Account info  
+
+| Param | Type |
+| --- | --- |
+| address | <code>String</code> | 
+
+<a name="module_rpc..Client+getBalances"></a>
+
+#### client.getBalances(balances)
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+
+| Param | Type |
+| --- | --- |
+| balances | <code>Array</code> | 
+
+<a name="module_rpc..Client+getBalance"></a>
+
+#### client.getBalance(address, symbol) ⇒ <code>Object</code>
+get balance by symbol and address
+
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+
+| Param | Type |
+| --- | --- |
+| address | <code>String</code> | 
+| symbol | <code>String</code> | 
+
+<a name="module_rpc..Client+getOpenOrders"></a>
+
+#### client.getOpenOrders(address, symbol) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+
+| Param | Type |
+| --- | --- |
+| address | <code>String</code> | 
+| symbol | <code>String</code> | 
+
+<a name="module_rpc..Client+getTradingPairs"></a>
+
+#### client.getTradingPairs(offset, limit) ⇒ <code>Array</code>
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>Number</code> | 
+| limit | <code>Number</code> | 
+
+<a name="module_rpc..Client+getDepth"></a>
+
+#### client.getDepth(tradePair) ⇒ <code>Array</code>
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+
+| Param | Type |
+| --- | --- |
+| tradePair | <code>String</code> | 
+
+<a name="module_Token"></a>
+
+## Token
+
+* [Token](#module_Token)
+    * [~TokenManagement](#module_Token..TokenManagement)
+        * [new TokenManagement(bncClient)](#new_module_Token..TokenManagement_new)
+        * [.issue(senderAddress, tokenName, symbol, totalSupply, mintable)](#module_Token..TokenManagement+issue) ⇒ <code>Promise</code>
+        * [.freeze(fromAddress, symbol, amount)](#module_Token..TokenManagement+freeze) ⇒ <code>Promise</code>
+        * [.unfreeze(fromAddress, symbol, amount)](#module_Token..TokenManagement+unfreeze) ⇒ <code>Promise</code>
+        * [.burn(fromAddress, symbol, amount)](#module_Token..TokenManagement+burn) ⇒ <code>Promise</code>
+        * [.mint(fromAddress, symbol, amount)](#module_Token..TokenManagement+mint) ⇒ <code>Promise</code>
+
+<a name="module_Token..TokenManagement"></a>
+
+### Token~TokenManagement
+**Kind**: inner class of [<code>Token</code>](#module_Token)  
+
+* [~TokenManagement](#module_Token..TokenManagement)
+    * [new TokenManagement(bncClient)](#new_module_Token..TokenManagement_new)
+    * [.issue(senderAddress, tokenName, symbol, totalSupply, mintable)](#module_Token..TokenManagement+issue) ⇒ <code>Promise</code>
+    * [.freeze(fromAddress, symbol, amount)](#module_Token..TokenManagement+freeze) ⇒ <code>Promise</code>
+    * [.unfreeze(fromAddress, symbol, amount)](#module_Token..TokenManagement+unfreeze) ⇒ <code>Promise</code>
+    * [.burn(fromAddress, symbol, amount)](#module_Token..TokenManagement+burn) ⇒ <code>Promise</code>
+    * [.mint(fromAddress, symbol, amount)](#module_Token..TokenManagement+mint) ⇒ <code>Promise</code>
+
+<a name="new_module_Token..TokenManagement_new"></a>
+
+#### new TokenManagement(bncClient)
+
+| Param | Type |
+| --- | --- |
+| bncClient | <code>Object</code> | 
+
+<a name="module_Token..TokenManagement+issue"></a>
+
+#### tokenManagement.issue(senderAddress, tokenName, symbol, totalSupply, mintable) ⇒ <code>Promise</code>
+create a new asset on Binance Chain
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| senderAddress | <code>String</code> |  | senderAddress |
+| tokenName | <code>String</code> |  | tokenName |
+| symbol | <code>String</code> |  | symbol |
+| totalSupply | <code>Number</code> | <code>0</code> | totalSupply |
+| mintable | <code>Boolean</code> | <code>false</code> | mintable |
+
+<a name="module_Token..TokenManagement+freeze"></a>
+
+#### tokenManagement.freeze(fromAddress, symbol, amount) ⇒ <code>Promise</code>
+freeze some amount of token
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| symbol | <code>String</code> | 
+| amount | <code>String</code> | 
+
+<a name="module_Token..TokenManagement+unfreeze"></a>
+
+#### tokenManagement.unfreeze(fromAddress, symbol, amount) ⇒ <code>Promise</code>
+unfreeze some amount of token
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| symbol | <code>String</code> | 
+| amount | <code>String</code> | 
+
+<a name="module_Token..TokenManagement+burn"></a>
+
+#### tokenManagement.burn(fromAddress, symbol, amount) ⇒ <code>Promise</code>
+burn some amount of token
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| symbol | <code>String</code> | 
+| amount | <code>Number</code> | 
+
+<a name="module_Token..TokenManagement+mint"></a>
+
+#### tokenManagement.mint(fromAddress, symbol, amount) ⇒ <code>Promise</code>
+mint tokens for an existing token
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| symbol | <code>String</code> | 
+| amount | <code>Number</code> | 
 
 <a name="module_utils"></a>
 

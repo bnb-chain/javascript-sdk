@@ -1,3 +1,6 @@
+/**
+ * @module Token
+ */
 import Big from 'big.js'
 import { txType } from '../tx/'
 import * as crypto from '../crypto/'
@@ -42,6 +45,9 @@ const validateNonZeroAmount = async (amount, symbol, fromAddress, httpClient, ty
 class TokenManagement {
   static instance
 
+  /**
+   * @param {Object} bncClient 
+   */
   constructor(bncClient) {
     if(!TokenManagement.instance) {
       this._bncClient = bncClient
@@ -53,12 +59,12 @@ class TokenManagement {
 
   /**
    * create a new asset on Binance Chain
-   * @param {String} senderAddress 
-   * @param {String} tokenName 
-   * @param {String} symbol 
-   * @param {Number} totalSupply 
-   * @param {Boolean} mintable 
-   * @return {Promise} resolves with response (success or fail)
+   * @param {String} - senderAddress 
+   * @param {String} - tokenName 
+   * @param {String} - symbol 
+   * @param {Number} - totalSupply 
+   * @param {Boolean} - mintable 
+   * @returns {Promise} resolves with response (success or fail)
    */
   async issue(senderAddress, tokenName, symbol, totalSupply=0, mintable=false) {
     if(!senderAddress) {
@@ -106,8 +112,7 @@ class TokenManagement {
    * @param {String} fromAddress 
    * @param {String} symbol 
    * @param {String} amount 
-   * @return {Promise} resolves with response (success or fail)
-   * @return {Promise} resolves with response (success or fail)
+   * @returns {Promise}  resolves with response (success or fail)
    */
   async freeze(fromAddress, symbol, amount) {
 
@@ -140,6 +145,7 @@ class TokenManagement {
    * @param {String} fromAddress 
    * @param {String} symbol 
    * @param {String} amount 
+   * @returns {Promise}  resolves with response (success or fail)
    */
   async unfreeze(fromAddress, symbol, amount){
     validateSymbol(symbol)
@@ -171,6 +177,7 @@ class TokenManagement {
    * @param {String} fromAddress 
    * @param {String} symbol 
    * @param {Number} amount 
+   * @returns {Promise}  resolves with response (success or fail)
    */
   async burn(fromAddress, symbol, amount) {
     validateSymbol(symbol)
@@ -202,6 +209,7 @@ class TokenManagement {
    * @param {String} fromAddress 
    * @param {String} symbol 
    * @param {Number} amount 
+   * @returns {Promise}  resolves with response (success or fail)
    */
   async mint(fromAddress, symbol, amount) {
     validateSymbol(symbol)
