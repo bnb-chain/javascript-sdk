@@ -1,5 +1,5 @@
 /**
- * @module amino-decode
+ * @module amino.decode
  */
 
 import {
@@ -23,6 +23,7 @@ const decoder = (bytes, varType) => {
  * js amino UnmarshalBinaryLengthPrefixed
  * @param {Buffer} bytes
  * @param {Object} type
+ * @returns {Object} 
  *  */
 export const unMarshalBinaryLengthPrefixed = (bytes, type) => {
   if(bytes.length === 0)
@@ -43,6 +44,7 @@ export const unMarshalBinaryLengthPrefixed = (bytes, type) => {
  * js amino UnmarshalBinaryBare
  * @param {Buffer} bytes
  * @param {Object} type
+ * @returns {Object} 
  *  */
 export const unMarshalBinaryBare = (bytes, type) => {
   if(!is.object(type)) 

@@ -1,5 +1,5 @@
 /**
- * @module amino-encode
+ * @module amino.encode
  */
 
 import vstruct from "varstruct"

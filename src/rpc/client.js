@@ -1,3 +1,6 @@
+/**
+ * @module rpc
+ */
 import { 
   Token, 
   AppAccount,
@@ -55,7 +58,15 @@ const convertObjectArrayNum = (objArr, keys)=>{
   })
 }
 
+/**
+ * The Binance Chain Node rpc client
+ */
 class Client extends BaseRpc {
+
+  /**
+   * @param {String} uriString dataseed address
+   * @param {String} netWork Binance Chain network
+   */
   constructor (uriString="localhost:27146", netWork) {
     super(uriString)
     this.netWork = netWork || 'mainnet'
@@ -75,6 +86,7 @@ class Client extends BaseRpc {
 
   /**
    * @param {String} symbol - required
+   * @returns {Object} token detail info
    */
   async getTokenInfo(symbol) {
     validateSymbol(symbol)
@@ -90,6 +102,12 @@ class Client extends BaseRpc {
     return tokenInfo
   }
 
+  /**
+   * get tokens by offset and limit
+   * @param {Number} offset 
+   * @param {Number} limit 
+   * @returns {Array} token list
+   */
   async listAllTokens(offset, limit) {
     validateOffsetLimit(offset, limit)
     const path = `tokens/list/${offset}/${limit}`
@@ -106,6 +124,7 @@ class Client extends BaseRpc {
 
   /**
    * @param {String} address
+   * @returns {Object} Account info
    */
   async getAccount(address) {
     const addr = crypto.decodeAddress(address)
@@ -124,6 +143,9 @@ class Client extends BaseRpc {
     return accountInfo
   }
 
+  /**
+   * @param {Array} balances 
+   */
   async getBalances(address) {
     const account = await this.getAccount(address)
     let coins = []
@@ -149,6 +171,12 @@ class Client extends BaseRpc {
     return balances
   }
 
+  /**
+   * get balance by symbol and address
+   * @param {String} address 
+   * @param {String} symbol 
+   * @returns {Object}
+   */
   async getBalance(address, symbol){
     validateSymbol(symbol)
     const balances = await this.getBalances(address)
@@ -156,6 +184,11 @@ class Client extends BaseRpc {
     return bal
   }
 
+  /**
+   * @param {String} address 
+   * @param {String} symbol 
+   * @returns {Object}
+   */
   async getOpenOrders(address, symbol) {
     const path = `/dex/openorders/${symbol}/${address}`
     const res = await this.abciQuery({path})
@@ -166,6 +199,11 @@ class Client extends BaseRpc {
     return openOrders
   }
 
+  /**
+   * @param {Number} offset 
+   * @param {Number} limit 
+   * @returns {Array}
+   */
   async getTradingPairs(offset, limit){
     validateOffsetLimit(offset, limit)        
     const path = `/dex/pairs/${offset}/${limit}`
@@ -177,6 +215,10 @@ class Client extends BaseRpc {
     return tradingPairs
   }
 
+  /**
+   * @param {String} tradePair 
+   * @returns {Array}
+   */
   async getDepth(tradePair){
     validateTradingPair(tradePair)
     const path = `dex/orderbook/${tradePair}`
