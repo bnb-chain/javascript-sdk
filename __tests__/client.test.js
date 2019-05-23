@@ -8,11 +8,11 @@ const mnemonic = "offer caution gift cross surge pretty orange during eye soldie
 
 const keystores = {
   // keystore with sha3 mac
-  new: {"version":1,"id":"73a811d0-5e31-4a0e-9b3a-a2a457ccbd7b","crypto":{"ciphertext":"3b","cipherparams":{"iv":"56d59d999578a0364c59934128dd215d"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"781849b3477252928cfbe5d62180a755dce1e5b2569b02f6f14e7f46a0740687","c":262144,"prf":"hmac-sha256"},"mac":"6a967b9dad5062eac3dbc9db4e30a8f2efa60f60403aa9ea0345e50cdfb5e9d86343f5808b7e2f51b062f7c7f24189723acd4a94568e6a72bb63e6345e988c0f"}},
+  new: { "version": 1, "id": "73a811d0-5e31-4a0e-9b3a-a2a457ccbd7b", "crypto": { "ciphertext": "3b", "cipherparams": { "iv": "56d59d999578a0364c59934128dd215d" }, "cipher": "aes-256-ctr", "kdf": "pbkdf2", "kdfparams": { "dklen": 32, "salt": "781849b3477252928cfbe5d62180a755dce1e5b2569b02f6f14e7f46a0740687", "c": 262144, "prf": "hmac-sha256" }, "mac": "6a967b9dad5062eac3dbc9db4e30a8f2efa60f60403aa9ea0345e50cdfb5e9d86343f5808b7e2f51b062f7c7f24189723acd4a94568e6a72bb63e6345e988c0f" } },
   // keystore with sha256 mac
-  legacy: {"version":1,"id":"dfb09873-f16f-48c6-a6b8-bb5a705c47a7","address":"bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk","crypto":{"ciphertext":"33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b","cipherparams":{"iv":"88c726d70cd0437bfdb2312dc60103fc"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9","c":262144,"prf":"hmac-sha256"},"mac":"f7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e"}},
+  legacy: { "version": 1, "id": "dfb09873-f16f-48c6-a6b8-bb5a705c47a7", "address": "bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk", "crypto": { "ciphertext": "33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b", "cipherparams": { "iv": "88c726d70cd0437bfdb2312dc60103fc" }, "cipher": "aes-256-ctr", "kdf": "pbkdf2", "kdfparams": { "dklen": 32, "salt": "ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9", "c": 262144, "prf": "hmac-sha256" }, "mac": "f7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e" } },
   // keystore with bad mac
-  badMac: {"version":1,"id":"dfb09873-f16f-48c6-a6b8-bb5a705c47a7","address":"bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk","crypto":{"ciphertext":"33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b","cipherparams":{"iv":"88c726d70cd0437bfdb2312dc60103fc"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9","c":262144,"prf":"hmac-sha256"},"mac":"x7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e"}},
+  badMac: { "version": 1, "id": "dfb09873-f16f-48c6-a6b8-bb5a705c47a7", "address": "bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk", "crypto": { "ciphertext": "33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b", "cipherparams": { "iv": "88c726d70cd0437bfdb2312dc60103fc" }, "cipher": "aes-256-ctr", "kdf": "pbkdf2", "kdfparams": { "dklen": 32, "salt": "ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9", "c": 262144, "prf": "hmac-sha256" }, "mac": "x7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e" } },
 }
 
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
@@ -48,8 +48,8 @@ describe("checkNumber", async () => {
   })
 
   it("ensures that the number is less than 2^63", async () => {
-    expect(() => checkNumber(Math.pow(2,63), "2^63")).toThrowError("2^63 should be less than 2^63")
-    expect(() => checkNumber(Math.pow(2,63) + 1, "2^63")).toThrowError("2^63 should be less than 2^63")
+    expect(() => checkNumber(Math.pow(2, 63), "2^63")).toThrowError("2^63 should be less than 2^63")
+    expect(() => checkNumber(Math.pow(2, 63) + 1, "2^63")).toThrowError("2^63 should be less than 2^63")
   })
 })
 
@@ -108,7 +108,7 @@ describe("BncClient test", async () => {
     jest.setTimeout(50000)
     const client = await getClient(false)
     const res = client.recoverAccountFromMneomnic(mnemonic)
-    await(1500)
+    await (1500)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
@@ -118,7 +118,7 @@ describe("BncClient test", async () => {
     const client = await getClient(false)
     const pk = crypto.generatePrivateKey()
     const res = client.recoverAccountFromPrivateKey(pk)
-    await(1500)
+    await (1500)
     expect(res.address).toBeTruthy()
     expect(res.privateKey).toBeTruthy()
   })
@@ -249,15 +249,15 @@ describe("BncClient test", async () => {
     const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
     const sequence = account.result && account.result.sequence
 
-    try{
+    try {
       await client.transfer(addr, targetAddress, -1, "BNB", "hello world", sequence)
-    } catch(err) {
+    } catch (err) {
       expect(err.message).toBe("amount should be a positive number")
     }
 
-    try{
+    try {
       await client.transfer(addr, targetAddress, Math.pow(2, 63), "BNB", "hello world", sequence)
-    } catch(err) {
+    } catch (err) {
       expect(err.message).toBe("amount should be less than 2^63")
     }
   })
@@ -267,15 +267,15 @@ describe("BncClient test", async () => {
     const client = await getClient(true)
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
 
-    try{
+    try {
       await client.placeOrder(addr, symbol, 2, -40, 0.0001, 1)
-    } catch(err) {
+    } catch (err) {
       expect(err.message).toBe("price should be a positive number")
     }
 
-    try{
-      await client.placeOrder(addr, symbol, 2, Math.pow(2,63), 2, 1)
-    } catch(err) {
+    try {
+      await client.placeOrder(addr, symbol, 2, Math.pow(2, 63), 2, 1)
+    } catch (err) {
       expect(err.message).toBe("price should be less than 2^63")
     }
   })
@@ -288,7 +288,7 @@ describe("BncClient test", async () => {
       "coins": [{
         "denom": "BNB",
         "amount": 0.01
-      },{
+      }, {
         "denom": "USDT.B-B7C",
         "amount": 0.01
       }]
@@ -298,7 +298,7 @@ describe("BncClient test", async () => {
       "coins": [{
         "denom": "USDT.B-B7C",
         "amount": 0.02
-      },{
+      }, {
         "denom": "BNB",
         "amount": 0.3
       }]
@@ -335,10 +335,10 @@ describe("BncClient test", async () => {
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "XZJ-D9A"
     const amount = 100
-    try{
+    try {
       const { status } = await client.tokens.unfreeze(addr, symbol, amount)
       expect(status).toBe(200)
-    }catch(err){
+    } catch (err) {
       expect(err.message).toBe("do not have enough token to unfreeze")
     }
   })
