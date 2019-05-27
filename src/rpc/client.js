@@ -41,11 +41,7 @@ class Client extends BaseRpc {
    * @param {String} uriString dataseed address
    * @param {String} netWork Binance Chain network
    */
-<<<<<<< HEAD
   constructor(uriString = "localhost:27146", netWork) {
-=======
-  constructor (uriString="localhost:27146", netWork) {
->>>>>>> master
     super(uriString)
     this.netWork = netWork || "mainnet"
   }
@@ -155,11 +151,7 @@ class Client extends BaseRpc {
    * @param {String} symbol 
    * @returns {Object}
    */
-<<<<<<< HEAD
   async getBalance(address, symbol) {
-=======
-  async getBalance(address, symbol){
->>>>>>> master
     validateSymbol(symbol)
     const balances = await this.getBalances(address)
     const bal = balances.find(item => item.symbol.toUpperCase() === symbol.toUpperCase())
@@ -186,13 +178,8 @@ class Client extends BaseRpc {
    * @param {Number} limit 
    * @returns {Array}
    */
-<<<<<<< HEAD
   async getTradingPairs(offset, limit) {
     validateOffsetLimit(offset, limit)
-=======
-  async getTradingPairs(offset, limit){
-    validateOffsetLimit(offset, limit)
->>>>>>> master
     const path = `/dex/pairs/${offset}/${limit}`
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
@@ -206,11 +193,7 @@ class Client extends BaseRpc {
    * @param {String} tradePair 
    * @returns {Array}
    */
-<<<<<<< HEAD
   async getDepth(tradePair) {
-=======
-  async getDepth(tradePair){
->>>>>>> master
     validateTradingPair(tradePair)
     const path = `dex/orderbook/${tradePair}`
     const res = await this.abciQuery({ path })
