@@ -1,9 +1,9 @@
 import rpcClient from "../src/rpc/client"
 
-const NETWORK = 'testnet'
-const getClient = (type)=>{
+const NETWORK = "testnet"
+const getClient = (type) => {
   let uri = "https://data-seed-pre-0-s3.binance.org"
-  if(type === "wss"){
+  if (type === "wss") {
     uri = "wss://data-seed-pre-0-s3.binance.org"
   }
   return new rpcClient(uri, NETWORK)
@@ -26,7 +26,7 @@ describe("rpcClient test", async () => {
     expect(res.node_info.network).toBe("Binance-Chain-Nile")
   })
 
-  it("wss status", async ()=>{
+  it("wss status", async () => {
     const client = getClient("wss")
     const res = await client.status()
     expect(res).toBeTruthy()
@@ -42,7 +42,7 @@ describe("rpcClient test", async () => {
     expect(res.peers.length).toBeGreaterThanOrEqual(0)
   })
 
-  it("wss net_info", async ()=>{
+  it("wss net_info", async () => {
     const client = getClient("wss")
     const res = await client.netInfo()
     expect(res).toBeTruthy()
@@ -80,7 +80,7 @@ describe("rpcClient test", async () => {
     client.close()
   })
 
-  it("rest txSearch", async ()=>{
+  it("rest txSearch", async () => {
     const client = getClient("https")
     const params = {
       query: "tx.height=8669273",
@@ -93,7 +93,7 @@ describe("rpcClient test", async () => {
     expect(result.txs).toBeTruthy()
   })
 
-  it("wss txSearch", async ()=>{
+  it("wss txSearch", async () => {
     const client = getClient("https")
     const params = {
       query: "tx.height=8669273",
@@ -130,7 +130,7 @@ describe("rpcClient test", async () => {
   it("only rest getBalance", async () => {
     const client = getClient("https")
     const result = await client.getBalance(address, symbol)
-    if(result){
+    if (result) {
       expect(result.free + result.locked + result.frozen).toBeGreaterThanOrEqual(0)
     }
   })
@@ -139,25 +139,25 @@ describe("rpcClient test", async () => {
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
-    expect(result.length).toBeGreaterThan(0)
+    expect(result.length).toBeGreaterThanOrEqual(0)
   })
 
-  it("wss getOpenOrders", async ()=>{
+  it("wss getOpenOrders", async () => {
     const client = getClient("https")
     const result = await client.getOpenOrders(address, tradePair)
     expect(result).toBeTruthy()
-    expect(result.length).toBeGreaterThan(0)
+    expect(result.length).toBeGreaterThanOrEqual(0)
     client.close()
   })
 
-  it("rest getTradingPairs", async ()=>{
+  it("rest getTradingPairs", async () => {
     const client = getClient("https")
     const result = await client.getTradingPairs(1, 2)
     expect(result).toBeTruthy()
     expect(result.length).toBe(2)
   })
 
-  it("wss getTradingPairs", async ()=>{
+  it("wss getTradingPairs", async () => {
     const client = getClient("https")
     const result = await client.getTradingPairs(1, 2)
     expect(result).toBeTruthy()
@@ -165,7 +165,7 @@ describe("rpcClient test", async () => {
     client.close()
   })
 
-  it("rest getDepth", async ()=>{
+  it("rest getDepth", async () => {
     const client = getClient("https")
     const result = await client.getDepth(tradePair)
     expect(result).toBeTruthy()
@@ -173,7 +173,7 @@ describe("rpcClient test", async () => {
     expect(result.levels.length).toBeGreaterThanOrEqual(0)
   })
 
-  it("wss getDepth", async ()=>{
+  it("wss getDepth", async () => {
     const client = getClient("https")
     const result = await client.getDepth(tradePair)
     expect(result).toBeTruthy()
@@ -182,13 +182,13 @@ describe("rpcClient test", async () => {
     client.close()
   })
 
-  it("subscribe", async ()=>{
+  it("subscribe", async () => {
     const client = getClient("wss")
-    await new Promise((resolve)=>{
-      client.subscribe({query: "tm.event = 'CompleteProposal'"}, (events)=>{
+    await new Promise((resolve) => {
+      client.subscribe({ query: "tm.event = 'CompleteProposal'" }, (events) => {
         resolve(events)
         expect(events).toBeTruthy()
-        expect(events.step).toBe('RoundStepPropose')
+        expect(events.step).toBe("RoundStepPropose")
       })
     })
   })

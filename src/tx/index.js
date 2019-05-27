@@ -7,7 +7,7 @@ export const txType = {
   NewOrderMsg: "NewOrderMsg",
   CancelOrderMsg: "CancelOrderMsg",
   IssueMsg: "IssueMsg",
-  BurnMsg: "BurnMsg", 
+  BurnMsg: "BurnMsg",
   FreezeMsg: "FreezeMsg",
   UnfreezeMsg: "UnfreezeMsg",
   MintMsg: "MintMsg",
@@ -15,6 +15,9 @@ export const txType = {
   StdTx: "StdTx",
   PubKeySecp256k1: "PubKeySecp256k1",
   SignatureSecp256k1: "SignatureSecp256k1",
+  MsgSubmitProposal: "MsgSubmitProposal",
+  MsgDeposit: "MsgDeposit",
+  MsgVote: "MsgVote"
 }
 
 export const typePrefix = {
@@ -30,6 +33,9 @@ export const typePrefix = {
   StdTx: "F0625DEE",
   PubKeySecp256k1: "EB5AE987",
   SignatureSecp256k1: "7FC4A495",
+  MsgSubmitProposal: "B42D614E",
+  MsgDeposit: "A18A56E5",
+  MsgVote: "A1CADD36"
 }
 
 /**
@@ -54,11 +60,11 @@ export const typePrefix = {
  */
 class Transaction {
   constructor(data) {
-    if(!txType[data.type]) {
+    if (!txType[data.type]) {
       throw new TypeError(`does not support transaction type: ${data.type}`)
     }
 
-    if(!data.chain_id) {
+    if (!data.chain_id) {
       throw new Error("chain id should not be null")
     }
 
@@ -78,7 +84,7 @@ class Transaction {
    * @return {Buffer}
    **/
   getSignBytes(msg) {
-    if(!msg){
+    if (!msg) {
       throw new Error("msg should be an object")
     }
     const signMsg = {
@@ -119,6 +125,7 @@ class Transaction {
    **/
   sign(privateKey, msg) {
     const signBytes = this.getSignBytes(msg)
+    console.log(signBytes.toString("hex"))
     const privKeyBuf = Buffer.from(privateKey, "hex")
     const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
     this.addSignature(crypto.generatePubKey(privKeyBuf), signature)
@@ -129,8 +136,8 @@ class Transaction {
    * encode signed transaction to hex which is compatible with amino
    * @param {object} opts msg field
    */
-  serialize(){
-    if(!this.signatures) {
+  serialize() {
+    if (!this.signatures) {
       throw new Error("need signature")
     }
 
@@ -154,9 +161,9 @@ class Transaction {
    * @param {Elliptic.PublicKey} unencodedPubKey
    * @return {Buffer}
    */
-  _serializePubKey(unencodedPubKey){
+  _serializePubKey(unencodedPubKey) {
     let format = 0x2
-    if(unencodedPubKey.y && unencodedPubKey.y.isOdd()){
+    if (unencodedPubKey.y && unencodedPubKey.y.isOdd()) {
       format |= 0x1
     }
     let pubBz = Buffer.concat([

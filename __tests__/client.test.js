@@ -2,6 +2,7 @@ import BncClient from "../src"
 import { checkNumber } from "../src/client"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
+import { voteOption } from "../src/gov/"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -18,7 +19,7 @@ const keystores = {
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
 const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = false) => {
-  const client = new BncClient("https://testnet-dex-asiapacific.binance.org")
+  const client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (!doNotSetPrivateKey) {
@@ -361,4 +362,47 @@ describe("BncClient test", async () => {
     expect(res.status).toBe(200)
   })
 
+  it("submitListProposal", async () => {
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const date = new Date()
+    const params = {
+      title: "list MINT-04F",
+      description: "list MINT-04F",
+      baseAsset: "MINT-04F",
+      quoteAsset: "BNB",
+      initPrice: 1,
+      address: addr,
+      initialDeposit: 1,
+      expireTime: date.setHours(date.getHours() + 1),
+      votingPeriod: 604800
+    }
+
+    const res = await client.gov.submitListProposal(params)
+    console.log(res)
+    expect(res.status).toBe(200)
+    expect(res.result[0].code).toBe(0)
+  })
+
+  it("depositProposal", async () => {
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const coins = [{
+      denom: "BNB",
+      amount: 1000
+    }]
+    const res = await client.gov.deposit(494, addr, coins)
+    console.log(res)
+    expect(res.status).toBe(200)
+    expect(res.result[0].code).toBe(0)
+  })
+
+  it("voteProposal", async () => {
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const res = await client.gov.vote(494, addr, voteOption.OptionYes)
+    console.log(res)
+    expect(res.status).toBe(200)
+    expect(res.result[0].code).toBe(0)
+  })
 })

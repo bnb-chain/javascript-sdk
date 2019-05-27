@@ -1,4 +1,4 @@
-const addMsgType = (type, msgTypeName)=>{
+const addMsgType = (type, msgTypeName) => {
   type.prototype.msgType = msgTypeName
 }
 
@@ -56,7 +56,7 @@ export class AppAccount {
 }
 
 export class TokenBalance {
-  constructor(opts){
+  constructor(opts) {
     opts = opts || {}
     this.symbol = opts.symbol || ""
     this.free = opts.free || 0
@@ -66,7 +66,7 @@ export class TokenBalance {
 }
 
 export class OpenOrder {
-  constructor(opts){
+  constructor(opts) {
     opts = opts || {}
     this.id = opts.id || ""
     this.symbol = opts.symbol || ""
@@ -80,10 +80,10 @@ export class OpenOrder {
   }
 }
 
-export class TradingPair{
-  constructor(opts){
+export class TradingPair {
+  constructor(opts) {
     opts = opts || {}
-    this.base_asset_symbol = opts.base_asset_symbol ||  ""
+    this.base_asset_symbol = opts.base_asset_symbol || ""
     this.quote_asset_symbol = opts.quote_asset_symbol || ""
     this.list_price = opts.list_price || 0
     this.tick_size = opts.tick_size || 0
@@ -92,7 +92,7 @@ export class TradingPair{
 }
 
 export class OrderBookLevel {
-  constructor(opts){
+  constructor(opts) {
     opts = opts || {}
     this.buyQty = opts.buyQty || 0
     this.buyPrice = opts.buyPrice || 0
@@ -102,12 +102,25 @@ export class OrderBookLevel {
 }
 
 export class OrderBook {
-  constructor(opts){
+  constructor(opts) {
     opts = opts || {}
     this.height = opts.height || 0
     this.levels = opts.levels || [new OrderBookLevel]
   }
 }
 
+export class SubmitProposalMsg {
+  constructor(opts) {
+    opts = opts || {}
+    this.title = opts.title || ""
+    this.description = opts.description || ""
+    this.proposal_type = opts.proposal_type || 0
+    this.proposer = opts.proposer || Buffer.alloc(0)
+    this.initial_deposit = opts.initial_deposit || []
+    this.voting_period = opts.voting_period || 0
+  }
+}
+
 addMsgType(Token, "Token")
 addMsgType(AppAccount, "bnbchain/Account")
+addMsgType(SubmitProposalMsg, "MsgSubmitProposal")
