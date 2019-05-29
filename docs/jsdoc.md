@@ -9,6 +9,8 @@
 <dd></dd>
 <dt><a href="#amino.module_encode">encode</a></dt>
 <dd></dd>
+<dt><a href="#module_gov">gov</a></dt>
+<dd></dd>
 <dt><a href="#module_ledger">ledger</a></dt>
 <dd></dd>
 <dt><a href="#module_rpc">rpc</a></dt>
@@ -24,6 +26,17 @@
 <dl>
 <dt><a href="#Transaction">Transaction</a></dt>
 <dd><p>Creates a new transaction object.</p>
+</dd>
+</dl>
+
+## Constants
+
+<dl>
+<dt><a href="#checkNumber">checkNumber</a></dt>
+<dd><p>validate the input number.</p>
+</dd>
+<dt><a href="#checkCoins">checkCoins</a></dt>
+<dd><p>basic validation of coins</p>
 </dd>
 </dl>
 
@@ -66,7 +79,6 @@
         * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
         * [.DefaultBroadcastDelegate](#module_client.DefaultBroadcastDelegate)
         * [.LedgerSigningDelegate](#module_client.LedgerSigningDelegate) ⇒ <code>function</code>
-        * [.checkNumber](#module_client.checkNumber)
     * _inner_
         * [~checkOutputs(outputs)](#module_client..checkOutputs)
         * [~calInputCoins(inputs, coins)](#module_client..calInputCoins)
@@ -512,17 +524,6 @@ The Ledger signing delegate.
 | function | <code>postSignCb</code> | 
 | function | <code>errCb</code> | 
 
-<a name="module_client.checkNumber"></a>
-
-### client.checkNumber
-validate the input number.
-
-**Kind**: static constant of [<code>client</code>](#module_client)  
-
-| Param | Type |
-| --- | --- |
-| value | <code>Number</code> | 
-
 <a name="module_client..checkOutputs"></a>
 
 ### client~checkOutputs(outputs)
@@ -941,6 +942,130 @@ prefixed with bytes length
 | fieldNum | <code>Number</code> | object field index |
 | arr | <code>Array</code> |  |
 | isByteLenPrefix | <code>Boolean</code> |  |
+
+<a name="module_gov"></a>
+
+## gov
+
+* [gov](#module_gov)
+    * _static_
+        * [.voteOption](#module_gov.voteOption)
+    * _inner_
+        * [~Gov](#module_gov..Gov)
+            * [new Gov(bncClient)](#new_module_gov..Gov_new)
+            * [.submitListProposal(listParams)](#module_gov..Gov+submitListProposal)
+            * [.submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod)](#module_gov..Gov+submitProposal) ⇒ <code>Promise</code>
+            * [.deposit(proposalId, address, coins)](#module_gov..Gov+deposit)
+            * [.vote(proposalId, voter, option)](#module_gov..Gov+vote)
+
+<a name="module_gov.voteOption"></a>
+
+### gov.voteOption
+VoteOption
+
+**Kind**: static constant of [<code>gov</code>](#module_gov)  
+**Example**  
+```js
+OptionEmpty - 0x00
+OptionYes - 0x01
+OptionAbstain - 0x02
+OptionNo - 0x03
+OptionNoWithVeto - 0x04
+```
+<a name="module_gov..Gov"></a>
+
+### gov~Gov
+**Kind**: inner class of [<code>gov</code>](#module_gov)  
+
+* [~Gov](#module_gov..Gov)
+    * [new Gov(bncClient)](#new_module_gov..Gov_new)
+    * [.submitListProposal(listParams)](#module_gov..Gov+submitListProposal)
+    * [.submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod)](#module_gov..Gov+submitProposal) ⇒ <code>Promise</code>
+    * [.deposit(proposalId, address, coins)](#module_gov..Gov+deposit)
+    * [.vote(proposalId, voter, option)](#module_gov..Gov+vote)
+
+<a name="new_module_gov..Gov_new"></a>
+
+#### new Gov(bncClient)
+
+| Param | Type |
+| --- | --- |
+| bncClient | <code>Object</code> | 
+
+<a name="module_gov..Gov+submitListProposal"></a>
+
+#### gov.submitListProposal(listParams)
+Submit a list proposal along with an initial deposit
+
+**Kind**: instance method of [<code>Gov</code>](#module_gov..Gov)  
+
+| Param | Type |
+| --- | --- |
+| listParams | <code>Object</code> | 
+
+**Example**  
+```js
+var listParams = {
+ title: 'New trading pair',
+ description: '',
+ baseAsset: 'BTC',
+ quoteAsset: 'BNB',
+ initPrice: 1,
+ address: '',
+ initialDeposit: 2000,
+ expireTime: 1570665600,
+ votingPeriod: 604800
+}
+```
+<a name="module_gov..Gov+submitProposal"></a>
+
+#### gov.submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod) ⇒ <code>Promise</code>
+Submit a proposal along with an initial deposit. 
+Proposal title, description, type and deposit can 
+be given directly or through a proposal JSON file.
+
+**Kind**: instance method of [<code>Gov</code>](#module_gov..Gov)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| address | <code>String</code> | 
+| title | <code>String</code> | 
+| description | <code>String</code> | 
+| proposalType | <code>Number</code> | 
+| initialDeposit | <code>Number</code> | 
+| votingPeriod | <code>String</code> | 
+
+<a name="module_gov..Gov+deposit"></a>
+
+#### gov.deposit(proposalId, address, coins)
+Deposit tokens for activing proposal
+
+**Kind**: instance method of [<code>Gov</code>](#module_gov..Gov)  
+
+| Param | Type |
+| --- | --- |
+| proposalId | <code>Number</code> | 
+| address | <code>String</code> | 
+| coins | <code>Array</code> | 
+
+**Example**  
+```js
+var coins = [{
+  "denom": "BNB",
+  "amount": 10
+}] 
+```
+<a name="module_gov..Gov+vote"></a>
+
+#### gov.vote(proposalId, voter, option)
+**Kind**: instance method of [<code>Gov</code>](#module_gov..Gov)  
+
+| Param | Type |
+| --- | --- |
+| proposalId | <code>Number</code> | 
+| voter | <code>String</code> | 
+| option | <code>VoteOption</code> | 
 
 <a name="module_ledger"></a>
 
@@ -1627,4 +1752,26 @@ serializes a public key in a 33-byte compressed format.
 | Param | Type |
 | --- | --- |
 | unencodedPubKey | <code>Elliptic.PublicKey</code> | 
+
+<a name="checkNumber"></a>
+
+## checkNumber
+validate the input number.
+
+**Kind**: global constant  
+
+| Param | Type |
+| --- | --- |
+| value | <code>Number</code> | 
+
+<a name="checkCoins"></a>
+
+## checkCoins
+basic validation of coins
+
+**Kind**: global constant  
+
+| Param | Type |
+| --- | --- |
+| coins | <code>Array</code> | 
 

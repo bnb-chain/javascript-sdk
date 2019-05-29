@@ -8,7 +8,7 @@ import cryp from "crypto-browserify"
 import uuid from "uuid"
 import is from "is_js"
 import bip32 from "bip32"
-import  * as bip39  from "bip39"
+import * as bip39 from "bip39"
 import { ec as EC } from "elliptic"
 import ecc from "tiny-secp256k1"
 
@@ -46,13 +46,13 @@ export const decodeAddress = (value) => {
 export const checkAddress = (address) => {
   try {
     const decodeAddress = bech32.decode(address)
-    if(decodeAddress.prefix === "tbnb" ||
-       decodeAddress.prefix === "bnb") {
+    if (decodeAddress.prefix === "tbnb" ||
+      decodeAddress.prefix === "bnb") {
       return true
     }
 
     return false
-  } catch(err) {
+  } catch (err) {
     return false
   }
 }
@@ -272,7 +272,7 @@ export const validateMnemonic = bip39.validateMnemonic
  * @return {string} hexstring
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0) => {
-  if(!bip39.validateMnemonic(mnemonic)){
+  if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error("wrong mnemonic format")
   }
   const seed = bip39.mnemonicToSeedSync(mnemonic)
