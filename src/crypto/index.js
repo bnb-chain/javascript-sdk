@@ -97,6 +97,9 @@ export const getPublicKey = publicKey => {
  * @return {string} public key hexstring
  */
 export const getPublicKeyFromPrivateKey = privateKeyHex => {
+  if (!privateKeyHex || privateKeyHex.length !== PRIVKEY_LEN * 2) {
+    throw new Error("invalid privateKey")
+  }
   const curve = new EC(CURVE)
   const keypair = curve.keyFromPrivate(privateKeyHex, "hex")
   const unencodedPubKey = keypair.getPublic().encode("hex")
