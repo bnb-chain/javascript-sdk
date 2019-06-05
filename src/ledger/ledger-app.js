@@ -224,7 +224,7 @@ class LedgerApp {
         Buffer.alloc(0),
         ACCEPT_STATUSES
       )
-      apduResponse = Buffer.from(apduResponse, "hex")
+      if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
       const returnCode = apduResponse.slice(-2)
       result["test_mode"] = apduResponse[0] !== 0
       result["major"] = apduResponse[1]
@@ -285,7 +285,7 @@ class LedgerApp {
         this._serializeHDPath(hdPath),
         ACCEPT_STATUSES
       )
-      apduResponse = Buffer.from(apduResponse, "hex")
+      if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
       const returnCode = apduResponse.slice(-2)
       result["pk"] = apduResponse.slice(0, 1 + 64)
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
@@ -364,7 +364,7 @@ class LedgerApp {
         chunksCount,
         chunk
       )
-      apduResponse = Buffer.from(apduResponse, "hex")
+      if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
       let returnCode = apduResponse.slice(-2)
 
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
@@ -516,7 +516,7 @@ class LedgerApp {
       data,
       ACCEPT_STATUSES
     )
-    apduResponse = Buffer.from(apduResponse, "hex")
+    if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
     let returnCode = apduResponse.slice(-2)
     result["return_code"] = returnCode[0] * 256 + returnCode[1]
     result["error_message"] = this._errorMessage(result["return_code"])
