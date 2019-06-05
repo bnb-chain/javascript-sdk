@@ -11,16 +11,33 @@ The Binance Chain JavaScript SDK allows browsers and node.js clients to interact
 
 # Installation
 
-Windows users: Please install [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) first.
+Important, please follow the instructions for your OS below:
 
-Linux users: Note that Ubuntu Xenial and newer distributions are recommended, especially when using Travis or other CI systems. You may need some dev packages to be installed on your system for USB support. On Debian-based distributions (like Ubuntu) you should install them with this command:
+**Windows users:** Please install [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) first.
+
+**Mac users:** Make sure XCode Command Line Tools are installed: `xcode-select --install`.
+
+**Linux users:** Note that Ubuntu Xenial and newer distributions are recommended, especially when using Travis or other CI systems. You may need some dev packages to be installed on your system for USB support. On Debian-based distributions (like Ubuntu) you should install them with this command:
 ```bash
 $ sudo apt-get install libudev-dev libusb-dev usbutils
 ```
 
-Install the NPM package:
+### Install the NPM package
 ```bash
 $ npm i @binance-chain/javascript-sdk
+```
+
+### Use with Webpack
+
+We often see Webpack builds failing with the SDK due to the `usb` dependency, but adding this to your Webpack config should fix that:
+```js
+module.exports = {
+  plugins: [new webpack.IgnorePlugin(/^usb$/)]
+}
+```
+or
+```js
+config.plugins.push(new webpack.IgnorePlugin(/^usb$/))
 ```
 
 # API
