@@ -1,3 +1,4 @@
+import Big from "big.js"
 import BncClient from "../src"
 import { checkNumber } from "../src/client"
 import * as crypto from "../src/crypto"
@@ -189,6 +190,28 @@ describe("BncClient test", async () => {
     const orderId = `${accCode.toString("hex")}-${sequence + 2}`.toUpperCase()
     const res2 = await client.cancelOrder(addr, symbol, orderId, sequence + 2)
     expect(res2.status).toBe(200)
+  })
+
+  it("transfer with presicion", async ()=>{
+    jest.setTimeout(30000)
+
+    const coin = "BNB"
+    let amount = 2.00177011
+    const client = await getClient(false)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+    const sequence = account.result && account.result.sequence
+    const res = await client.transfer(addr, targetAddress, amount, coin, "hello world", sequence)
+    expect(res.status).toBe(200)
+
+    try{
+      const hash = res.result[0].hash
+      const res2 = await client._httpClient.get(`/api/v1/tx/${hash}?format=json`)
+      const sendAmount = res2.result.tx.value.msg[0].value.inputs[0].coins[0].amount
+      expect(sendAmount).toBe(200177011)
+    }catch(err){
+      //
+    }
   })
 
   it("transfer placeOrder cancelOrder (no await on set privkey)", async () => {

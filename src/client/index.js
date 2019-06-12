@@ -70,7 +70,7 @@ export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb, h
 
 /**
  * validate the input number.
- * @param {Array} outputs 
+ * @param {Array} outputs
  */
 const checkOutputs = (outputs) => {
   outputs.forEach(transfer => {
@@ -86,8 +86,8 @@ const checkOutputs = (outputs) => {
 
 /**
  * sum corresponding input coin
- * @param {Array} inputs 
- * @param {Array} coins 
+ * @param {Array} inputs
+ * @param {Array} coins
  */
 const calInputCoins = (inputs, coins) => {
   coins.forEach((coin) => {
@@ -237,7 +237,9 @@ export class BncClient {
   async transfer(fromAddress, toAddress, amount, asset, memo = "", sequence = null) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
-    amount = parseInt(amount * Math.pow(10, 8))
+
+    amount = new Big(amount)
+    amount = Number(amount.mul(Math.pow(10,8)).toString())
 
     checkNumber(amount, "amount")
 
