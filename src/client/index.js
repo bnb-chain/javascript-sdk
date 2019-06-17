@@ -461,6 +461,61 @@ export class BncClient {
   }
 
   /**
+   * @param {String} address
+   * @param {Number} proposalId
+   * @param {String} baseAsset
+   * @param {String} quoteAsset
+   * @param {Number} initPrice
+   * @param {Number} sequence optional sequence
+   * @return {Promise} resolves with response (success or fail)
+   */
+  async list(address, proposalId, baseAsset, quoteAsset, initPrice, sequence = null) {
+    const accCode = crypto.decodeAddress(address)
+
+    if (!address) {
+      throw new Error("address should not be falsy")
+    }
+
+    if(proposalId <= 0){
+      throw new Error("proposal id should larger than 0")
+    }
+
+    if(initPrice <= 0){
+      throw new Error("price should larger than 0")
+    }
+
+    if (!baseAsset) {
+      throw new Error("baseAsset should not be falsy")
+    }
+
+    if (!quoteAsset) {
+      throw new Error("quoteAsset should not be falsy")
+    }
+
+    const init_price = Number(new Big(initPrice).mul(10**8).toString())
+
+    const listMsg = {
+      from: accCode,
+      proposal_id: proposalId,
+      base_asset_symbol: baseAsset,
+      quote_asset_symbol: quoteAsset,
+      init_price: init_price,
+      msgType: "ListMsg"
+    }
+
+    const signMsg = {
+      base_asset_symbol: baseAsset,
+      from: address,
+      init_price: init_price,
+      proposal_id: proposalId,
+      quote_asset_symbol: quoteAsset,
+    }
+
+    const signedTx = await this._prepareTransaction(listMsg, signMsg, address, sequence, "")
+    return this._broadcastDelegate(signedTx)
+  }
+
+  /**
    * Prepare a serialized raw transaction for sending to the blockchain.
    * @param {Object} msg the msg object
    * @param {Object} stdSignMsg the sign doc object used to generate a signature
