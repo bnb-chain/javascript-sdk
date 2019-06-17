@@ -390,15 +390,15 @@ describe("BncClient test", async () => {
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
     const date = new Date()
     const params = {
-      title: "list MINT-04F",
-      description: "list MINT-04F",
-      baseAsset: "MINT-04F",
+      title: "list MINT-200",
+      description: "list MINT-200",
+      baseAsset: "MINT-200",
       quoteAsset: "BNB",
       initPrice: 1,
       address: addr,
-      initialDeposit: 1,
+      initialDeposit: 2000,
       expireTime: date.setHours(date.getHours() + 1),
-      votingPeriod: 604800
+      votingPeriod: 300
     }
 
     const res = await client.gov.submitListProposal(params)
@@ -428,4 +428,18 @@ describe("BncClient test", async () => {
     expect(res.status).toBe(200)
     expect(res.result[0].code).toBe(0)
   })
+
+  it("list MINT", async ()=>{
+    const client = await getClient(true)
+    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    try{
+      const res = await client.list(addr, 620, "MINT-200", "BNB", 1)
+      console.log(res)
+      expect(res.status).toBe(200)
+      expect(res.result[0].code).toBe(0)
+    }catch(err){
+      expect(err.message).toBe("trading pair exists")
+    }
+  })
+
 })
