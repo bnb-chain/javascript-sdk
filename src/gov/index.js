@@ -46,7 +46,7 @@ class Gov {
   static instance
 
   /**
-   * @param {Object} bncClient 
+   * @param {Object} bncClient
    */
   constructor(bncClient) {
     if (!Gov.instance) {
@@ -59,7 +59,7 @@ class Gov {
 
   /**
    * Submit a list proposal along with an initial deposit
-   * @param {Object} listParams 
+   * @param {Object} listParams
    * @example
    * var listParams = {
    *  title: 'New trading pair',
@@ -89,15 +89,15 @@ class Gov {
   }
 
   /**
-   * Submit a proposal along with an initial deposit. 
-   * Proposal title, description, type and deposit can 
+   * Submit a proposal along with an initial deposit.
+   * Proposal title, description, type and deposit can
    * be given directly or through a proposal JSON file.
-   * @param {String} address 
-   * @param {String} title 
-   * @param {String} description 
-   * @param {Number} proposalType 
-   * @param {Number} initialDeposit 
-   * @param {String} votingPeriod 
+   * @param {String} address
+   * @param {String} title
+   * @param {String} description
+   * @param {Number} proposalType
+   * @param {Number} initialDeposit
+   * @param {String} votingPeriod
    * @return {Promise} resolves with response (success or fail)
    */
   async submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod) {
@@ -107,7 +107,7 @@ class Gov {
       amount: new Big(initialDeposit).mul(Math.pow(10, 8)).toString()
     }]
 
-    votingPeriod = +(new Big(votingPeriod).mul(Math.pow(10, 9)).toString())
+    votingPeriod = +(new Big(votingPeriod).mul(Math.pow(10, 8)).toString())
 
     const proposalMsg = {
       title,
@@ -137,14 +137,14 @@ class Gov {
 
   /**
    * Deposit tokens for activing proposal
-   * @param {Number} proposalId 
-   * @param {String} address 
+   * @param {Number} proposalId
+   * @param {String} address
    * @param {Array} coins
    * @example
    * var coins = [{
    *   "denom": "BNB",
    *   "amount": 10
-   * }] 
+   * }]
    */
   async deposit(proposalId, address, coins) {
     const accAddress = crypto.decodeAddress(address)
@@ -180,10 +180,10 @@ class Gov {
   }
 
   /**
-   * 
-   * @param {Number} proposalId 
-   * @param {String} voter 
-   * @param {VoteOption} option 
+   *
+   * @param {Number} proposalId
+   * @param {String} voter
+   * @param {VoteOption} option
    */
   async vote(proposalId, voter, option) {
     const accAddress = crypto.decodeAddress(voter)
