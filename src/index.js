@@ -1,7 +1,7 @@
 import * as client from "./client"
 import * as crypto from "./crypto"
 import * as encoder from "./encoder"
-import * as decoder from './decoder'
+import * as decoder from "./decoder"
 import * as utils from "./utils"
 import rpc from "./rpc/client"
 import Ledger from "./ledger"

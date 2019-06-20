@@ -6,6 +6,8 @@ import * as crypto from '../crypto/'
 import { checkCoins } from '../utils/validateHelper'
 import proposalType from './proposalType'
 
+const BASENUMBER = Math.pow(10, 8)
+
 const proposalTypeMapping = {
   0x04: 'ListTradingPair',
   0x00: 'Nil',
@@ -77,7 +79,7 @@ class Gov {
     const listTradingPairObj = {
       base_asset_symbol: listParams.baseAsset,
       quote_asset_symbol: listParams.quoteAsset,
-      init_price: +(new Big(listParams.initPrice).mul(Math.pow(10, 8)).toString()),
+      init_price: +(new Big(listParams.initPrice).mul(BASENUMBER).toString()),
       description: listParams.description,
       expire_time: new Date(listParams.expireTime).toISOString(),
     }
@@ -104,10 +106,10 @@ class Gov {
     const accAddress = crypto.decodeAddress(address)
     const coins = [{
       denom: 'BNB',
-      amount: new Big(initialDeposit).mul(Math.pow(10, 8)).toString()
+      amount: new Big(initialDeposit).mul(BASENUMBER).toString()
     }]
 
-    votingPeriod = +(new Big(votingPeriod).mul(Math.pow(10, 8)).toString())
+    votingPeriod = +(new Big(votingPeriod).mul(BASENUMBER).toString())
 
     const proposalMsg = {
       title,
@@ -116,7 +118,7 @@ class Gov {
       proposer: accAddress,
       initial_deposit: [{
         denom: 'BNB',
-        amount: +(new Big(initialDeposit).mul(Math.pow(10, 8)).toString())
+        amount: +(new Big(initialDeposit).mul(BASENUMBER).toString())
       }],
       voting_period: votingPeriod,
       msgType: 'MsgSubmitProposal'
@@ -155,7 +157,7 @@ class Gov {
     coins.forEach(coin => {
       amount.push({
         denom: coin.denom,
-        amount: +(new Big(coin.amount).mul(Math.pow(10, 8)).toString())
+        amount: +(new Big(coin.amount).mul(BASENUMBER).toString())
       })
     })
 
