@@ -22,7 +22,10 @@ import {
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
 const MNEMONIC_LEN = 256
+const DECODED_ADDRESS_LENGTH = 20
 const CURVE = "secp256k1"
+const MAINNET_PREFIX = "bnb"
+const TESTNET_PREFIX = "tbnb"
 
 //hdpath
 const HDPATH = "44'/714'/0'/0/"
@@ -45,9 +48,16 @@ export const decodeAddress = (value) => {
  */
 export const checkAddress = (address) => {
   try {
+    if(!(address.startsWith(TESTNET_PREFIX) ||
+     address.startsWith(MAINNET_PREFIX))) {
+      return false
+    }
+
     const decodeAddress = bech32.decode(address)
-    if (decodeAddress.prefix === "tbnb" ||
-      decodeAddress.prefix === "bnb") {
+    const decodeAddressLength = decodeAddress(address).length
+    if (decodeAddressLength === DECODED_ADDRESS_LENGTH &&
+      (decodeAddress.prefix === TESTNET_PREFIX ||
+      decodeAddress.prefix === MAINNET_PREFIX)) {
       return true
     }
 
@@ -63,7 +73,7 @@ export const checkAddress = (address) => {
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
  */
-export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
+export const encodeAddress = (value, prefix = TESTNET_PREFIX, type = "hex") => {
   const words = bech32.toWords(Buffer.from(value, type))
   return bech32.encode(prefix, words)
 }
