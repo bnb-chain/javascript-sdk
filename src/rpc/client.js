@@ -20,8 +20,10 @@ import {
   validateOffsetLimit
 } from "../utils/validateHelper"
 
+const BASENUMBER = Math.pow(10, 8)
+
 const divide = (num) => {
-  return +(new big(num).div(Math.pow(10, 8)).toString())
+  return +(new big(num).div(BASENUMBER).toString())
 }
 
 const convertObjectArrayNum = (objArr, keys) => {
@@ -78,8 +80,8 @@ class Client extends BaseRpc {
 
   /**
    * get tokens by offset and limit
-   * @param {Number} offset 
-   * @param {Number} limit 
+   * @param {Number} offset
+   * @param {Number} limit
    * @returns {Array} token list
    */
   async listAllTokens(offset, limit) {
@@ -118,7 +120,7 @@ class Client extends BaseRpc {
   }
 
   /**
-   * @param {Array} balances 
+   * @param {Array} balances
    */
   async getBalances(address) {
     const account = await this.getAccount(address)
@@ -147,8 +149,8 @@ class Client extends BaseRpc {
 
   /**
    * get balance by symbol and address
-   * @param {String} address 
-   * @param {String} symbol 
+   * @param {String} address
+   * @param {String} symbol
    * @returns {Object}
    */
   async getBalance(address, symbol) {
@@ -159,8 +161,8 @@ class Client extends BaseRpc {
   }
 
   /**
-   * @param {String} address 
-   * @param {String} symbol 
+   * @param {String} address
+   * @param {String} symbol
    * @returns {Object}
    */
   async getOpenOrders(address, symbol) {
@@ -174,8 +176,8 @@ class Client extends BaseRpc {
   }
 
   /**
-   * @param {Number} offset 
-   * @param {Number} limit 
+   * @param {Number} offset
+   * @param {Number} limit
    * @returns {Array}
    */
   async getTradingPairs(offset, limit) {
@@ -190,7 +192,7 @@ class Client extends BaseRpc {
   }
 
   /**
-   * @param {String} tradePair 
+   * @param {String} tradePair
    * @returns {Array}
    */
   async getDepth(tradePair) {

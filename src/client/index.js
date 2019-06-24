@@ -9,6 +9,8 @@ import TokenManagement from "../token/"
 import Gov from "../gov/"
 import Big from "big.js"
 
+const BASENUMBER = Math.pow(10, 8)
+
 export const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
@@ -239,7 +241,7 @@ export class BncClient {
     const toAccCode = crypto.decodeAddress(toAddress)
 
     amount = new Big(amount)
-    amount = Number(amount.mul(Math.pow(10,8)).toString())
+    amount = Number(amount.mul(BASENUMBER).toString())
 
     checkNumber(amount, "amount")
 
@@ -327,7 +329,7 @@ export class BncClient {
       item.coins = item.coins.sort((a, b) => a.denom.localeCompare(b.denom))
       item.coins.forEach(coin => {
         const amount = new Big(coin.amount)
-        coin.amount = Number(amount.mul(Math.pow(10, 8)).toString())
+        coin.amount = Number(amount.mul(BASENUMBER).toString())
       })
     })
 
@@ -436,8 +438,8 @@ export class BncClient {
       symbol: symbol,
       ordertype: 2,
       side,
-      price: parseFloat(bigPrice.mul(Math.pow(10, 8)).toString(), 10),
-      quantity: parseFloat(bigQuantity.mul(Math.pow(10, 8)).toString(), 10),
+      price: parseFloat(bigPrice.mul(BASENUMBER).toString(), 10),
+      quantity: parseFloat(bigQuantity.mul(BASENUMBER).toString(), 10),
       timeinforce: timeinforce,
       msgType: "NewOrderMsg",
     }
@@ -492,7 +494,7 @@ export class BncClient {
       throw new Error("quoteAsset should not be falsy")
     }
 
-    const init_price = Number(new Big(initPrice).mul(10**8).toString())
+    const init_price = Number(new Big(initPrice).mul(BASENUMBER).toString())
 
     const listMsg = {
       from: accCode,

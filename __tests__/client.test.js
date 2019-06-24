@@ -1,4 +1,3 @@
-import Big from "big.js"
 import BncClient from "../src"
 import { checkNumber } from "../src/client"
 import * as crypto from "../src/crypto"
