@@ -48,7 +48,7 @@ export const decodeAddress = (value) => {
  */
 export const checkAddress = (address) => {
   try {
-    if(!(address.startsWith(TESTNET_PREFIX) ||
+    if (!(address.startsWith(TESTNET_PREFIX) ||
      address.startsWith(MAINNET_PREFIX))) {
       return false
     }
