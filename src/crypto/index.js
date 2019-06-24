@@ -22,7 +22,7 @@ import {
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
 const MNEMONIC_LEN = 256
-const DECODED_ADDRESS_LENGTH = 20
+const DECODED_ADDRESS_LEN = 20
 const CURVE = "secp256k1"
 const MAINNET_PREFIX = "bnb"
 const TESTNET_PREFIX = "tbnb"
@@ -48,14 +48,13 @@ export const decodeAddress = (value) => {
  */
 export const checkAddress = (address) => {
   try {
-    if (!(address.startsWith(TESTNET_PREFIX) ||
-     address.startsWith(MAINNET_PREFIX))) {
+    if (!(address.startsWith(TESTNET_PREFIX) || address.startsWith(MAINNET_PREFIX))){
       return false
     }
 
     const decodeAddress = bech32.decode(address)
     const decodeAddressLength = decodeAddress(address).length
-    if (decodeAddressLength === DECODED_ADDRESS_LENGTH &&
+    if (decodeAddressLength === DECODED_ADDRESS_LEN &&
       (decodeAddress.prefix === TESTNET_PREFIX ||
       decodeAddress.prefix === MAINNET_PREFIX)) {
       return true
