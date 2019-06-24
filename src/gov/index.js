@@ -109,7 +109,7 @@ class Gov {
       amount: new Big(initialDeposit).mul(BASENUMBER).toString()
     }]
 
-    votingPeriod = +(new Big(votingPeriod).mul(BASENUMBER).toString())
+    votingPeriod = +(new Big(votingPeriod).mul(10**9).toString())
 
     const proposalMsg = {
       title,
