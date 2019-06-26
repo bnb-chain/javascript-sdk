@@ -24,6 +24,7 @@ const PRIVKEY_LEN = 32
 const MNEMONIC_LEN = 256
 const DECODED_ADDRESS_LEN = 20
 const CURVE = "secp256k1"
+const TESTNET_PREFIX = "tbnb"
 
 //hdpath
 const HDPATH = "44'/714'/0'/0/"
@@ -45,16 +46,16 @@ export const decodeAddress = (value) => {
  * @param {string} hrp the prefix to check for the bech32 address 
  * @return {boolean}
  */
-export const checkAddress = (address, prefix) => {
+export const checkAddress = (address, hrp) => {
   try {
-    if (!address.startsWith(prefix)){
+    if (!address.startsWith(hrp)){
       return false
     }
 
     const decodeAddress = bech32.decode(address)
     const decodeAddressLength = decodeAddress(address).length
     if (decodeAddressLength === DECODED_ADDRESS_LEN &&
-      decodeAddress.prefix === prefix) {
+      decodeAddress.prefix === hrp) {
       return true
     }
 
