@@ -24,7 +24,6 @@ const PRIVKEY_LEN = 32
 const MNEMONIC_LEN = 256
 const DECODED_ADDRESS_LEN = 20
 const CURVE = "secp256k1"
-const TESTNET_PREFIX = "tbnb"
 
 //hdpath
 const HDPATH = "44'/714'/0'/0/"
@@ -71,7 +70,7 @@ export const checkAddress = (address, hrp) => {
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
  */
-export const encodeAddress = (value, prefix = TESTNET_PREFIX, type = "hex") => {
+export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
   const words = bech32.toWords(Buffer.from(value, type))
   return bech32.encode(prefix, words)
 }
