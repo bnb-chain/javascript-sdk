@@ -755,10 +755,11 @@ export class BncClient {
   /**
    * Validates an address.
    * @param {String} address
+   * @param {String prefix}
    * @return {Boolean}
    */
-  checkAddress(address) {
-    return crypto.checkAddress(address)
+  checkAddress(address, prefix = this.addressPrefix) {
+    return crypto.checkAddress(address, prefix)
   }
 
   /**
