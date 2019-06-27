@@ -22,6 +22,7 @@ import {
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
 const MNEMONIC_LEN = 256
+const DECODED_ADDRESS_LEN = 20
 const CURVE = "secp256k1"
 
 //hdpath
@@ -41,13 +42,19 @@ export const decodeAddress = (value) => {
 /**
  * Checks whether an address is valid.
  * @param {string} address the bech32 address to decode
+ * @param {string} hrp the prefix to check for the bech32 address 
  * @return {boolean}
  */
-export const checkAddress = (address) => {
+export const checkAddress = (address, hrp) => {
   try {
-    const decodeAddress = bech32.decode(address)
-    if (decodeAddress.prefix === "tbnb" ||
-      decodeAddress.prefix === "bnb") {
+    if (!address.startsWith(hrp)){
+      return false
+    }
+
+    const decodedAddress = bech32.decode(address)
+    const decodedAddressLength = decodeAddress(address).length
+    if (decodedAddressLength === DECODED_ADDRESS_LEN &&
+      decodedAddress.prefix === hrp) {
       return true
     }
 
