@@ -51,10 +51,10 @@ export const checkAddress = (address, hrp) => {
       return false
     }
 
-    const decodeAddress = bech32.decode(address)
-    const decodeAddressLength = decodeAddress(address).length
-    if (decodeAddressLength === DECODED_ADDRESS_LEN &&
-      decodeAddress.prefix === hrp) {
+    const decodedAddress = bech32.decode(address)
+    const decodedAddressLength = decodeAddress(address).length
+    if (decodedAddressLength === DECODED_ADDRESS_LEN &&
+      decodedAddress.prefix === hrp) {
       return true
     }
 
