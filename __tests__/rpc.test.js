@@ -37,7 +37,6 @@ describe("rpcClient test", async () => {
   it("rest net_info", async () => {
     const client = getClient("https")
     const res = await client.netInfo()
-    console.log(res)
     expect(res).toBeTruthy()
     expect(res.peers.length).toBeGreaterThanOrEqual(0)
   })
