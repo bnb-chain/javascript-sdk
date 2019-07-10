@@ -1,6 +1,6 @@
 {
   "name": "@binance-chain/javascript-sdk",
-  "version": "2.14.0",
+  "version": "2.14.1",
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "scripts": {
@@ -58,6 +58,7 @@
     "cross-env": "^5.2.0",
     "eslint": "^5.11.1",
     "http-server": "^0.11.1",
+    "husky": "^3.0.0",
     "jest": "^23.6.0",
     "jsdoc-to-markdown": "^4.0.1",
     "qunit": "^2.9.2"

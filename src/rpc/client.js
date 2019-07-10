@@ -103,12 +103,13 @@ class Client extends BaseRpc {
    * @returns {Object} Account info
    */
   async getAccount(address) {
-    const addr = crypto.decodeAddress(address)
-    const addrHex = Buffer.concat([Buffer.from("account:"), addr])
+    // const addr = crypto.decodeAddress(address)
+    // const addrHex = Buffer.concat([Buffer.from("account:"), addr])
 
     const res = await this.abciQuery({
-      path: "/store/acc/key",
-      data: addrHex
+      // path: "/store/acc/key",
+      path: `/account/${address}`,
+      // data: addrHex
     })
 
     const result = new AppAccount()
