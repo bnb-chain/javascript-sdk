@@ -25,10 +25,10 @@ const Ledger = module.exports
 Ledger.app = Ledger.LedgerApp = require("./ledger-app")
 
 Ledger.transports = {
-  u2f: moduleExists(LEDGER_U2F_TRANSPORT_MODULE) && require(LEDGER_U2F_TRANSPORT_MODULE).default,
-  wble: moduleExists(LEDGER_WEB_BLE_TRANSPORT_MODULE) && require(LEDGER_WEB_BLE_TRANSPORT_MODULE).default,
+  u2f: require(LEDGER_U2F_TRANSPORT_MODULE).default,
+  wble: require(LEDGER_WEB_BLE_TRANSPORT_MODULE).default,
 
-  // requiring the node transport in the browser causes a bit of an issue with webpack!
+  // requiring the node transport in the browser causes a bit of an issue with webpack! this is a conditional require
   node: !isBrowser && moduleExists(LEDGER_NODE_HID_TRANSPORT_MODULE) ? require(LEDGER_NODE_HID_TRANSPORT_MODULE).default : null,
 }
 
