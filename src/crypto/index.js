@@ -279,13 +279,15 @@ export const validateMnemonic = bip39.validateMnemonic
  * @param {string} mnemonic the mnemonic phrase words
  * @param {Boolean} derive derive a private key using the default HD path (default: true)
  * @param {number} index the bip44 address index (default: 0)
+ * @param {string} password according to bip39
  * @return {string} hexstring
  */
-export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0) => {
+export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0, password = '') => {
+
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error("wrong mnemonic format")
   }
-  const seed = bip39.mnemonicToSeedSync(mnemonic)
+  const seed = bip39.mnemonicToSeedSync(mnemonic, password)
   if (derive) {
     const master = bip32.fromSeed(seed)
     const child = master.derivePath(HDPATH + index)
