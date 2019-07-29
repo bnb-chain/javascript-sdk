@@ -36,8 +36,6 @@ class HttpRequest {
       .then(response => {
         return { result: response.data, status: response.status }
       }).catch(err => {
-        // TODO: what if it's not json?
-        console.error("error in HttpRequest#request", err, err.statusCode)
         let error = err
         try {
           const msgObj = err.response && err.response.data
