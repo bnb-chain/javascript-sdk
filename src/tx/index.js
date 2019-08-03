@@ -124,6 +124,14 @@ class Transaction {
    * @return {Transaction}
    **/
   sign(privateKey, msg) {
+    if(!privateKey){
+      throw new Error("private key should not be null")
+    }
+
+    if(!msg){
+      throw new Error("signing message should not be null")
+    }
+
     const signBytes = this.getSignBytes(msg)
     const privKeyBuf = Buffer.from(privateKey, "hex")
     const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
