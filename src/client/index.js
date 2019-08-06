@@ -108,10 +108,11 @@ const calInputCoins = (inputs, coins) => {
  */
 export class BncClient {
   /**
-   * @param {string} server Binance Chain public url
+   * @param {String} server Binance Chain public url
    * @param {Boolean} useAsyncBroadcast use async broadcast mode, faster but less guarantees (default off)
+   * @param {Number} source where does this transaction come from (default 0)
    */
-  constructor(server, useAsyncBroadcast = false) {
+  constructor(server, useAsyncBroadcast = false, source = 0) {
     if (!server) {
       throw new Error("Binance chain server should not be null")
     }
@@ -119,6 +120,7 @@ export class BncClient {
     this._signingDelegate = DefaultSigningDelegate
     this._broadcastDelegate = DefaultBroadcastDelegate
     this._useAsyncBroadcast = useAsyncBroadcast
+    this._source = source
     this.tokens = new TokenManagement(this)
     this.gov = new Gov(this)
   }
@@ -542,6 +544,7 @@ export class BncClient {
       memo: memo,
       msg,
       sequence: parseInt(sequence),
+      source: this._source,
       type: msg.msgType,
     }
 

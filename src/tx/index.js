@@ -48,6 +48,7 @@ export const typePrefix = {
  *   msg: {},
  *   type: 'NewOrderMsg',
  *   sequence: 29,
+ *   source: 0
  * };
  * var tx = new Transaction(rawTx);
  * @property {Buffer} raw The raw vstruct encoded transaction
@@ -57,6 +58,7 @@ export const typePrefix = {
  * @param {String} type transaction type
  * @param {Object} data.msg object data of tx type
  * @param {Number} data.sequence transaction counts
+ * @param {Number} data.source where does this transaction come from
  */
 class Transaction {
   constructor(data) {
@@ -76,6 +78,7 @@ class Transaction {
     this.chain_id = data.chain_id
     this.msgs = data.msg ? [data.msg] : []
     this.memo = data.memo
+    this.source = data.source || 0 // default value is 0
   }
 
   /**
@@ -94,7 +97,7 @@ class Transaction {
       "memo": this.memo,
       "msgs": [msg],
       "sequence": this.sequence.toString(),
-      "source": "1"
+      "source": this.source.toString()
     }
 
     return encoder.convertObjectToSignBytes(signMsg)
@@ -154,7 +157,7 @@ class Transaction {
       msg: [msg],
       signatures: this.signatures,
       memo: this.memo,
-      source: 1, // web wallet value is 1
+      source: this.source, // sdk value is 0, web wallet value is 1
       data: "",
       msgType: txType.StdTx
     }

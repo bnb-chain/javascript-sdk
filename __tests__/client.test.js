@@ -42,7 +42,6 @@ const wait = ms => {
     }, ms)
   })
 }
-console.log(checkNumber)
 // describe("checkNumber", async () => {
 it("ensures that the number is positive", async () => {
   expect(() => checkNumber(-100, "-100")).toThrowError("-100 should be a positive number")
