@@ -758,7 +758,7 @@ export class BncClient {
   /**
    * Validates an address.
    * @param {String} address
-   * @param {String prefix}
+   * @param {String} prefix
    * @return {Boolean}
    */
   checkAddress(address, prefix = this.addressPrefix) {

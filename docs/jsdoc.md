@@ -47,7 +47,7 @@
 * [client](#module_client)
     * _static_
         * [.BncClient](#module_client.BncClient)
-            * [new exports.BncClient(server, useAsyncBroadcast)](#new_module_client.BncClient_new)
+            * [new exports.BncClient(server, useAsyncBroadcast, source)](#new_module_client.BncClient_new)
             * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
             * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
             * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
@@ -75,7 +75,7 @@
             * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
             * [.recoverAccountFromMnemonic(mneomnic)](#module_client.BncClient+recoverAccountFromMnemonic)
             * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
-            * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
+            * [.checkAddress(address, prefix)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
             * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
         * [.DefaultSigningDelegate](#module_client.DefaultSigningDelegate) ⇒ [<code>Transaction</code>](#Transaction)
         * [.DefaultBroadcastDelegate](#module_client.DefaultBroadcastDelegate)
@@ -92,7 +92,7 @@ The Binance Chain client.
 **Kind**: static class of [<code>client</code>](#module_client)  
 
 * [.BncClient](#module_client.BncClient)
-    * [new exports.BncClient(server, useAsyncBroadcast)](#new_module_client.BncClient_new)
+    * [new exports.BncClient(server, useAsyncBroadcast, source)](#new_module_client.BncClient_new)
     * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
     * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
     * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
@@ -120,17 +120,18 @@ The Binance Chain client.
     * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
     * [.recoverAccountFromMnemonic(mneomnic)](#module_client.BncClient+recoverAccountFromMnemonic)
     * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
-    * [.checkAddress(address)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
+    * [.checkAddress(address, prefix)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
     * [.getClientKeyAddress()](#module_client.BncClient+getClientKeyAddress) ⇒ <code>String</code>
 
 <a name="new_module_client.BncClient_new"></a>
 
-#### new exports.BncClient(server, useAsyncBroadcast)
+#### new exports.BncClient(server, useAsyncBroadcast, source)
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| server | <code>string</code> |  | Binance Chain public url |
+| server | <code>String</code> |  | Binance Chain public url |
 | useAsyncBroadcast | <code>Boolean</code> | <code>false</code> | use async broadcast mode, faster but less guarantees (default off) |
+| source | <code>Number</code> | <code>0</code> | where does this transaction come from (default 0) |
 
 <a name="module_client.BncClient+initChain"></a>
 
@@ -489,7 +490,7 @@ Recovers an account using private key.
 
 <a name="module_client.BncClient+checkAddress"></a>
 
-#### bncClient.checkAddress(address) ⇒ <code>Boolean</code>
+#### bncClient.checkAddress(address, prefix) ⇒ <code>Boolean</code>
 Validates an address.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
@@ -497,6 +498,7 @@ Validates an address.
 | Param | Type |
 | --- | --- |
 | address | <code>String</code> | 
+| prefix | <code>String</code> | 
 
 <a name="module_client.BncClient+getClientKeyAddress"></a>
 
@@ -608,6 +610,7 @@ Checks whether an address is valid.
 | Param | Type | Description |
 | --- | --- | --- |
 | address | <code>string</code> | the bech32 address to decode |
+| hrp | <code>string</code> | the prefix to check for the bech32 address |
 
 <a name="module_crypto.encodeAddress"></a>
 
@@ -786,6 +789,7 @@ Get a private key from mnemonic words.
 | mnemonic | <code>string</code> | the mnemonic phrase words |
 | derive | <code>Boolean</code> | derive a private key using the default HD path (default: true) |
 | index | <code>number</code> | the bip44 address index (default: 0) |
+| password | <code>string</code> | according to bip39 |
 
 <a name="amino.module_decode"></a>
 
@@ -1037,8 +1041,8 @@ var listParams = {
 <a name="module_gov..Gov+submitProposal"></a>
 
 #### gov.submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod) ⇒ <code>Promise</code>
-Submit a proposal along with an initial deposit. 
-Proposal title, description, type and deposit can 
+Submit a proposal along with an initial deposit.
+Proposal title, description, type and deposit can
 be given directly or through a proposal JSON file.
 
 **Kind**: instance method of [<code>Gov</code>](#module_gov..Gov)  
@@ -1071,7 +1075,7 @@ Deposit tokens for activing proposal
 var coins = [{
   "denom": "BNB",
   "amount": 10
-}] 
+}]
 ```
 <a name="module_gov..Gov+vote"></a>
 
@@ -1700,6 +1704,7 @@ Creates a new transaction object.
 | type | <code>String</code> | transaction type |
 | data.msg | <code>Object</code> | object data of tx type |
 | data.sequence | <code>Number</code> | transaction counts |
+| data.source | <code>Number</code> | where does this transaction come from |
 
 **Example**  
 ```js
@@ -1710,6 +1715,7 @@ var rawTx = {
   msg: {},
   type: 'NewOrderMsg',
   sequence: 29,
+  source: 0
 };
 var tx = new Transaction(rawTx);
 ```
