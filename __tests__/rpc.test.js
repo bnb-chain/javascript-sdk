@@ -64,14 +64,15 @@ it("wss getTokenInfo", async () => {
 
 it("rest listAllTokens", async () => {
   const client = getClient("https")
-  const res = await client.listAllTokens(1, 2)
+  const res = await client.listAllTokens(0, 15)
+  console.log(res)
   expect(res).toBeTruthy()
-  expect(res.length).toBe(2)
+  expect(res.length).toBe(15)
 })
 
 it("wss listAllTokens", async () => {
   const client = getClient("https")
-  const res = await client.listAllTokens(1, 2)
+  const res = await client.listAllTokens(2, 2)
   expect(res).toBeTruthy()
   expect(res.length).toBe(2)
   client.close()
@@ -149,7 +150,7 @@ it("wss getOpenOrders", async () => {
 
 it("rest getTradingPairs", async () => {
   const client = getClient("https")
-  const result = await client.getTradingPairs(1, 2)
+  const result = await client.getTradingPairs(0, 2)
   expect(result).toBeTruthy()
   expect(result.length).toBe(2)
 })

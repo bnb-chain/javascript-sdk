@@ -223,4 +223,5 @@ const isDefaultValue = (obj) => {
   return (is.number(obj) && obj === 0)
         || (is.string(obj) && obj === "")
         || (is.array(obj) && obj.length === 0)
+        || (is.boolean(obj) && !obj)
 }
