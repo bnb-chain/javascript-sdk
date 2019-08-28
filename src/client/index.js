@@ -148,21 +148,33 @@ export class BncClient {
 
   /**
    * Sets the client's private key for calls made by this client. Asynchronous.
+   * @param {string} privateKey the private key hexstring
+   * @param {boolean} localOnly set this to true if you will supply an account_number yourself via `setAccountNumber`. Warning: You must do that if you set this to true!
    * @return {Promise}
    */
-  async setPrivateKey(privateKey) {
+  async setPrivateKey(privateKey, localOnly = false) {
     if (privateKey !== this.privateKey) {
       const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
       if (!address) throw new Error("address is falsy: ${address}. invalid private key?")
       if (address === this.address) return this // safety
       this.privateKey = privateKey
       this.address = address
-      // _setPkPromise used in _sendTransaction for non-await calls
-      const promise = this._setPkPromise = this._httpClient.request("get", `${api.getAccount}/${address}`)
-      const data = await promise
-      this.account_number = data.result.account_number
+      if (!localOnly) {
+        // _setPkPromise is used in _sendTransaction for non-await calls
+        const promise = this._setPkPromise = this._httpClient.request("get", `${api.getAccount}/${address}`)
+        const data = await promise
+        this.account_number = data.result.account_number
+      }
     }
     return this
+  }
+
+  /**
+   * Sets the client's account number.
+   * @param {boolean} accountNumber
+   */
+  setAccountNumber(accountNumber) {
+    this.account_number = accountNumber
   }
 
   /**
@@ -529,7 +541,7 @@ export class BncClient {
    * @return {Transaction} signed transaction
    */
   async _prepareTransaction(msg, stdSignMsg, address, sequence = null, memo = "") {
-    if ((!this.account_number || !sequence) && address) {
+    if ((!this.account_number || (sequence !== 0 && !sequence)) && address) {
       const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
       sequence = data.result.sequence
       this.account_number = data.result.account_number
