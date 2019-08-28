@@ -149,7 +149,7 @@ export class BncClient {
   /**
    * Sets the client's private key for calls made by this client. Asynchronous.
    * @param {string} privateKey the private key hexstring
-   * @param {boolean} localOnly set this to true if you will supply an account_number yourself via `setAccountNumber`. Warning: You must do this!
+   * @param {boolean} localOnly set this to true if you will supply an account_number yourself via `setAccountNumber`. Warning: You must do that if you set this to true!
    * @return {Promise}
    */
   async setPrivateKey(privateKey, localOnly = false) {
