@@ -2,7 +2,7 @@
  * @module Token
  */
 import Big from 'big.js'
-import { txType } from '../tx/'
+import { TxTypes } from '../tx/'
 import * as crypto from '../crypto/'
 import { api } from '../client/'
 import { validateSymbol } from '../utils/validateHelper'
@@ -34,7 +34,7 @@ class TokenManagement {
   static instance
 
   /**
-   * @param {Object} bncClient 
+   * @param {Object} bncClient
    */
   constructor(bncClient) {
     if (!TokenManagement.instance) {
@@ -47,11 +47,11 @@ class TokenManagement {
 
   /**
    * create a new asset on Binance Chain
-   * @param {String} - senderAddress 
-   * @param {String} - tokenName 
-   * @param {String} - symbol 
-   * @param {Number} - totalSupply 
-   * @param {Boolean} - mintable 
+   * @param {String} - senderAddress
+   * @param {String} - tokenName
+   * @param {String} - symbol
+   * @param {Number} - totalSupply
+   * @param {Boolean} - mintable
    * @returns {Promise} resolves with response (success or fail)
    */
   async issue(senderAddress, tokenName, symbol, totalSupply = 0, mintable = false) {
@@ -80,7 +80,7 @@ class TokenManagement {
       symbol,
       total_supply: totalSupply,
       mintable,
-      msgType: txType.IssueMsg
+      msgType: TxTypes.IssueMsg
     }
 
     const signIssueMsg = {
@@ -97,9 +97,9 @@ class TokenManagement {
 
   /**
    * freeze some amount of token
-   * @param {String} fromAddress 
-   * @param {String} symbol 
-   * @param {String} amount 
+   * @param {String} fromAddress
+   * @param {String} symbol
+   * @param {String} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
   async freeze(fromAddress, symbol, amount) {
@@ -115,7 +115,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount,
-      msgType: txType.FreezeMsg
+      msgType: TxTypes.FreezeMsg
     }
 
     const freezeSignMsg = {
@@ -130,9 +130,9 @@ class TokenManagement {
 
   /**
    * unfreeze some amount of token
-   * @param {String} fromAddress 
-   * @param {String} symbol 
-   * @param {String} amount 
+   * @param {String} fromAddress
+   * @param {String} symbol
+   * @param {String} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
   async unfreeze(fromAddress, symbol, amount) {
@@ -147,7 +147,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount,
-      msgType: txType.UnfreezeMsg
+      msgType: TxTypes.UnfreezeMsg
     }
 
     const unfreezeSignMsg = {
@@ -162,9 +162,9 @@ class TokenManagement {
 
   /**
    * burn some amount of token
-   * @param {String} fromAddress 
-   * @param {String} symbol 
-   * @param {Number} amount 
+   * @param {String} fromAddress
+   * @param {String} symbol
+   * @param {Number} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
   async burn(fromAddress, symbol, amount) {
@@ -179,7 +179,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount,
-      msgType: txType.BurnMsg
+      msgType: TxTypes.BurnMsg
     }
 
     const burnSignMsg = {
@@ -194,9 +194,9 @@ class TokenManagement {
 
   /**
    * mint tokens for an existing token
-   * @param {String} fromAddress 
-   * @param {String} symbol 
-   * @param {Number} amount 
+   * @param {String} fromAddress
+   * @param {String} symbol
+   * @param {Number} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
   async mint(fromAddress, symbol, amount) {
@@ -213,7 +213,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount,
-      msgType: txType.MintMsg
+      msgType: TxTypes.MintMsg
     }
 
     const mintSignMsg = {

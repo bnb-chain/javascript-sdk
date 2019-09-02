@@ -2,7 +2,7 @@ import * as crypto from "../crypto/"
 import * as encoder from "../encoder/"
 import { UVarInt } from "../encoder/varint"
 
-export const txType = {
+export const TxTypes = {
   MsgSend: "MsgSend",
   NewOrderMsg: "NewOrderMsg",
   CancelOrderMsg: "CancelOrderMsg",
@@ -20,7 +20,7 @@ export const txType = {
   MsgVote: "MsgVote"
 }
 
-export const typePrefix = {
+export const TypePrefixes = {
   MsgSend: "2A2C87FA",
   NewOrderMsg: "CE6DC043",
   CancelOrderMsg: "166E681B",
@@ -62,7 +62,7 @@ export const typePrefix = {
  */
 class Transaction {
   constructor(data) {
-    if (!txType[data.type]) {
+    if (!TxTypes[data.type]) {
       throw new TypeError(`does not support transaction type: ${data.type}`)
     }
 
@@ -159,7 +159,7 @@ class Transaction {
       memo: this.memo,
       source: this.source, // sdk value is 0, web wallet value is 1
       data: "",
-      msgType: txType.StdTx
+      msgType: TxTypes.StdTx
     }
 
     const bytes = encoder.marshalBinary(stdTx)
@@ -188,7 +188,11 @@ class Transaction {
   }
 }
 
-Transaction.txType = txType
-Transaction.typePrefix = typePrefix
+Transaction.TxTypes = TxTypes
+Transaction.TypePrefixes = TypePrefixes
+
+// DEPRECATED: Retained for backward compatibility
+Transaction.txType = TxTypes
+Transaction.typePrefix = TypePrefixes
 
 export default Transaction
