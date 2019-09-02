@@ -5,11 +5,14 @@ import * as decoder from "./decoder"
 import * as utils from "./utils"
 import rpc from "./rpc/client"
 import Ledger from "./ledger"
+import Transaction from "./tx"
 
 const { BncClient } = client
 const amino = { ...encoder, ...decoder }
 
 module.exports = BncClient
+module.exports.Transaction = Transaction
+
 module.exports.crypto = crypto
 module.exports.amino = amino
 module.exports.utils = utils
