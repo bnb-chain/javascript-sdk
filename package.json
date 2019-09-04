@@ -1,5 +1,5 @@
 {
-  "name": "@binance-chain/javascript-sdk",
+  "name": "@nodefactory/binance-chain-javascript-sdk",
   "version": "2.15.0",
   "license": "Apache-2.0",
   "main": "lib/index.js",
@@ -7,7 +7,7 @@
     "test": "cross-env NODE_ENV=test jest",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
-    "build": "rm -rf lib && npx babel src -d lib",
+    "build": "npx babel src -d lib",
     "build:docs": "npx jsdoc-to-markdown -f src/**/*.js > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__"
