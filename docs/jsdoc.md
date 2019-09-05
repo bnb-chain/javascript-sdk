@@ -50,7 +50,8 @@
             * [new exports.BncClient(server, useAsyncBroadcast, source)](#new_module_client.BncClient_new)
             * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
             * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
-            * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+            * [.setPrivateKey(privateKey, localOnly)](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+            * [.setAccountNumber(accountNumber)](#module_client.BncClient+setAccountNumber)
             * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
             * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
             * [.setBroadcastDelegate(delegate)](#module_client.BncClient+setBroadcastDelegate) ⇒ <code>BncClient</code>
@@ -95,7 +96,8 @@ The Binance Chain client.
     * [new exports.BncClient(server, useAsyncBroadcast, source)](#new_module_client.BncClient_new)
     * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
     * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
-    * [.setPrivateKey()](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+    * [.setPrivateKey(privateKey, localOnly)](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+    * [.setAccountNumber(accountNumber)](#module_client.BncClient+setAccountNumber)
     * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
     * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
     * [.setBroadcastDelegate(delegate)](#module_client.BncClient+setBroadcastDelegate) ⇒ <code>BncClient</code>
@@ -152,10 +154,27 @@ Sets the client network (testnet or mainnet).
 
 <a name="module_client.BncClient+setPrivateKey"></a>
 
-#### bncClient.setPrivateKey() ⇒ <code>Promise</code>
+#### bncClient.setPrivateKey(privateKey, localOnly) ⇒ <code>Promise</code>
 Sets the client's private key for calls made by this client. Asynchronous.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| privateKey | <code>string</code> |  | the private key hexstring |
+| localOnly | <code>boolean</code> | <code>false</code> | set this to true if you will supply an account_number yourself via `setAccountNumber`. Warning: You must do that if you set this to true! |
+
+<a name="module_client.BncClient+setAccountNumber"></a>
+
+#### bncClient.setAccountNumber(accountNumber)
+Sets the client's account number.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+
+| Param | Type |
+| --- | --- |
+| accountNumber | <code>boolean</code> | 
+
 <a name="module_client.BncClient+useAsyncBroadcast"></a>
 
 #### bncClient.useAsyncBroadcast(useAsyncBroadcast) ⇒ <code>BncClient</code>
