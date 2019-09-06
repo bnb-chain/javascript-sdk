@@ -332,7 +332,7 @@ it("multiSend", async () => {
 it("issue token", async () => {
   const client = await getClient(true)
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
-  const symbol = "MINT1"
+  const symbol = "MINT"
   const tokenName = "test issue token"
   const totalSupply = 21000000
 
@@ -346,9 +346,6 @@ it("time lock token", async () => {
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const description = "timelock token test"
   const amount = [{
-    denom: "BNB",
-    amount: 10
-  }, {
     denom: "MINT1-13C",
     amount: 100000
   }]

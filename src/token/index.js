@@ -261,20 +261,20 @@ class TokenManagement {
     }
     const timeLockMsg = {
       from: crypto.decodeAddress(fromAddress),
-      amount: amount,
-      description: description,
+      description,
+      amount,
       lock_time: lockTime,
       msgType: txType.TimeLockMsg
     }
 
-    const timeLockSignMsg = {
+    const signTimeLockMsg = {
       from: fromAddress,
-      amount: amount,
       description: description,
+      amount,
       lock_time: lockTime
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(timeLockMsg, timeLockSignMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(timeLockMsg, signTimeLockMsg, fromAddress)
     return this._bncClient._broadcastDelegate(signedTx)
   }
 }
