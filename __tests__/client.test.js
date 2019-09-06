@@ -19,7 +19,7 @@ const keystores = {
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
 const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = false) => {
-  const client = new BncClient("http://127.0.0.1:8888")
+  const client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (!doNotSetPrivateKey) {
@@ -346,11 +346,35 @@ it("time lock token", async () => {
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const description = "timelock token test"
   const amount = [{
-    denom: "MINT1-13C",
+    denom: "BNB",
     amount: 100000
   }]
-  const timeLock = 1568767490
+  const timeLock = Math.floor(Date.now()/1000)+100;
   const res = await client.tokens.timeLock(addr, description, amount, timeLock)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("time relock token", async () => {
+  const client = await getClient(true)
+  const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const description = "timerelock token test"
+  const amount = [{
+    denom: "BNB",
+    amount: 150000
+  }]
+  const id = 2248
+  const timeLock = Math.floor(Date.now()/1000)+200;
+  const res = await client.tokens.timeRelock(addr, id, description, amount, timeLock)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("time unlock token", async () => {
+  const client = await getClient(true)
+  const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const id = 2248
+  const res = await client.tokens.timeUnlock(addr, id)
   console.log(res)
   expect(res.status).toBe(200)
 })

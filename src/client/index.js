@@ -561,7 +561,6 @@ export class BncClient {
     }
 
     const tx = new Transaction(options)
-    console.log(tx)
     return this._signingDelegate.call(this, tx, stdSignMsg)
   }
 
@@ -573,7 +572,6 @@ export class BncClient {
    */
   async sendTransaction(signedTx, sync) {
     const signedBz = signedTx.serialize()
-    console.log(signedBz)
     return this.sendRawTransaction(signedBz, sync)
   }
 

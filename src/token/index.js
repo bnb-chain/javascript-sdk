@@ -242,7 +242,7 @@ class TokenManagement {
   }
 
   /**
-   * mint tokens for an existing token
+   * lock token for a while
    * @param {String} fromAddress
    * @param {String} description
    * @param {Array} amount
@@ -275,6 +275,67 @@ class TokenManagement {
     }
 
     const signedTx = await this._bncClient._prepareTransaction(timeLockMsg, signTimeLockMsg, fromAddress)
+    return this._bncClient._broadcastDelegate(signedTx)
+  }
+  /**
+   * lock more token or increase locked period
+   * @param {String} fromAddress
+   * @param {Number} id
+   * @param {String} description
+   * @param {Array} amount
+   * @param {Number} lockTime
+   * @returns {Promise}  resolves with response (success or fail)
+   */
+  async timeRelock(fromAddress, id, description, amount, lockTime) {
+    checkCoins(amount)
+
+    if (description.length > 128) {
+      throw new Error("description is too long")
+    }
+
+    if (lockTime < 60 || lockTime > 253402300800) {
+      throw new Error("timeTime must be in [60, 253402300800]")
+    }
+    const timeRelockMsg = {
+      from: crypto.decodeAddress(fromAddress),
+      time_lock_id: id,
+      description,
+      amount,
+      lock_time: lockTime,
+      msgType: txType.TimeRelockMsg
+    }
+
+    const signTimeRelockMsg = {
+      from: fromAddress,
+      time_lock_id: id,
+      description: description,
+      amount,
+      lock_time: lockTime
+    }
+
+    const signedTx = await this._bncClient._prepareTransaction(timeRelockMsg, signTimeRelockMsg, fromAddress)
+    return this._bncClient._broadcastDelegate(signedTx)
+  }
+  /**
+   * unlock locked tokens
+   * @param {String} fromAddress
+   * @param {Number} id
+   * @returns {Promise}  resolves with response (success or fail)
+   */
+  async timeUnlock(fromAddress, id) {
+
+    const timeUnlockMsg = {
+      from: crypto.decodeAddress(fromAddress),
+      time_lock_id: id,
+      msgType: txType.TimeUnlockMsg
+    }
+
+    const signTimeUnlockMsg = {
+      from: fromAddress,
+      time_lock_id: id,
+    }
+
+    const signedTx = await this._bncClient._prepareTransaction(timeUnlockMsg, signTimeUnlockMsg, fromAddress)
     return this._bncClient._broadcastDelegate(signedTx)
   }
 }
