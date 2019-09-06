@@ -19,7 +19,7 @@ const keystores = {
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
 const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = false) => {
-  const client = new BncClient("https://testnet-dex.binance.org")
+  const client = new BncClient("http://127.0.0.1:8888")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (!doNotSetPrivateKey) {
@@ -332,11 +332,28 @@ it("multiSend", async () => {
 it("issue token", async () => {
   const client = await getClient(true)
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
-  const symbol = "MINT"
+  const symbol = "MINT1"
   const tokenName = "test issue token"
   const totalSupply = 21000000
 
   const res = await client.tokens.issue(addr, tokenName, symbol, totalSupply, true)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("time lock token", async () => {
+  const client = await getClient(true)
+  const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const description = "timelock token test"
+  const amount = [{
+    denom: "BNB",
+    amount: 10
+  }, {
+    denom: "MINT1-13C",
+    amount: 100000
+  }]
+  const timeLock = 1568767490
+  const res = await client.tokens.timeLock(addr, description, amount, timeLock)
   console.log(res)
   expect(res.status).toBe(200)
 })

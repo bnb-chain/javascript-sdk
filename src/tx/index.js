@@ -17,7 +17,14 @@ export const TxTypes = {
   SignatureSecp256k1: "SignatureSecp256k1",
   MsgSubmitProposal: "MsgSubmitProposal",
   MsgDeposit: "MsgDeposit",
-  MsgVote: "MsgVote"
+  MsgVote: "MsgVote",
+  TimeLockMsg: "TimeLockMsg",
+  MsgTimeUnlock: "MsgTimeUnlock",
+  MsgTimeRelock: "MsgTimeRelock",
+  MsgHTLT: "MsgHTLT",
+  MsgDepositHTLT: "MsgDepositHTLT",
+  MsgClaimHTLT: "MsgClaimHTLT",
+  MsgRefundHTLT: "MsgRefundHTLT"
 }
 
 export const TypePrefixes = {
@@ -35,7 +42,14 @@ export const TypePrefixes = {
   SignatureSecp256k1: "7FC4A495",
   MsgSubmitProposal: "B42D614E",
   MsgDeposit: "A18A56E5",
-  MsgVote: "A1CADD36"
+  MsgVote: "A1CADD36",
+  TimeLockMsg: "07921531",
+  MsgTimeUnlock: "C4050C6C",
+  MsgTimeRelock: "504711DA",
+  MsgHTLT: "B33F9A24",
+  MsgDepositHTLT: "63986496",
+  MsgClaimHTLT: "C1665300",
+  MsgRefundHTLT: "3454A27C"
 }
 
 /**

@@ -6,7 +6,21 @@ import { TxTypes } from '../tx/'
 import * as crypto from '../crypto/'
 import { api } from '../client/'
 import { validateSymbol } from '../utils/validateHelper'
+import { checkNumber } from "../utils/validateHelper"
 const MAXTOTALSUPPLY = 9000000000000000000
+
+/**
+ * validate the coins.
+ * @param {Array} coins
+ */
+const checkCoins = (coins) => {
+  coins.forEach(coin => {
+    checkNumber(coin.amount)
+    if (!coin.denom) {
+      throw new Error("invalid demon")
+    }
+  })
+}
 
 const validateNonZeroAmount = async (amount, symbol, fromAddress, httpClient, type = "free") => {
   if (amount <= 0 || amount > MAXTOTALSUPPLY) {
@@ -223,6 +237,44 @@ class TokenManagement {
     }
 
     const signedTx = await this._bncClient._prepareTransaction(mintMsg, mintSignMsg, fromAddress)
+    console.log(signedTx)
+    return this._bncClient._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * mint tokens for an existing token
+   * @param {String} fromAddress
+   * @param {String} description
+   * @param {Array} amount
+   * @param {Number} lockTime
+   * @returns {Promise}  resolves with response (success or fail)
+   */
+  async timeLock(fromAddress, description, amount, lockTime) {
+    checkCoins(amount)
+
+    if (description.length > 128) {
+      throw new Error("description is too long")
+    }
+
+    if (lockTime < 60 || lockTime > 253402300800) {
+      throw new Error("timeTime must be in [60, 253402300800]")
+    }
+    const timeLockMsg = {
+      from: crypto.decodeAddress(fromAddress),
+      amount: amount,
+      description: description,
+      lock_time: lockTime,
+      msgType: txType.TimeLockMsg
+    }
+
+    const timeLockSignMsg = {
+      from: fromAddress,
+      amount: amount,
+      description: description,
+      lock_time: lockTime
+    }
+
+    const signedTx = await this._bncClient._prepareTransaction(timeLockMsg, timeLockSignMsg, fromAddress)
     return this._bncClient._broadcastDelegate(signedTx)
   }
 }
