@@ -6,21 +6,8 @@ import { TxTypes } from '../tx/'
 import * as crypto from '../crypto/'
 import { api } from '../client/'
 import { validateSymbol } from '../utils/validateHelper'
-import { checkNumber } from "../utils/validateHelper"
+import { checkCoins } from '../utils/validateHelper'
 const MAXTOTALSUPPLY = 9000000000000000000
-
-/**
- * validate the coins.
- * @param {Array} coins
- */
-const checkCoins = (coins) => {
-  coins.forEach(coin => {
-    checkNumber(coin.amount)
-    if (!coin.denom) {
-      throw new Error("invalid demon")
-    }
-  })
-}
 
 const validateNonZeroAmount = async (amount, symbol, fromAddress, httpClient, type = "free") => {
   if (amount <= 0 || amount > MAXTOTALSUPPLY) {

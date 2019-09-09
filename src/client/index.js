@@ -6,6 +6,7 @@ import Transaction from "../tx"
 import HttpRequest from "../utils/request"
 import { checkNumber } from "../utils/validateHelper"
 import TokenManagement from "../token/"
+import Swap from "../swap/"
 import Gov from "../gov/"
 import Big from "big.js"
 
@@ -122,6 +123,7 @@ export class BncClient {
     this._useAsyncBroadcast = useAsyncBroadcast
     this._source = source
     this.tokens = new TokenManagement(this)
+    this.swap = new Swap(this)
     this.gov = new Gov(this)
   }
 

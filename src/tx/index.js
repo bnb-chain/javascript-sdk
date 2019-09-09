@@ -21,10 +21,10 @@ export const TxTypes = {
   TimeLockMsg: "TimeLockMsg",
   TimeUnlockMsg: "TimeUnlockMsg",
   TimeRelockMsg: "TimeRelockMsg",
-  MsgHTLT: "MsgHTLT",
-  MsgDepositHTLT: "MsgDepositHTLT",
-  MsgClaimHTLT: "MsgClaimHTLT",
-  MsgRefundHTLT: "MsgRefundHTLT"
+  HTLTMsg: "HTLTMsg",
+  DepositHTLTMsg: "DepositHTLTMsg",
+  ClaimHTLTMsg: "ClaimHTLTMsg",
+  RefundHTLTMsg: "RefundHTLTMsg"
 }
 
 export const TypePrefixes = {
@@ -46,10 +46,10 @@ export const TypePrefixes = {
   TimeLockMsg: "07921531",
   TimeUnlockMsg: "C4050C6C",
   TimeRelockMsg: "504711DA",
-  MsgHTLT: "B33F9A24",
-  MsgDepositHTLT: "63986496",
-  MsgClaimHTLT: "C1665300",
-  MsgRefundHTLT: "3454A27C"
+  HTLTMsg: "B33F9A24",
+  DepositHTLTMsg: "63986496",
+  ClaimHTLTMsg: "C1665300",
+  RefundHTLTMsg: "3454A27C"
 }
 
 /**

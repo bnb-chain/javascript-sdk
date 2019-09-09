@@ -237,3 +237,20 @@ export const sha3 = (hex) => {
   const hexEncoded = hexEncoding.parse(hex)
   return SHA3(hexEncoded).toString()
 }
+
+/**
+ * Computes sha256 of random number and timestamp
+ * @param {String} randomNumber
+ * @param {Number} timestamp
+ * @returns {string} sha256 result
+ */
+export const calculateRandomNumberHash = (randomNumber, timestamp) => {
+  const timestampHexStr = timestamp.toString(16)
+  var timestampHexStrFormat = timestampHexStr
+  for (var i = 0; i < 16 - timestampHexStr.length; i++) {
+    timestampHexStrFormat = '0' + timestampHexStrFormat;
+  }
+  const timestampBytes = Buffer.from(timestampHexStrFormat, "hex")
+  const newBuffer = Buffer.concat([Buffer.from(randomNumber, "hex"), timestampBytes])
+  return sha256(newBuffer.toString('hex'))
+}

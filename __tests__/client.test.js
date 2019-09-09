@@ -3,6 +3,7 @@ import { checkNumber } from "../src/utils/validateHelper"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 import { voteOption } from "../src/gov/"
+import { calculateRandomNumberHash } from "../src/utils/index"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -364,7 +365,7 @@ it("time relock token", async () => {
     amount: 150000
   }]
   const id = 2248
-  const timeLock = Math.floor(Date.now()/1000)+200;
+  const timeLock = Math.floor(Date.now()/1000)+200
   const res = await client.tokens.timeRelock(addr, id, description, amount, timeLock)
   console.log(res)
   expect(res.status).toBe(200)
@@ -375,6 +376,55 @@ it("time unlock token", async () => {
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const id = 2248
   const res = await client.tokens.timeUnlock(addr, id)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("htlt", async () => {
+  const client = await getClient(true)
+  const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const recipient = "tbnb1prrujx8kkukrcrppklggadhuvegfnx8pemsq77"
+  const randomNumber = "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
+  const timestamp = Math.floor(Date.now()/1000)
+  const randomNumberHash = calculateRandomNumberHash(randomNumber, timestamp)
+  const amount = [{
+    denom: "BNB",
+    amount: 100000
+  }]
+  const expectedIncome = "100000:BNB"
+  const res = await client.swap.HTLT(from, recipient, "", "", randomNumberHash, timestamp, amount, expectedIncome, 400, false)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("deposit HTLT", async () => {
+  const client = await getClient(true)
+  const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const swapID = "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
+  const amount = [{
+    denom: "BNB",
+    amount: 100000
+  }]
+  const res = await client.swap.depositHTLT(from, swapID, amount)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("claim HTLT", async () => {
+  const client = await getClient(true)
+  const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const swapID = "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
+  const randomNumber = "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
+  const res = await client.swap.claimHTLT(from, swapID, randomNumber)
+  console.log(res)
+  expect(res.status).toBe(200)
+})
+
+it("refund HTLT", async () => {
+  const client = await getClient(true)
+  const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+  const swapID = "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
+  const res = await client.swap.refundHTLT(from, swapID)
   console.log(res)
   expect(res.status).toBe(200)
 })
