@@ -251,7 +251,7 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      msgType: txType.TimeLockMsg
+      msgType: TxTypes.TimeLockMsg
     }
 
     const signTimeLockMsg = {
@@ -289,7 +289,7 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      msgType: txType.TimeRelockMsg
+      msgType: TxTypes.TimeRelockMsg
     }
 
     const signTimeRelockMsg = {
@@ -314,7 +314,7 @@ class TokenManagement {
     const timeUnlockMsg = {
       from: crypto.decodeAddress(fromAddress),
       time_lock_id: id,
-      msgType: txType.TimeUnlockMsg
+      msgType: TxTypes.TimeUnlockMsg
     }
 
     const signTimeUnlockMsg = {

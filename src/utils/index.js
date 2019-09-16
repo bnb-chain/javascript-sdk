@@ -246,8 +246,8 @@ export const sha3 = (hex) => {
  */
 export const calculateRandomNumberHash = (randomNumber, timestamp) => {
   const timestampHexStr = timestamp.toString(16)
-  var timestampHexStrFormat = timestampHexStr
-  for (var i = 0; i < 16 - timestampHexStr.length; i++) {
+  let timestampHexStrFormat = timestampHexStr
+  for (let i = 0; i < 16 - timestampHexStr.length; i++) {
     timestampHexStrFormat = '0' + timestampHexStrFormat;
   }
   const timestampBytes = Buffer.from(timestampHexStrFormat, "hex")

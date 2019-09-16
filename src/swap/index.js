@@ -2,7 +2,7 @@
  * @module Swap
  */
 
-import { txType } from '../tx/'
+import { TxTypes } from '../tx/'
 import * as crypto from '../crypto/'
 import { checkCoins } from '../utils/validateHelper'
 import {Buffer} from "buffer"
@@ -28,7 +28,7 @@ class Swap {
    * @param {String} recipient
    * @param {String} recipientOtherChain
    * @param {String} senderOtherChain
-   * @Param {String} randomNumberHash
+   * @param {String} randomNumberHash
    * @param {Number} timestamp
    * @param {Array} amount
    * @param {String} expectedIncome
@@ -49,7 +49,7 @@ class Swap {
       expected_income: expectedIncome,
       height_span: heightSpan,
       cross_chain: crossChain,
-      msgType: txType.HTLTMsg
+      msgType: TxTypes.HTLTMsg
     }
 
     const signHTLTMsg = {
@@ -82,7 +82,7 @@ class Swap {
       from: crypto.decodeAddress(from),
       amount: amount,
       swap_id: Buffer.from(swapID, 'hex'),
-      msgType: txType.DepositHTLTMsg
+      msgType: TxTypes.DepositHTLTMsg
     }
 
     const signDepositHTLTMsg = {
@@ -107,7 +107,7 @@ class Swap {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, 'hex'),
       random_number: Buffer.from(randomNumber, 'hex'),
-      msgType: txType.ClaimHTLTMsg
+      msgType: TxTypes.ClaimHTLTMsg
     }
 
     const signClaimHTLTMsg = {
@@ -130,7 +130,7 @@ class Swap {
     const refundHTLTMsg = {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, 'hex'),
-      msgType: txType.RefundHTLTMsg
+      msgType: TxTypes.RefundHTLTMsg
     }
 
     const signRefundHTLTMsg = {
