@@ -3,7 +3,7 @@ import { checkNumber } from "../src/utils/validateHelper"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 import { voteOption } from "../src/gov/"
-import { calculateRandomNumberHash } from "../src/utils/index"
+import {calculateRandomNumberHash, calculateSwapID} from "../src/utils/index"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
 const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
@@ -394,6 +394,7 @@ it("htlt", async () => {
   const expectedIncome = "100000:BNB"
   const res = await client.swap.HTLT(from, recipient, "", "", randomNumberHash, timestamp, amount, expectedIncome, 400, false)
   console.log(res)
+  console.log(calculateSwapID(randomNumberHash, from, ""))
   expect(res.status).toBe(200)
 })
 

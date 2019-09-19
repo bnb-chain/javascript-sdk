@@ -6,6 +6,7 @@ import hexEncoding from "crypto-js/enc-hex"
 import SHA3 from "crypto-js/sha3"
 import SHA256 from "crypto-js/sha256"
 import RIPEMD160 from "crypto-js/ripemd160"
+import * as crypto from "../crypto"
 
 /**
  * @param {arrayBuffer} buf
@@ -252,5 +253,19 @@ export const calculateRandomNumberHash = (randomNumber, timestamp) => {
   }
   const timestampBytes = Buffer.from(timestampHexStrFormat, "hex")
   const newBuffer = Buffer.concat([Buffer.from(randomNumber, "hex"), timestampBytes])
+  return sha256(newBuffer.toString('hex'))
+}
+
+/**
+ * Computes swapID
+ * @param {String} randomNumberHash
+ * @param {String} sender
+ * @param {String} senderOtherChain
+ * @returns {string} sha256 result
+ */
+export const calculateSwapID = (randomNumberHash, sender, senderOtherChain) => {
+  const senderBytes = crypto.decodeAddress(sender)
+  const sendOtherChainBytes = Buffer.from(senderOtherChain, 'utf8')
+  const newBuffer = Buffer.concat([Buffer.from(randomNumberHash, "hex"), senderBytes, sendOtherChainBytes])
   return sha256(newBuffer.toString('hex'))
 }
