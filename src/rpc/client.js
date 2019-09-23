@@ -48,6 +48,24 @@ class Client extends BaseRpc {
     this.netWork = netWork || "mainnet"
   }
 
+  /**
+   * The RPC broadcast delegate broadcasts a transaction via RPC. This is intended for optional use as BncClient's broadcast delegate.
+   * @param {Transaction} signedTx the signed transaction
+   * @return {Promise}
+   */
+  async broadcastDelegate(signedTx) {
+    // amino encode the signed TX
+    const encoded = signedTx.serialize()
+    // broadcast it via RPC; we have to use a promise here because that's
+    // what the BncClient expects as the return value of this function.
+    const res = await this.broadcastTxSync({ tx: Buffer.from(encoded, "hex") })
+    if (`${res.code}` === "0") {
+      return res
+    } else {
+      throw new Error(`broadcastDelegate: non-zero status code ${res.code}`)
+    }
+  }
+
   getBech32Prefix() {
     if (this.netWork === "mainnet") {
       return "bnb"
