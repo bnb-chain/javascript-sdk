@@ -15,6 +15,8 @@
 <dd></dd>
 <dt><a href="#module_rpc">rpc</a></dt>
 <dd></dd>
+<dt><a href="#module_Swap">Swap</a></dt>
+<dd></dd>
 <dt><a href="#module_Token">Token</a></dt>
 <dd></dd>
 <dt><a href="#module_utils">utils</a></dt>
@@ -1244,6 +1246,7 @@ Sends a transaction sign doc to the Ledger app to be signed.
 * [rpc](#module_rpc)
     * [~Client](#module_rpc..Client)
         * [new Client(uriString, netWork)](#new_module_rpc..Client_new)
+        * [.broadcastDelegate(signedTx)](#module_rpc..Client+broadcastDelegate) ⇒ <code>Promise</code>
         * [.getTokenInfo(symbol)](#module_rpc..Client+getTokenInfo) ⇒ <code>Object</code>
         * [.listAllTokens(offset, limit)](#module_rpc..Client+listAllTokens) ⇒ <code>Array</code>
         * [.getAccount(address)](#module_rpc..Client+getAccount) ⇒ <code>Object</code>
@@ -1262,6 +1265,7 @@ The Binance Chain Node rpc client
 
 * [~Client](#module_rpc..Client)
     * [new Client(uriString, netWork)](#new_module_rpc..Client_new)
+    * [.broadcastDelegate(signedTx)](#module_rpc..Client+broadcastDelegate) ⇒ <code>Promise</code>
     * [.getTokenInfo(symbol)](#module_rpc..Client+getTokenInfo) ⇒ <code>Object</code>
     * [.listAllTokens(offset, limit)](#module_rpc..Client+listAllTokens) ⇒ <code>Array</code>
     * [.getAccount(address)](#module_rpc..Client+getAccount) ⇒ <code>Object</code>
@@ -1279,6 +1283,17 @@ The Binance Chain Node rpc client
 | --- | --- | --- | --- |
 | uriString | <code>String</code> | <code>localhost:27146</code> | dataseed address |
 | netWork | <code>String</code> |  | Binance Chain network |
+
+<a name="module_rpc..Client+broadcastDelegate"></a>
+
+#### client.broadcastDelegate(signedTx) ⇒ <code>Promise</code>
+The RPC broadcast delegate broadcasts a transaction via RPC. This is intended for optional use as BncClient's broadcast delegate.
+
+**Kind**: instance method of [<code>Client</code>](#module_rpc..Client)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signedTx | [<code>Transaction</code>](#Transaction) | the signed transaction |
 
 <a name="module_rpc..Client+getTokenInfo"></a>
 
@@ -1363,6 +1378,100 @@ get balance by symbol and address
 | --- | --- |
 | tradePair | <code>String</code> | 
 
+<a name="module_Swap"></a>
+
+## Swap
+
+* [Swap](#module_Swap)
+    * [~Swap](#module_Swap..Swap)
+        * [new Swap(bncClient)](#new_module_Swap..Swap_new)
+        * [.HTLT(from, recipient, recipientOtherChain, senderOtherChain, randomNumberHash, timestamp, amount, expectedIncome, heightSpan, crossChain)](#module_Swap..Swap+HTLT) ⇒ <code>Promise</code>
+        * [.depositHTLT(from, swapID, amount)](#module_Swap..Swap+depositHTLT) ⇒ <code>Promise</code>
+        * [.claimHTLT(from, swapID, randomNumber)](#module_Swap..Swap+claimHTLT) ⇒ <code>Promise</code>
+        * [.refundHTLT(from, swapID)](#module_Swap..Swap+refundHTLT) ⇒ <code>Promise</code>
+
+<a name="module_Swap..Swap"></a>
+
+### Swap~Swap
+**Kind**: inner class of [<code>Swap</code>](#module_Swap)  
+
+* [~Swap](#module_Swap..Swap)
+    * [new Swap(bncClient)](#new_module_Swap..Swap_new)
+    * [.HTLT(from, recipient, recipientOtherChain, senderOtherChain, randomNumberHash, timestamp, amount, expectedIncome, heightSpan, crossChain)](#module_Swap..Swap+HTLT) ⇒ <code>Promise</code>
+    * [.depositHTLT(from, swapID, amount)](#module_Swap..Swap+depositHTLT) ⇒ <code>Promise</code>
+    * [.claimHTLT(from, swapID, randomNumber)](#module_Swap..Swap+claimHTLT) ⇒ <code>Promise</code>
+    * [.refundHTLT(from, swapID)](#module_Swap..Swap+refundHTLT) ⇒ <code>Promise</code>
+
+<a name="new_module_Swap..Swap_new"></a>
+
+#### new Swap(bncClient)
+
+| Param | Type |
+| --- | --- |
+| bncClient | <code>Object</code> | 
+
+<a name="module_Swap..Swap+HTLT"></a>
+
+#### swap.HTLT(from, recipient, recipientOtherChain, senderOtherChain, randomNumberHash, timestamp, amount, expectedIncome, heightSpan, crossChain) ⇒ <code>Promise</code>
+HTLT(Hash timer locked transfer, create an atomic swap)
+
+**Kind**: instance method of [<code>Swap</code>](#module_Swap..Swap)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| from | <code>String</code> | 
+| recipient | <code>String</code> | 
+| recipientOtherChain | <code>String</code> | 
+| senderOtherChain | <code>String</code> | 
+| randomNumberHash | <code>String</code> | 
+| timestamp | <code>Number</code> | 
+| amount | <code>Array</code> | 
+| expectedIncome | <code>String</code> | 
+| heightSpan | <code>Number</code> | 
+| crossChain | <code>boolean</code> | 
+
+<a name="module_Swap..Swap+depositHTLT"></a>
+
+#### swap.depositHTLT(from, swapID, amount) ⇒ <code>Promise</code>
+depositHTLT(deposit assets to an existing swap)
+
+**Kind**: instance method of [<code>Swap</code>](#module_Swap..Swap)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| from | <code>String</code> | 
+| swapID | <code>String</code> | 
+| amount | <code>Array</code> | 
+
+<a name="module_Swap..Swap+claimHTLT"></a>
+
+#### swap.claimHTLT(from, swapID, randomNumber) ⇒ <code>Promise</code>
+claimHTLT(claim assets from an swap)
+
+**Kind**: instance method of [<code>Swap</code>](#module_Swap..Swap)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| from | <code>String</code> | 
+| swapID | <code>String</code> | 
+| randomNumber | <code>String</code> | 
+
+<a name="module_Swap..Swap+refundHTLT"></a>
+
+#### swap.refundHTLT(from, swapID) ⇒ <code>Promise</code>
+refundHTLT(refund assets from an swap)
+
+**Kind**: instance method of [<code>Swap</code>](#module_Swap..Swap)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| from | <code>String</code> | 
+| swapID | <code>String</code> | 
+
 <a name="module_Token"></a>
 
 ## Token
@@ -1375,6 +1484,9 @@ get balance by symbol and address
         * [.unfreeze(fromAddress, symbol, amount)](#module_Token..TokenManagement+unfreeze) ⇒ <code>Promise</code>
         * [.burn(fromAddress, symbol, amount)](#module_Token..TokenManagement+burn) ⇒ <code>Promise</code>
         * [.mint(fromAddress, symbol, amount)](#module_Token..TokenManagement+mint) ⇒ <code>Promise</code>
+        * [.timeLock(fromAddress, description, amount, lockTime)](#module_Token..TokenManagement+timeLock) ⇒ <code>Promise</code>
+        * [.timeRelock(fromAddress, id, description, amount, lockTime)](#module_Token..TokenManagement+timeRelock) ⇒ <code>Promise</code>
+        * [.timeUnlock(fromAddress, id)](#module_Token..TokenManagement+timeUnlock) ⇒ <code>Promise</code>
 
 <a name="module_Token..TokenManagement"></a>
 
@@ -1388,6 +1500,9 @@ get balance by symbol and address
     * [.unfreeze(fromAddress, symbol, amount)](#module_Token..TokenManagement+unfreeze) ⇒ <code>Promise</code>
     * [.burn(fromAddress, symbol, amount)](#module_Token..TokenManagement+burn) ⇒ <code>Promise</code>
     * [.mint(fromAddress, symbol, amount)](#module_Token..TokenManagement+mint) ⇒ <code>Promise</code>
+    * [.timeLock(fromAddress, description, amount, lockTime)](#module_Token..TokenManagement+timeLock) ⇒ <code>Promise</code>
+    * [.timeRelock(fromAddress, id, description, amount, lockTime)](#module_Token..TokenManagement+timeRelock) ⇒ <code>Promise</code>
+    * [.timeUnlock(fromAddress, id)](#module_Token..TokenManagement+timeUnlock) ⇒ <code>Promise</code>
 
 <a name="new_module_Token..TokenManagement_new"></a>
 
@@ -1469,6 +1584,50 @@ mint tokens for an existing token
 | symbol | <code>String</code> | 
 | amount | <code>Number</code> | 
 
+<a name="module_Token..TokenManagement+timeLock"></a>
+
+#### tokenManagement.timeLock(fromAddress, description, amount, lockTime) ⇒ <code>Promise</code>
+lock token for a while
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| description | <code>String</code> | 
+| amount | <code>Array</code> | 
+| lockTime | <code>Number</code> | 
+
+<a name="module_Token..TokenManagement+timeRelock"></a>
+
+#### tokenManagement.timeRelock(fromAddress, id, description, amount, lockTime) ⇒ <code>Promise</code>
+lock more token or increase locked period
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| id | <code>Number</code> | 
+| description | <code>String</code> | 
+| amount | <code>Array</code> | 
+| lockTime | <code>Number</code> | 
+
+<a name="module_Token..TokenManagement+timeUnlock"></a>
+
+#### tokenManagement.timeUnlock(fromAddress, id) ⇒ <code>Promise</code>
+unlock locked tokens
+
+**Kind**: instance method of [<code>TokenManagement</code>](#module_Token..TokenManagement)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type |
+| --- | --- |
+| fromAddress | <code>String</code> | 
+| id | <code>Number</code> | 
+
 <a name="module_utils"></a>
 
 ## utils
@@ -1491,6 +1650,8 @@ mint tokens for an existing token
     * [.sha256ripemd160](#module_utils.sha256ripemd160) ⇒ <code>string</code>
     * [.sha256](#module_utils.sha256) ⇒ <code>string</code>
     * [.sha3](#module_utils.sha3) ⇒ <code>string</code>
+    * [.calculateRandomNumberHash](#module_utils.calculateRandomNumberHash) ⇒ <code>string</code>
+    * [.calculateSwapID](#module_utils.calculateSwapID) ⇒ <code>string</code>
 
 <a name="module_utils.ab2str"></a>
 
@@ -1689,6 +1850,33 @@ Computes a single SHA3 (Keccak) digest.
 | Param | Type | Description |
 | --- | --- | --- |
 | hex | <code>string</code> | message to hash |
+
+<a name="module_utils.calculateRandomNumberHash"></a>
+
+### utils.calculateRandomNumberHash ⇒ <code>string</code>
+Computes sha256 of random number and timestamp
+
+**Kind**: static constant of [<code>utils</code>](#module_utils)  
+**Returns**: <code>string</code> - sha256 result  
+
+| Param | Type |
+| --- | --- |
+| randomNumber | <code>String</code> | 
+| timestamp | <code>Number</code> | 
+
+<a name="module_utils.calculateSwapID"></a>
+
+### utils.calculateSwapID ⇒ <code>string</code>
+Computes swapID
+
+**Kind**: static constant of [<code>utils</code>](#module_utils)  
+**Returns**: <code>string</code> - sha256 result  
+
+| Param | Type |
+| --- | --- |
+| randomNumberHash | <code>String</code> | 
+| sender | <code>String</code> | 
+| senderOtherChain | <code>String</code> | 
 
 <a name="Transaction"></a>
 
