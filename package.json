@@ -40,7 +40,7 @@
     "websocket-stream": "^5.5.0"
   },
   "optionalDependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^4.63.2"
+    "@ledgerhq/hw-transport-node-hid": "^4.71.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
