@@ -16,7 +16,10 @@ export const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
-  getMarkets: "/api/v1/markets"
+  getMarkets: "/api/v1/markets",
+  getOpenOrders: "/api/v1/orders/open",
+  getDepth: "/api/v1/depth",
+  getTransactions: "/api/v1/transactions"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -651,6 +654,53 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getMarkets error", err)
+      return []
+    }
+  }
+
+  /**
+   * get transactions for an account
+   * @param {String} address optional address
+   * @param {Number} offset from beggining, default 0
+   * @return {Promise} resolves with http response
+   */
+  async getTransactions(address = this.address, offset = 0) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getTransactions}?address=${address}&offset=${offset}`)
+      return data
+    } catch (err) {
+      console.warn("getTransactions error", err)
+      return []
+    }
+  }
+
+  /**
+   * get depth for a given market
+   * @param {String} symbol the market pair
+   * @return {Promise} resolves with http response
+   */
+  async getDepth(symbol = 'BNB_BUSD-BD1') {
+    try {
+      const data = await this._httpClient.request("get", `${api.getDepth}?symbol=${symbol}`)
+      return data
+    } catch (err) {
+      console.warn("getDepth error", err)
+      return []
+    }
+  }
+
+  /**
+   * get open orders for an address
+   * @param {String} address binance address
+   * @param {String} symbol binance BEP2 symbol
+   * @return {Promise} resolves with http response
+   */
+  async getOpenOrders(address = this.address) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getOpenOrders}?address=${address}`)
+      return data
+    } catch (err) {
+      console.warn("getOpenOrders error", err)
       return []
     }
   }
