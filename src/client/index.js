@@ -16,7 +16,8 @@ export const api = {
   broadcast: "/api/v1/broadcast",
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
-  getMarkets: "/api/v1/markets"
+  getMarkets: "/api/v1/markets",
+  getSwaps: "/api/v1/atomic-swaps"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -651,6 +652,55 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getMarkets error", err)
+      return []
+    }
+  }
+
+  /**
+   * get atomic swap
+   * @param {String} swapID: ID of an existing swap
+   * @return {Promise} AtomicSwap
+   */
+  async getSwapByID(swapID) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getSwaps}/${swapID}`)
+      return data
+    } catch (err) {
+      console.warn("query swap by swapID error", err)
+      return []
+    }
+  }
+
+  /**
+   * query atomic swap list by creator address
+   * @param {String} creator: swap creator address
+   * @param {Number} offset from beginning, default 0
+   * @param {Number} limit, max 1000 is default
+   * @return {Promise} Array of AtomicSwap
+   */
+  async getSwapByCreator(creator, limit = 100, offset = 0) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getSwaps}?fromAddress=${creator}&limit=${limit}&offset=${offset}`)
+      return data
+    } catch (err) {
+      console.warn("query swap list by swap creator error", err)
+      return []
+    }
+  }
+
+  /**
+   * query atomic swap list by recipient address
+   * @param {String} recipient: the recipient address of the swap
+   * @param {Number} offset from beginning, default 0
+   * @param {Number} limit, max 1000 is default
+   * @return {Promise} Array of AtomicSwap
+   */
+  async getSwapByRecipient(recipient, limit = 100, offset = 0) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getSwaps}?toAddress=${recipient}&limit=${limit}&offset=${offset}`)
+      return data
+    } catch (err) {
+      console.warn("query swap list by swap recipient error", err)
       return []
     }
   }
