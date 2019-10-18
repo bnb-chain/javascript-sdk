@@ -17,10 +17,7 @@ export const api = {
   nodeInfo: "/api/v1/node-info",
   getAccount: "/api/v1/account",
   getMarkets: "/api/v1/markets",
-  getOpenOrders: "/api/v1/orders/open",
-  getDepth: "/api/v1/depth",
-  getTransactions: "/api/v1/transactions",
-  getTx: "/api/v1/tx"
+  getSwaps: "/api/v1/atomic-swaps"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -660,63 +657,50 @@ export class BncClient {
   }
 
   /**
-   * get transactions for an account
-   * @param {String} address optional address
-   * @param {Number} offset from beggining, default 0
-   * @return {Promise} resolves with http response
+   * get atomic swap
+   * @param {String} swapID: ID of an existing swap
+   * @return {Promise} AtomicSwap
    */
-  async getTransactions(address = this.address, offset = 0) {
+  async getSwapByID(swapID) {
     try {
-      const data = await this._httpClient.request("get", `${api.getTransactions}?address=${address}&offset=${offset}`)
+      const data = await this._httpClient.request("get", `${api.getSwaps}/${swapID}`)
       return data
     } catch (err) {
-      console.warn("getTransactions error", err)
-      return []
-    }
-  }
-
-    /**
-   * get transaction
-   * @param {String} hash the transaction hash
-   * @return {Promise} resolves with http response
-   */
-  async getTx(hash) {
-    try {
-      const data = await this._httpClient.request("get", `${api.getTx}/${hash}`)
-      return data
-    } catch (err) {
-      console.warn("getTx error", err)
+      console.warn("query swap by swapID error", err)
       return []
     }
   }
 
   /**
-   * get depth for a given market
-   * @param {String} symbol the market pair
-   * @return {Promise} resolves with http response
+   * query atomic swap list by creator address
+   * @param {String} creator: swap creator address
+   * @param {Number} offset from beginning, default 0
+   * @param {Number} limit, max 1000 is default
+   * @return {Promise} Array of AtomicSwap
    */
-  async getDepth(symbol = 'BNB_BUSD-BD1') {
+  async getSwapByCreator(creator, limit = 100, offset = 0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getDepth}?symbol=${symbol}`)
+      const data = await this._httpClient.request("get", `${api.getSwaps}?fromAddress=${creator}&limit=${limit}&offset=${offset}`)
       return data
     } catch (err) {
-      console.warn("getDepth error", err)
+      console.warn("query swap list by swap creator error", err)
       return []
     }
   }
 
   /**
-   * get open orders for an address
-   * @param {String} address binance address
-   * @param {String} symbol binance BEP2 symbol
-   * @return {Promise} resolves with http response
+   * query atomic swap list by recipient address
+   * @param {String} recipient: the recipient address of the swap
+   * @param {Number} offset from beginning, default 0
+   * @param {Number} limit, max 1000 is default
+   * @return {Promise} Array of AtomicSwap
    */
-  async getOpenOrders(address = this.address) {
+  async getSwapByRecipient(recipient, limit = 100, offset = 0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getOpenOrders}?address=${address}`)
+      const data = await this._httpClient.request("get", `${api.getSwaps}?toAddress=${recipient}&limit=${limit}&offset=${offset}`)
       return data
     } catch (err) {
-      console.warn("getOpenOrders error", err)
+      console.warn("query swap list by swap recipient error", err)
       return []
     }
   }
