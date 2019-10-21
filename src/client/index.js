@@ -19,7 +19,8 @@ export const api = {
   getMarkets: "/api/v1/markets",
   getOpenOrders: "/api/v1/orders/open",
   getDepth: "/api/v1/depth",
-  getTransactions: "/api/v1/transactions"
+  getTransactions: "/api/v1/transactions",
+  getTx: "/api/v1/tx"
 }
 
 const NETWORK_PREFIX_MAPPING = {
@@ -670,6 +671,21 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getTransactions error", err)
+      return []
+    }
+  }
+
+    /**
+   * get transaction
+   * @param {String} hash the transaction hash
+   * @return {Promise} resolves with http response
+   */
+  async getTx(hash) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getTx}/${hash}`)
+      return data
+    } catch (err) {
+      console.warn("getTx error", err)
       return []
     }
   }

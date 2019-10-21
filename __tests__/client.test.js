@@ -272,6 +272,19 @@ it("get transactions works", async () => {
   expect(transactions).toHaveProperty("total")
 })
 
+it("get tx works", async () => {
+  const testHash = 'F1C85CF924D3246EE519CE44F96F8F0FF028E509E3B3EE32A25A805EEFB21A4F'
+  const client = await getClient(false)
+  const { result: tx, status } = await client.getTx(testHash)
+  expect(status).toBe(200)
+  expect(tx).toHaveProperty("code")
+  expect(tx).toHaveProperty("data")
+  expect(tx).toHaveProperty("hash")
+  expect(tx).toHaveProperty("height")
+  expect(tx).toHaveProperty("log")
+  expect(tx).toHaveProperty("ok")
+})
+
 it("get open orders works", async () => {
   const client = await getClient(false)
   const { result: orders, status } = await client.getOpenOrders(targetAddress)
@@ -554,4 +567,4 @@ it("list MINT", async ()=>{
   }
 })
 
-// })
+})
