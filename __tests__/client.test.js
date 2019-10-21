@@ -129,6 +129,22 @@ it("get balance", async () => {
   expect(res.length).toBeGreaterThanOrEqual(0)
 })
 
+it("get swaps", async () => {
+  const client = await getClient(false)
+  const swapID = "4dd95fadfb6c064dcb99234301bf22978ade9ad49ca7a4c708305c8fea6549d8"
+  let res = await client.getSwapByID(swapID)
+  expect(res.status).toBe(200)
+  console.log(res)
+
+  res = await client.getSwapByCreator("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd", 10, 0)
+  expect(res.status).toBe(200)
+  console.log(res)
+
+  res = await client.getSwapByRecipient("tbnb1prrujx8kkukrcrppklggadhuvegfnx8pemsq77", 10, 0)
+  expect(res.status).toBe(200)
+  console.log(res)
+})
+
 it("works with a custom signing delegate", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
