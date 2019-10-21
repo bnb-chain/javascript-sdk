@@ -264,8 +264,9 @@ export const calculateRandomNumberHash = (randomNumber, timestamp) => {
  * @returns {string} sha256 result
  */
 export const calculateSwapID = (randomNumberHash, sender, senderOtherChain) => {
+  const randomNumberHashBytes = Buffer.from(randomNumberHash, "hex")
   const senderBytes = crypto.decodeAddress(sender)
-  const sendOtherChainBytes = Buffer.from(senderOtherChain, 'utf8')
-  const newBuffer = Buffer.concat([Buffer.from(randomNumberHash, "hex"), senderBytes, sendOtherChainBytes])
+  const sendOtherChainBytes = Buffer.from(senderOtherChain.toLowerCase(), "utf8")
+  const newBuffer = Buffer.concat([randomNumberHashBytes, senderBytes, sendOtherChainBytes])
   return sha256(newBuffer.toString('hex'))
 }
