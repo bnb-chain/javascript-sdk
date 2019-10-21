@@ -676,6 +676,21 @@ export class BncClient {
     }
   }
 
+    /**
+   * get transaction
+   * @param {String} hash the transaction hash
+   * @return {Promise} resolves with http response
+   */
+  async getTx(hash) {
+    try {
+      const data = await this._httpClient.request("get", `${api.getTx}/${hash}`)
+      return data
+    } catch (err) {
+      console.warn("getTx error", err)
+      return []
+    }
+  }
+
   /**
    * get transaction
    * @param {String} hash the transaction hash
