@@ -72,6 +72,13 @@
             * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Promise</code>
             * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
             * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
+            * [.getTransactions(address, offset)](#module_client.BncClient+getTransactions) ⇒ <code>Promise</code>
+            * [.getTx(hash)](#module_client.BncClient+getTx) ⇒ <code>Promise</code>
+            * [.getDepth(symbol)](#module_client.BncClient+getDepth) ⇒ <code>Promise</code>
+            * [.getOpenOrders(address, symbol)](#module_client.BncClient+getOpenOrders) ⇒ <code>Promise</code>
+            * [.getSwapByID(swapID:)](#module_client.BncClient+getSwapByID) ⇒ <code>Promise</code>
+            * [.getSwapByCreator(creator:, offset, limit,)](#module_client.BncClient+getSwapByCreator) ⇒ <code>Promise</code>
+            * [.getSwapByRecipient(recipient:, offset, limit,)](#module_client.BncClient+getSwapByRecipient) ⇒ <code>Promise</code>
             * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
             * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
             * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
@@ -118,6 +125,13 @@ The Binance Chain client.
     * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Promise</code>
     * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
     * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
+    * [.getTransactions(address, offset)](#module_client.BncClient+getTransactions) ⇒ <code>Promise</code>
+    * [.getTx(hash)](#module_client.BncClient+getTx) ⇒ <code>Promise</code>
+    * [.getDepth(symbol)](#module_client.BncClient+getDepth) ⇒ <code>Promise</code>
+    * [.getOpenOrders(address, symbol)](#module_client.BncClient+getOpenOrders) ⇒ <code>Promise</code>
+    * [.getSwapByID(swapID:)](#module_client.BncClient+getSwapByID) ⇒ <code>Promise</code>
+    * [.getSwapByCreator(creator:, offset, limit,)](#module_client.BncClient+getSwapByCreator) ⇒ <code>Promise</code>
+    * [.getSwapByRecipient(recipient:, offset, limit,)](#module_client.BncClient+getSwapByRecipient) ⇒ <code>Promise</code>
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
@@ -442,6 +456,96 @@ get markets
 | offset | <code>Number</code> | <code>0</code> | from beggining, default 0 |
 | limit, | <code>Number</code> |  | max 1000 is default |
 
+<a name="module_client.BncClient+getTransactions"></a>
+
+#### bncClient.getTransactions(address, offset) ⇒ <code>Promise</code>
+get transactions for an account
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>String</code> |  | optional address |
+| offset | <code>Number</code> | <code>0</code> | from beggining, default 0 |
+
+<a name="module_client.BncClient+getTx"></a>
+
+#### bncClient.getTx(hash) ⇒ <code>Promise</code>
+get transaction
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| hash | <code>String</code> | the transaction hash |
+
+<a name="module_client.BncClient+getDepth"></a>
+
+#### bncClient.getDepth(symbol) ⇒ <code>Promise</code>
+get depth for a given market
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| symbol | <code>String</code> | <code>BNB_BUSD-BD1</code> | the market pair |
+
+<a name="module_client.BncClient+getOpenOrders"></a>
+
+#### bncClient.getOpenOrders(address, symbol) ⇒ <code>Promise</code>
+get open orders for an address
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with http response  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>String</code> | binance address |
+| symbol | <code>String</code> | binance BEP2 symbol |
+
+<a name="module_client.BncClient+getSwapByID"></a>
+
+#### bncClient.getSwapByID(swapID:) ⇒ <code>Promise</code>
+get atomic swap
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - AtomicSwap  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| swapID: | <code>String</code> | ID of an existing swap |
+
+<a name="module_client.BncClient+getSwapByCreator"></a>
+
+#### bncClient.getSwapByCreator(creator:, offset, limit,) ⇒ <code>Promise</code>
+query atomic swap list by creator address
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - Array of AtomicSwap  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| creator: | <code>String</code> | swap creator address |
+| offset | <code>Number</code> | from beginning, default 0 |
+| limit, | <code>Number</code> | max 1000 is default |
+
+<a name="module_client.BncClient+getSwapByRecipient"></a>
+
+#### bncClient.getSwapByRecipient(recipient:, offset, limit,) ⇒ <code>Promise</code>
+query atomic swap list by recipient address
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - Array of AtomicSwap  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| recipient: | <code>String</code> | the recipient address of the swap |
+| offset | <code>Number</code> | from beginning, default 0 |
+| limit, | <code>Number</code> | max 1000 is default |
+
 <a name="module_client.BncClient+createAccount"></a>
 
 #### bncClient.createAccount() ⇒ <code>object</code>
@@ -726,7 +830,6 @@ Gets an address from a private key.
 | Param | Type | Description |
 | --- | --- | --- |
 | privateKeyHex | <code>string</code> | the private key hexstring |
-| prefix | <code>string</code> | the address prefix |
 
 <a name="module_crypto.generateSignature"></a>
 
