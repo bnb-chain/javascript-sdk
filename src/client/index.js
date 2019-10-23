@@ -690,7 +690,7 @@ export class BncClient {
       return []
     }
   }
-  
+
   /**
    * get depth for a given market
    * @param {String} symbol the market pair
@@ -833,7 +833,7 @@ export class BncClient {
   /**
    * Recovers an account from a keystore object.
    * @param {object} keystore object.
-   * @param {string} keystore password.
+   * @param {string} password password.
    * {
    * privateKey,
    * address
