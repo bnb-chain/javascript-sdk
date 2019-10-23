@@ -726,6 +726,7 @@ Gets an address from a private key.
 | Param | Type | Description |
 | --- | --- | --- |
 | privateKeyHex | <code>string</code> | the private key hexstring |
+| prefix | <code>string</code> | the address prefix |
 
 <a name="module_crypto.generateSignature"></a>
 
