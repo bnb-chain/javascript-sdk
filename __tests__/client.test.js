@@ -280,6 +280,45 @@ it("get markets works", async () => {
   expect(markets[0]).toHaveProperty("lot_size")
 })
 
+it("get transactions works", async () => {
+  const client = await getClient(false)
+  const { result: transactions, status } = await client.getTransactions(targetAddress)
+  expect(status).toBe(200)
+  expect(transactions).toHaveProperty("tx")
+  expect(transactions).toHaveProperty("total")
+})
+
+it("get tx works", async () => {
+  const testHash = 'F1C85CF924D3246EE519CE44F96F8F0FF028E509E3B3EE32A25A805EEFB21A4F'
+  const client = await getClient(false)
+  const { result: tx, status } = await client.getTx(testHash)
+  expect(status).toBe(200)
+  expect(tx).toHaveProperty("code")
+  expect(tx).toHaveProperty("data")
+  expect(tx).toHaveProperty("hash")
+  expect(tx).toHaveProperty("height")
+  expect(tx).toHaveProperty("log")
+  expect(tx).toHaveProperty("ok")
+})
+
+it("get open orders works", async () => {
+  const client = await getClient(false)
+  const { result: orders, status } = await client.getOpenOrders(targetAddress)
+  expect(status).toBe(200)
+  expect(orders).toHaveProperty("order")
+  expect(orders).toHaveProperty("total")
+})
+
+it("get depth works", async () => {
+  const symbol = "BNB_USDT.B-B7C"
+  const client = await getClient(false)
+  const { result: depth, status } = await client.getDepth(symbol)
+  expect(status).toBe(200)
+  expect(depth).toHaveProperty("bids")
+  expect(depth).toHaveProperty("asks")
+  expect(depth).toHaveProperty("height")
+})
+
 it("check number when transfer", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
@@ -544,4 +583,4 @@ it("list MINT", async ()=>{
   }
 })
 
-// })
+})
