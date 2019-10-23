@@ -75,7 +75,7 @@
             * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
             * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
             * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
-            * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
+            * [.recoverAccountFromKeystore(keystore, password)](#module_client.BncClient+recoverAccountFromKeystore)
             * [.recoverAccountFromMnemonic(mneomnic)](#module_client.BncClient+recoverAccountFromMnemonic)
             * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
             * [.checkAddress(address, prefix)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
@@ -121,7 +121,7 @@ The Binance Chain client.
     * [.createAccount()](#module_client.BncClient+createAccount) ⇒ <code>object</code>
     * [.createAccountWithKeystore(password)](#module_client.BncClient+createAccountWithKeystore)
     * [.createAccountWithMneomnic()](#module_client.BncClient+createAccountWithMneomnic) ⇒ <code>object</code>
-    * [.recoverAccountFromKeystore(keystore, keystore)](#module_client.BncClient+recoverAccountFromKeystore)
+    * [.recoverAccountFromKeystore(keystore, password)](#module_client.BncClient+recoverAccountFromKeystore)
     * [.recoverAccountFromMnemonic(mneomnic)](#module_client.BncClient+recoverAccountFromMnemonic)
     * [.recoverAccountFromPrivateKey(privateKey)](#module_client.BncClient+recoverAccountFromPrivateKey)
     * [.checkAddress(address, prefix)](#module_client.BncClient+checkAddress) ⇒ <code>Boolean</code>
@@ -477,7 +477,7 @@ Creates an account from mnemonic seed phrase.
 }  
 <a name="module_client.BncClient+recoverAccountFromKeystore"></a>
 
-#### bncClient.recoverAccountFromKeystore(keystore, keystore)
+#### bncClient.recoverAccountFromKeystore(keystore, password)
 Recovers an account from a keystore object.
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
@@ -485,7 +485,7 @@ Recovers an account from a keystore object.
 | Param | Type | Description |
 | --- | --- | --- |
 | keystore | <code>object</code> | object. |
-| keystore | <code>string</code> | password. { privateKey, address } |
+| password | <code>string</code> | password. { privateKey, address } |
 
 <a name="module_client.BncClient+recoverAccountFromMnemonic"></a>
 
