@@ -26,7 +26,7 @@ if (typeof window !== "undefined") {
 //#region Init Connection
 
 const getApp = async function(timeout = LONG_TIMEOUT) {
-  const transClass = isBrowser ? Ledger.transports.u2f : Ledger.transports.node
+  const transClass = Ledger.transports.u2f
   const transport = await transClass.create(timeout)
   app = new Ledger.app(transport)
 
