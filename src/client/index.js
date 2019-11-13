@@ -539,6 +539,31 @@ export class BncClient {
   }
 
   /**
+   * Set account flags 
+   * @param {String} address
+   * @param {Number} flags new value of account flags 
+   * @param {Number} sequence optional sequence
+   * @return {Promise} resolves with response (success or fail)
+   */
+  async setAccountFlags(address, flags, sequence = null) {
+    const accCode = crypto.decodeAddress(address)
+
+    const msg = {
+      from: accCode,
+      flags: flags,
+      msgType: "SetAccountFlagsMsg"
+    }
+
+    const signMsg = {
+      flags: flags,
+      from: address
+    }
+
+    const signedTx = await this._prepareTransaction(msg, signMsg, address, sequence, "")
+    return this._broadcastDelegate(signedTx)
+  }
+
+  /**
    * Prepare a serialized raw transaction for sending to the blockchain.
    * @param {Object} msg the msg object
    * @param {Object} stdSignMsg the sign doc object used to generate a signature
