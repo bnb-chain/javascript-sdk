@@ -3,23 +3,84 @@ import { checkNumber } from "../src/utils/validateHelper"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 import { voteOption } from "../src/gov/"
-import {calculateRandomNumberHash, calculateSwapID} from "../src/utils/index"
+import { calculateRandomNumberHash, calculateSwapID } from "../src/utils/index"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
-const mnemonic = "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
+const mnemonic =
+  "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
 
 const keystores = {
   // keystore with sha3 mac
-  new: {"version":1,"id":"4cffb5da-2f64-48ea-b1c7-c4dd9fe53da8","crypto":{"ciphertext":"721fadbb4d7a53aefb3895c089115da5203e36221bb8735f539e6c9d466b3567","cipherparams":{"iv":"19e3ae15059bb8b80e91fdbb30d0d28b"},"cipher":"aes-256-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"04fc271dcd65e9e833ed2b6a1b4f90ce80b06fb57f9283c29d403cc269e4d8a7","c":262144,"prf":"hmac-sha256"},"mac":"32beae99a8cc2f9f2134f5aad1047b33182d3bd9996f9c7a88c51429da8942d7fbd44d6035934031aaee3af189cd54644c4655bb6c20c96f7c25ac906ca4786d"}},
+  new: {
+    version: 1,
+    id: "4cffb5da-2f64-48ea-b1c7-c4dd9fe53da8",
+    crypto: {
+      ciphertext:
+        "721fadbb4d7a53aefb3895c089115da5203e36221bb8735f539e6c9d466b3567",
+      cipherparams: { iv: "19e3ae15059bb8b80e91fdbb30d0d28b" },
+      cipher: "aes-256-ctr",
+      kdf: "pbkdf2",
+      kdfparams: {
+        dklen: 32,
+        salt:
+          "04fc271dcd65e9e833ed2b6a1b4f90ce80b06fb57f9283c29d403cc269e4d8a7",
+        c: 262144,
+        prf: "hmac-sha256"
+      },
+      mac:
+        "32beae99a8cc2f9f2134f5aad1047b33182d3bd9996f9c7a88c51429da8942d7fbd44d6035934031aaee3af189cd54644c4655bb6c20c96f7c25ac906ca4786d"
+    }
+  },
   // keystore with sha256 mac
-  legacy: { "version": 1, "id": "dfb09873-f16f-48c6-a6b8-bb5a705c47a7", "address": "bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk", "crypto": { "ciphertext": "33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b", "cipherparams": { "iv": "88c726d70cd0437bfdb2312dc60103fc" }, "cipher": "aes-256-ctr", "kdf": "pbkdf2", "kdfparams": { "dklen": 32, "salt": "ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9", "c": 262144, "prf": "hmac-sha256" }, "mac": "f7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e" } },
+  legacy: {
+    version: 1,
+    id: "dfb09873-f16f-48c6-a6b8-bb5a705c47a7",
+    address: "bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk",
+    crypto: {
+      ciphertext:
+        "33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b",
+      cipherparams: { iv: "88c726d70cd0437bfdb2312dc60103fc" },
+      cipher: "aes-256-ctr",
+      kdf: "pbkdf2",
+      kdfparams: {
+        dklen: 32,
+        salt:
+          "ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9",
+        c: 262144,
+        prf: "hmac-sha256"
+      },
+      mac: "f7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e"
+    }
+  },
   // keystore with bad mac
-  badMac: { "version": 1, "id": "dfb09873-f16f-48c6-a6b8-bb5a705c47a7", "address": "bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk", "crypto": { "ciphertext": "33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b", "cipherparams": { "iv": "88c726d70cd0437bfdb2312dc60103fc" }, "cipher": "aes-256-ctr", "kdf": "pbkdf2", "kdfparams": { "dklen": 32, "salt": "ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9", "c": 262144, "prf": "hmac-sha256" }, "mac": "x7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e" } },
+  badMac: {
+    version: 1,
+    id: "dfb09873-f16f-48c6-a6b8-bb5a705c47a7",
+    address: "bnc1dxj068zgk007fchefj9n8tq06pcuce5ypqm5zk",
+    crypto: {
+      ciphertext:
+        "33b7439a8d64d73357dc91f88a6b3a45e7303717664d17daf8e8dc1cc708fa4b",
+      cipherparams: { iv: "88c726d70cd0437bfdb2312dc60103fc" },
+      cipher: "aes-256-ctr",
+      kdf: "pbkdf2",
+      kdfparams: {
+        dklen: 32,
+        salt:
+          "ad10ef544417d4a25914dec3d908882686dd9d793b5c484b76fd5aa575cf54b9",
+        c: 262144,
+        prf: "hmac-sha256"
+      },
+      mac: "x7cc301d18c97c71741492b8029544952ad5567a733971deb49fd3eb03ee696e"
+    }
+  }
 }
 
 const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
-const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = false) => {
+const getClient = async (
+  useAwaitSetPrivateKey = true,
+  doNotSetPrivateKey = false
+) => {
   const client = new BncClient("https://testnet-dex.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
@@ -37,20 +98,26 @@ const getClient = async (useAwaitSetPrivateKey = true, doNotSetPrivateKey = fals
 }
 
 const wait = ms => {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
+  return new Promise(function(resolve) {
+    setTimeout(function() {
       resolve()
     }, ms)
   })
 }
 // describe("checkNumber", async () => {
 it("ensures that the number is positive", async () => {
-  expect(() => checkNumber(-100, "-100")).toThrowError("-100 should be a positive number")
+  expect(() => checkNumber(-100, "-100")).toThrowError(
+    "-100 should be a positive number"
+  )
 })
 
 it("ensures that the number is less than 2^63", async () => {
-  expect(() => checkNumber(Math.pow(2, 63), "2^63")).toThrowError("2^63 should be less than 2^63")
-  expect(() => checkNumber(Math.pow(2, 63) + 1, "2^63")).toThrowError("2^63 should be less than 2^63")
+  expect(() => checkNumber(Math.pow(2, 63), "2^63")).toThrowError(
+    "2^63 should be less than 2^63"
+  )
+  expect(() => checkNumber(Math.pow(2, 63) + 1, "2^63")).toThrowError(
+    "2^63 should be less than 2^63"
+  )
 })
 // })
 
@@ -92,7 +159,10 @@ it("recover account from keystore", async () => {
 
 it("recover account from legacy (sha256) keystore", async () => {
   const client = await getClient(false, true)
-  const res = client.recoverAccountFromKeystore(keystores.legacy, "12345qwert!S")
+  const res = client.recoverAccountFromKeystore(
+    keystores.legacy,
+    "12345qwert!S"
+  )
   expect(res.address).toBeTruthy()
   expect(res.privateKey).toBeTruthy()
 })
@@ -108,7 +178,7 @@ it("recover account from mneomnic", async () => {
   jest.setTimeout(50000)
   const client = await getClient(false)
   const res = client.recoverAccountFromMneomnic(mnemonic)
-  await (1500)
+  await 1500
   expect(res.address).toBeTruthy()
   expect(res.privateKey).toBeTruthy()
 })
@@ -118,7 +188,7 @@ it("recover account from privatekey", async () => {
   const client = await getClient(false)
   const pk = crypto.generatePrivateKey()
   const res = client.recoverAccountFromPrivateKey(pk)
-  await (1500)
+  await 1500
   expect(res.address).toBeTruthy()
   expect(res.privateKey).toBeTruthy()
 })
@@ -131,16 +201,25 @@ it("get balance", async () => {
 
 it("get swaps", async () => {
   const client = await getClient(false)
-  const swapID = "4dd95fadfb6c064dcb99234301bf22978ade9ad49ca7a4c708305c8fea6549d8"
+  const swapID =
+    "4dd95fadfb6c064dcb99234301bf22978ade9ad49ca7a4c708305c8fea6549d8"
   let res = await client.getSwapByID(swapID)
   expect(res.status).toBe(200)
   console.log(res)
 
-  res = await client.getSwapByCreator("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd", 10, 0)
+  res = await client.getSwapByCreator(
+    "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
+    10,
+    0
+  )
   expect(res.status).toBe(200)
   console.log(res)
 
-  res = await client.getSwapByRecipient("tbnb1prrujx8kkukrcrppklggadhuvegfnx8pemsq77", 10, 0)
+  res = await client.getSwapByRecipient(
+    "tbnb1prrujx8kkukrcrppklggadhuvegfnx8pemsq77",
+    10,
+    0
+  )
   expect(res.status).toBe(200)
   console.log(res)
 })
@@ -148,7 +227,10 @@ it("get swaps", async () => {
 it("works with a custom signing delegate", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
-  const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+  const account = await client._httpClient.request(
+    "get",
+    `/api/v1/account/${addr}`
+  )
   const sequence = account.result && account.result.sequence
 
   client.setSigningDelegate((tx, signMsg) => {
@@ -159,7 +241,14 @@ it("works with a custom signing delegate", async () => {
   })
 
   try {
-    await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
+    await client.transfer(
+      addr,
+      targetAddress,
+      0.00000001,
+      "BNB",
+      "hello world",
+      sequence
+    )
   } catch (err) {
     // will throw because a signature was not added by the signing delegate.
   }
@@ -168,7 +257,10 @@ it("works with a custom signing delegate", async () => {
 it("works with a custom broadcast delegate", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
-  const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+  const account = await client._httpClient.request(
+    "get",
+    `/api/v1/account/${addr}`
+  )
   const sequence = account.result && account.result.sequence
 
   client.setBroadcastDelegate(signedTx => {
@@ -177,7 +269,14 @@ it("works with a custom broadcast delegate", async () => {
     return "broadcastDelegateResult"
   })
 
-  const res = await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
+  const res = await client.transfer(
+    addr,
+    targetAddress,
+    0.00000001,
+    "BNB",
+    "hello world",
+    sequence
+  )
   expect(res).toBe("broadcastDelegateResult")
 })
 
@@ -188,15 +287,32 @@ it("transfer placeOrder cancelOrder only", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
   const accCode = crypto.decodeAddress(addr)
-  const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+  const account = await client._httpClient.request(
+    "get",
+    `/api/v1/account/${addr}`
+  )
   const sequence = account.result && account.result.sequence
-  const res = await client.transfer(addr, targetAddress, 0.00000001, "BNB", "hello world", sequence)
+  const res = await client.transfer(
+    addr,
+    targetAddress,
+    0.00000001,
+    "BNB",
+    "hello world",
+    sequence
+  )
   expect(res.status).toBe(200)
 
   await wait(3000)
 
   // acc needs .004 BNB to lock
-  const res1 = await client.placeOrder(addr, symbol, 2, 40, 0.0001, sequence + 1)
+  const res1 = await client.placeOrder(
+    addr,
+    symbol,
+    2,
+    40,
+    0.0001,
+    sequence + 1
+  )
   expect(res1.status).toBe(200)
 
   await wait(5000)
@@ -206,24 +322,35 @@ it("transfer placeOrder cancelOrder only", async () => {
   expect(res2.status).toBe(200)
 })
 
-it("transfer with presicion", async ()=>{
+it("transfer with presicion", async () => {
   jest.setTimeout(30000)
 
   const coin = "BNB"
   let amount = 2.00177011
   const client = await getClient(false)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
-  const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+  const account = await client._httpClient.request(
+    "get",
+    `/api/v1/account/${addr}`
+  )
   const sequence = account.result && account.result.sequence
-  const res = await client.transfer(addr, targetAddress, amount, coin, "hello world", sequence)
+  const res = await client.transfer(
+    addr,
+    targetAddress,
+    amount,
+    coin,
+    "hello world",
+    sequence
+  )
   expect(res.status).toBe(200)
 
-  try{
+  try {
     const hash = res.result[0].hash
     const res2 = await client._httpClient.get(`/api/v1/tx/${hash}?format=json`)
-    const sendAmount = res2.result.tx.value.msg[0].value.inputs[0].coins[0].amount
+    const sendAmount =
+      res2.result.tx.value.msg[0].value.inputs[0].coins[0].amount
     expect(sendAmount).toBe(200177011)
-  }catch(err){
+  } catch (err) {
     //
   }
 })
@@ -282,14 +409,17 @@ it("get markets works", async () => {
 
 it("get transactions works", async () => {
   const client = await getClient(false)
-  const { result: transactions, status } = await client.getTransactions(targetAddress)
+  const { result: transactions, status } = await client.getTransactions(
+    targetAddress
+  )
   expect(status).toBe(200)
   expect(transactions).toHaveProperty("tx")
   expect(transactions).toHaveProperty("total")
 })
 
 it("get tx works", async () => {
-  const testHash = 'F1C85CF924D3246EE519CE44F96F8F0FF028E509E3B3EE32A25A805EEFB21A4F'
+  const testHash =
+    "F1C85CF924D3246EE519CE44F96F8F0FF028E509E3B3EE32A25A805EEFB21A4F"
   const client = await getClient(false)
   const { result: tx, status } = await client.getTx(testHash)
   expect(status).toBe(200)
@@ -323,17 +453,34 @@ it("check number when transfer", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
 
-  const account = await client._httpClient.request("get", `/api/v1/account/${addr}`)
+  const account = await client._httpClient.request(
+    "get",
+    `/api/v1/account/${addr}`
+  )
   const sequence = account.result && account.result.sequence
 
   try {
-    await client.transfer(addr, targetAddress, -1, "BNB", "hello world", sequence)
+    await client.transfer(
+      addr,
+      targetAddress,
+      -1,
+      "BNB",
+      "hello world",
+      sequence
+    )
   } catch (err) {
     expect(err.message).toBe("amount should be a positive number")
   }
 
   try {
-    await client.transfer(addr, targetAddress, Math.pow(2, 63), "BNB", "hello world", sequence)
+    await client.transfer(
+      addr,
+      targetAddress,
+      Math.pow(2, 63),
+      "BNB",
+      "hello world",
+      sequence
+    )
   } catch (err) {
     expect(err.message).toBe("amount should be less than 2^63")
   }
@@ -360,26 +507,34 @@ it("check number when place order", async () => {
 it("multiSend", async () => {
   const client = await getClient(true)
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
-  const transfers = [{
-    "to": "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
-    "coins": [{
-      "denom": "BNB",
-      "amount": 0.01
-    }, {
-      "denom": "USDT.B-B7C",
-      "amount": 0.01
-    }]
-  },
-  {
-    "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
-    "coins": [{
-      "denom": "USDT.B-B7C",
-      "amount": 0.02
-    }, {
-      "denom": "BNB",
-      "amount": 0.3
-    }]
-  }]
+  const transfers = [
+    {
+      to: "tbnb1p4kpnj5qz5spsaf0d2555h6ctngse0me5q57qe",
+      coins: [
+        {
+          denom: "BNB",
+          amount: 0.01
+        },
+        {
+          denom: "USDT.B-B7C",
+          amount: 0.01
+        }
+      ]
+    },
+    {
+      to: "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
+      coins: [
+        {
+          denom: "USDT.B-B7C",
+          amount: 0.02
+        },
+        {
+          denom: "BNB",
+          amount: 0.3
+        }
+      ]
+    }
+  ]
 
   const { status } = await client.multiSend(addr, transfers)
   expect(status).toBe(200)
@@ -392,7 +547,13 @@ it("issue token", async () => {
   const tokenName = "test issue token"
   const totalSupply = 21000000
 
-  const res = await client.tokens.issue(addr, tokenName, symbol, totalSupply, true)
+  const res = await client.tokens.issue(
+    addr,
+    tokenName,
+    symbol,
+    totalSupply,
+    true
+  )
   console.log(res)
   expect(res.status).toBe(200)
 })
@@ -401,11 +562,13 @@ it("time lock token", async () => {
   const client = await getClient(true)
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const description = "timelock token test"
-  const amount = [{
-    denom: "BNB",
-    amount: 100000
-  }]
-  const timeLock = Math.floor(Date.now()/1000)+100;
+  const amount = [
+    {
+      denom: "BNB",
+      amount: 100000
+    }
+  ]
+  const timeLock = Math.floor(Date.now() / 1000) + 100
   const res = await client.tokens.timeLock(addr, description, amount, timeLock)
   console.log(res)
   expect(res.status).toBe(200)
@@ -415,13 +578,21 @@ it("time relock token", async () => {
   const client = await getClient(true)
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const description = "timerelock token test"
-  const amount = [{
-    denom: "BNB",
-    amount: 150000
-  }]
+  const amount = [
+    {
+      denom: "BNB",
+      amount: 150000
+    }
+  ]
   const id = 2248
-  const timeLock = Math.floor(Date.now()/1000)+200
-  const res = await client.tokens.timeRelock(addr, id, description, amount, timeLock)
+  const timeLock = Math.floor(Date.now() / 1000) + 200
+  const res = await client.tokens.timeRelock(
+    addr,
+    id,
+    description,
+    amount,
+    timeLock
+  )
   console.log(res)
   expect(res.status).toBe(200)
 })
@@ -439,15 +610,29 @@ it("htlt", async () => {
   const client = await getClient(true)
   const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const recipient = "tbnb1prrujx8kkukrcrppklggadhuvegfnx8pemsq77"
-  const randomNumber = "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
-  const timestamp = Math.floor(Date.now()/1000)
+  const randomNumber =
+    "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
+  const timestamp = Math.floor(Date.now() / 1000)
   const randomNumberHash = calculateRandomNumberHash(randomNumber, timestamp)
-  const amount = [{
-    denom: "BNB",
-    amount: 100000
-  }]
+  const amount = [
+    {
+      denom: "BNB",
+      amount: 100000
+    }
+  ]
   const expectedIncome = "100000:BNB"
-  const res = await client.swap.HTLT(from, recipient, "", "", randomNumberHash, timestamp, amount, expectedIncome, 400, false)
+  const res = await client.swap.HTLT(
+    from,
+    recipient,
+    "",
+    "",
+    randomNumberHash,
+    timestamp,
+    amount,
+    expectedIncome,
+    400,
+    false
+  )
   console.log(res)
   console.log(calculateSwapID(randomNumberHash, from, ""))
   expect(res.status).toBe(200)
@@ -456,11 +641,14 @@ it("htlt", async () => {
 it("deposit HTLT", async () => {
   const client = await getClient(true)
   const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
-  const swapID = "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
-  const amount = [{
-    denom: "BNB",
-    amount: 100000
-  }]
+  const swapID =
+    "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
+  const amount = [
+    {
+      denom: "BNB",
+      amount: 100000
+    }
+  ]
   const res = await client.swap.depositHTLT(from, swapID, amount)
   console.log(res)
   expect(res.status).toBe(200)
@@ -469,8 +657,10 @@ it("deposit HTLT", async () => {
 it("claim HTLT", async () => {
   const client = await getClient(true)
   const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
-  const swapID = "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
-  const randomNumber = "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
+  const swapID =
+    "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
+  const randomNumber =
+    "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
   const res = await client.swap.claimHTLT(from, swapID, randomNumber)
   console.log(res)
   expect(res.status).toBe(200)
@@ -479,7 +669,8 @@ it("claim HTLT", async () => {
 it("refund HTLT", async () => {
   const client = await getClient(true)
   const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
-  const swapID = "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
+  const swapID =
+    "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
   const res = await client.swap.refundHTLT(from, swapID)
   console.log(res)
   expect(res.status).toBe(200)
@@ -551,10 +742,12 @@ it("submitListProposal", async () => {
 it("depositProposal", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
-  const coins = [{
-    denom: "BNB",
-    amount: 1000
-  }]
+  const coins = [
+    {
+      denom: "BNB",
+      amount: 1000
+    }
+  ]
   const res = await client.gov.deposit(494, addr, coins)
   console.log(res)
   expect(res.status).toBe(200)
@@ -570,17 +763,17 @@ it("voteProposal", async () => {
   expect(res.result[0].code).toBe(0)
 })
 
-it("list MINT", async ()=>{
+it("list MINT", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
-  try{
+  try {
     const res = await client.list(addr, 620, "MINT-200", "BNB", 1)
     console.log(res)
     expect(res.status).toBe(200)
     expect(res.result[0].code).toBe(0)
-  }catch(err){
+  } catch (err) {
     expect(err.message).toBe("trading pair exists")
   }
 })
 
-})
+// })
