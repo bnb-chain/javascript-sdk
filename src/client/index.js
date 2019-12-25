@@ -499,11 +499,11 @@ export class BncClient {
       throw new Error("address should not be falsy")
     }
 
-    if(proposalId <= 0){
+    if (proposalId <= 0) {
       throw new Error("proposal id should larger than 0")
     }
 
-    if(initPrice <= 0){
+    if (initPrice <= 0) {
       throw new Error("price should larger than 0")
     }
 
@@ -663,12 +663,30 @@ export class BncClient {
   /**
    * get transactions for an account
    * @param {String} address optional address
+   * @param {Number} blockHeight blockHeight
+   * @param {Number} endTime endTime in Milliseconds, default current time
+   * @param {Number} limit transactions, default 25
    * @param {Number} offset from beggining, default 0
+   * @param {String} side transaction side. Allowed value: [ RECEIVE, SEND ]
+   * @param {String} txAsset transaction asset, default BNB
+   * @param {Number} startTime start time in Milliseconds
+   * @param {String} txType transaction type. Allowed value: [ NEW_ORDER,ISSUE_TOKEN,BURN_TOKEN,LIST_TOKEN,CANCEL_ORDER,FREEZE_TOKEN,UN_FREEZE_TOKEN,TRANSFER,PROPOSAL,VOTE,MINT,DEPOSIT,CREATE_VALIDATOR,REMOVE_VALIDATOR,TIME_LOCK,TIME_UNLOCK,TIME_RELOCK,SET_ACCOUNT_FLAG,HTL_TRANSFER,CLAIM_HTL,DEPOSIT_HTL,REFUND_HTL ]
    * @return {Promise} resolves with http response
    */
-  async getTransactions(address = this.address, offset = 0) {
+  async getTransactions(address = this.address, blockHeight = 0, endTime = new Date().getTime(), limit = 25, offset = 0, side = "", startTime = 0, txAsset = "BNB", txType = "") {
     try {
-      const data = await this._httpClient.request("get", `${api.getTransactions}?address=${address}&offset=${offset}`)
+      const data = await this._httpClient.request("get",
+        `${api.getTransactions}
+        ?address=${address}
+        ${blockHeight ? `&blockHeight=${blockHeight}` : ""}
+        &endTime=${endTime}
+        &limit=${limit}
+        &offset=${offset}
+        ${side ? `&side=${side}` : ""}
+        ${startTime ? `&startTime=${startTime}` : ""}
+        &txAsset=${txAsset}
+        ${txType ? `&txType=${txType}` : ""}
+        `)
       return data
     } catch (err) {
       console.warn("getTransactions error", err)
@@ -676,11 +694,11 @@ export class BncClient {
     }
   }
 
-    /**
-   * get transaction
-   * @param {String} hash the transaction hash
-   * @return {Promise} resolves with http response
-   */
+  /**
+ * get transaction
+ * @param {String} hash the transaction hash
+ * @return {Promise} resolves with http response
+ */
   async getTx(hash) {
     try {
       const data = await this._httpClient.request("get", `${api.getTx}/${hash}`)
