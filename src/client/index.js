@@ -675,18 +675,19 @@ export class BncClient {
    */
   async getTransactions(address = this.address, blockHeight = 0, endTime = new Date().getTime(), limit = 25, offset = 0, side = "", startTime = 0, txAsset = "BNB", txType = "") {
     try {
-      const data = await this._httpClient.request("get",
-        `${api.getTransactions}
-        ?address=${address}
-        ${blockHeight ? `&blockHeight=${blockHeight}` : ""}
-        &endTime=${endTime}
-        &limit=${limit}
-        &offset=${offset}
-        ${side ? `&side=${side}` : ""}
-        ${startTime ? `&startTime=${startTime}` : ""}
-        &txAsset=${txAsset}
-        ${txType ? `&txType=${txType}` : ""}
-        `)
+      const path = `${api.getTransactions}
+      ?address=${address}
+      ${blockHeight ? `&blockHeight=${blockHeight}` : ""}
+      &endTime=${endTime}
+      &limit=${limit}
+      &offset=${offset}
+      ${side ? `&side=${side}` : ""}
+      ${startTime ? `&startTime=${startTime}` : ""}
+      &txAsset=${txAsset}
+      ${txType ? `&txType=${txType}` : ""}
+      `.replace(/\s/g, "")
+
+      const data = await this._httpClient.request("get", path)
       return data
     } catch (err) {
       console.warn("getTransactions error", err)
