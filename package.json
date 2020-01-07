@@ -1,6 +1,6 @@
 {
   "name": "@binance-chain/javascript-sdk",
-  "version": "2.16.2",
+  "version": "2.16.3",
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "scripts": {
