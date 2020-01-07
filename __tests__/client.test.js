@@ -776,4 +776,15 @@ it("list MINT", async () => {
   }
 })
 
+it("set privatekey", async () => {
+  try {
+    const client = await getClient(true)
+    const privateKey = BncClient.crypto.generatePrivateKey()
+    await client.setPrivateKey(privateKey)
+    expect(true).toBeTruthy()
+  } catch (err) {
+    expect(false).toBeTruthy()
+  }
+})
+
 // })

@@ -4,7 +4,7 @@ import axios from "axios"
  * @alias utils.HttpRequest
  */
 class HttpRequest {
-  constructor(baseURL){
+  constructor(baseURL) {
     this.httpClient = axios.create({ baseURL })
   }
 
@@ -35,12 +35,20 @@ class HttpRequest {
       .request(options)
       .then(response => {
         return { result: response.data, status: response.status }
-      }).catch(err => {
+      })
+      .catch(err => {
         let error = err
         try {
           const msgObj = err.response && err.response.data
-          error = new Error(msgObj.message)
-          error.code = msgObj.code
+          if (msgObj) {
+            error = new Error(msgObj.message)
+            error.code = msgObj.code
+          } else {
+            const errMsg = err.response && err.response.statusText
+            const status = err.response && err.response.status
+            error = new Error(errMsg)
+            error.code = status
+          }
         } catch (err) {
           throw error
         }
