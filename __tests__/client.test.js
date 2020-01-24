@@ -776,4 +776,10 @@ it("list MINT", async () => {
   }
 })
 
-// })
+it("set account flags", async () => {
+  const client = await getClient(true)
+  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const res = await client.setAccountFlags(addr, 0x01)
+  expect(res.status).toBe(200)
+  expect(res.result[0].code).toBe(0)
+})

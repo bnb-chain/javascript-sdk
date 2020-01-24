@@ -24,7 +24,8 @@ export const TxTypes = {
   HTLTMsg: "HTLTMsg",
   DepositHTLTMsg: "DepositHTLTMsg",
   ClaimHTLTMsg: "ClaimHTLTMsg",
-  RefundHTLTMsg: "RefundHTLTMsg"
+  RefundHTLTMsg: "RefundHTLTMsg",
+  SetAccountFlagsMsg: "SetAccountFlagsMsg"
 }
 
 export const TypePrefixes = {
@@ -49,7 +50,8 @@ export const TypePrefixes = {
   HTLTMsg: "B33F9A24",
   DepositHTLTMsg: "63986496",
   ClaimHTLTMsg: "C1665300",
-  RefundHTLTMsg: "3454A27C"
+  RefundHTLTMsg: "3454A27C",
+  SetAccountFlagsMsg: "BEA6E301"
 }
 
 /**
