@@ -249,11 +249,11 @@ export const calculateRandomNumberHash = (randomNumber, timestamp) => {
   const timestampHexStr = timestamp.toString(16)
   let timestampHexStrFormat = timestampHexStr
   for (let i = 0; i < 16 - timestampHexStr.length; i++) {
-    timestampHexStrFormat = '0' + timestampHexStrFormat;
+    timestampHexStrFormat = "0" + timestampHexStrFormat
   }
   const timestampBytes = Buffer.from(timestampHexStrFormat, "hex")
   const newBuffer = Buffer.concat([Buffer.from(randomNumber, "hex"), timestampBytes])
-  return sha256(newBuffer.toString('hex'))
+  return sha256(newBuffer.toString("hex"))
 }
 
 /**
@@ -268,5 +268,5 @@ export const calculateSwapID = (randomNumberHash, sender, senderOtherChain) => {
   const senderBytes = crypto.decodeAddress(sender)
   const sendOtherChainBytes = Buffer.from(senderOtherChain.toLowerCase(), "utf8")
   const newBuffer = Buffer.concat([randomNumberHashBytes, senderBytes, sendOtherChainBytes])
-  return sha256(newBuffer.toString('hex'))
+  return sha256(newBuffer.toString("hex"))
 }

@@ -282,7 +282,7 @@ export const validateMnemonic = bip39.validateMnemonic
  * @param {string} password according to bip39
  * @return {string} hexstring
  */
-export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0, password = '') => {
+export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0, password = "") => {
 
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error("wrong mnemonic format")
