@@ -162,15 +162,19 @@ export class BncClient {
   async setPrivateKey(privateKey, localOnly = false) {
     if (privateKey !== this.privateKey) {
       const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
-      if (!address) throw new Error("address is falsy: ${address}. invalid private key?")
+      if (!address) throw new Error(`address is falsy: ${address}. invalid private key?`)
       if (address === this.address) return this // safety
       this.privateKey = privateKey
       this.address = address
       if (!localOnly) {
         // _setPkPromise is used in _sendTransaction for non-await calls
-        const promise = this._setPkPromise = this._httpClient.request("get", `${api.getAccount}/${address}`)
-        const data = await promise
-        this.account_number = data.result.account_number
+        try {
+          const promise = this._setPkPromise = this._httpClient.request("get", `${api.getAccount}/${address}`)
+          const data = await promise
+          this.account_number = data.result.account_number
+        } catch (e) {
+          throw new Error(`unable to query the address on the blockchain. try sending it some funds first: ${address}`)
+        }
       }
     }
     return this
@@ -701,7 +705,7 @@ export class BncClient {
     }
   }
 
-    /**
+  /**
    * get transaction
    * @param {String} hash the transaction hash
    * @return {Promise} resolves with http response
@@ -721,7 +725,7 @@ export class BncClient {
    * @param {String} symbol the market pair
    * @return {Promise} resolves with http response
    */
-  async getDepth(symbol = 'BNB_BUSD-BD1') {
+  async getDepth(symbol = "BNB_BUSD-BD1") {
     try {
       const data = await this._httpClient.request("get", `${api.getDepth}?symbol=${symbol}`)
       return data
