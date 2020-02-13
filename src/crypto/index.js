@@ -284,9 +284,17 @@ export const validateMnemonic = bip39.validateMnemonic
  */
 export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0, password = "") => {
 
-  if (!bip39.validateMnemonic(mnemonic)) {
-    throw new Error("wrong mnemonic format")
+  if (!bip39.validateMnemonic(mnemonic, bip39.wordlists.english)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.chinese_simplified)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.chinese_traditional)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.korean)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.french)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.italian)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.spanish)
+        && !bip39.validateMnemonic(mnemonic, bip39.wordlists.japanese)) {
+    throw new Error("wrong mnemonic format");
   }
+  
   const seed = bip39.mnemonicToSeedSync(mnemonic, password)
   if (derive) {
     const master = bip32.fromSeed(seed)
