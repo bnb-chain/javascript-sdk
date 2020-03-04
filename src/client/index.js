@@ -164,7 +164,6 @@ export class BncClient {
     if (privateKey !== this._privateKey) {
       const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
       if (!address) throw new Error(`address is falsy: ${address}. invalid private key?`)
-      if (address === this.address) return this // safety
       this._privateKey = privateKey
       this.address = address
       if (!localOnly) {
