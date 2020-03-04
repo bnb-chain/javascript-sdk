@@ -65,13 +65,14 @@
             * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
             * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
             * [.list(address, proposalId, baseAsset, quoteAsset, initPrice, sequence)](#module_client.BncClient+list) ⇒ <code>Promise</code>
+            * [.setAccountFlags(address, flags, sequence)](#module_client.BncClient+setAccountFlags) ⇒ <code>Promise</code>
             * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
             * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Promise</code>
             * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Promise</code>
             * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Promise</code>
             * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Promise</code>
             * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
-            * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
+            * [.getMarkets(limit, offset)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
             * [.getTransactions(address, offset)](#module_client.BncClient+getTransactions) ⇒ <code>Promise</code>
             * [.getTx(hash)](#module_client.BncClient+getTx) ⇒ <code>Promise</code>
             * [.getDepth(symbol)](#module_client.BncClient+getDepth) ⇒ <code>Promise</code>
@@ -118,13 +119,14 @@ The Binance Chain client.
     * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
     * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
     * [.list(address, proposalId, baseAsset, quoteAsset, initPrice, sequence)](#module_client.BncClient+list) ⇒ <code>Promise</code>
+    * [.setAccountFlags(address, flags, sequence)](#module_client.BncClient+setAccountFlags) ⇒ <code>Promise</code>
     * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
     * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Promise</code>
     * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Promise</code>
     * [._sendTransaction(msg, stdSignMsg, address, sequence, memo, sync)](#module_client.BncClient+_sendTransaction) ⇒ <code>Promise</code>
     * [.getAccount(address)](#module_client.BncClient+getAccount) ⇒ <code>Promise</code>
     * [.getBalance(address)](#module_client.BncClient+getBalance) ⇒ <code>Promise</code>
-    * [.getMarkets(offset, limit,)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
+    * [.getMarkets(limit, offset)](#module_client.BncClient+getMarkets) ⇒ <code>Promise</code>
     * [.getTransactions(address, offset)](#module_client.BncClient+getTransactions) ⇒ <code>Promise</code>
     * [.getTx(hash)](#module_client.BncClient+getTx) ⇒ <code>Promise</code>
     * [.getDepth(symbol)](#module_client.BncClient+getDepth) ⇒ <code>Promise</code>
@@ -360,6 +362,20 @@ Place an order.
 | initPrice | <code>Number</code> |  |  |
 | sequence | <code>Number</code> | <code></code> | optional sequence |
 
+<a name="module_client.BncClient+setAccountFlags"></a>
+
+#### bncClient.setAccountFlags(address, flags, sequence) ⇒ <code>Promise</code>
+Set account flags
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>String</code> |  |  |
+| flags | <code>Number</code> |  | new value of account flags |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
+
 <a name="module_client.BncClient+_prepareTransaction"></a>
 
 #### bncClient.\_prepareTransaction(msg, stdSignMsg, address, sequence, memo) ⇒ [<code>Transaction</code>](#Transaction)
@@ -445,7 +461,7 @@ get balances
 
 <a name="module_client.BncClient+getMarkets"></a>
 
-#### bncClient.getMarkets(offset, limit,) ⇒ <code>Promise</code>
+#### bncClient.getMarkets(limit, offset) ⇒ <code>Promise</code>
 get markets
 
 **Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
@@ -453,8 +469,8 @@ get markets
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
+| limit | <code>Number</code> | <code>1000</code> | max 1000 is default |
 | offset | <code>Number</code> | <code>0</code> | from beggining, default 0 |
-| limit, | <code>Number</code> |  | max 1000 is default |
 
 <a name="module_client.BncClient+getTransactions"></a>
 
