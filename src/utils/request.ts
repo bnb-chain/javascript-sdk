@@ -1,22 +1,24 @@
-import axios from "axios"
+import axios, { AxiosInstance, Method, AxiosRequestConfig } from "axios"
 
 /**
  * @alias utils.HttpRequest
  */
 class HttpRequest {
-  constructor(baseURL){
+  private httpClient: AxiosInstance
+
+  constructor(baseURL: string) {
     this.httpClient = axios.create({ baseURL })
   }
 
-  get(path, params, opts) {
+  get(path: string, params: any, opts: AxiosRequestConfig) {
     return this.request("get", path, params, opts)
   }
 
-  post(path, body, opts) {
+  post(path: string, body: any, opts: AxiosRequestConfig) {
     return this.request("post", path, body, opts)
   }
 
-  request(method, path, params, opts) {
+  request(method: Method, path: string, params: any, opts: AxiosRequestConfig) {
     const options = {
       method,
       url: path,
@@ -35,7 +37,8 @@ class HttpRequest {
       .request(options)
       .then(response => {
         return { result: response.data, status: response.status }
-      }).catch(err => {
+      })
+      .catch(err => {
         let error = err
         try {
           const msgObj = err.response && err.response.data

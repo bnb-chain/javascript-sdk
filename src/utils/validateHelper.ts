@@ -4,7 +4,7 @@ const MAX_INT64 = Math.pow(2, 63)
  * validate the input number.
  * @param {Number} value
  */
-export const checkNumber = (value, name = "input number") => {
+export const checkNumber = (value: number, name = "input number") => {
   if (value <= 0) {
     throw new Error(`${name} should be a positive number`)
   }
@@ -16,11 +16,16 @@ export const checkNumber = (value, name = "input number") => {
 
 /**
  * basic validation of coins
- * @param {Array} coins 
+ * @param {Array} coins
  */
-export const checkCoins = (coins) => {
+export const checkCoins = (
+  coins: Array<{
+    denom: string
+    amount: number
+  }>
+) => {
   coins = coins || []
-  coins.forEach((coin) => {
+  coins.forEach(coin => {
     checkNumber(coin.amount)
     if (!coin.denom) {
       throw new Error("invalid denmon")
@@ -28,7 +33,7 @@ export const checkCoins = (coins) => {
   })
 }
 
-export const validateSymbol = (symbol) => {
+export const validateSymbol = (symbol: string) => {
   if (!symbol) {
     throw new Error("suffixed token symbol cannot be empty")
   }
@@ -41,17 +46,17 @@ export const validateSymbol = (symbol) => {
   }
 }
 
-export const validateTradingPair = (pair) => {
+export const validateTradingPair = (pair: string) => {
   const symbols = pair.split("_")
   if (symbols.length !== 2) {
-    throw new Error("the pair should in format \"symbol1_symbol2\"")
+    throw new Error('the pair should in format "symbol1_symbol2"')
   }
 
   validateSymbol(symbols[0])
   validateSymbol(symbols[1])
 }
 
-export const validateOffsetLimit = (offset, limit) => {
+export const validateOffsetLimit = (offset: number, limit: number) => {
   if (offset < 0) {
     throw new Error("offset can't be less than 0")
   }
@@ -60,5 +65,3 @@ export const validateOffsetLimit = (offset, limit) => {
     throw new Error("limit can't be less than 0")
   }
 }
-
-
