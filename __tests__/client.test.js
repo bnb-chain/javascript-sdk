@@ -226,7 +226,7 @@ it("get swaps", async () => {
 
 it("works with a custom signing delegate", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const account = await client._httpClient.request(
     "get",
     `/api/v1/account/${addr}`
@@ -256,7 +256,7 @@ it("works with a custom signing delegate", async () => {
 
 it("works with a custom broadcast delegate", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const account = await client._httpClient.request(
     "get",
     `/api/v1/account/${addr}`
@@ -285,7 +285,7 @@ it("transfer placeOrder cancelOrder only", async () => {
 
   const symbol = "BNB_USDT.B-B7C"
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const accCode = crypto.decodeAddress(addr)
   const account = await client._httpClient.request(
     "get",
@@ -328,7 +328,7 @@ it("transfer with presicion", async () => {
   const coin = "BNB"
   let amount = 2.00177011
   const client = await getClient(false)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const account = await client._httpClient.request(
     "get",
     `/api/v1/account/${addr}`
@@ -360,7 +360,7 @@ it("transfer placeOrder cancelOrder (no await on set privkey)", async () => {
 
   const symbol = "BNB_USDT.B-B7C"
   const client = await getClient(false)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
 
   // acc needs .004 BNB to lock
   // IOC - auto cancels
@@ -451,7 +451,7 @@ it("get depth works", async () => {
 
 it("check number when transfer", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
 
   const account = await client._httpClient.request(
     "get",
@@ -489,7 +489,7 @@ it("check number when transfer", async () => {
 it("check number when place order", async () => {
   const symbol = "BNB_USDT.B-B7C"
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
 
   try {
     await client.placeOrder(addr, symbol, 2, -40, 0.0001, 1)
@@ -719,7 +719,7 @@ it("mint token", async () => {
 
 it("submitListProposal", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const date = new Date()
   const params = {
     title: "list MINT-200",
@@ -741,7 +741,7 @@ it("submitListProposal", async () => {
 
 it("depositProposal", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const coins = [
     {
       denom: "BNB",
@@ -756,7 +756,7 @@ it("depositProposal", async () => {
 
 it("voteProposal", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const res = await client.gov.vote(494, addr, voteOption.OptionYes)
   console.log(res)
   expect(res.status).toBe(200)
@@ -765,7 +765,7 @@ it("voteProposal", async () => {
 
 it("list MINT", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   try {
     const res = await client.list(addr, 620, "MINT-200", "BNB", 1)
     console.log(res)
@@ -778,8 +778,25 @@ it("list MINT", async () => {
 
 it("set account flags", async () => {
   const client = await getClient(true)
-  const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+  const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
   const res = await client.setAccountFlags(addr, 0x01)
   expect(res.status).toBe(200)
   expect(res.result[0].code).toBe(0)
+})
+
+it("can't get private key", async () => {
+  const client = await getClient(true, true)
+  expect(client.getPrivateKey()).toBeNull()
+})
+
+it("get private key", async () => {
+  const client = await getClient()
+  expect(client.getPrivateKey()).not.toBeNull()
+})
+
+it("remove private key", async () => {
+  const client = await getClient()
+  expect(client.getPrivateKey()).not.toBeNull()
+  client.removePrivateKey()
+  expect(client.getPrivateKey()).toBeNull()
 })

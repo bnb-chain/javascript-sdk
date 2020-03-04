@@ -36,7 +36,7 @@ const NETWORK_PREFIX_MAPPING = {
  * @return {Transaction}
  */
 export const DefaultSigningDelegate = async function (tx, signMsg) {
-  return tx.sign(this.privateKey, signMsg)
+  return tx.sign(this.getPrivateKey(), signMsg)
 }
 
 /**
@@ -127,6 +127,7 @@ export class BncClient {
     this._broadcastDelegate = DefaultBroadcastDelegate
     this._useAsyncBroadcast = useAsyncBroadcast
     this._source = source
+    this._privateKey = null
     this.tokens = new TokenManagement(this)
     this.swap = new Swap(this)
     this.gov = new Gov(this)
@@ -160,11 +161,11 @@ export class BncClient {
    * @return {Promise}
    */
   async setPrivateKey(privateKey, localOnly = false) {
-    if (privateKey !== this.privateKey) {
+    if (privateKey !== this._privateKey) {
       const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
       if (!address) throw new Error(`address is falsy: ${address}. invalid private key?`)
       if (address === this.address) return this // safety
-      this.privateKey = privateKey
+      this._privateKey = privateKey
       this.address = address
       if (!localOnly) {
         // _setPkPromise is used in _sendTransaction for non-await calls
@@ -178,6 +179,23 @@ export class BncClient {
       }
     }
     return this
+  }
+
+  /**
+   * Removes client's private key.
+   * @return {BncClient} this instance (for chaining)
+   */
+  removePrivateKey() {
+    this._privateKey = null
+    return this
+  }
+
+  /**
+   * Gets client's private key.
+   * @return {string|null} the private key hexstring or `null` if no private key has been added before
+   */
+  getPrivateKey() {
+    return this._privateKey
   }
 
   /**
@@ -543,9 +561,9 @@ export class BncClient {
   }
 
   /**
-   * Set account flags 
+   * Set account flags
    * @param {String} address
-   * @param {Number} flags new value of account flags 
+   * @param {Number} flags new value of account flags
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
@@ -929,8 +947,8 @@ export class BncClient {
    * @return {String}
    */
   getClientKeyAddress() {
-    if (!this.privateKey) throw new Error("no private key is set on this client")
-    const address = crypto.getAddressFromPrivateKey(this.privateKey, this.addressPrefix)
+    if (!this._privateKey) throw new Error("no private key is set on this client")
+    const address = crypto.getAddressFromPrivateKey(this._privateKey, this.addressPrefix)
     this.address = address
     return address
   }

@@ -53,6 +53,8 @@
             * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
             * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
             * [.setPrivateKey(privateKey, localOnly)](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+            * [.removePrivateKey()](#module_client.BncClient+removePrivateKey) ⇒ <code>BncClient</code>
+            * [.getPrivateKey()](#module_client.BncClient+getPrivateKey) ⇒ <code>string</code>
             * [.setAccountNumber(accountNumber)](#module_client.BncClient+setAccountNumber)
             * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
             * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
@@ -65,6 +67,7 @@
             * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
             * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
             * [.list(address, proposalId, baseAsset, quoteAsset, initPrice, sequence)](#module_client.BncClient+list) ⇒ <code>Promise</code>
+            * [.setAccountFlags(address, flags, sequence)](#module_client.BncClient+setAccountFlags) ⇒ <code>Promise</code>
             * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
             * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Promise</code>
             * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Promise</code>
@@ -106,6 +109,8 @@ The Binance Chain client.
     * [.initChain()](#module_client.BncClient+initChain) ⇒ <code>Promise</code>
     * [.chooseNetwork(network)](#module_client.BncClient+chooseNetwork)
     * [.setPrivateKey(privateKey, localOnly)](#module_client.BncClient+setPrivateKey) ⇒ <code>Promise</code>
+    * [.removePrivateKey()](#module_client.BncClient+removePrivateKey) ⇒ <code>BncClient</code>
+    * [.getPrivateKey()](#module_client.BncClient+getPrivateKey) ⇒ <code>string</code>
     * [.setAccountNumber(accountNumber)](#module_client.BncClient+setAccountNumber)
     * [.useAsyncBroadcast(useAsyncBroadcast)](#module_client.BncClient+useAsyncBroadcast) ⇒ <code>BncClient</code>
     * [.setSigningDelegate(delegate)](#module_client.BncClient+setSigningDelegate) ⇒ <code>BncClient</code>
@@ -118,6 +123,7 @@ The Binance Chain client.
     * [.cancelOrder(fromAddress, symbol, refid, sequence)](#module_client.BncClient+cancelOrder) ⇒ <code>Promise</code>
     * [.placeOrder(address, symbol, side, price, quantity, sequence, timeinforce)](#module_client.BncClient+placeOrder) ⇒ <code>Promise</code>
     * [.list(address, proposalId, baseAsset, quoteAsset, initPrice, sequence)](#module_client.BncClient+list) ⇒ <code>Promise</code>
+    * [.setAccountFlags(address, flags, sequence)](#module_client.BncClient+setAccountFlags) ⇒ <code>Promise</code>
     * [._prepareTransaction(msg, stdSignMsg, address, sequence, memo)](#module_client.BncClient+_prepareTransaction) ⇒ [<code>Transaction</code>](#Transaction)
     * [.sendTransaction(tx, sync)](#module_client.BncClient+sendTransaction) ⇒ <code>Promise</code>
     * [.sendRawTransaction(signedBz, sync)](#module_client.BncClient+sendRawTransaction) ⇒ <code>Promise</code>
@@ -180,6 +186,20 @@ Sets the client's private key for calls made by this client. Asynchronous.
 | privateKey | <code>string</code> |  | the private key hexstring |
 | localOnly | <code>boolean</code> | <code>false</code> | set this to true if you will supply an account_number yourself via `setAccountNumber`. Warning: You must do that if you set this to true! |
 
+<a name="module_client.BncClient+removePrivateKey"></a>
+
+#### bncClient.removePrivateKey() ⇒ <code>BncClient</code>
+Removes client's private key.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>BncClient</code> - this instance (for chaining)  
+<a name="module_client.BncClient+getPrivateKey"></a>
+
+#### bncClient.getPrivateKey() ⇒ <code>string</code>
+Gets client's private key.
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>string</code> - the private key hexstring  
 <a name="module_client.BncClient+setAccountNumber"></a>
 
 #### bncClient.setAccountNumber(accountNumber)
@@ -358,6 +378,20 @@ Place an order.
 | baseAsset | <code>String</code> |  |  |
 | quoteAsset | <code>String</code> |  |  |
 | initPrice | <code>Number</code> |  |  |
+| sequence | <code>Number</code> | <code></code> | optional sequence |
+
+<a name="module_client.BncClient+setAccountFlags"></a>
+
+#### bncClient.setAccountFlags(address, flags, sequence) ⇒ <code>Promise</code>
+Set account flags
+
+**Kind**: instance method of [<code>BncClient</code>](#module_client.BncClient)  
+**Returns**: <code>Promise</code> - resolves with response (success or fail)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>String</code> |  |  |
+| flags | <code>Number</code> |  | new value of account flags |
 | sequence | <code>Number</code> | <code></code> | optional sequence |
 
 <a name="module_client.BncClient+_prepareTransaction"></a>
