@@ -2,10 +2,10 @@
  * @module Swap
  */
 
-import { TxTypes } from '../tx/'
-import * as crypto from '../crypto/'
-import { checkCoins } from '../utils/validateHelper'
-import {Buffer} from "buffer"
+import { TxTypes } from "../tx/"
+import * as crypto from "../crypto/"
+import { checkCoins } from "../utils/validateHelper"
+import { Buffer } from "buffer"
 
 class Swap {
   static instance
@@ -36,14 +36,25 @@ class Swap {
    * @param {boolean} crossChain
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async HTLT(from, recipient, recipientOtherChain, senderOtherChain, randomNumberHash, timestamp, amount, expectedIncome, heightSpan, crossChain) {
+  async HTLT(
+    from,
+    recipient,
+    recipientOtherChain,
+    senderOtherChain,
+    randomNumberHash,
+    timestamp,
+    amount,
+    expectedIncome,
+    heightSpan,
+    crossChain
+  ) {
     checkCoins(amount)
     const htltMsg = {
       from: crypto.decodeAddress(from),
       to: crypto.decodeAddress(recipient),
       recipient_other_chain: recipientOtherChain,
       sender_other_chain: senderOtherChain,
-      random_number_hash: Buffer.from(randomNumberHash, 'hex'),
+      random_number_hash: Buffer.from(randomNumberHash, "hex"),
       timestamp: timestamp,
       amount: amount,
       expected_income: expectedIncome,
@@ -62,10 +73,14 @@ class Swap {
       amount: amount,
       expected_income: expectedIncome,
       height_span: heightSpan,
-      cross_chain: crossChain,
+      cross_chain: crossChain
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(htltMsg, signHTLTMsg, from)
+    const signedTx = await this._bncClient._prepareTransaction(
+      htltMsg,
+      signHTLTMsg,
+      from
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -81,17 +96,21 @@ class Swap {
     const depositHTLTMsg = {
       from: crypto.decodeAddress(from),
       amount: amount,
-      swap_id: Buffer.from(swapID, 'hex'),
+      swap_id: Buffer.from(swapID, "hex"),
       msgType: TxTypes.DepositHTLTMsg
     }
 
     const signDepositHTLTMsg = {
       from: from,
       amount: amount,
-      swap_id: swapID,
+      swap_id: swapID
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(depositHTLTMsg, signDepositHTLTMsg, from)
+    const signedTx = await this._bncClient._prepareTransaction(
+      depositHTLTMsg,
+      signDepositHTLTMsg,
+      from
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -105,8 +124,8 @@ class Swap {
   async claimHTLT(from, swapID, randomNumber) {
     const claimHTLTMsg = {
       from: crypto.decodeAddress(from),
-      swap_id: Buffer.from(swapID, 'hex'),
-      random_number: Buffer.from(randomNumber, 'hex'),
+      swap_id: Buffer.from(swapID, "hex"),
+      random_number: Buffer.from(randomNumber, "hex"),
       msgType: TxTypes.ClaimHTLTMsg
     }
 
@@ -116,7 +135,11 @@ class Swap {
       random_number: randomNumber
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(claimHTLTMsg, signClaimHTLTMsg, from)
+    const signedTx = await this._bncClient._prepareTransaction(
+      claimHTLTMsg,
+      signClaimHTLTMsg,
+      from
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -129,7 +152,7 @@ class Swap {
   async refundHTLT(from, swapID) {
     const refundHTLTMsg = {
       from: crypto.decodeAddress(from),
-      swap_id: Buffer.from(swapID, 'hex'),
+      swap_id: Buffer.from(swapID, "hex"),
       msgType: TxTypes.RefundHTLTMsg
     }
 
@@ -138,7 +161,11 @@ class Swap {
       swap_id: swapID
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(refundHTLTMsg, signRefundHTLTMsg, from)
+    const signedTx = await this._bncClient._prepareTransaction(
+      refundHTLTMsg,
+      signRefundHTLTMsg,
+      from
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 }

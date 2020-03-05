@@ -13,13 +13,13 @@ const ndjson = require("ndjson")
 const pumpify = require("pumpify").obj
 const methods = require("./methods.js")
 
-function convertHttpArgs (url, args) {
+function convertHttpArgs(url, args) {
   args = args || {}
   const search = []
   for (let k in args) {
-    if(is.string(args[k])) {
+    if (is.string(args[k])) {
       search.push(`${k}="${args[k]}"`)
-    } else if(Buffer.isBuffer(args[k])){
+    } else if (Buffer.isBuffer(args[k])) {
       search.push(`${k}=0x${args[k].toString("hex")}`)
     } else {
       search.push(`${k}=${args[k]}`)
@@ -28,7 +28,7 @@ function convertHttpArgs (url, args) {
   return `${url}?${search.join("&")}`
 }
 
-function convertWsArgs (args) {
+function convertWsArgs(args) {
   args = args || {}
   for (let k in args) {
     let v = args[k]
@@ -43,12 +43,12 @@ function convertWsArgs (args) {
   return args
 }
 
-const wsProtocols = [ "ws:", "wss:" ]
-const httpProtocols = [ "http:", "https:" ]
+const wsProtocols = ["ws:", "wss:"]
+const httpProtocols = ["http:", "https:"]
 const allProtocols = wsProtocols.concat(httpProtocols)
 
 class BaseRpc extends EventEmitter {
-  constructor (uriString = "localhost:27146") {
+  constructor(uriString = "localhost:27146") {
     super()
 
     // parse full-node URI
@@ -62,7 +62,9 @@ class BaseRpc extends EventEmitter {
       port = uri.port
     }
 
-    this.uri = !port ? `${protocol}//${hostname}/` : `${protocol}//${hostname}:${port}/`
+    this.uri = !port
+      ? `${protocol}//${hostname}/`
+      : `${protocol}//${hostname}:${port}/`
 
     if (wsProtocols.includes(protocol)) {
       this.websocket = true
@@ -74,42 +76,42 @@ class BaseRpc extends EventEmitter {
     }
   }
 
-  connectWs () {
-    this.ws = pumpify(
-      ndjson.stringify(),
-      websocket(this.uri)
-    )
+  connectWs() {
+    this.ws = pumpify(ndjson.stringify(), websocket(this.uri))
 
-    this.ws.on("error", (err) => this.emit("error", err))
+    this.ws.on("error", err => this.emit("error", err))
     this.ws.on("close", () => {
       if (this.closed) return
       this.emit("error", Error("websocket disconnected"))
     })
-    this.ws.on("data", (data) => {
+    this.ws.on("data", data => {
       data = JSON.parse(data)
       if (!data.id) return
       this.emit(data.id, data.error, data.result)
     })
   }
 
-  callHttp (method, args) {
+  callHttp(method, args) {
     let url = this.uri + method
     url = convertHttpArgs(url, args)
     return axios({
       url: url
-    }).then(function ({ data }) {
-      if (data.error) {
-        let err = Error(data.error.message)
-        Object.assign(err, data.error)
-        throw err
+    }).then(
+      function({ data }) {
+        if (data.error) {
+          let err = Error(data.error.message)
+          Object.assign(err, data.error)
+          throw err
+        }
+        return data.result
+      },
+      function(err) {
+        throw Error(err)
       }
-      return data.result
-    }, function (err) {
-      throw Error(err)
-    })
+    )
   }
 
-  callWs (method, args, listener) {
+  callWs(method, args, listener) {
     let self = this
     return new Promise((resolve, reject) => {
       let id = Math.random().toString(36)
@@ -126,7 +128,7 @@ class BaseRpc extends EventEmitter {
         })
 
         // promise resolves on successful subscription or error
-        this.on(id, (err) => {
+        this.on(id, err => {
           if (err) return reject(err)
           resolve()
         })
@@ -141,7 +143,7 @@ class BaseRpc extends EventEmitter {
     })
   }
 
-  close () {
+  close() {
     this.closed = true
     if (!this.ws) return
     this.ws.destroy()
@@ -150,11 +152,10 @@ class BaseRpc extends EventEmitter {
 
 // add methods to Client class based on methods defined in './methods.js'
 for (let name of methods) {
-  BaseRpc.prototype[camel(name)] = function (args, listener) {
-    return this.call(name, args, listener)
-      .then((res) => {
-        return res
-      })
+  BaseRpc.prototype[camel(name)] = function(args, listener) {
+    return this.call(name, args, listener).then(res => {
+      return res
+    })
   }
 }
 

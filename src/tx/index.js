@@ -107,13 +107,13 @@ class Transaction {
       throw new Error("msg should be an object")
     }
     const signMsg = {
-      "account_number": this.account_number.toString(),
-      "chain_id": this.chain_id,
-      "data": null,
-      "memo": this.memo,
-      "msgs": [msg],
-      "sequence": this.sequence.toString(),
-      "source": this.source.toString()
+      account_number: this.account_number.toString(),
+      chain_id: this.chain_id,
+      data: null,
+      memo: this.memo,
+      msgs: [msg],
+      sequence: this.sequence.toString(),
+      source: this.source.toString()
     }
 
     return encoder.convertObjectToSignBytes(signMsg)
@@ -127,12 +127,14 @@ class Transaction {
    **/
   addSignature(pubKey, signature) {
     pubKey = this._serializePubKey(pubKey) // => Buffer
-    this.signatures = [{
-      pub_key: pubKey,
-      signature: signature,
-      account_number: this.account_number,
-      sequence: this.sequence,
-    }]
+    this.signatures = [
+      {
+        pub_key: pubKey,
+        signature: signature,
+        account_number: this.account_number,
+        sequence: this.sequence
+      }
+    ]
     return this
   }
 
@@ -143,17 +145,20 @@ class Transaction {
    * @return {Transaction}
    **/
   sign(privateKey, msg) {
-    if(!privateKey){
+    if (!privateKey) {
       throw new Error("private key should not be null")
     }
 
-    if(!msg){
+    if (!msg) {
       throw new Error("signing message should not be null")
     }
 
     const signBytes = this.getSignBytes(msg)
     const privKeyBuf = Buffer.from(privateKey, "hex")
-    const signature = crypto.generateSignature(signBytes.toString("hex"), privKeyBuf)
+    const signature = crypto.generateSignature(
+      signBytes.toString("hex"),
+      privKeyBuf
+    )
     this.addSignature(crypto.generatePubKey(privKeyBuf), signature)
     return this
   }

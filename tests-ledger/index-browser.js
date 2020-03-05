@@ -18,12 +18,12 @@
 require("babel-polyfill")
 
 const SDK = module.exports
-const Ledger = SDK.Ledger = {}
+const Ledger = (SDK.Ledger = {})
 
 SDK.crypto = require("../lib/crypto")
 Ledger.app = require("../lib/ledger/ledger-app")
 
 Ledger.transports = {
   u2f: require("@ledgerhq/hw-transport-u2f").default,
-  wble: require("@ledgerhq/hw-transport-web-ble").default,
+  wble: require("@ledgerhq/hw-transport-web-ble").default
 }

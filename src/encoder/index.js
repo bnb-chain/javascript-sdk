@@ -16,8 +16,7 @@ const sortObject = obj => {
   if (obj === null) return null
   if (typeof obj !== "object") return obj
   // arrays have typeof "object" in js!
-  if (Array.isArray(obj))
-    return obj.map(sortObject)
+  if (Array.isArray(obj)) return obj.map(sortObject)
   const sortedKeys = Object.keys(obj).sort()
   const result = {}
   sortedKeys.forEach(key => {
@@ -30,25 +29,25 @@ const sortObject = obj => {
  * encode number
  * @param num
  */
-export const encodeNumber = (num) => UVarInt.encode(num)
+export const encodeNumber = num => UVarInt.encode(num)
 
 /**
  * encode bool
  * @param b
  */
-export const encodeBool = (b) => b ? UVarInt.encode(1): UVarInt.encode(0)
+export const encodeBool = b => (b ? UVarInt.encode(1) : UVarInt.encode(0))
 
 /**
  * encode string
  * @param str
  */
-export const encodeString = (str) => VarString.encode(str)
+export const encodeString = str => VarString.encode(str)
 
 /**
  * encode time
  * @param value
  */
-export const encodeTime = (value) => {
+export const encodeTime = value => {
   const millis = new Date(value).getTime()
   const seconds = Math.floor(millis / 1000)
   const nanos = Number(seconds.toString().padEnd(9, "0"))
@@ -75,9 +74,8 @@ export const convertObjectToSignBytes = obj =>
  * js amino MarshalBinary
  * @param {Object} obj
  *  */
-export const marshalBinary = (obj) => {
-  if (!is.object(obj))
-    throw new TypeError("data must be an object")
+export const marshalBinary = obj => {
+  if (!is.object(obj)) throw new TypeError("data must be an object")
 
   return encodeBinary(obj, -1, true).toString("hex")
 }
@@ -86,9 +84,8 @@ export const marshalBinary = (obj) => {
  * js amino MarshalBinaryBare
  * @param {Object} obj
  *  */
-export const marshalBinaryBare = (obj) => {
-  if (!is.object(obj))
-    throw new TypeError("data must be an object")
+export const marshalBinaryBare = obj => {
+  if (!is.object(obj)) throw new TypeError("data must be an object")
 
   return encodeBinary(obj).toString("hex")
 }
@@ -101,33 +98,32 @@ export const marshalBinaryBare = (obj) => {
  * @return {Buffer} binary of object.
  */
 export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
-  if (val === null || val === undefined)
-    throw new TypeError("unsupported type")
+  if (val === null || val === undefined) throw new TypeError("unsupported type")
 
-  if(Buffer.isBuffer(val)) {
-    if(isByteLenPrefix) {
+  if (Buffer.isBuffer(val)) {
+    if (isByteLenPrefix) {
       return Buffer.concat([UVarInt.encode(val.length), val])
     }
     return val
   }
 
-  if(is.array(val)) {
+  if (is.array(val)) {
     return encodeArrayBinary(fieldNum, val, isByteLenPrefix)
   }
 
-  if(is.number(val)) {
+  if (is.number(val)) {
     return encodeNumber(val)
   }
 
-  if(is.boolean(val)) {
+  if (is.boolean(val)) {
     return encodeBool(val)
   }
 
-  if(is.string(val)) {
+  if (is.string(val)) {
     return encodeString(val)
   }
 
-  if(is.object(val)) {
+  if (is.object(val)) {
     return encodeObjectBinary(val, isByteLenPrefix)
   }
 
@@ -139,7 +135,7 @@ export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
  * @param {Buffer} bytes
  * @return {Buffer} with bytes length prefixed
  */
-export const encodeBinaryByteArray = (bytes) => {
+export const encodeBinaryByteArray = bytes => {
   const lenPrefix = bytes.length
   return Buffer.concat([UVarInt.encode(lenPrefix), bytes])
 }
@@ -168,13 +164,13 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
   let bytes = Buffer.concat(bufferArr)
 
   // add prefix
-  if(TypePrefixes[obj.msgType]) {
+  if (TypePrefixes[obj.msgType]) {
     const prefix = Buffer.from(TypePrefixes[obj.msgType], "hex")
     bytes = Buffer.concat([prefix, bytes])
   }
 
   // Write byte-length prefixed.
-  if(isByteLenPrefix) {
+  if (isByteLenPrefix) {
     const lenBytes = UVarInt.encode(bytes.length)
     bytes = Buffer.concat([lenBytes, bytes])
   }
@@ -191,7 +187,7 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
 export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
   const result = []
 
-  arr.forEach((item) => {
+  arr.forEach(item => {
     result.push(encodeTypeAndField(fieldNum, item))
 
     if (isDefaultValue(item)) {
@@ -203,8 +199,8 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
   })
 
   //encode length
-  if(isByteLenPrefix){
-    const length = result.reduce((prev, item) => (prev + item.length), 0)
+  if (isByteLenPrefix) {
+    const length = result.reduce((prev, item) => prev + item.length, 0)
     result.unshift(UVarInt.encode(length))
   }
 
@@ -213,15 +209,17 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
 
 // Write field key.
 const encodeTypeAndField = (index, field) => {
-  const value = (index + 1) << 3 | typeToTyp3(field)
+  const value = ((index + 1) << 3) | typeToTyp3(field)
   return UVarInt.encode(value)
 }
 
-const isDefaultValue = (obj) => {
-  if(obj === null) return false
+const isDefaultValue = obj => {
+  if (obj === null) return false
 
-  return (is.number(obj) && obj === 0)
-        || (is.string(obj) && obj === "")
-        || (is.array(obj) && obj.length === 0)
-        || (is.boolean(obj) && !obj)
+  return (
+    (is.number(obj) && obj === 0) ||
+    (is.string(obj) && obj === "") ||
+    (is.array(obj) && obj.length === 0) ||
+    (is.boolean(obj) && !obj)
+  )
 }

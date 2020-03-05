@@ -1,22 +1,33 @@
 /**
  * @module Token
  */
-import Big from 'big.js'
-import { TxTypes } from '../tx/'
-import * as crypto from '../crypto/'
-import { api } from '../client/'
-import { validateSymbol } from '../utils/validateHelper'
-import { checkCoins } from '../utils/validateHelper'
+import Big from "big.js"
+import { TxTypes } from "../tx/"
+import * as crypto from "../crypto/"
+import { api } from "../client/"
+import { validateSymbol } from "../utils/validateHelper"
+import { checkCoins } from "../utils/validateHelper"
 const MAXTOTALSUPPLY = 9000000000000000000
 
-const validateNonZeroAmount = async (amount, symbol, fromAddress, httpClient, type = "free") => {
+const validateNonZeroAmount = async (
+  amount,
+  symbol,
+  fromAddress,
+  httpClient,
+  type = "free"
+) => {
   if (amount <= 0 || amount > MAXTOTALSUPPLY) {
     throw new Error("invalid amount")
   }
 
   try {
-    const { result } = await httpClient.request("get", `${api.getAccount}/${fromAddress}`)
-    const balance = result.balances.find(b => b.symbol.toUpperCase() === symbol.toUpperCase())
+    const { result } = await httpClient.request(
+      "get",
+      `${api.getAccount}/${fromAddress}`
+    )
+    const balance = result.balances.find(
+      b => b.symbol.toUpperCase() === symbol.toUpperCase()
+    )
     if (!balance) {
       throw new Error(`the account doesn't have ${symbol}`)
     }
@@ -24,7 +35,6 @@ const validateNonZeroAmount = async (amount, symbol, fromAddress, httpClient, ty
     if (Number(balance[type]) < Number(amount)) {
       throw new Error(`the account doesn't have enougth balance`)
     }
-
   } catch (err) {
     //if get account failed. still broadcast
     console.log(err)
@@ -55,7 +65,13 @@ class TokenManagement {
    * @param {Boolean} - mintable
    * @returns {Promise} resolves with response (success or fail)
    */
-  async issue(senderAddress, tokenName, symbol, totalSupply = 0, mintable = false) {
+  async issue(
+    senderAddress,
+    tokenName,
+    symbol,
+    totalSupply = 0,
+    mintable = false
+  ) {
     if (!senderAddress) {
       throw new Error("sender address cannot be empty")
     }
@@ -65,7 +81,9 @@ class TokenManagement {
     }
 
     if (!/^[a-zA-z\d]{3,8}$/.test(symbol)) {
-      throw new Error("symbol should be alphanumeric and length is limited to 3~8")
+      throw new Error(
+        "symbol should be alphanumeric and length is limited to 3~8"
+      )
     }
 
     if (totalSupply <= 0 || totalSupply > MAXTOTALSUPPLY) {
@@ -89,10 +107,14 @@ class TokenManagement {
       name: tokenName,
       symbol,
       total_supply: totalSupply,
-      mintable,
+      mintable
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(issueMsg, signIssueMsg, senderAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      issueMsg,
+      signIssueMsg,
+      senderAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -104,10 +126,15 @@ class TokenManagement {
    * @returns {Promise}  resolves with response (success or fail)
    */
   async freeze(fromAddress, symbol, amount) {
-
     validateSymbol(symbol)
 
-    validateNonZeroAmount(amount, symbol, fromAddress, this._bncClient._httpClient, 'free')
+    validateNonZeroAmount(
+      amount,
+      symbol,
+      fromAddress,
+      this._bncClient._httpClient,
+      "free"
+    )
 
     amount = new Big(amount)
     amount = Number(amount.mul(Math.pow(10, 8)).toString())
@@ -125,7 +152,11 @@ class TokenManagement {
       symbol
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(freezeMsg, freezeSignMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      freezeMsg,
+      freezeSignMsg,
+      fromAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -139,7 +170,13 @@ class TokenManagement {
   async unfreeze(fromAddress, symbol, amount) {
     validateSymbol(symbol)
 
-    validateNonZeroAmount(amount, symbol, fromAddress, this._bncClient._httpClient, 'frozen')
+    validateNonZeroAmount(
+      amount,
+      symbol,
+      fromAddress,
+      this._bncClient._httpClient,
+      "frozen"
+    )
 
     amount = new Big(amount)
     amount = Number(amount.mul(Math.pow(10, 8)).toString())
@@ -157,7 +194,11 @@ class TokenManagement {
       symbol
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(unfreezeMsg, unfreezeSignMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      unfreezeMsg,
+      unfreezeSignMsg,
+      fromAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -171,7 +212,12 @@ class TokenManagement {
   async burn(fromAddress, symbol, amount) {
     validateSymbol(symbol)
 
-    validateNonZeroAmount(amount, symbol, fromAddress, this._bncClient._httpClient)
+    validateNonZeroAmount(
+      amount,
+      symbol,
+      fromAddress,
+      this._bncClient._httpClient
+    )
 
     amount = new Big(amount)
     amount = Number(amount.mul(Math.pow(10, 8)).toString())
@@ -189,7 +235,11 @@ class TokenManagement {
       symbol
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(burnMsg, burnSignMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      burnMsg,
+      burnSignMsg,
+      fromAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -223,7 +273,11 @@ class TokenManagement {
       symbol
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(mintMsg, mintSignMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      mintMsg,
+      mintSignMsg,
+      fromAddress
+    )
     console.log(signedTx)
     return this._bncClient._broadcastDelegate(signedTx)
   }
@@ -261,7 +315,11 @@ class TokenManagement {
       lock_time: lockTime
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(timeLockMsg, signTimeLockMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      timeLockMsg,
+      signTimeLockMsg,
+      fromAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
   /**
@@ -300,7 +358,11 @@ class TokenManagement {
       lock_time: lockTime
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(timeRelockMsg, signTimeRelockMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      timeRelockMsg,
+      signTimeRelockMsg,
+      fromAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
   /**
@@ -310,7 +372,6 @@ class TokenManagement {
    * @returns {Promise}  resolves with response (success or fail)
    */
   async timeUnlock(fromAddress, id) {
-
     const timeUnlockMsg = {
       from: crypto.decodeAddress(fromAddress),
       time_lock_id: id,
@@ -319,10 +380,14 @@ class TokenManagement {
 
     const signTimeUnlockMsg = {
       from: fromAddress,
-      time_lock_id: id,
+      time_lock_id: id
     }
 
-    const signedTx = await this._bncClient._prepareTransaction(timeUnlockMsg, signTimeUnlockMsg, fromAddress)
+    const signedTx = await this._bncClient._prepareTransaction(
+      timeUnlockMsg,
+      signTimeUnlockMsg,
+      fromAddress
+    )
     return this._bncClient._broadcastDelegate(signedTx)
   }
 }

@@ -1,31 +1,31 @@
 "use strict"
 const BN = require("bn.js")
 
-const VarInt = (signed)=> {
+const VarInt = signed => {
   /**
    * https://github.com/golang/go/blob/master/src/encoding/binary/varint.go#L60
-   * @param {*} bytes 
+   * @param {*} bytes
    */
-  function decode (bytes) {
+  function decode(bytes) {
     let x = 0
     let s = 0
-    for(let i=0,len=bytes.length;i<len;i++) {
+    for (let i = 0, len = bytes.length; i < len; i++) {
       const b = bytes[i]
-      if(b<0x80) {
-        if(i > 9 || i===9 && b>1) {
+      if (b < 0x80) {
+        if (i > 9 || (i === 9 && b > 1)) {
           return 0
         }
-        return x|b<<s
+        return x | (b << s)
       }
-      x |=(b&0x7f) << s
+      x |= (b & 0x7f) << s
       s += 7
     }
 
     return 0
   }
 
-  function encode (n, buffer = Buffer.alloc(encodingLength(n)), offset = 0) {
-    if(n < 0) {
+  function encode(n, buffer = Buffer.alloc(encodingLength(n)), offset = 0) {
+    if (n < 0) {
       throw Error("varint value is out of bounds")
     }
 
@@ -34,7 +34,7 @@ const VarInt = (signed)=> {
     let bn = new BN(n, 10)
 
     // amino signed varint is multiplied by 2
-    if (signed){
+    if (signed) {
       bn = bn.muln(2)
     }
 
@@ -50,9 +50,9 @@ const VarInt = (signed)=> {
     return buffer
   }
 
-  function encodingLength (n) {
+  function encodingLength(n) {
     if (signed) n *= 2
-    if(n < 0){
+    if (n < 0) {
       throw Error("varint value is out of bounds")
     }
     let bits = Math.log2(n + 1)

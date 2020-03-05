@@ -1,7 +1,7 @@
 import rpcClient from "../src/rpc/client"
 
 const NETWORK = "testnet"
-const getClient = (type) => {
+const getClient = type => {
   let uri = "https://data-seed-pre-0-s3.binance.org"
   if (type === "wss") {
     uri = "wss://data-seed-pre-0-s3.binance.org"
@@ -107,7 +107,10 @@ it("wss txSearch", async () => {
 it("https txHash", async () => {
   const client = getClient("https")
   const params = {
-    hash: Buffer.from("41EB40A5E21D4946BECD922426EDE4789A07384D446A90C499F93344B3B2659B", "hex"),
+    hash: Buffer.from(
+      "41EB40A5E21D4946BECD922426EDE4789A07384D446A90C499F93344B3B2659B",
+      "hex"
+    ),
     prove: true
   }
   const result = await client.tx(params)
@@ -139,7 +142,9 @@ it("only rest getBalance", async () => {
   const client = getClient("https")
   const result = await client.getBalance(address, symbol)
   if (result) {
-    expect(result.free + result.locked + result.frozen).toBeGreaterThanOrEqual(0)
+    expect(result.free + result.locked + result.frozen).toBeGreaterThanOrEqual(
+      0
+    )
   }
 })
 
@@ -192,8 +197,8 @@ it("wss getDepth", async () => {
 
 it("subscribe", async () => {
   const client = getClient("wss")
-  await new Promise((resolve) => {
-    client.subscribe({ query: "tm.event = 'CompleteProposal'" }, (events) => {
+  await new Promise(resolve => {
+    client.subscribe({ query: "tm.event = 'CompleteProposal'" }, events => {
       resolve(events)
       expect(events).toBeTruthy()
       expect(events.step).toBe("RoundStepPropose")

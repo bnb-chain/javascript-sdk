@@ -11,7 +11,8 @@
     "build": "rm -rf lib && tsc --emitDeclarationOnly && npx babel src -d lib",
     "build:docs": "npx jsdoc-to-markdown -f src/**/*.js > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
-    "lint": "eslint --fix src __tests__"
+    "lint": "eslint --fix src __tests__",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
@@ -70,6 +71,7 @@
     "husky": "^3.0.0",
     "jest": "^24.8.0",
     "jsdoc-to-markdown": "^5.0.0",
+    "prettier": "^1.19.1",
     "qunit": "^2.9.2",
     "typescript": "^3.8.3"
   },

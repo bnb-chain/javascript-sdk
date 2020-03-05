@@ -25,8 +25,8 @@ export const api = {
 }
 
 const NETWORK_PREFIX_MAPPING = {
-  "testnet": "tbnb",
-  "mainnet": "bnb"
+  testnet: "tbnb",
+  mainnet: "bnb"
 }
 
 /**
@@ -35,7 +35,7 @@ const NETWORK_PREFIX_MAPPING = {
  * @param  {Object}      signMsg the canonical sign bytes for the msg
  * @return {Transaction}
  */
-export const DefaultSigningDelegate = async function (tx, signMsg) {
+export const DefaultSigningDelegate = async function(tx, signMsg) {
   return tx.sign(this.privateKey, signMsg)
 }
 
@@ -43,7 +43,7 @@ export const DefaultSigningDelegate = async function (tx, signMsg) {
  * The default broadcast delegate which immediately broadcasts a transaction.
  * @param {Transaction} signedTx the signed transaction
  */
-export const DefaultBroadcastDelegate = async function (signedTx) {
+export const DefaultBroadcastDelegate = async function(signedTx) {
   return this.sendTransaction(signedTx)
 }
 
@@ -55,32 +55,37 @@ export const DefaultBroadcastDelegate = async function (signedTx) {
  * @param  {errCb} function
  * @return {function}
  */
-export const LedgerSigningDelegate = (ledgerApp, preSignCb, postSignCb, errCb, hdPath) => async function (
-  tx, signMsg
-) {
-  const signBytes = tx.getSignBytes(signMsg)
-  preSignCb && preSignCb(signBytes)
-  let pubKeyResp, sigResp
-  try {
-    pubKeyResp = await ledgerApp.getPublicKey(hdPath)
-    sigResp = await ledgerApp.sign(signBytes, hdPath)
-    postSignCb && postSignCb(pubKeyResp, sigResp)
-  } catch (err) {
-    console.warn("LedgerSigningDelegate error", err)
-    errCb && errCb(err)
+export const LedgerSigningDelegate = (
+  ledgerApp,
+  preSignCb,
+  postSignCb,
+  errCb,
+  hdPath
+) =>
+  async function(tx, signMsg) {
+    const signBytes = tx.getSignBytes(signMsg)
+    preSignCb && preSignCb(signBytes)
+    let pubKeyResp, sigResp
+    try {
+      pubKeyResp = await ledgerApp.getPublicKey(hdPath)
+      sigResp = await ledgerApp.sign(signBytes, hdPath)
+      postSignCb && postSignCb(pubKeyResp, sigResp)
+    } catch (err) {
+      console.warn("LedgerSigningDelegate error", err)
+      errCb && errCb(err)
+    }
+    if (sigResp && sigResp.signature) {
+      const pubKey = crypto.getPublicKey(pubKeyResp.pk.toString("hex"))
+      return tx.addSignature(pubKey, sigResp.signature)
+    }
+    return tx
   }
-  if (sigResp && sigResp.signature) {
-    const pubKey = crypto.getPublicKey(pubKeyResp.pk.toString("hex"))
-    return tx.addSignature(pubKey, sigResp.signature)
-  }
-  return tx
-}
 
 /**
  * validate the input number.
  * @param {Array} outputs
  */
-const checkOutputs = (outputs) => {
+const checkOutputs = outputs => {
   outputs.forEach(transfer => {
     const coins = transfer.coins || []
     coins.forEach(coin => {
@@ -98,7 +103,7 @@ const checkOutputs = (outputs) => {
  * @param {Array} coins
  */
 const calInputCoins = (inputs, coins) => {
-  coins.forEach((coin) => {
+  coins.forEach(coin => {
     const existCoin = inputs[0].coins.find(c => c.denom === coin.denom)
     if (existCoin) {
       const existAmount = new Big(existCoin.amount)
@@ -161,19 +166,28 @@ export class BncClient {
    */
   async setPrivateKey(privateKey, localOnly = false) {
     if (privateKey !== this.privateKey) {
-      const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
-      if (!address) throw new Error(`address is falsy: ${address}. invalid private key?`)
+      const address = crypto.getAddressFromPrivateKey(
+        privateKey,
+        this.addressPrefix
+      )
+      if (!address)
+        throw new Error(`address is falsy: ${address}. invalid private key?`)
       if (address === this.address) return this // safety
       this.privateKey = privateKey
       this.address = address
       if (!localOnly) {
         // _setPkPromise is used in _sendTransaction for non-await calls
         try {
-          const promise = this._setPkPromise = this._httpClient.request("get", `${api.getAccount}/${address}`)
+          const promise = (this._setPkPromise = this._httpClient.request(
+            "get",
+            `${api.getAccount}/${address}`
+          ))
           const data = await promise
           this.account_number = data.result.account_number
         } catch (e) {
-          throw new Error(`unable to query the address on the blockchain. try sending it some funds first: ${address}`)
+          throw new Error(
+            `unable to query the address on the blockchain. try sending it some funds first: ${address}`
+          )
         }
       }
     }
@@ -204,7 +218,8 @@ export class BncClient {
    * @return {BncClient} this instance (for chaining)
    */
   setSigningDelegate(delegate) {
-    if (typeof delegate !== "function") throw new Error("signing delegate must be a function")
+    if (typeof delegate !== "function")
+      throw new Error("signing delegate must be a function")
     this._signingDelegate = delegate
     return this
   }
@@ -215,7 +230,8 @@ export class BncClient {
    * @return {BncClient} this instance (for chaining)
    */
   setBroadcastDelegate(delegate) {
-    if (typeof delegate !== "function") throw new Error("broadcast delegate must be a function")
+    if (typeof delegate !== "function")
+      throw new Error("broadcast delegate must be a function")
     this._broadcastDelegate = delegate
     return this
   }
@@ -247,7 +263,13 @@ export class BncClient {
    * @return {BncClient} this instance (for chaining)
    */
   useLedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb, hdPath) {
-    this._signingDelegate = LedgerSigningDelegate(ledgerApp, preSignCb, postSignCb, errCb, hdPath)
+    this._signingDelegate = LedgerSigningDelegate(
+      ledgerApp,
+      preSignCb,
+      postSignCb,
+      errCb,
+      hdPath
+    )
     return this
   }
 
@@ -261,7 +283,14 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
-  async transfer(fromAddress, toAddress, amount, asset, memo = "", sequence = null) {
+  async transfer(
+    fromAddress,
+    toAddress,
+    amount,
+    asset,
+    memo = "",
+    sequence = null
+  ) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
 
@@ -272,39 +301,57 @@ export class BncClient {
 
     const coin = {
       denom: asset,
-      amount: amount,
+      amount: amount
     }
 
     const msg = {
-      inputs: [{
-        address: accCode,
-        coins: [coin]
-      }],
-      outputs: [{
-        address: toAccCode,
-        coins: [coin]
-      }],
+      inputs: [
+        {
+          address: accCode,
+          coins: [coin]
+        }
+      ],
+      outputs: [
+        {
+          address: toAccCode,
+          coins: [coin]
+        }
+      ],
       msgType: "MsgSend"
     }
 
     const signMsg = {
-      inputs: [{
-        address: fromAddress,
-        coins: [{
-          amount: amount,
-          denom: asset
-        }]
-      }],
-      outputs: [{
-        address: toAddress,
-        coins: [{
-          amount: amount,
-          denom: asset
-        }]
-      }]
+      inputs: [
+        {
+          address: fromAddress,
+          coins: [
+            {
+              amount: amount,
+              denom: asset
+            }
+          ]
+        }
+      ],
+      outputs: [
+        {
+          address: toAddress,
+          coins: [
+            {
+              amount: amount,
+              denom: asset
+            }
+          ]
+        }
+      ]
     }
 
-    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    const signedTx = await this._prepareTransaction(
+      msg,
+      signMsg,
+      fromAddress,
+      sequence,
+      memo
+    )
     return this._broadcastDelegate(signedTx)
   }
 
@@ -320,9 +367,9 @@ export class BncClient {
    *     "denom": "BNB",
    *     "amount": 10
    *   },{
-    *     "denom": "BTC",
-    *     "amount": 10
-    *   }]
+   *     "denom": "BTC",
+   *     "amount": 10
+   *   }]
    * },
    * {
    *   "to": "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
@@ -330,9 +377,9 @@ export class BncClient {
    *     "denom": "BTC",
    *     "amount": 10
    *   },{
-    *     "denom": "BNB",
-    *     "amount": 10
-    *   }]
+   *     "denom": "BNB",
+   *     "amount": 10
+   *   }]
    * }]
    * @param {String} memo optional memo
    * @param {Number} sequence optional sequence
@@ -362,7 +409,7 @@ export class BncClient {
     const inputs = [{ address: fromAddrCode, coins: [] }]
     const transfers = []
 
-    outputs.forEach((item) => {
+    outputs.forEach(item => {
       const toAddcCode = crypto.decodeAddress(item.to)
       calInputCoins(inputs, item.coins)
       transfers.push({ address: toAddcCode, coins: item.coins })
@@ -390,7 +437,13 @@ export class BncClient {
       outputs: signOutputs
     }
 
-    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, memo)
+    const signedTx = await this._prepareTransaction(
+      msg,
+      signMsg,
+      fromAddress,
+      sequence,
+      memo
+    )
     return this._broadcastDelegate(signedTx)
   }
 
@@ -418,7 +471,13 @@ export class BncClient {
       symbol: symbol
     }
 
-    const signedTx = await this._prepareTransaction(msg, signMsg, fromAddress, sequence, "")
+    const signedTx = await this._prepareTransaction(
+      msg,
+      signMsg,
+      fromAddress,
+      sequence,
+      ""
+    )
     return this._broadcastDelegate(signedTx)
   }
 
@@ -433,7 +492,15 @@ export class BncClient {
    * @param {Number} timeinforce (1-GTC(Good Till Expire), 3-IOC(Immediate or Cancel))
    * @return {Promise} resolves with response (success or fail)
    */
-  async placeOrder(address = this.address, symbol, side, price, quantity, sequence = null, timeinforce = 1) {
+  async placeOrder(
+    address = this.address,
+    symbol,
+    side,
+    price,
+    quantity,
+    sequence = null,
+    timeinforce = 1
+  ) {
     if (!address) {
       throw new Error("address should not be falsy")
     }
@@ -450,7 +517,10 @@ export class BncClient {
     const accCode = crypto.decodeAddress(address)
 
     if (sequence !== 0 && !sequence) {
-      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getAccount}/${address}`
+      )
       sequence = data.result && data.result.sequence
     }
 
@@ -466,7 +536,7 @@ export class BncClient {
       price: parseFloat(bigPrice.mul(BASENUMBER).toString(), 10),
       quantity: parseFloat(bigQuantity.mul(BASENUMBER).toString(), 10),
       timeinforce: timeinforce,
-      msgType: "NewOrderMsg",
+      msgType: "NewOrderMsg"
     }
 
     const signMsg = {
@@ -477,13 +547,19 @@ export class BncClient {
       sender: address,
       side: placeOrderMsg.side,
       symbol: placeOrderMsg.symbol,
-      timeinforce: timeinforce,
+      timeinforce: timeinforce
     }
 
     checkNumber(placeOrderMsg.price, "price")
     checkNumber(placeOrderMsg.quantity, "quantity")
 
-    const signedTx = await this._prepareTransaction(placeOrderMsg, signMsg, address, sequence, "")
+    const signedTx = await this._prepareTransaction(
+      placeOrderMsg,
+      signMsg,
+      address,
+      sequence,
+      ""
+    )
     return this._broadcastDelegate(signedTx)
   }
 
@@ -496,18 +572,25 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
-  async list(address, proposalId, baseAsset, quoteAsset, initPrice, sequence = null) {
+  async list(
+    address,
+    proposalId,
+    baseAsset,
+    quoteAsset,
+    initPrice,
+    sequence = null
+  ) {
     const accCode = crypto.decodeAddress(address)
 
     if (!address) {
       throw new Error("address should not be falsy")
     }
 
-    if(proposalId <= 0){
+    if (proposalId <= 0) {
       throw new Error("proposal id should larger than 0")
     }
 
-    if(initPrice <= 0){
+    if (initPrice <= 0) {
       throw new Error("price should larger than 0")
     }
 
@@ -535,17 +618,23 @@ export class BncClient {
       from: address,
       init_price: init_price,
       proposal_id: proposalId,
-      quote_asset_symbol: quoteAsset,
+      quote_asset_symbol: quoteAsset
     }
 
-    const signedTx = await this._prepareTransaction(listMsg, signMsg, address, sequence, "")
+    const signedTx = await this._prepareTransaction(
+      listMsg,
+      signMsg,
+      address,
+      sequence,
+      ""
+    )
     return this._broadcastDelegate(signedTx)
   }
 
   /**
-   * Set account flags 
+   * Set account flags
    * @param {String} address
-   * @param {Number} flags new value of account flags 
+   * @param {Number} flags new value of account flags
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
@@ -563,7 +652,13 @@ export class BncClient {
       from: address
     }
 
-    const signedTx = await this._prepareTransaction(msg, signMsg, address, sequence, "")
+    const signedTx = await this._prepareTransaction(
+      msg,
+      signMsg,
+      address,
+      sequence,
+      ""
+    )
     return this._broadcastDelegate(signedTx)
   }
 
@@ -576,9 +671,18 @@ export class BncClient {
    * @param {String} memo optional memo
    * @return {Transaction} signed transaction
    */
-  async _prepareTransaction(msg, stdSignMsg, address, sequence = null, memo = "") {
+  async _prepareTransaction(
+    msg,
+    stdSignMsg,
+    address,
+    sequence = null,
+    memo = ""
+  ) {
     if ((!this.account_number || (sequence !== 0 && !sequence)) && address) {
-      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getAccount}/${address}`
+      )
       sequence = data.result.sequence
       this.account_number = data.result.account_number
       // if user has not used `await` in its call to setPrivateKey (old API), we should wait for the promise here
@@ -593,7 +697,7 @@ export class BncClient {
       msg,
       sequence: parseInt(sequence),
       source: this._source,
-      type: msg.msgType,
+      type: msg.msgType
     }
 
     const tx = new Transaction(options)
@@ -621,10 +725,15 @@ export class BncClient {
     const opts = {
       data: signedBz,
       headers: {
-        "content-type": "text/plain",
+        "content-type": "text/plain"
       }
     }
-    return this._httpClient.request("post", `${api.broadcast}?sync=${sync}`, null, opts)
+    return this._httpClient.request(
+      "post",
+      `${api.broadcast}?sync=${sync}`,
+      null,
+      opts
+    )
   }
 
   /**
@@ -637,8 +746,21 @@ export class BncClient {
    * @param {Boolean} sync use synchronous mode, optional
    * @return {Promise} resolves with response (success or fail)
    */
-  async _sendTransaction(msg, stdSignMsg, address, sequence = null, memo = "", sync = !this._useAsyncBroadcast) {
-    const signedTx = await this._prepareTransaction(msg, stdSignMsg, address, sequence, memo)
+  async _sendTransaction(
+    msg,
+    stdSignMsg,
+    address,
+    sequence = null,
+    memo = "",
+    sync = !this._useAsyncBroadcast
+  ) {
+    const signedTx = await this._prepareTransaction(
+      msg,
+      stdSignMsg,
+      address,
+      sequence,
+      memo
+    )
     return this.sendTransaction(signedTx, sync)
   }
 
@@ -652,7 +774,10 @@ export class BncClient {
       throw new Error("address should not be falsy")
     }
     try {
-      const data = await this._httpClient.request("get", `${api.getAccount}/${address}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getAccount}/${address}`
+      )
       return data
     } catch (err) {
       return null
@@ -681,7 +806,10 @@ export class BncClient {
    */
   async getMarkets(limit = 1000, offset = 0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getMarkets}?limit=${limit}&offset=${offset}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getMarkets}?limit=${limit}&offset=${offset}`
+      )
       return data
     } catch (err) {
       console.warn("getMarkets error", err)
@@ -697,7 +825,10 @@ export class BncClient {
    */
   async getTransactions(address = this.address, offset = 0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getTransactions}?address=${address}&offset=${offset}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getTransactions}?address=${address}&offset=${offset}`
+      )
       return data
     } catch (err) {
       console.warn("getTransactions error", err)
@@ -727,7 +858,10 @@ export class BncClient {
    */
   async getDepth(symbol = "BNB_BUSD-BD1") {
     try {
-      const data = await this._httpClient.request("get", `${api.getDepth}?symbol=${symbol}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getDepth}?symbol=${symbol}`
+      )
       return data
     } catch (err) {
       console.warn("getDepth error", err)
@@ -743,7 +877,10 @@ export class BncClient {
    */
   async getOpenOrders(address = this.address) {
     try {
-      const data = await this._httpClient.request("get", `${api.getOpenOrders}?address=${address}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getOpenOrders}?address=${address}`
+      )
       return data
     } catch (err) {
       console.warn("getOpenOrders error", err)
@@ -758,7 +895,10 @@ export class BncClient {
    */
   async getSwapByID(swapID) {
     try {
-      const data = await this._httpClient.request("get", `${api.getSwaps}/${swapID}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getSwaps}/${swapID}`
+      )
       return data
     } catch (err) {
       console.warn("query swap by swapID error", err)
@@ -775,7 +915,10 @@ export class BncClient {
    */
   async getSwapByCreator(creator, limit = 100, offset = 0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getSwaps}?fromAddress=${creator}&limit=${limit}&offset=${offset}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getSwaps}?fromAddress=${creator}&limit=${limit}&offset=${offset}`
+      )
       return data
     } catch (err) {
       console.warn("query swap list by swap creator error", err)
@@ -792,7 +935,10 @@ export class BncClient {
    */
   async getSwapByRecipient(recipient, limit = 100, offset = 0) {
     try {
-      const data = await this._httpClient.request("get", `${api.getSwaps}?toAddress=${recipient}&limit=${limit}&offset=${offset}`)
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getSwaps}?toAddress=${recipient}&limit=${limit}&offset=${offset}`
+      )
       return data
     } catch (err) {
       console.warn("query swap list by swap recipient error", err)
@@ -830,7 +976,10 @@ export class BncClient {
       throw new Error("password should not be falsy")
     }
     const privateKey = crypto.generatePrivateKey()
-    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
+    const address = crypto.getAddressFromPrivateKey(
+      privateKey,
+      this.addressPrefix
+    )
     const keystore = crypto.generateKeyStore(privateKey, password)
     return {
       privateKey,
@@ -851,7 +1000,10 @@ export class BncClient {
   createAccountWithMneomnic() {
     const mnemonic = crypto.generateMnemonic()
     const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
-    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
+    const address = crypto.getAddressFromPrivateKey(
+      privateKey,
+      this.addressPrefix
+    )
     return {
       privateKey,
       address,
@@ -870,7 +1022,10 @@ export class BncClient {
    */
   recoverAccountFromKeystore(keystore, password) {
     const privateKey = crypto.getPrivateKeyFromKeyStore(keystore, password)
-    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
+    const address = crypto.getAddressFromPrivateKey(
+      privateKey,
+      this.addressPrefix
+    )
     return {
       privateKey,
       address
@@ -887,7 +1042,10 @@ export class BncClient {
    */
   recoverAccountFromMnemonic(mnemonic) {
     const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
-    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
+    const address = crypto.getAddressFromPrivateKey(
+      privateKey,
+      this.addressPrefix
+    )
     return {
       privateKey,
       address
@@ -907,7 +1065,10 @@ export class BncClient {
    * }
    */
   recoverAccountFromPrivateKey(privateKey) {
-    const address = crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
+    const address = crypto.getAddressFromPrivateKey(
+      privateKey,
+      this.addressPrefix
+    )
     return {
       privateKey,
       address
@@ -929,8 +1090,12 @@ export class BncClient {
    * @return {String}
    */
   getClientKeyAddress() {
-    if (!this.privateKey) throw new Error("no private key is set on this client")
-    const address = crypto.getAddressFromPrivateKey(this.privateKey, this.addressPrefix)
+    if (!this.privateKey)
+      throw new Error("no private key is set on this client")
+    const address = crypto.getAddressFromPrivateKey(
+      this.privateKey,
+      this.addressPrefix
+    )
     this.address = address
     return address
   }

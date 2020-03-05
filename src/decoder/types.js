@@ -105,7 +105,7 @@ export class OrderBook {
   constructor(opts) {
     opts = opts || {}
     this.height = opts.height || 0
-    this.levels = opts.levels || [new OrderBookLevel]
+    this.levels = opts.levels || [new OrderBookLevel()]
   }
 }
 

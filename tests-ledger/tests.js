@@ -426,7 +426,7 @@ QUnit.module("SIGN_SECP256K1 - good tx", {
       // eslint-disable-next-line quotes
       const signBytes = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"smiley!☺","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1612345678,"quantity":123456,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":3}],"sequence":"3","source":"1"}`
       const hdPathSign = [44, 714, 0, 0, 1]
-      await app.showAddress("bnb", hdPathSign)  // prime the device with this hd path
+      await app.showAddress("bnb", hdPathSign) // prime the device with this hd path
       response = await app.sign(signBytes, hdPathSign)
       console.log(response)
     } catch (err) {
@@ -467,7 +467,7 @@ QUnit.module("SIGN_SECP256K1 - good transfer tx with data", {
     try {
       const hdPathSign = [44, 714, 0, 0, 10]
       const pkResp = await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
-      await app.showAddress("bnb", hdPathSign)  // prime the device with this hd path
+      await app.showAddress("bnb", hdPathSign) // prime the device with this hd path
       pubKey = pkResp.pk
       response = await app.sign(xferSignBytes, hdPathSign)
       console.log(response)
@@ -520,7 +520,7 @@ QUnit.module("SIGN_SECP256K1 - good cancel tx", {
     try {
       const hdPathSign = [44, 714, 0, 0, 0]
       const pkResp = await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
-      await app.showAddress("bnb", hdPathSign)  // prime the device with this hd path
+      await app.showAddress("bnb", hdPathSign) // prime the device with this hd path
       response = await app.sign(cancelSignBytes, hdPathSign)
       pubKey = pkResp.pk
       console.log(response)
@@ -570,9 +570,9 @@ QUnit.module("SIGN_SECP256K1 - list proposal tx", {
   before: async function() {
     response = {} // clear
     try {
-      const hdPathSign = [44, 714, 0, 0, 0]  // already "seen" in the above test
+      const hdPathSign = [44, 714, 0, 0, 0] // already "seen" in the above test
       const pkResp = await app.getPublicKey(hdPathSign) // sets the last "viewed" hd path on the device
-      await app.showAddress("bnb", hdPathSign)  // prime the device with this hd path
+      await app.showAddress("bnb", hdPathSign) // prime the device with this hd path
       response = await app.sign(listSignBytes, hdPathSign)
       pubKey = pkResp.pk
       console.log(response)
@@ -626,7 +626,7 @@ QUnit.module("SIGN_SECP256K1 - bad tx content", {
       const signBytes = `{"account_number":1,"data":"ABCD","chain_id":"bnbchain","memo":"smiley!☺","msgs":["msg"],"sequence":1,"source":1}`
       response = {}
       const hdPathSign = [44, 714, 0, 0, 0]
-      await app.showAddress("bnb", hdPathSign)  // prime the device with this hd path
+      await app.showAddress("bnb", hdPathSign) // prime the device with this hd path
       response = await app.sign(signBytes, hdPathSign)
       badTxErrored = false
     } catch (err) {
@@ -661,7 +661,7 @@ QUnit.module("SIGN_SECP256K1 - different prior hd path", {
       // eslint-disable-next-line quotes
       const signBytes = `{"account_number":"12","chain_id":"bnbchain","data":null,"memo":"smiley!☺","msgs":[{"id":"BA36F0FAD74D8F41045463E4774F328F4AF779E5-4","ordertype":2,"price":1612345678,"quantity":123456,"sender":"bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh","side":1,"symbol":"NNB-338_BNB","timeinforce":3}],"sequence":"3","source":"1"}`
       const hdPathView = [44, 714, 1, 0, 0]
-      await app.showAddress("bnb", hdPathView)  // prime the device with this hd path
+      await app.showAddress("bnb", hdPathView) // prime the device with this hd path
       const hdPathSign = [44, 714, 0, 0, 0]
       response = await app.sign(signBytes, hdPathSign)
       console.log(response)

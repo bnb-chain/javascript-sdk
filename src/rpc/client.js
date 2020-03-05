@@ -22,8 +22,8 @@ import {
 
 const BASENUMBER = Math.pow(10, 8)
 
-const divide = (num) => {
-  return +(new big(num).div(BASENUMBER).toString())
+const divide = num => {
+  return +new big(num).div(BASENUMBER).toString()
 }
 
 const convertObjectArrayNum = (objArr, keys) => {
@@ -38,7 +38,6 @@ const convertObjectArrayNum = (objArr, keys) => {
  * The Binance Chain Node rpc client
  */
 class Client extends BaseRpc {
-
   /**
    * @param {String} uriString dataseed address
    * @param {String} netWork Binance Chain network
@@ -90,7 +89,10 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = new Token()
-    const { val: tokenInfo } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
+    const { val: tokenInfo } = decoder.unMarshalBinaryLengthPrefixed(
+      bytes,
+      result
+    )
     const bech32Prefix = this.getBech32Prefix()
     tokenInfo.owner = crypto.encodeAddress(tokenInfo.owner, bech32Prefix)
     return tokenInfo
@@ -108,9 +110,12 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = [new TokenOfList()]
-    const { val: tokenList } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
+    const { val: tokenList } = decoder.unMarshalBinaryLengthPrefixed(
+      bytes,
+      result
+    )
     const bech32Prefix = this.getBech32Prefix()
-    tokenList.forEach((item) => {
+    tokenList.forEach(item => {
       item.owner = crypto.encodeAddress(item.owner, bech32Prefix)
     })
     return tokenList
@@ -126,7 +131,7 @@ class Client extends BaseRpc {
 
     const res = await this.abciQuery({
       // path: "/store/acc/key",
-      path: `/account/${address}`,
+      path: `/account/${address}`
       // data: addrHex
     })
 
@@ -134,7 +139,10 @@ class Client extends BaseRpc {
     const bytes = Buffer.from(res.response.value, "base64")
     const { val: accountInfo } = decoder.unMarshalBinaryBare(bytes, result)
     const bech32Prefix = this.getBech32Prefix()
-    accountInfo.base.address = crypto.encodeAddress(accountInfo.base.address, bech32Prefix)
+    accountInfo.base.address = crypto.encodeAddress(
+      accountInfo.base.address,
+      bech32Prefix
+    )
     return accountInfo
   }
 
@@ -146,15 +154,17 @@ class Client extends BaseRpc {
     let coins = []
     const balances = []
     if (account) {
-      coins = account.base && account.base.coins || []
+      coins = (account.base && account.base.coins) || []
       convertObjectArrayNum(coins, ["amount"])
       convertObjectArrayNum(account.locked, ["amount"])
       convertObjectArrayNum(account.frozen, ["amount"])
     }
 
     coins.forEach(item => {
-      const locked = account.locked.find(lockedItem => item.denom === lockedItem.denom) || {}
-      const frozen = account.frozen.find(frozenItem => item.denom === frozenItem.denom) || {}
+      const locked =
+        account.locked.find(lockedItem => item.denom === lockedItem.denom) || {}
+      const frozen =
+        account.frozen.find(frozenItem => item.denom === frozenItem.denom) || {}
       const bal = new TokenBalance()
       bal.symbol = item.denom
       bal.free = item.amount
@@ -175,7 +185,9 @@ class Client extends BaseRpc {
   async getBalance(address, symbol) {
     validateSymbol(symbol)
     const balances = await this.getBalances(address)
-    const bal = balances.find(item => item.symbol.toUpperCase() === symbol.toUpperCase())
+    const bal = balances.find(
+      item => item.symbol.toUpperCase() === symbol.toUpperCase()
+    )
     return bal
   }
 
@@ -189,7 +201,10 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = [new OpenOrder()]
-    const { val: openOrders } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
+    const { val: openOrders } = decoder.unMarshalBinaryLengthPrefixed(
+      bytes,
+      result
+    )
     convertObjectArrayNum(openOrders, ["price", "quantity", "cumQty"])
     return openOrders
   }
@@ -205,7 +220,10 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = [new TradingPair()]
-    const { val: tradingPairs } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
+    const { val: tradingPairs } = decoder.unMarshalBinaryLengthPrefixed(
+      bytes,
+      result
+    )
     convertObjectArrayNum(tradingPairs, ["list_price", "tick_size", "lot_size"])
     return tradingPairs
   }
@@ -221,7 +239,12 @@ class Client extends BaseRpc {
     const bytes = Buffer.from(res.response.value, "base64")
     const result = new OrderBook()
     const { val: depth } = decoder.unMarshalBinaryLengthPrefixed(bytes, result)
-    convertObjectArrayNum(depth.levels, ["buyQty", "buyPrice", "sellQty", "sellPrice"])
+    convertObjectArrayNum(depth.levels, [
+      "buyQty",
+      "buyPrice",
+      "sellQty",
+      "sellPrice"
+    ])
     return depth
   }
 }

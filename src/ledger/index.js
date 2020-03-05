@@ -28,12 +28,18 @@ Ledger.transports = {
   wble: require("@ledgerhq/hw-transport-web-ble").default,
 
   // requiring the node transport in the browser causes a bit of an issue with webpack! this is a conditional require
-  node: !isBrowser && moduleExists(LEDGER_NODE_HID_TRANSPORT_MODULE) ? require(LEDGER_NODE_HID_TRANSPORT_MODULE).default : null,
+  node:
+    !isBrowser && moduleExists(LEDGER_NODE_HID_TRANSPORT_MODULE)
+      ? require(LEDGER_NODE_HID_TRANSPORT_MODULE).default
+      : null
 }
 
 module.exports = Ledger
 
 function moduleExists(name) {
-  try { return require.resolve(name) }
-  catch (e) { return false }
+  try {
+    return require.resolve(name)
+  } catch (e) {
+    return false
+  }
 }

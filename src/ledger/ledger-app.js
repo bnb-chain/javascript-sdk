@@ -23,7 +23,7 @@
 const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 50000
 const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000
 
-const CLA = 0xBC
+const CLA = 0xbc
 const SCRAMBLE_KEY = "CSM"
 const ACCEPT_STATUSES = [0x9000] // throw if not
 const CHUNK_SIZE = 250
@@ -168,17 +168,17 @@ class LedgerApp {
         return "Conditions not satisfied"
       case 0x6986:
         return "Transaction rejected"
-      case 0x6A80:
+      case 0x6a80:
         return "Bad key handle"
-      case 0x6B00:
+      case 0x6b00:
         return "Invalid P1/P2"
-      case 0x6D00:
+      case 0x6d00:
         return "Instruction not supported"
-      case 0x6E00:
+      case 0x6e00:
         return "The app does not seem to be open"
-      case 0x6F00:
+      case 0x6f00:
         return "Unknown error"
-      case 0x6F01:
+      case 0x6f01:
         return "Sign/verify error"
       default:
         return "Unknown error code"
@@ -224,7 +224,8 @@ class LedgerApp {
         Buffer.alloc(0),
         ACCEPT_STATUSES
       )
-      if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
+      if (!Buffer.isBuffer(apduResponse))
+        throw new Error("expected apduResponse to be Buffer")
       const returnCode = apduResponse.slice(-2)
       result["test_mode"] = apduResponse[0] !== 0
       result["major"] = apduResponse[1]
@@ -235,8 +236,13 @@ class LedgerApp {
       result["error_message"] = this._errorMessage(result["return_code"])
     } catch (err) {
       const { statusCode, statusText, message, stack } = err
-      console.warn("Ledger getVersion error:",
-        this._errorMessage(statusCode), message, statusText, stack)
+      console.warn(
+        "Ledger getVersion error:",
+        this._errorMessage(statusCode),
+        message,
+        statusText,
+        stack
+      )
       throw err
     }
     return result
@@ -285,15 +291,21 @@ class LedgerApp {
         this._serializeHDPath(hdPath),
         ACCEPT_STATUSES
       )
-      if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
+      if (!Buffer.isBuffer(apduResponse))
+        throw new Error("expected apduResponse to be Buffer")
       const returnCode = apduResponse.slice(-2)
       result["pk"] = apduResponse.slice(0, 1 + 64)
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
     } catch (err) {
       const { statusCode, statusText, message, stack } = err
-      console.warn("Ledger publicKeySecp256k1 error:",
-        this._errorMessage(statusCode), message, statusText, stack)
+      console.warn(
+        "Ledger publicKeySecp256k1 error:",
+        this._errorMessage(statusCode),
+        message,
+        statusText,
+        stack
+      )
       throw err
     }
     return result
@@ -364,7 +376,8 @@ class LedgerApp {
         chunksCount,
         chunk
       )
-      if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
+      if (!Buffer.isBuffer(apduResponse))
+        throw new Error("expected apduResponse to be Buffer")
       let returnCode = apduResponse.slice(-2)
 
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
@@ -376,8 +389,13 @@ class LedgerApp {
       }
     } catch (err) {
       const { statusCode, statusText, message, stack } = err
-      console.warn("Ledger signSendChunk error:",
-        this._errorMessage(statusCode), message, statusText, stack)
+      console.warn(
+        "Ledger signSendChunk error:",
+        this._errorMessage(statusCode),
+        message,
+        statusText,
+        stack
+      )
       throw err
     }
     return result
@@ -407,14 +425,20 @@ class LedgerApp {
       result["signature"] = null
     } catch (err) {
       const { statusCode, statusText, message, stack } = err
-      console.warn("Ledger signSecp256k1 error (chunk 1):",
-        this._errorMessage(statusCode), message, statusText, stack)
+      console.warn(
+        "Ledger signSecp256k1 error (chunk 1):",
+        this._errorMessage(statusCode),
+        message,
+        statusText,
+        stack
+      )
       throw err
     }
     if (response.return_code === 0x9000) {
       for (let i = 1; i < chunks.length; i++) {
         try {
-          if (i === chunks.length - 1) { // last?
+          if (i === chunks.length - 1) {
+            // last?
             this._transport.setExchangeTimeout(this._interactiveTimeout)
           }
           response = await this._signSendChunk(1 + i, chunks.length, chunks[i])
@@ -422,8 +446,13 @@ class LedgerApp {
           result["error_message"] = response.error_message
         } catch (err) {
           const { statusCode, statusText, message, stack } = err
-          console.warn("Ledger signSecp256k1 error (chunk 2):",
-            this._errorMessage(statusCode), message, statusText, stack)
+          console.warn(
+            "Ledger signSecp256k1 error (chunk 2):",
+            this._errorMessage(statusCode),
+            message,
+            statusText,
+            stack
+          )
           throw err
         }
         if (response.return_code !== 0x9000) {
@@ -446,10 +475,14 @@ class LedgerApp {
       //  = 7 bytes of overhead
       let signature = response.signature
       if (!signature || !signature.length) {
-        throw new Error("Ledger assertion failed: Expected a non-empty signature from the device")
+        throw new Error(
+          "Ledger assertion failed: Expected a non-empty signature from the device"
+        )
       }
       if (signature[0] !== 0x30) {
-        throw new Error("Ledger assertion failed: Expected a signature header of 0x30")
+        throw new Error(
+          "Ledger assertion failed: Expected a signature header of 0x30"
+        )
       }
       // decode DER string format
       let rOffset = 4
@@ -467,7 +500,9 @@ class LedgerApp {
 
       signature = result["signature"] = Buffer.concat([sigR, sigS])
       if (signature.length !== 64) {
-        throw new Error(`Ledger assertion failed: incorrect signature length ${signature.length}`)
+        throw new Error(
+          `Ledger assertion failed: incorrect signature length ${signature.length}`
+        )
       }
     } else {
       throw new Error(
@@ -506,7 +541,10 @@ class LedgerApp {
    */
   async showAddress(hrp = "bnb", hdPath = [44, 714, 0, 0, 0]) {
     const result = {}
-    let data = Buffer.concat([this._serializeHRP(hrp), this._serializeHDPath(hdPath)])
+    let data = Buffer.concat([
+      this._serializeHRP(hrp),
+      this._serializeHDPath(hdPath)
+    ])
     this._transport.setExchangeTimeout(this._interactiveTimeout)
     let apduResponse = await this._transport.send(
       CLA,
@@ -516,12 +554,15 @@ class LedgerApp {
       data,
       ACCEPT_STATUSES
     )
-    if (!Buffer.isBuffer(apduResponse)) throw new Error("expected apduResponse to be Buffer")
+    if (!Buffer.isBuffer(apduResponse))
+      throw new Error("expected apduResponse to be Buffer")
     let returnCode = apduResponse.slice(-2)
     result["return_code"] = returnCode[0] * 256 + returnCode[1]
     result["error_message"] = this._errorMessage(result["return_code"])
-    if (result.return_code === 0x6A80) {
-      result["error_message"] = apduResponse.slice(0, apduResponse.length - 2).toString("ascii")
+    if (result.return_code === 0x6a80) {
+      result["error_message"] = apduResponse
+        .slice(0, apduResponse.length - 2)
+        .toString("ascii")
     }
     return result
   }

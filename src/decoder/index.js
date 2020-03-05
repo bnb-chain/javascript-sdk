@@ -5,7 +5,7 @@
 import {
   string as varString,
   bool as varBool,
-  bytes as varBytes ,
+  bytes as varBytes,
   varint
 } from "protocol-buffers-encodings"
 import { Buffer } from "safe-buffer"
@@ -26,13 +26,12 @@ const decoder = (bytes, varType) => {
  * @returns {Object}
  *  */
 export const unMarshalBinaryLengthPrefixed = (bytes, type) => {
-  if(bytes.length === 0)
-    throw new TypeError("Cannot decode empty bytes")
+  if (bytes.length === 0) throw new TypeError("Cannot decode empty bytes")
 
   // read byte-length prefix
-  const{ offset: len } = decoder(bytes, varint)
+  const { offset: len } = decoder(bytes, varint)
 
-  if(len < 0)
+  if (len < 0)
     throw new Error(`Error reading msg byte-length prefix: got code ${len}`)
 
   bytes = bytes.slice(len)
@@ -47,15 +46,12 @@ export const unMarshalBinaryLengthPrefixed = (bytes, type) => {
  * @returns {Object}
  *  */
 export const unMarshalBinaryBare = (bytes, type) => {
-  if(!is.object(type))
-    throw new TypeError("type should be object")
+  if (!is.object(type)) throw new TypeError("type should be object")
 
-  if(!Buffer.isBuffer(bytes))
-    throw new TypeError("bytes must be buffer")
+  if (!Buffer.isBuffer(bytes)) throw new TypeError("bytes must be buffer")
 
-  if(is.array(type)) {
-    if(!is.object(type[0]))
-      throw new TypeError("type should be object")
+  if (is.array(type)) {
+    if (!is.object(type[0])) throw new TypeError("type should be object")
 
     return decodeArrayBinary(bytes, type[0])
   }
@@ -64,55 +60,55 @@ export const unMarshalBinaryBare = (bytes, type) => {
 }
 
 const decodeBinary = (bytes, type, isLengthPrefixed) => {
-  if(Buffer.isBuffer(type)) {
+  if (Buffer.isBuffer(type)) {
     return decoder(bytes, varBytes)
   }
 
-  if(is.array(type)) {
+  if (is.array(type)) {
     return decodeArrayBinary(bytes, type)
   }
 
-  if(is.number(type)) {
+  if (is.number(type)) {
     return decoder(bytes, varint)
   }
 
-  if(is.boolean(type)) {
+  if (is.boolean(type)) {
     return decoder(bytes, varBool)
   }
 
-  if(is.string(type)) {
+  if (is.string(type)) {
     return decoder(bytes, varString)
   }
 
-  if(is.object(type)) {
+  if (is.object(type)) {
     return decodeObjectBinary(bytes, type, isLengthPrefixed)
   }
 
   return
 }
 
-const setDefaultValue = (type, key)=>{
-  if(is.object(type[key])) type[key] = null
+const setDefaultValue = (type, key) => {
+  if (is.object(type[key])) type[key] = null
 
-  if(is.number(type[key])) type[key] = 0
+  if (is.number(type[key])) type[key] = 0
 
-  if(is.boolean(type[key])) type[key] = false
+  if (is.boolean(type[key])) type[key] = false
 
-  if(is.string(type[key])) type[key] = ""
+  if (is.string(type[key])) type[key] = ""
 }
 
 const decodeObjectBinary = (bytes, type, isLengthPrefixed) => {
   let objectOffset = 0
 
   // read byte-length prefix
-  if(isLengthPrefixed){
-    const{ offset: len } = decoder(bytes, varint)
+  if (isLengthPrefixed) {
+    const { offset: len } = decoder(bytes, varint)
     bytes = bytes.slice(len)
     objectOffset += len
   }
 
   // If registered concrete, consume and verify prefix bytes.
-  if(type.msgType) {
+  if (type.msgType) {
     bytes = bytes.slice(4)
     objectOffset += 4
   }
@@ -129,24 +125,26 @@ const decodeObjectBinary = (bytes, type, isLengthPrefixed) => {
       const { fieldNum, typ } = decodeFieldNumberAndTyp3(bytes)
 
       //if this field is default value, continue
-      if(index+1 !== fieldNum || fieldNum < 0) {
+      if (index + 1 !== fieldNum || fieldNum < 0) {
         setDefaultValue(type, key)
         return
       }
 
-      if(fieldNum <= lastFieldNum) {
-        throw new Error(`encountered fieldNum: ${fieldNum}, but we have already seen fnum: ${lastFieldNum}`)
+      if (fieldNum <= lastFieldNum) {
+        throw new Error(
+          `encountered fieldNum: ${fieldNum}, but we have already seen fnum: ${lastFieldNum}`
+        )
       }
 
       lastFieldNum = fieldNum
 
-      if(index+1 !== fieldNum) {
+      if (index + 1 !== fieldNum) {
         throw new Error("field number is not expected")
       }
 
       const typeWanted = typeToTyp3(type[key])
 
-      if(typ !== typeWanted) {
+      if (typ !== typeWanted) {
         throw new Error("field type is not expected")
       }
 
@@ -170,20 +168,20 @@ const decodeArrayBinary = (bytes, type) => {
   let arrayOffset = 0
   let { fieldNum: fieldNumber } = decodeFieldNumberAndTyp3(bytes)
 
-  while(true) {
+  while (true) {
     const { fieldNum } = decodeFieldNumberAndTyp3(bytes)
 
-    if(fieldNum !== fieldNumber || fieldNum < 0) break
+    if (fieldNum !== fieldNumber || fieldNum < 0) break
 
     //remove 1 byte of encoded field number and type
     bytes = bytes.slice(1)
 
     //is default value, skip and continue read bytes
-    if(bytes.length > 0 && bytes[0] === 0x00) continue
+    if (bytes.length > 0 && bytes[0] === 0x00) continue
 
     const { offset, val } = decodeBinary(bytes, type, true)
 
-    arr.push({...val})
+    arr.push({ ...val })
     bytes = bytes.slice(offset)
 
     //add 1 byte of type
@@ -195,8 +193,8 @@ const decodeArrayBinary = (bytes, type) => {
   return { val: arr, offset: arrayOffset }
 }
 
-export const decodeFieldNumberAndTyp3 = (bytes) => {
-  if(bytes.length < 2) {
+export const decodeFieldNumberAndTyp3 = bytes => {
+  if (bytes.length < 2) {
     //default value
     return { fieldNum: -1 }
   }
@@ -205,7 +203,7 @@ export const decodeFieldNumberAndTyp3 = (bytes) => {
 
   const typ = val & 7
   let fieldNum = val >> 3
-  if(fieldNum > (1<<29 -1)) {
+  if (fieldNum > 1 << (29 - 1)) {
     throw new Error(`invalid field num ${fieldNum}`)
   }
 
