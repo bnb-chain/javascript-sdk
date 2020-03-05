@@ -31,12 +31,3 @@ export const size = function<T>(
   for (var i = 0; i < items.length; ++i) acc += iter(items[i], i, acc)
   return acc
 }
-
-export const isAbstractCodec = function(codec) {
-  return (
-    codec &&
-    typeof codec.encode === "function" &&
-    typeof codec.decode === "function" &&
-    typeof codec.encodingLength === "function"
-  )
-}
