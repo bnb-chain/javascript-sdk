@@ -7,17 +7,33 @@ import bech32 from "bech32"
 import cryp from "crypto-browserify"
 import uuid from "uuid"
 import is from "is_js"
-import bip32 from "bip32"
+import * as bip32 from "bip32"
 import * as bip39 from "bip39"
-import { ec as EC } from "elliptic"
+import { ec as EC, curve } from "elliptic"
 import ecc from "tiny-secp256k1"
 
-import {
-  ab2hexstring,
-  sha3,
-  sha256,
-  sha256ripemd160,
-} from "../utils"
+import { ab2hexstring, sha3, sha256, sha256ripemd160 } from "../utils"
+
+export interface KeyStore {
+  version: number
+  id: string
+  crypto: {
+    ciphertext: string
+    cipherparams: {
+      iv: string
+    }
+    cipher: string
+    kdf: string
+    kdfparams: {
+      dklen: number
+      salt: string
+      c: number
+      prf: string
+    }
+    /** Must use sha3 according to web3 secret storage spec. */
+    mac: string
+  }
+}
 
 // secp256k1 privkey is 32 bytes
 const PRIVKEY_LEN = 32
@@ -34,7 +50,7 @@ const ec = new EC(CURVE)
  * Decodes an address in bech32 format.
  * @param {string} value the bech32 address to decode
  */
-export const decodeAddress = (value) => {
+export const decodeAddress = (value: string): Buffer => {
   const decodeAddress = bech32.decode(value)
   return Buffer.from(bech32.fromWords(decodeAddress.words))
 }
@@ -42,19 +58,21 @@ export const decodeAddress = (value) => {
 /**
  * Checks whether an address is valid.
  * @param {string} address the bech32 address to decode
- * @param {string} hrp the prefix to check for the bech32 address 
+ * @param {string} hrp the prefix to check for the bech32 address
  * @return {boolean}
  */
-export const checkAddress = (address, hrp) => {
+export const checkAddress = (address: string, hrp: string): boolean => {
   try {
-    if (!address.startsWith(hrp)){
+    if (!address.startsWith(hrp)) {
       return false
     }
 
     const decodedAddress = bech32.decode(address)
     const decodedAddressLength = decodeAddress(address).length
-    if (decodedAddressLength === DECODED_ADDRESS_LEN &&
-      decodedAddress.prefix === hrp) {
+    if (
+      decodedAddressLength === DECODED_ADDRESS_LEN &&
+      decodedAddress.prefix === hrp
+    ) {
       return true
     }
 
@@ -70,7 +88,11 @@ export const checkAddress = (address, hrp) => {
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
  */
-export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
+export const encodeAddress = (
+  value: string,
+  prefix: string = "tbnb",
+  type: BufferEncoding = "hex"
+): string => {
   const words = bech32.toWords(Buffer.from(value, type))
   return bech32.encode(prefix, words)
 }
@@ -80,20 +102,22 @@ export const encodeAddress = (value, prefix = "tbnb", type = "hex") => {
  * @param {number} len output length (default: 32 bytes)
  * @returns {string} entropy bytes hexstring
  */
-export const generatePrivateKey = (len = PRIVKEY_LEN) => ab2hexstring(csprng(len))
+export const generatePrivateKey = (len: number = PRIVKEY_LEN): string =>
+  ab2hexstring(csprng(len))
 
 /**
  * Generates an arrayBuffer filled with random bits.
  * @param {number} length - Length of buffer.
  * @returns {ArrayBuffer}
  */
-export const generateRandomArray = length => csprng(length)
+export const generateRandomArray = (length: number): ArrayBuffer =>
+  csprng(length)
 
 /**
  * @param {string} publicKey - Encoded public key
  * @return {Elliptic.PublicKey} public key hexstring
  */
-export const getPublicKey = publicKey => {
+export const getPublicKey = (publicKey: string) => {
   let keyPair = ec.keyFromPublic(publicKey, "hex")
   return keyPair.getPublic()
 }
@@ -103,13 +127,13 @@ export const getPublicKey = publicKey => {
  * @param {string} privateKeyHex the private key hexstring
  * @return {string} public key hexstring
  */
-export const getPublicKeyFromPrivateKey = privateKeyHex => {
+export const getPublicKeyFromPrivateKey = (privateKeyHex: string): string => {
   if (!privateKeyHex || privateKeyHex.length !== PRIVKEY_LEN * 2) {
     throw new Error("invalid privateKey")
   }
   const curve = new EC(CURVE)
   const keypair = curve.keyFromPrivate(privateKeyHex, "hex")
-  const unencodedPubKey = keypair.getPublic().encode("hex")
+  const unencodedPubKey = keypair.getPublic().encode("hex", false)
   return unencodedPubKey
 }
 
@@ -119,7 +143,7 @@ export const getPublicKeyFromPrivateKey = privateKeyHex => {
  * @param {Buffer} privateKey
  * @return {Elliptic.PublicKey} PubKey
  * */
-export const generatePubKey = privateKey => {
+export const generatePubKey = (privateKey: Buffer): curve.base.BasePoint => {
   const curve = new EC(CURVE)
   const keypair = curve.keyFromPrivate(privateKey)
   return keypair.getPublic()
@@ -130,7 +154,10 @@ export const generatePubKey = privateKey => {
  * @param {string} publicKeyHex the public key hexstring
  * @param {string} prefix the address prefix
  */
-export const getAddressFromPublicKey = (publicKeyHex, prefix) => {
+export const getAddressFromPublicKey = (
+  publicKeyHex: string,
+  prefix: string
+) => {
   const pubKey = ec.keyFromPublic(publicKeyHex, "hex")
   const pubPoint = pubKey.getPublic()
   const compressed = pubPoint.encodeCompressed()
@@ -144,8 +171,14 @@ export const getAddressFromPublicKey = (publicKeyHex, prefix) => {
  * Gets an address from a private key.
  * @param {string} privateKeyHex the private key hexstring
  */
-export const getAddressFromPrivateKey = (privateKeyHex, prefix) => {
-  return getAddressFromPublicKey(getPublicKeyFromPrivateKey(privateKeyHex), prefix)
+export const getAddressFromPrivateKey = (
+  privateKeyHex: string,
+  prefix: string
+): string => {
+  return getAddressFromPublicKey(
+    getPublicKeyFromPrivateKey(privateKeyHex),
+    prefix
+  )
 }
 
 /**
@@ -154,10 +187,16 @@ export const getAddressFromPrivateKey = (privateKeyHex, prefix) => {
  * @param {string | Buffer} privateKey - The private key.
  * @return {Buffer} Signature. Does not include tx.
  */
-export const generateSignature = (signBytesHex, privateKey) => {
+export const generateSignature = (
+  signBytesHex: string,
+  privateKey: string | Buffer
+): Buffer => {
   const msgHash = sha256(signBytesHex)
   const msgHashHex = Buffer.from(msgHash, "hex")
-  const signature = ecc.sign(msgHashHex, Buffer.from(privateKey, "hex")) // enc ignored if buffer
+  const signature = ecc.sign(
+    msgHashHex,
+    typeof privateKey === "string" ? Buffer.from(privateKey, "hex") : privateKey
+  )
   return signature
 }
 
@@ -166,9 +205,13 @@ export const generateSignature = (signBytesHex, privateKey) => {
  * @param {string} sigHex - The signature hexstring.
  * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
  * @param {string} publicKeyHex - The public key.
- * @return {Buffer} Signature. Does not include tx.
+ * @return {boolean}
  */
-export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
+export const verifySignature = (
+  sigHex: string,
+  signBytesHex: string,
+  publicKeyHex: string
+): boolean => {
   const publicKey = Buffer.from(publicKeyHex, "hex")
   if (!ecc.isPoint(publicKey)) throw new Error("Invalid public key provided")
   const msgHash = sha256(signBytesHex)
@@ -182,7 +225,10 @@ export const verifySignature = (sigHex, signBytesHex, publicKeyHex) => {
  * @param {string} password the password.
  * @return {object} the keystore object.
  */
-export const generateKeyStore = (privateKeyHex, password) => {
+export const generateKeyStore = (
+  privateKeyHex: string,
+  password: string
+): KeyStore => {
   const salt = cryp.randomBytes(32)
   const iv = cryp.randomBytes(16)
   const cipherAlg = "aes-256-ctr"
@@ -195,14 +241,23 @@ export const generateKeyStore = (privateKeyHex, password) => {
     prf: "hmac-sha256"
   }
 
-  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256")
+  const derivedKey = cryp.pbkdf2Sync(
+    Buffer.from(password),
+    salt,
+    kdfparams.c,
+    kdfparams.dklen,
+    "sha256"
+  )
   const cipher = cryp.createCipheriv(cipherAlg, derivedKey.slice(0, 32), iv)
   if (!cipher) {
     throw new Error("Unsupported cipher")
   }
 
-  const ciphertext = Buffer.concat([cipher.update(Buffer.from(privateKeyHex, "hex")), cipher.final()])
-  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, "hex")])
+  const ciphertext = Buffer.concat([
+    cipher.update(Buffer.from(privateKeyHex, "hex")),
+    cipher.final()
+  ])
+  const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext])
 
   return {
     version: 1,
@@ -216,7 +271,7 @@ export const generateKeyStore = (privateKeyHex, password) => {
       },
       cipher: cipherAlg,
       kdf,
-      kdfparams: kdfparams,
+      kdfparams,
       // mac must use sha3 according to web3 secret storage spec
       mac: sha3(bufferValue.toString("hex"))
     }
@@ -228,20 +283,28 @@ export const generateKeyStore = (privateKeyHex, password) => {
  * @param {string} keystore the keystore in json format
  * @param {string} password the password.
  */
-export const getPrivateKeyFromKeyStore = (keystore, password) => {
-
+export const getPrivateKeyFromKeyStore = (
+  keystore: string,
+  password: string
+): string => {
   if (!is.string(password)) {
     throw new Error("No password given.")
   }
 
-  const json = is.object(keystore) ? keystore : JSON.parse(keystore)
+  const json: KeyStore = is.object(keystore) ? keystore : JSON.parse(keystore)
   const kdfparams = json.crypto.kdfparams
 
   if (kdfparams.prf !== "hmac-sha256") {
     throw new Error("Unsupported parameters to PBKDF2")
   }
 
-  const derivedKey = cryp.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c, kdfparams.dklen, "sha256")
+  const derivedKey = cryp.pbkdf2Sync(
+    Buffer.from(password),
+    Buffer.from(kdfparams.salt, "hex"),
+    kdfparams.c,
+    kdfparams.dklen,
+    "sha256"
+  )
   const ciphertext = Buffer.from(json.crypto.ciphertext, "hex")
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext])
 
@@ -252,12 +315,21 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
     // the sha256 mac was not compatible with ethereum keystores, so it was changed to sha3 for mainnet.
     const macLegacy = sha256(bufferValue.toString("hex"))
     if (macLegacy !== json.crypto.mac) {
-      throw new Error("Keystore mac check failed (sha3 & sha256) - wrong password?")
+      throw new Error(
+        "Keystore mac check failed (sha3 & sha256) - wrong password?"
+      )
     }
   }
 
-  const decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 32), Buffer.from(json.crypto.cipherparams.iv, "hex"))
-  const privateKey = Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("hex")
+  const decipher = cryp.createDecipheriv(
+    json.crypto.cipher,
+    derivedKey.slice(0, 32),
+    Buffer.from(json.crypto.cipherparams.iv, "hex")
+  )
+  const privateKey = Buffer.concat([
+    decipher.update(ciphertext),
+    decipher.final()
+  ]).toString("hex")
 
   return privateKey
 }
@@ -265,7 +337,8 @@ export const getPrivateKeyFromKeyStore = (keystore, password) => {
 /**
  * Generates mnemonic phrase words using random entropy.
  */
-export const generateMnemonic = () => bip39.generateMnemonic(MNEMONIC_LEN)
+export const generateMnemonic = (): string =>
+  bip39.generateMnemonic(MNEMONIC_LEN)
 
 /**
  * Validates mnemonic phrase words.
@@ -282,8 +355,12 @@ export const validateMnemonic = bip39.validateMnemonic
  * @param {string} password according to bip39
  * @return {string} hexstring
  */
-export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0, password = "") => {
-
+export const getPrivateKeyFromMnemonic = (
+  mnemonic: string,
+  derive: boolean = true,
+  index: number = 0,
+  password: string = ""
+): string => {
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error("wrong mnemonic format")
   }
@@ -291,6 +368,10 @@ export const getPrivateKeyFromMnemonic = (mnemonic, derive = true, index = 0, pa
   if (derive) {
     const master = bip32.fromSeed(seed)
     const child = master.derivePath(HDPATH + index)
+    if (!child.privateKey) {
+      throw new Error("child does not have a privateKey")
+    }
+
     return child.privateKey.toString("hex")
   }
   return seed.toString("hex")
