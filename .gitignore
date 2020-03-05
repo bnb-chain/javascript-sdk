@@ -34,6 +34,9 @@ tests-ledger/buffer-polyfill.js
 /lib
 /typings
 
+# editor
+/.vscode
+
 # misc
 .DS_Store
 .env.local
