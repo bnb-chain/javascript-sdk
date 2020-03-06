@@ -17,7 +17,7 @@ const proposalTypeMapping = {
   0x05: "FeeChange",
   0x06: "CreateValidator",
   0x07: "RemoveValidator"
-}
+} as const
 
 /**
  * VoteOption
@@ -34,7 +34,7 @@ export const voteOption = {
   OptionAbstain: 0x02,
   OptionNo: 0x03,
   OptionNoWithVeto: 0x04
-}
+} as const
 
 const voteOptionMapping = {
   0x00: "Empty",
@@ -45,7 +45,7 @@ const voteOptionMapping = {
 }
 
 class Gov {
-  static instance
+  static instance: Gov
 
   /**
    * @param {Object} bncClient

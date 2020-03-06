@@ -26,7 +26,7 @@ export const TxTypes = {
   ClaimHTLTMsg: "ClaimHTLTMsg",
   RefundHTLTMsg: "RefundHTLTMsg",
   SetAccountFlagsMsg: "SetAccountFlagsMsg"
-}
+} as const
 
 export const TypePrefixes = {
   MsgSend: "2A2C87FA",
@@ -52,6 +52,16 @@ export const TypePrefixes = {
   ClaimHTLTMsg: "C1665300",
   RefundHTLTMsg: "3454A27C",
   SetAccountFlagsMsg: "BEA6E301"
+} as const
+
+export interface Data {
+  account_number?: number
+  chain_id: string
+  memo: string
+  type: typeof TxTypes[keyof typeof TxTypes]
+  msg?: {}
+  sequence?: number
+  source?: number
 }
 
 /**
@@ -77,7 +87,15 @@ export const TypePrefixes = {
  * @param {Number} data.source where does this transaction come from
  */
 class Transaction {
-  constructor(data) {
+  private type: Data["type"]
+  private sequence: NonNullable<Data["sequence"]>
+  private account_number: NonNullable<Data["account_number"]>
+  private chain_id: Data["chain_id"]
+  private msgs: Array<NonNullable<Data["msg"]>>
+  private memo: Data["memo"]
+  private source: NonNullable<Data["source"]>
+
+  constructor(data: Data) {
     if (!TxTypes[data.type]) {
       throw new TypeError(`does not support transaction type: ${data.type}`)
     }
