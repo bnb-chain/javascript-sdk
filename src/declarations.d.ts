@@ -39,8 +39,6 @@ declare module "crypto-browserify" {
 }
 
 declare module "protocol-buffers-encodings" {
-  import { Buffer } from "safe-buffer"
-
   export const string = {
     encode: (val: any, buffer: Buffer, offset?: number) => Buffer,
     decode: (buf: Buffer | number[], offset?: number) => any,

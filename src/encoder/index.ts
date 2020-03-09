@@ -3,7 +3,6 @@
  */
 
 import { string as VarString } from "protocol-buffers-encodings"
-import { Buffer } from "safe-buffer"
 import is from "is_js"
 
 import { UVarInt } from "./varint"

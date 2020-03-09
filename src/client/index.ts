@@ -11,7 +11,6 @@ import Gov from "../gov/"
 import Big, { BigSource } from "big.js"
 import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
-import { Buffer } from "safe-buffer"
 
 const BASENUMBER = Math.pow(10, 8)
 

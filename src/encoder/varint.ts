@@ -1,6 +1,5 @@
 "use strict"
 const BN = require("bn.js")
-import { Buffer } from "safe-buffer"
 
 function VarIntFunc(signed: boolean) {
   const encodingLength = (n: number) => {

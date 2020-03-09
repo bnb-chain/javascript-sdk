@@ -6,7 +6,6 @@ import hexEncoding from "crypto-js/enc-hex"
 import SHA3 from "crypto-js/sha3"
 import SHA256 from "crypto-js/sha256"
 import RIPEMD160 from "crypto-js/ripemd160"
-import { Buffer } from "safe-buffer"
 import * as crypto from "../crypto"
 
 /**

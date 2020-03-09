@@ -21,7 +21,6 @@
  */
 
 import Transport from "@ledgerhq/hw-transport"
-import { Buffer } from "safe-buffer"
 
 const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 50000
 const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000

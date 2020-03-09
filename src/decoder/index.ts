@@ -8,7 +8,6 @@ import {
   bytes as varBytes,
   varint
 } from "protocol-buffers-encodings"
-import { Buffer } from "safe-buffer"
 import is from "is_js"
 
 import typeToTyp3 from "../utils/encoderHelper"

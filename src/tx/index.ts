@@ -1,5 +1,3 @@
-import { Buffer } from "safe-buffer"
-
 import * as crypto from "../crypto"
 import * as encoder from "../encoder"
 import { UVarInt } from "../encoder/varint"

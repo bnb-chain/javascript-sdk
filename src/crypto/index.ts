@@ -11,7 +11,6 @@ import * as bip32 from "bip32"
 import * as bip39 from "bip39"
 import { ec as EC, curve } from "elliptic"
 import ecc from "tiny-secp256k1"
-import { Buffer } from "safe-buffer"
 
 import { ab2hexstring, sha3, sha256, sha256ripemd160 } from "../utils"
 
