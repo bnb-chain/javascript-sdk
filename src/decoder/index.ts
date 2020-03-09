@@ -25,7 +25,10 @@ const decoder = (bytes: Buffer, varType: any) => {
  * @param {Object} type
  * @returns {Object}
  *  */
-export const unMarshalBinaryLengthPrefixed = (bytes: Buffer, type: any) => {
+export const unMarshalBinaryLengthPrefixed = (
+  bytes: Buffer,
+  type: any
+): object => {
   if (bytes.length === 0) throw new TypeError("Cannot decode empty bytes")
 
   // read byte-length prefix
@@ -45,7 +48,7 @@ export const unMarshalBinaryLengthPrefixed = (bytes: Buffer, type: any) => {
  * @param {Object} type
  * @returns {Object}
  *  */
-export const unMarshalBinaryBare = (bytes: Buffer, type: any) => {
+export const unMarshalBinaryBare = (bytes: Buffer, type: any): object => {
   if (!is.object(type)) throw new TypeError("type should be object")
 
   if (!Buffer.isBuffer(bytes)) throw new TypeError("bytes must be buffer")
@@ -185,7 +188,8 @@ const decodeArrayBinary = (bytes: Buffer, type: any) => {
     bytes = bytes.slice(1)
 
     //is default value, skip and continue read bytes
-    if (bytes.length > 0 && bytes[0] === 0x00) continue
+    // if (bytes.length > 0 && bytes[0] === 0x00) continue
+    if (bytes.length > 0 && bytes.readUInt8(0) === 0x00) continue
 
     const { offset, val } = decodeBinary(bytes, type, true)
 
@@ -201,7 +205,7 @@ const decodeArrayBinary = (bytes: Buffer, type: any) => {
   return { val: arr, offset: arrayOffset }
 }
 
-export const decodeFieldNumberAndTyp3 = (bytes: Buffer) => {
+export const decodeFieldNumberAndTyp3 = (bytes: Buffer): any => {
   if (bytes.length < 2) {
     //default value
     return { fieldNum: -1 }

@@ -12,14 +12,19 @@ import * as crypto from "../crypto"
  * @param {arrayBuffer} buf
  * @returns {string} ASCII string
  */
-export const ab2str = buf =>
-  String.fromCharCode.apply(null, new Uint8Array(buf))
+export const ab2str = (buf: Uint8Array) => {
+  const numArr: number[] = []
+  for (let i = 0, len = buf.length; i < len; i++) {
+    numArr.push(buf[i])
+  }
+  String.fromCharCode.apply(null, numArr)
+}
 
 /**
  * @param {string} str - ASCII string
  * @returns {arrayBuffer}
  */
-export const str2ab = str => {
+export const str2ab = (str: string) => {
   if (typeof str !== "string") {
     throw new Error("str2ab expects a string")
   }
@@ -34,7 +39,7 @@ export const str2ab = str => {
  * @param {string} str - HEX string
  * @returns {number[]}
  */
-export const hexstring2ab = str => {
+export const hexstring2ab = (str: string) => {
   ensureHex(str)
   if (!str.length) return new Uint8Array()
   const iters = str.length / 2
@@ -50,7 +55,7 @@ export const hexstring2ab = str => {
  * @param {arrayBuffer} arr
  * @returns {string} HEX string
  */
-export const ab2hexstring = arr => {
+export const ab2hexstring = (arr: any) => {
   if (typeof arr !== "object") {
     throw new Error("ab2hexstring expects an array")
   }
@@ -67,20 +72,21 @@ export const ab2hexstring = arr => {
  * @param {string} str - ASCII string
  * @returns {string} HEX string
  */
-export const str2hexstring = str => ab2hexstring(str2ab(str))
+export const str2hexstring = (str: string) => ab2hexstring(str2ab(str))
 
 /**
  * @param {string} hexstring - HEX string
  * @returns {string} ASCII string
  */
-export const hexstring2str = hexstring => ab2str(hexstring2ab(hexstring))
+export const hexstring2str = (hexstring: string) =>
+  ab2str(hexstring2ab(hexstring))
 
 /**
  * convert an integer to big endian hex and add leading zeros
  * @param {Number} num
  * @returns {string}
  */
-export const int2hex = num => {
+export const int2hex = (num: number) => {
   if (typeof num !== "number") {
     throw new Error("int2hex expects a number")
   }
@@ -95,7 +101,11 @@ export const int2hex = num => {
  * @param {Boolean} littleEndian - Encode the hex in little endian form
  * @return {string}
  */
-export const num2hexstring = (num, size = 1, littleEndian = false) => {
+export const num2hexstring = (
+  num: number,
+  size: number = 1,
+  littleEndian: boolean = false
+) => {
   if (typeof num !== "number") throw new Error("num must be numeric")
   if (num < 0) throw new RangeError("num is unsigned (>= 0)")
   if (size % 1 !== 0) throw new Error("size must be a whole integer")
@@ -116,7 +126,7 @@ export const num2hexstring = (num, size = 1, littleEndian = false) => {
  * @param {Number} num - The number
  * @returns {string} hexstring of the variable Int.
  */
-export const num2VarInt = num => {
+export const num2VarInt = (num: number) => {
   if (num < 0xfd) {
     return num2hexstring(num)
   } else if (num <= 0xffff) {
@@ -137,12 +147,12 @@ export const num2VarInt = num => {
  * @param {string} str2 - HEX string
  * @returns {string} XOR output as a HEX string
  */
-export const hexXor = (str1, str2) => {
+export const hexXor = (str1: string, str2: string) => {
   ensureHex(str1)
   ensureHex(str2)
   if (str1.length !== str2.length)
     throw new Error("strings are disparate lengths")
-  const result = []
+  const result: any[] = []
   for (let i = 0; i < str1.length; i += 2) {
     result.push(
       parseInt(str1.substr(i, 2), 16) ^ parseInt(str2.substr(i, 2), 16)
@@ -156,7 +166,7 @@ export const hexXor = (str1, str2) => {
  * @param {Array} arr
  * @returns {Uint8Array}
  */
-export const reverseArray = arr => {
+export const reverseArray = (arr: any[]) => {
   if (typeof arr !== "object" || !arr.length)
     throw new Error("reverseArray expects an array")
   let result = new Uint8Array(arr.length)
@@ -174,7 +184,7 @@ export const reverseArray = arr => {
  * @param {string} hex - HEX string
  * @return {string} HEX string reversed in 2s.
  */
-export const reverseHex = hex => {
+export const reverseHex = (hex: string) => {
   ensureHex(hex)
   let out = ""
   for (let i = hex.length - 2; i >= 0; i -= 2) {
@@ -194,7 +204,7 @@ const hexRegex = /^([0-9A-Fa-f]{2})*$/
  * @param {string} str
  * @return {boolean}
  */
-export const isHex = str => {
+export const isHex = (str: string) => {
   try {
     return hexRegex.test(str)
   } catch (err) {
@@ -206,7 +216,7 @@ export const isHex = str => {
  * Throws an error if input is not hexstring.
  * @param {string} str
  */
-export const ensureHex = str => {
+export const ensureHex = (str: string) => {
   if (!isHex(str)) throw new Error(`Expected a hexstring but got ${str}`)
 }
 
@@ -215,12 +225,12 @@ export const ensureHex = str => {
  * @param {string} hex message to hash
  * @returns {string} hash output
  */
-export const sha256ripemd160 = hex => {
+export const sha256ripemd160 = (hex: string) => {
   if (typeof hex !== "string")
     throw new Error("sha256ripemd160 expects a string")
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)
-  const ProgramSha256 = SHA256(hexEncoded)
+  const ProgramSha256: any = SHA256(hexEncoded)
   return RIPEMD160(ProgramSha256).toString()
 }
 
@@ -229,7 +239,7 @@ export const sha256ripemd160 = hex => {
  * @param {string} hex message to hash
  * @returns {string} hash output
  */
-export const sha256 = hex => {
+export const sha256 = (hex: string) => {
   if (typeof hex !== "string") throw new Error("sha256 expects a hex string")
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)
@@ -241,7 +251,7 @@ export const sha256 = hex => {
  * @param {string} hex message to hash
  * @returns {string} hash output
  */
-export const sha3 = hex => {
+export const sha3 = (hex: string) => {
   if (typeof hex !== "string") throw new Error("sha3 expects a hex string")
   if (hex.length % 2 !== 0) throw new Error(`invalid hex string length: ${hex}`)
   const hexEncoded = hexEncoding.parse(hex)
@@ -254,7 +264,10 @@ export const sha3 = hex => {
  * @param {Number} timestamp
  * @returns {string} sha256 result
  */
-export const calculateRandomNumberHash = (randomNumber, timestamp) => {
+export const calculateRandomNumberHash = (
+  randomNumber: string,
+  timestamp: number
+) => {
   const timestampHexStr = timestamp.toString(16)
   let timestampHexStrFormat = timestampHexStr
   for (let i = 0; i < 16 - timestampHexStr.length; i++) {
@@ -275,7 +288,11 @@ export const calculateRandomNumberHash = (randomNumber, timestamp) => {
  * @param {String} senderOtherChain
  * @returns {string} sha256 result
  */
-export const calculateSwapID = (randomNumberHash, sender, senderOtherChain) => {
+export const calculateSwapID = (
+  randomNumberHash: string,
+  sender: string,
+  senderOtherChain: string
+) => {
   const randomNumberHashBytes = Buffer.from(randomNumberHash, "hex")
   const senderBytes = crypto.decodeAddress(sender)
   const sendOtherChainBytes = Buffer.from(
