@@ -1,8 +1,8 @@
-import * as crypto from "../crypto/"
-import * as encoder from "../encoder/"
+import * as crypto from "../crypto"
+import * as encoder from "../encoder"
 import { UVarInt } from "../encoder/varint"
 
-export const TxTypes = {
+export const TxTypes: any = {
   MsgSend: "MsgSend",
   NewOrderMsg: "NewOrderMsg",
   CancelOrderMsg: "CancelOrderMsg",
@@ -28,7 +28,7 @@ export const TxTypes = {
   SetAccountFlagsMsg: "SetAccountFlagsMsg"
 } as const
 
-export const TypePrefixes = {
+export const TypePrefixes: any = {
   MsgSend: "2A2C87FA",
   NewOrderMsg: "CE6DC043",
   CancelOrderMsg: "166E681B",

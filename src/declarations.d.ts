@@ -37,3 +37,31 @@ declare module "crypto-browserify" {
   >
   export default crypto
 }
+
+declare module "protocol-buffers-encodings" {
+  import { Buffer } from "safe-buffer"
+
+  export const string = {
+    encode: (val: any, buffer: Buffer, offset?: number) => Buffer,
+    decode: (buf: Buffer | number[], offset?: number) => any,
+    encodingLength: (val: any) => number
+  }
+
+  export const bytes = {
+    encode: (val: any, buffer: Buffer, offset?: number) => Buffer,
+    decode: (buf: Buffer | number[], offset?: number) => any,
+    encodingLength: (val: any) => number
+  }
+
+  export const bool = {
+    encode: (val: any, buffer: Buffer, offset?: number) => Buffer,
+    decode: (buf: Buffer | number[], offset?: number) => any,
+    encodingLength: (val: any) => number
+  }
+
+  export const varint = {
+    encode: (val: any, buffer: Buffer, offset?: number) => Buffer,
+    decode: (buf: Buffer | number[], offset?: number) => any,
+    encodingLength: (val: any) => number
+  }
+}

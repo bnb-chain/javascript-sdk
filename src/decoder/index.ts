@@ -13,7 +13,7 @@ import is from "is_js"
 
 import typeToTyp3 from "../utils/encoderHelper"
 
-const decoder = (bytes, varType) => {
+const decoder = (bytes: Buffer, varType: any) => {
   const val = varType.decode(bytes, 0)
   const offset = varType.encodingLength(val)
   return { val, offset }
@@ -25,7 +25,7 @@ const decoder = (bytes, varType) => {
  * @param {Object} type
  * @returns {Object}
  *  */
-export const unMarshalBinaryLengthPrefixed = (bytes, type) => {
+export const unMarshalBinaryLengthPrefixed = (bytes: Buffer, type: any) => {
   if (bytes.length === 0) throw new TypeError("Cannot decode empty bytes")
 
   // read byte-length prefix
@@ -45,7 +45,7 @@ export const unMarshalBinaryLengthPrefixed = (bytes, type) => {
  * @param {Object} type
  * @returns {Object}
  *  */
-export const unMarshalBinaryBare = (bytes, type) => {
+export const unMarshalBinaryBare = (bytes: Buffer, type: any) => {
   if (!is.object(type)) throw new TypeError("type should be object")
 
   if (!Buffer.isBuffer(bytes)) throw new TypeError("bytes must be buffer")
@@ -59,7 +59,11 @@ export const unMarshalBinaryBare = (bytes, type) => {
   return decodeBinary(bytes, type)
 }
 
-const decodeBinary = (bytes, type, isLengthPrefixed) => {
+const decodeBinary = (
+  bytes: Buffer,
+  type: any,
+  isLengthPrefixed?: boolean
+): any => {
   if (Buffer.isBuffer(type)) {
     return decoder(bytes, varBytes)
   }
@@ -87,7 +91,7 @@ const decodeBinary = (bytes, type, isLengthPrefixed) => {
   return
 }
 
-const setDefaultValue = (type, key) => {
+const setDefaultValue = (type: any, key: string) => {
   if (is.object(type[key])) type[key] = null
 
   if (is.number(type[key])) type[key] = 0
@@ -97,7 +101,11 @@ const setDefaultValue = (type, key) => {
   if (is.string(type[key])) type[key] = ""
 }
 
-const decodeObjectBinary = (bytes, type, isLengthPrefixed) => {
+const decodeObjectBinary = (
+  bytes: Buffer,
+  type: any,
+  isLengthPrefixed?: boolean
+) => {
   let objectOffset = 0
 
   // read byte-length prefix
@@ -163,7 +171,7 @@ const decodeObjectBinary = (bytes, type, isLengthPrefixed) => {
   return { val: type, offset: objectOffset }
 }
 
-const decodeArrayBinary = (bytes, type) => {
+const decodeArrayBinary = (bytes: Buffer, type: any) => {
   const arr = []
   let arrayOffset = 0
   let { fieldNum: fieldNumber } = decodeFieldNumberAndTyp3(bytes)
@@ -193,7 +201,7 @@ const decodeArrayBinary = (bytes, type) => {
   return { val: arr, offset: arrayOffset }
 }
 
-export const decodeFieldNumberAndTyp3 = bytes => {
+export const decodeFieldNumberAndTyp3 = (bytes: Buffer) => {
   if (bytes.length < 2) {
     //default value
     return { fieldNum: -1 }

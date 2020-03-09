@@ -2,23 +2,21 @@
  * @module amino.encode
  */
 
-import vstruct from "varstruct"
+import { string as VarString } from "protocol-buffers-encodings"
 import { Buffer } from "safe-buffer"
 import is from "is_js"
 
 import { UVarInt } from "./varint"
 import typeToTyp3 from "../utils/encoderHelper"
-import { TypePrefixes } from "../tx/"
+import { TypePrefixes } from "../tx"
 
-const VarString = vstruct.VarString(UVarInt)
-
-const sortObject = obj => {
+const sortObject = (obj: any): object | null => {
   if (obj === null) return null
   if (typeof obj !== "object") return obj
   // arrays have typeof "object" in js!
   if (Array.isArray(obj)) return obj.map(sortObject)
   const sortedKeys = Object.keys(obj).sort()
-  const result = {}
+  const result: any = {}
   sortedKeys.forEach(key => {
     result[key] = sortObject(obj[key])
   })
@@ -29,35 +27,41 @@ const sortObject = obj => {
  * encode number
  * @param num
  */
-export const encodeNumber = num => UVarInt.encode(num)
+export const encodeNumber = (num: number) => UVarInt.encode(num)
 
 /**
  * encode bool
  * @param b
  */
-export const encodeBool = b => (b ? UVarInt.encode(1) : UVarInt.encode(0))
+export const encodeBool = (b: boolean) =>
+  b ? UVarInt.encode(1) : UVarInt.encode(0)
 
 /**
  * encode string
  * @param str
  */
-export const encodeString = str => VarString.encode(str)
+export const encodeString = (str: string) => {
+  var buf = Buffer.alloc(VarString.encodingLength(str))
+  return VarString.encode(str, buf, 0)
+}
 
 /**
  * encode time
  * @param value
  */
-export const encodeTime = value => {
+export const encodeTime = (value: string | Date) => {
   const millis = new Date(value).getTime()
   const seconds = Math.floor(millis / 1000)
   const nanos = Number(seconds.toString().padEnd(9, "0"))
 
   const buffer = Buffer.alloc(14)
 
-  buffer[0] = (1 << 3) | 1 // field 1, typ3 1
+  // buffer[0] = (1 << 3) | 1 // field 1, typ3 1
+  buffer.writeInt32LE((1 << 3) | 1, 0)
   buffer.writeUInt32LE(seconds, 1)
 
-  buffer[9] = (2 << 3) | 5 // field 2, typ3 5
+  // buffer[9] = (2 << 3) | 5 // field 2, typ3 5
+  buffer.writeInt32LE((2 << 3) | 5, 9)
   buffer.writeUInt32LE(nanos, 10)
 
   return buffer
@@ -67,14 +71,14 @@ export const encodeTime = value => {
  * @param obj -- {object}
  * @return bytes {Buffer}
  */
-export const convertObjectToSignBytes = obj =>
+export const convertObjectToSignBytes = (obj: any) =>
   Buffer.from(JSON.stringify(sortObject(obj)))
 
 /**
  * js amino MarshalBinary
  * @param {Object} obj
  *  */
-export const marshalBinary = obj => {
+export const marshalBinary = (obj: any) => {
   if (!is.object(obj)) throw new TypeError("data must be an object")
 
   return encodeBinary(obj, -1, true).toString("hex")
@@ -84,7 +88,7 @@ export const marshalBinary = obj => {
  * js amino MarshalBinaryBare
  * @param {Object} obj
  *  */
-export const marshalBinaryBare = obj => {
+export const marshalBinaryBare = (obj: any) => {
   if (!is.object(obj)) throw new TypeError("data must be an object")
 
   return encodeBinary(obj).toString("hex")
@@ -97,7 +101,11 @@ export const marshalBinaryBare = obj => {
  * @param {Boolean} isByteLenPrefix
  * @return {Buffer} binary of object.
  */
-export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
+export const encodeBinary = (
+  val: any,
+  fieldNum?: number,
+  isByteLenPrefix?: boolean
+) => {
   if (val === null || val === undefined) throw new TypeError("unsupported type")
 
   if (Buffer.isBuffer(val)) {
@@ -135,7 +143,7 @@ export const encodeBinary = (val, fieldNum, isByteLenPrefix) => {
  * @param {Buffer} bytes
  * @return {Buffer} with bytes length prefixed
  */
-export const encodeBinaryByteArray = bytes => {
+export const encodeBinaryByteArray = (bytes: Buffer) => {
   const lenPrefix = bytes.length
   return Buffer.concat([UVarInt.encode(lenPrefix), bytes])
 }
@@ -145,8 +153,8 @@ export const encodeBinaryByteArray = bytes => {
  * @param {Object} obj
  * @return {Buffer} with bytes length prefixed
  */
-export const encodeObjectBinary = (obj, isByteLenPrefix) => {
-  const bufferArr = []
+export const encodeObjectBinary = (obj: any, isByteLenPrefix?: boolean) => {
+  const bufferArr: any[] = []
 
   Object.keys(obj).forEach((key, index) => {
     if (key === "msgType" || key === "version") return
@@ -184,8 +192,12 @@ export const encodeObjectBinary = (obj, isByteLenPrefix) => {
  * @param {Boolean} isByteLenPrefix
  * @return {Buffer} bytes of array
  */
-export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
-  const result = []
+export const encodeArrayBinary = (
+  fieldNum: number | undefined,
+  arr: any[],
+  isByteLenPrefix?: boolean
+) => {
+  const result: any[] = []
 
   arr.forEach(item => {
     result.push(encodeTypeAndField(fieldNum, item))
@@ -208,12 +220,13 @@ export const encodeArrayBinary = (fieldNum, arr, isByteLenPrefix) => {
 }
 
 // Write field key.
-const encodeTypeAndField = (index, field) => {
+const encodeTypeAndField = (index: number | undefined, field: any) => {
+  index = Number(index)
   const value = ((index + 1) << 3) | typeToTyp3(field)
   return UVarInt.encode(value)
 }
 
-const isDefaultValue = obj => {
+const isDefaultValue = (obj: any) => {
   if (obj === null) return false
 
   return (

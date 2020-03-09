@@ -20,6 +20,8 @@
  *******************************************************************************
  */
 
+import Transport from "@ledgerhq/hw-transport"
+
 const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 50000
 const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000
 
@@ -33,6 +35,33 @@ const INS_PUBLIC_KEY_SECP256K1 = 0x01
 const INS_SIGN_SECP256K1 = 0x02
 const INS_SHOW_ADDR_SECP256K1 = 0x03
 // const INS_GET_ADDR_SECP256K1 = 0x04
+
+interface Version {
+  test_mode?: boolean
+  major?: number
+  minor?: number
+  patch?: number
+  device_locked?: boolean
+  return_code?: number
+  error_message?: string
+}
+
+interface PublicKey {
+  pk?: Buffer
+  return_code?: number
+  error_message?: string
+}
+
+interface SignedSignature {
+  return_code?: number
+  error_message?: string
+  signature?: Buffer | null
+}
+
+interface ReturnResponse {
+  return_code?: number
+  error_message?: string
+}
 
 // The general structure of commands and responses is as follows:
 
@@ -59,6 +88,9 @@ const INS_SHOW_ADDR_SECP256K1 = 0x03
  * @static
  */
 class LedgerApp {
+  private _transport: Transport
+  private _interactiveTimeout: number
+  private _nonInteractiveTimeout: number
   /**
    * Constructs a new LedgerApp.
    * @param {Transport} transport Ledger Transport, a subclass of ledgerjs Transport.
@@ -66,24 +98,26 @@ class LedgerApp {
    * @param {Number} nonInteractiveTimeout The non-interactive timeout in ms. Default 3s.
    */
   constructor(
-    transport,
-    interactiveTimeout = DEFAULT_LEDGER_INTERACTIVE_TIMEOUT,
-    nonInteractiveTimeout = DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT
+    transport: Transport,
+    interactiveTimeout: number = DEFAULT_LEDGER_INTERACTIVE_TIMEOUT,
+    nonInteractiveTimeout: number = DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT
   ) {
     if (!transport || !transport.send) {
       throw new Error("LedgerApp expected a Transport")
     }
     this._transport = transport
-    if (typeof interactiveTimeout === "number") {
-      this._interactiveTimeout = interactiveTimeout
-    }
-    if (typeof nonInteractiveTimeout === "number") {
-      this._nonInteractiveTimeout = nonInteractiveTimeout
-    }
+    this._interactiveTimeout = interactiveTimeout
+    this._nonInteractiveTimeout = nonInteractiveTimeout
     this._transport.setScrambleKey(SCRAMBLE_KEY)
   }
 
-  _serialize(CLA, INS, p1 = 0, p2 = 0, data = null) {
+  _serialize(
+    cla: number = CLA,
+    ins: number,
+    p1: number = 0,
+    p2: number = 0,
+    data: any = null
+  ) {
     let size = 5
     if (data != null) {
       if (data.length > 255) {
@@ -93,8 +127,8 @@ class LedgerApp {
     }
     let buffer = Buffer.alloc(size)
 
-    buffer[0] = CLA
-    buffer[1] = INS
+    buffer[0] = cla
+    buffer[1] = ins
     buffer[2] = p1
     buffer[3] = p2
     buffer[4] = 0
@@ -107,7 +141,7 @@ class LedgerApp {
     return buffer
   }
 
-  _serializeHRP(hrp) {
+  _serializeHRP(hrp: string) {
     if (hrp == null || hrp.length < 3 || hrp.length > 83) {
       throw new Error("Invalid HRP")
     }
@@ -117,7 +151,7 @@ class LedgerApp {
     return buf
   }
 
-  _serializeHDPath(path) {
+  _serializeHDPath(path: number[]) {
     if (path == null || path.length < 3) {
       throw new Error("Invalid path.")
     }
@@ -125,7 +159,7 @@ class LedgerApp {
       throw new Error("Invalid path. Length should be <= 10")
     }
     let buf = Buffer.alloc(1 + 4 * path.length)
-    buf.writeUInt8(path.length)
+    buf.writeUInt8(path.length, 0)
     for (let i = 0; i < path.length; i++) {
       let v = path[i]
       if (i < 3) {
@@ -136,7 +170,7 @@ class LedgerApp {
     return buf
   }
 
-  _errorMessage(code) {
+  _errorMessage(code: number) {
     switch (code) {
       case 1:
         return "U2F: Unknown"
@@ -212,8 +246,8 @@ class LedgerApp {
    * Gets the version of the Ledger app that is currently open on the device.
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
-  async getVersion() {
-    const result = {}
+  async getVersion(): Promise<Version> {
+    const result: Version = {}
     try {
       this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
       let apduResponse = await this._transport.send(
@@ -279,8 +313,10 @@ class LedgerApp {
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
-  async publicKeySecp256k1(hdPath = [44, 714, 0, 0, 0]) {
-    const result = {}
+  async publicKeySecp256k1(
+    hdPath: number[] = [44, 714, 0, 0, 0]
+  ): Promise<PublicKey> {
+    const result: PublicKey = {}
     try {
       this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
       let apduResponse = await this._transport.send(
@@ -352,7 +388,7 @@ class LedgerApp {
   // | SIG     | byte (~71) | Signature     | DER encoded (length prefixed parts) |
   // | SW1-SW2 | byte (2)  | Return code   | see list of return codes        |
 
-  _signGetChunks(data, hdPath) {
+  _signGetChunks(data: any, hdPath: number[]) {
     const chunks = []
     chunks.push(this._serializeHDPath(hdPath))
     let buffer = Buffer.from(data)
@@ -366,8 +402,8 @@ class LedgerApp {
     return chunks
   }
 
-  async _signSendChunk(chunkIdx, chunksCount, chunk) {
-    const result = {}
+  async _signSendChunk(chunkIdx: any, chunksCount: any, chunk: any) {
+    const result: SignedSignature = {}
     try {
       let apduResponse = await this._transport.send(
         CLA,
@@ -407,8 +443,11 @@ class LedgerApp {
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
-  async signSecp256k1(signBytes, hdPath = [44, 714, 0, 0, 0]) {
-    const result = {}
+  async signSecp256k1(
+    signBytes: Buffer,
+    hdPath: number[] = [44, 714, 0, 0, 0]
+  ): Promise<SignedSignature> {
+    const result: SignedSignature = {}
     const chunks = this._signGetChunks(signBytes, hdPath)
     // _signSendChunk doesn't throw, it catches exceptions itself. no need for try/catch
     let response
@@ -539,8 +578,11 @@ class LedgerApp {
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
-  async showAddress(hrp = "bnb", hdPath = [44, 714, 0, 0, 0]) {
-    const result = {}
+  async showAddress(
+    hrp: string = "bnb",
+    hdPath: number[] = [44, 714, 0, 0, 0]
+  ): Promise<ReturnResponse> {
+    const result: ReturnResponse = {}
     let data = Buffer.concat([
       this._serializeHRP(hrp),
       this._serializeHDPath(hdPath)
@@ -574,7 +616,7 @@ class LedgerApp {
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
-  getPublicKey(hdPath) {
+  getPublicKey(hdPath: number[]): Promise<PublicKey> {
     return this.publicKeySecp256k1(hdPath)
   }
 
@@ -584,9 +626,10 @@ class LedgerApp {
    * @param {array} hdPath The HD path to use to get the public key. Default is [44, 714, 0, 0, 0]
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
-  sign(signBytes, hdPath) {
+  sign(signBytes: Buffer, hdPath: number[]): Promise<SignedSignature> {
     return this.signSecp256k1(signBytes, hdPath)
   }
 }
 
 module.exports = LedgerApp
+export default LedgerApp
