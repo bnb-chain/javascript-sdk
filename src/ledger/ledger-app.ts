@@ -21,6 +21,7 @@
  */
 
 import Transport from "@ledgerhq/hw-transport"
+import { Buffer } from "safe-buffer"
 
 const DEFAULT_LEDGER_INTERACTIVE_TIMEOUT = 50000
 const DEFAULT_LEDGER_NONINTERACTIVE_TIMEOUT = 3000
@@ -36,7 +37,7 @@ const INS_SIGN_SECP256K1 = 0x02
 const INS_SHOW_ADDR_SECP256K1 = 0x03
 // const INS_GET_ADDR_SECP256K1 = 0x04
 
-interface Version {
+export interface Version {
   test_mode?: boolean
   major?: number
   minor?: number
@@ -46,19 +47,19 @@ interface Version {
   error_message?: string
 }
 
-interface PublicKey {
+export interface PublicKey {
   pk?: Buffer
   return_code?: number
   error_message?: string
 }
 
-interface SignedSignature {
+export interface SignedSignature {
   return_code?: number
   error_message?: string
   signature?: Buffer | null
 }
 
-interface ReturnResponse {
+export interface ReturnResponse {
   return_code?: number
   error_message?: string
 }

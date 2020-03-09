@@ -1,10 +1,13 @@
 /**
  * @module gov
  */
-import Big from "big.js"
+import Big, { BigSource } from "big.js"
 import * as crypto from "../crypto/"
 import { checkCoins } from "../utils/validateHelper"
 import proposalType from "./proposalType"
+import { Coin } from "../utils/coin"
+
+import { BncClient } from "../client" // This is a circular dependecy; should be changed to `import type` asap
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -46,11 +49,12 @@ const voteOptionMapping = {
 
 class Gov {
   static instance: Gov
+  private _bncClient!: BncClient
 
   /**
    * @param {Object} bncClient
    */
-  constructor(bncClient) {
+  constructor(bncClient: BncClient) {
     if (!Gov.instance) {
       this._bncClient = bncClient
       Gov.instance = this
@@ -75,7 +79,17 @@ class Gov {
    *  votingPeriod: 604800
    * }
    */
-  async submitListProposal(listParams) {
+  async submitListProposal(listParams: {
+    baseAsset: string
+    quoteAsset: string
+    initPrice: BigSource
+    description: string
+    expireTime: string
+    address: string
+    title: string
+    initialDeposit: BigSource
+    votingPeriod: BigSource
+  }) {
     const listTradingPairObj = {
       base_asset_symbol: listParams.baseAsset,
       quote_asset_symbol: listParams.quoteAsset,
@@ -109,12 +123,12 @@ class Gov {
    * @return {Promise} resolves with response (success or fail)
    */
   async submitProposal(
-    address,
-    title,
-    description,
-    proposalType,
-    initialDeposit,
-    votingPeriod
+    address: string,
+    title: string,
+    description: string,
+    proposalType: keyof typeof proposalTypeMapping,
+    initialDeposit: BigSource,
+    votingPeriod: BigSource
   ) {
     const accAddress = crypto.decodeAddress(address)
     const coins = [
@@ -169,12 +183,12 @@ class Gov {
    *   "amount": 10
    * }]
    */
-  async deposit(proposalId, address, coins) {
+  async deposit(proposalId: number, address: string, coins: Coin[]) {
     const accAddress = crypto.decodeAddress(address)
 
     checkCoins(coins)
 
-    const amount = []
+    const amount: Coin[] = []
     coins.forEach(coin => {
       amount.push({
         denom: coin.denom,

@@ -1,15 +1,18 @@
+import { Coin } from "./coin"
+import { BigSource } from "big.js"
+
 const MAX_INT64 = Math.pow(2, 63)
 
 /**
  * validate the input number.
  * @param {Number} value
  */
-export const checkNumber = (value: number, name = "input number") => {
-  if (value <= 0) {
+export const checkNumber = (value: BigSource, name = "input number") => {
+  if (new Big(value).lte(0)) {
     throw new Error(`${name} should be a positive number`)
   }
 
-  if (MAX_INT64 <= value) {
+  if (new Big(value).gt(MAX_INT64)) {
     throw new Error(`${name} should be less than 2^63`)
   }
 }
@@ -18,12 +21,7 @@ export const checkNumber = (value: number, name = "input number") => {
  * basic validation of coins
  * @param {Array} coins
  */
-export const checkCoins = (
-  coins: Array<{
-    denom: string
-    amount: number
-  }>
-) => {
+export const checkCoins = (coins: Coin[]) => {
   coins = coins || []
   coins.forEach(coin => {
     checkNumber(coin.amount)

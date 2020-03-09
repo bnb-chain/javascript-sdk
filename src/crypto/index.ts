@@ -11,6 +11,7 @@ import * as bip32 from "bip32"
 import * as bip39 from "bip39"
 import { ec as EC, curve } from "elliptic"
 import ecc from "tiny-secp256k1"
+import { Buffer } from "safe-buffer"
 
 import { ab2hexstring, sha3, sha256, sha256ripemd160 } from "../utils"
 
@@ -156,7 +157,7 @@ export const generatePubKey = (privateKey: Buffer): curve.base.BasePoint => {
  */
 export const getAddressFromPublicKey = (
   publicKeyHex: string,
-  prefix: string
+  prefix?: string
 ) => {
   const pubKey = ec.keyFromPublic(publicKeyHex, "hex")
   const pubPoint = pubKey.getPublic()
@@ -173,7 +174,7 @@ export const getAddressFromPublicKey = (
  */
 export const getAddressFromPrivateKey = (
   privateKeyHex: string,
-  prefix: string
+  prefix?: string
 ): string => {
   return getAddressFromPublicKey(
     getPublicKeyFromPrivateKey(privateKeyHex),

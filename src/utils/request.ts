@@ -10,15 +10,20 @@ class HttpRequest {
     this.httpClient = axios.create({ baseURL })
   }
 
-  get(path: string, params: any, opts: AxiosRequestConfig) {
+  get(path: string, params?: any, opts?: AxiosRequestConfig) {
     return this.request("get", path, params, opts)
   }
 
-  post(path: string, body: any, opts: AxiosRequestConfig) {
+  post(path: string, body?: any, opts?: AxiosRequestConfig) {
     return this.request("post", path, body, opts)
   }
 
-  request(method: Method, path: string, params: any, opts: AxiosRequestConfig) {
+  request(
+    method: Method,
+    path: string,
+    params?: any,
+    opts: AxiosRequestConfig = {}
+  ) {
     const options = {
       method,
       url: path,

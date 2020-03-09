@@ -16,4 +16,4 @@ export default {
   ProposalTypeFeeChange,
   ProposalTypeCreateValidator,
   ProposalTypeRemoveValidator
-}
+} as const
