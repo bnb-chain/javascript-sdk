@@ -226,7 +226,11 @@ class Gov {
    * @param {String} voter
    * @param {VoteOption} option
    */
-  async vote(proposalId, voter, option) {
+  async vote(
+    proposalId: number,
+    voter: string,
+    option: keyof typeof voteOptionMapping
+  ) {
     const accAddress = crypto.decodeAddress(voter)
 
     const voteMsg = {
