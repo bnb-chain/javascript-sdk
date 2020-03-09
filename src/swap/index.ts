@@ -2,18 +2,22 @@
  * @module Swap
  */
 
+import { Buffer } from "buffer"
+
 import { TxTypes } from "../tx/"
 import * as crypto from "../crypto/"
 import { checkCoins } from "../utils/validateHelper"
-import { Buffer } from "buffer"
+import { BncClient } from "../client"
+import { Coin } from "../utils/coin"
 
 class Swap {
-  static instance
+  static instance: Swap
+  private _bncClient!: BncClient
 
   /**
    * @param {Object} bncClient
    */
-  constructor(bncClient) {
+  constructor(bncClient: BncClient) {
     if (!Swap.instance) {
       this._bncClient = bncClient
       Swap.instance = this
@@ -37,16 +41,16 @@ class Swap {
    * @returns {Promise}  resolves with response (success or fail)
    */
   async HTLT(
-    from,
-    recipient,
-    recipientOtherChain,
-    senderOtherChain,
-    randomNumberHash,
-    timestamp,
-    amount,
-    expectedIncome,
-    heightSpan,
-    crossChain
+    from: string,
+    recipient: string,
+    recipientOtherChain: string,
+    senderOtherChain: string,
+    randomNumberHash: string,
+    timestamp: number,
+    amount: Coin[],
+    expectedIncome: string,
+    heightSpan: number,
+    crossChain: boolean
   ) {
     checkCoins(amount)
     const htltMsg = {
@@ -91,7 +95,7 @@ class Swap {
    * @param {Array} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async depositHTLT(from, swapID, amount) {
+  async depositHTLT(from: string, swapID: string, amount: Coin[]) {
     checkCoins(amount)
     const depositHTLTMsg = {
       from: crypto.decodeAddress(from),
@@ -121,7 +125,7 @@ class Swap {
    * @param {String} randomNumber
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async claimHTLT(from, swapID, randomNumber) {
+  async claimHTLT(from: string, swapID: string, randomNumber: string) {
     const claimHTLTMsg = {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, "hex"),
@@ -149,7 +153,7 @@ class Swap {
    * @param {String} swapID
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async refundHTLT(from, swapID) {
+  async refundHTLT(from: string, swapID: string) {
     const refundHTLTMsg = {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, "hex"),
