@@ -1,22 +1,27 @@
 /**
  * @module Token
  */
-import Big from "big.js"
+import Big, { BigSource } from "big.js"
+
 import { TxTypes } from "../tx/"
 import * as crypto from "../crypto/"
-import { api } from "../client/"
+import { api, BncClient } from "../client/"
 import { validateSymbol } from "../utils/validateHelper"
 import { checkCoins } from "../utils/validateHelper"
+import HttpRequest from "../utils/request"
+import { Coin } from "../utils/coin"
+
 const MAXTOTALSUPPLY = 9000000000000000000
 
 const validateNonZeroAmount = async (
-  amount,
-  symbol,
-  fromAddress,
-  httpClient,
+  amountParam: BigSource,
+  symbol: string,
+  fromAddress: string,
+  httpClient: HttpRequest,
   type = "free"
 ) => {
-  if (amount <= 0 || amount > MAXTOTALSUPPLY) {
+  const amount = new Big(amountParam)
+  if (amount.lte(0) || amount.gt(MAXTOTALSUPPLY)) {
     throw new Error("invalid amount")
   }
 
@@ -26,13 +31,13 @@ const validateNonZeroAmount = async (
       `${api.getAccount}/${fromAddress}`
     )
     const balance = result.balances.find(
-      b => b.symbol.toUpperCase() === symbol.toUpperCase()
+      (b: { symbol: string }) => b.symbol.toUpperCase() === symbol.toUpperCase()
     )
     if (!balance) {
       throw new Error(`the account doesn't have ${symbol}`)
     }
 
-    if (Number(balance[type]) < Number(amount)) {
+    if (amount.gte(balance[type])) {
       throw new Error(`the account doesn't have enougth balance`)
     }
   } catch (err) {
@@ -42,12 +47,14 @@ const validateNonZeroAmount = async (
 }
 
 class TokenManagement {
-  static instance
+  static instance: TokenManagement
+
+  private _bncClient!: BncClient
 
   /**
    * @param {Object} bncClient
    */
-  constructor(bncClient) {
+  constructor(bncClient: BncClient) {
     if (!TokenManagement.instance) {
       this._bncClient = bncClient
       TokenManagement.instance = this
@@ -66,11 +73,11 @@ class TokenManagement {
    * @returns {Promise} resolves with response (success or fail)
    */
   async issue(
-    senderAddress,
-    tokenName,
-    symbol,
-    totalSupply = 0,
-    mintable = false
+    senderAddress: string,
+    tokenName: string,
+    symbol: string,
+    totalSupply: number = 0,
+    mintable: boolean = false
   ) {
     if (!senderAddress) {
       throw new Error("sender address cannot be empty")
@@ -90,8 +97,7 @@ class TokenManagement {
       throw new Error("invalid supply amount")
     }
 
-    totalSupply = new Big(totalSupply)
-    totalSupply = Number(totalSupply.mul(Math.pow(10, 8)).toString())
+    totalSupply = Number(new Big(totalSupply).mul(Math.pow(10, 8)).toString())
 
     const issueMsg = {
       from: crypto.decodeAddress(senderAddress),
@@ -125,7 +131,7 @@ class TokenManagement {
    * @param {String} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async freeze(fromAddress, symbol, amount) {
+  async freeze(fromAddress: string, symbol: string, amount: BigSource) {
     validateSymbol(symbol)
 
     validateNonZeroAmount(
@@ -136,13 +142,10 @@ class TokenManagement {
       "free"
     )
 
-    amount = new Big(amount)
-    amount = Number(amount.mul(Math.pow(10, 8)).toString())
-
     const freezeMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount,
+      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
       msgType: TxTypes.FreezeMsg
     }
 
@@ -167,7 +170,7 @@ class TokenManagement {
    * @param {String} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async unfreeze(fromAddress, symbol, amount) {
+  async unfreeze(fromAddress: string, symbol: string, amount: BigSource) {
     validateSymbol(symbol)
 
     validateNonZeroAmount(
@@ -178,13 +181,10 @@ class TokenManagement {
       "frozen"
     )
 
-    amount = new Big(amount)
-    amount = Number(amount.mul(Math.pow(10, 8)).toString())
-
     const unfreezeMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount,
+      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
       msgType: TxTypes.UnfreezeMsg
     }
 
@@ -209,7 +209,7 @@ class TokenManagement {
    * @param {Number} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async burn(fromAddress, symbol, amount) {
+  async burn(fromAddress: string, symbol: string, amount: BigSource) {
     validateSymbol(symbol)
 
     validateNonZeroAmount(
@@ -219,13 +219,10 @@ class TokenManagement {
       this._bncClient._httpClient
     )
 
-    amount = new Big(amount)
-    amount = Number(amount.mul(Math.pow(10, 8)).toString())
-
     const burnMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount,
+      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
       msgType: TxTypes.BurnMsg
     }
 
@@ -250,20 +247,17 @@ class TokenManagement {
    * @param {Number} amount
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async mint(fromAddress, symbol, amount) {
+  async mint(fromAddress: string, symbol: string, amount: BigSource) {
     validateSymbol(symbol)
 
     if (amount <= 0 || amount > MAXTOTALSUPPLY) {
       throw new Error("invalid amount")
     }
 
-    amount = new Big(amount)
-    amount = Number(amount.mul(Math.pow(10, 8)).toString())
-
     const mintMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount,
+      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
       msgType: TxTypes.MintMsg
     }
 
@@ -290,7 +284,12 @@ class TokenManagement {
    * @param {Number} lockTime
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async timeLock(fromAddress, description, amount, lockTime) {
+  async timeLock(
+    fromAddress: string,
+    description: string,
+    amount: Coin[],
+    lockTime: number
+  ) {
     checkCoins(amount)
 
     if (description.length > 128) {
@@ -322,6 +321,7 @@ class TokenManagement {
     )
     return this._bncClient._broadcastDelegate(signedTx)
   }
+
   /**
    * lock more token or increase locked period
    * @param {String} fromAddress
@@ -331,7 +331,13 @@ class TokenManagement {
    * @param {Number} lockTime
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async timeRelock(fromAddress, id, description, amount, lockTime) {
+  async timeRelock(
+    fromAddress: string,
+    id: number,
+    description: string,
+    amount: Coin[],
+    lockTime: number
+  ) {
     checkCoins(amount)
 
     if (description.length > 128) {
@@ -365,13 +371,14 @@ class TokenManagement {
     )
     return this._bncClient._broadcastDelegate(signedTx)
   }
+
   /**
    * unlock locked tokens
    * @param {String} fromAddress
    * @param {Number} id
    * @returns {Promise}  resolves with response (success or fail)
    */
-  async timeUnlock(fromAddress, id) {
+  async timeUnlock(fromAddress: string, id: number) {
     const timeUnlockMsg = {
       from: crypto.decodeAddress(fromAddress),
       time_lock_id: id,

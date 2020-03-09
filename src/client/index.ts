@@ -129,11 +129,11 @@ const calInputCoins = (inputs: Array<{ coins: Coin[] }>, coins: Coin[]) => {
  * The Binance Chain client.
  */
 export class BncClient {
-  private _httpClient: HttpRequest
-  private _signingDelegate: typeof DefaultSigningDelegate
-  private _broadcastDelegate: typeof DefaultBroadcastDelegate
-  private _useAsyncBroadcast: boolean
-  private _source: number
+  public _httpClient: HttpRequest
+  public _signingDelegate: typeof DefaultSigningDelegate
+  public _broadcastDelegate: typeof DefaultBroadcastDelegate
+  public _useAsyncBroadcast: boolean
+  public _source: number
   public tokens: TokenManagement
   public swap: Swap
   public gov: Gov
@@ -143,7 +143,7 @@ export class BncClient {
   public network: keyof typeof NETWORK_PREFIX_MAPPING = "testnet"
   public privateKey?: string
   public address?: string
-  private _setPkPromise?: ReturnType<HttpRequest["request"]>
+  public _setPkPromise?: ReturnType<HttpRequest["request"]>
   public account_number?: string | number
 
   /**

@@ -1,4 +1,3 @@
-"use strict"
 const BN = require("bn.js")
 
 function VarIntFunc(signed: boolean) {

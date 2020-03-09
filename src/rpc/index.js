@@ -1,7 +1,6 @@
 /**
  * https://github.com/nomic-io/js-tendermint/blob/master/src/rpc.js
  */
-"use strict"
 
 const is = require("is_js")
 const EventEmitter = require("events")
