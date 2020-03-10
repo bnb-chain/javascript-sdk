@@ -12,7 +12,7 @@ export const checkNumber = (value: BigSource, name = "input number") => {
     throw new Error(`${name} should be a positive number`)
   }
 
-  if (new Big(value).gt(MAX_INT64)) {
+  if (new Big(value).gte(MAX_INT64)) {
     throw new Error(`${name} should be less than 2^63`)
   }
 }
