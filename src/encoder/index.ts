@@ -4,10 +4,9 @@
 
 import { string as VarString } from "protocol-buffers-encodings"
 import is from "is_js"
-
 import { UVarInt } from "./varint"
 import typeToTyp3 from "../utils/encoderHelper"
-import { TypePrefixes } from "../tx"
+// import { TypePrefixes, TxTypes } from "../types/stdTx"
 
 const sortObject = (obj: any): object | null => {
   if (obj === null) return null
@@ -156,7 +155,7 @@ export const encodeObjectBinary = (obj: any, isByteLenPrefix?: boolean) => {
   const bufferArr: any[] = []
 
   Object.keys(obj).forEach((key, index) => {
-    if (key === "msgType" || key === "version") return
+    if (key === "aminoPrefix" || key === "version") return
 
     if (isDefaultValue(obj[key])) return
 
@@ -171,8 +170,8 @@ export const encodeObjectBinary = (obj: any, isByteLenPrefix?: boolean) => {
   let bytes = Buffer.concat(bufferArr)
 
   // add prefix
-  if (TypePrefixes[obj.msgType]) {
-    const prefix = Buffer.from(TypePrefixes[obj.msgType], "hex")
+  if (obj.aminoPrefix) {
+    const prefix = Buffer.from(obj.aminoPrefix, "hex")
     bytes = Buffer.concat([prefix, bytes])
   }
 

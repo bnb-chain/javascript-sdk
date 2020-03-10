@@ -1,6 +1,7 @@
 {
   "include": ["src", "types"],
   "compilerOptions": {
+    "allowJs": true,
     "target": "es5",
     "module": "esnext",
     "lib": ["dom", "esnext"],

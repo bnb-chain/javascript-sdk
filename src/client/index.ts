@@ -11,6 +11,8 @@ import Gov from "../gov/"
 import Big, { BigSource } from "big.js"
 import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
+import { StdSignMsg, TxAminoPrefix } from "../types/stdTx"
+import { Msg, NewOrderMsg } from "../types/msg"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -566,7 +568,7 @@ export class BncClient {
     const bigPrice = new Big(price)
     const bigQuantity = new Big(quantity)
 
-    const placeOrderMsg = {
+    const placeOrderMsg: NewOrderMsg = {
       sender: accCode,
       id: `${accCode.toString("hex")}-${sequence! + 1}`.toUpperCase(),
       symbol: symbol,
@@ -575,7 +577,7 @@ export class BncClient {
       price: parseFloat(bigPrice.mul(BASENUMBER).toString()),
       quantity: parseFloat(bigQuantity.mul(BASENUMBER).toString()),
       timeinforce: timeinforce,
-      msgType: "NewOrderMsg"
+      aminoPrefix: TxAminoPrefix.NewOrderMsg
     }
 
     const signMsg = {
@@ -599,6 +601,7 @@ export class BncClient {
       sequence,
       ""
     )
+
     return this._broadcastDelegate(signedTx)
   }
 
@@ -711,11 +714,11 @@ export class BncClient {
    * @return {Transaction} signed transaction
    */
   async _prepareTransaction(
-    msg,
-    stdSignMsg,
+    msg: Msg,
+    stdSignMsg: StdSignMsg,
     address: string,
     sequence: string | number | null = null,
-    memo = ""
+    memo: string = ""
   ) {
     if ((!this.account_number || (sequence !== 0 && !sequence)) && address) {
       const data = await this._httpClient.request(
@@ -729,18 +732,32 @@ export class BncClient {
       await this._setPkPromise
     }
 
-    const tx = new Transaction({
-      account_number:
+    const data: StdSignMsg = {
+      chainId: this.chainId!,
+      accountNumber:
         typeof this.account_number !== "number"
           ? parseInt(this.account_number!)
           : this.account_number,
-      chain_id: this.chainId!,
-      memo: memo,
-      msg,
       sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
-      source: this._source,
-      type: msg.msgType
-    })
+      msgs: [msg],
+      memo: memo,
+      source: this._source
+    }
+
+    const tx = new Transaction(data)
+
+    // const tx = new Transaction({
+    //   account_number:
+    //     typeof this.account_number !== "number"
+    //       ? parseInt(this.account_number!)
+    //       : this.account_number,
+    //   chain_id: this.chainId!,
+    //   memo: memo,
+    //   msg,
+    //   sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
+    //   source: this._source,
+    //   type: msg.msgType
+    // })
     return this._signingDelegate.call(this, tx, stdSignMsg)
   }
 

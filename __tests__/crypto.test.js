@@ -59,6 +59,8 @@ describe("crypto", () => {
       "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic)
     const address = crypto.getAddressFromPrivateKey(pk)
+    const keystore = crypto.generateKeyStore(pk, "12345qwert!S")
+    console.log(JSON.stringify(keystore))
     expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
