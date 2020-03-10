@@ -1,7 +1,7 @@
 /**
  * @module rpc
  */
-import big from "big.js"
+import { Big, BigSource } from "big.js"
 import {
   Token,
   AppAccount,
@@ -13,23 +13,29 @@ import {
 } from "../decoder/types"
 import * as decoder from "../decoder"
 import * as crypto from "../crypto"
-import BaseRpc from "."
+import BaseRpc from "./"
 import {
   validateSymbol,
   validateTradingPair,
   validateOffsetLimit
 } from "../utils/validateHelper"
+import { NETWORK_PREFIX_MAPPING } from "../client"
+import Transaction from "../tx"
+import { Coin } from "utils/coin"
 
 const BASENUMBER = Math.pow(10, 8)
 
-const divide = num => {
-  return +new big(num).div(BASENUMBER).toString()
+const divide = (num: BigSource) => {
+  return +new Big(num).div(BASENUMBER).toString()
 }
 
-const convertObjectArrayNum = (objArr, keys) => {
+const convertObjectArrayNum = <T extends { [k: string]: BigSource }>(
+  objArr: Array<T>,
+  keys: Array<keyof T>
+): void => {
   objArr.forEach(item => {
     keys.forEach(key => {
-      item[key] = divide(item[key])
+      item[key] = divide(item[key]) as any
     })
   })
 }
@@ -38,11 +44,16 @@ const convertObjectArrayNum = (objArr, keys) => {
  * The Binance Chain Node rpc client
  */
 class Client extends BaseRpc {
+  private netWork: keyof typeof NETWORK_PREFIX_MAPPING
+
   /**
    * @param {String} uriString dataseed address
    * @param {String} netWork Binance Chain network
    */
-  constructor(uriString = "localhost:27146", netWork) {
+  constructor(
+    uriString: string = "localhost:27146",
+    netWork: keyof typeof NETWORK_PREFIX_MAPPING
+  ) {
     super(uriString)
     this.netWork = netWork || "mainnet"
   }
@@ -52,7 +63,7 @@ class Client extends BaseRpc {
    * @param {Transaction} signedTx the signed transaction
    * @return {Promise}
    */
-  async broadcastDelegate(signedTx) {
+  async broadcastDelegate(signedTx: Transaction) {
     // amino encode the signed TX
     const encoded = signedTx.serialize()
     // broadcast it via RPC; we have to use a promise here because that's
@@ -81,7 +92,7 @@ class Client extends BaseRpc {
    * @param {String} symbol - required
    * @returns {Object} token detail info
    */
-  async getTokenInfo(symbol) {
+  async getTokenInfo(symbol: string) {
     validateSymbol(symbol)
 
     const path = "/tokens/info/" + symbol
@@ -104,7 +115,7 @@ class Client extends BaseRpc {
    * @param {Number} limit
    * @returns {Array} token list
    */
-  async listAllTokens(offset, limit) {
+  async listAllTokens(offset: number, limit: number) {
     validateOffsetLimit(offset, limit)
     const path = `tokens/list/${offset}/${limit}`
     const res = await this.abciQuery({ path })
@@ -125,7 +136,7 @@ class Client extends BaseRpc {
    * @param {String} address
    * @returns {Object} Account info
    */
-  async getAccount(address) {
+  async getAccount(address: string) {
     // const addr = crypto.decodeAddress(address)
     // const addrHex = Buffer.concat([Buffer.from("account:"), addr])
 
@@ -149,10 +160,10 @@ class Client extends BaseRpc {
   /**
    * @param {Array} balances
    */
-  async getBalances(address) {
+  async getBalances(address: string) {
     const account = await this.getAccount(address)
-    let coins = []
-    const balances = []
+    let coins: Coin[] = []
+    const balances: TokenBalance[] = []
     if (account) {
       coins = (account.base && account.base.coins) || []
       convertObjectArrayNum(coins, ["amount"])
@@ -167,7 +178,7 @@ class Client extends BaseRpc {
         account.frozen.find(frozenItem => item.denom === frozenItem.denom) || {}
       const bal = new TokenBalance()
       bal.symbol = item.denom
-      bal.free = item.amount
+      bal.free = +new Big(item.amount).toString()
       bal.locked = locked.amount || 0
       bal.frozen = frozen.amount || 0
       balances.push(bal)
@@ -182,7 +193,7 @@ class Client extends BaseRpc {
    * @param {String} symbol
    * @returns {Object}
    */
-  async getBalance(address, symbol) {
+  async getBalance(address: string, symbol: string) {
     validateSymbol(symbol)
     const balances = await this.getBalances(address)
     const bal = balances.find(
@@ -196,7 +207,7 @@ class Client extends BaseRpc {
    * @param {String} symbol
    * @returns {Object}
    */
-  async getOpenOrders(address, symbol) {
+  async getOpenOrders(address: string, symbol: string) {
     const path = `/dex/openorders/${symbol}/${address}`
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
@@ -214,7 +225,7 @@ class Client extends BaseRpc {
    * @param {Number} limit
    * @returns {Array}
    */
-  async getTradingPairs(offset, limit) {
+  async getTradingPairs(offset: number, limit: number) {
     validateOffsetLimit(offset, limit)
     const path = `/dex/pairs/${offset}/${limit}`
     const res = await this.abciQuery({ path })
@@ -232,7 +243,7 @@ class Client extends BaseRpc {
    * @param {String} tradePair
    * @returns {Array}
    */
-  async getDepth(tradePair) {
+  async getDepth(tradePair: string) {
     validateTradingPair(tradePair)
     const path = `dex/orderbook/${tradePair}`
     const res = await this.abciQuery({ path })

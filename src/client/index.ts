@@ -26,7 +26,7 @@ export const api = {
   getTx: "/api/v1/tx"
 }
 
-const NETWORK_PREFIX_MAPPING = {
+export const NETWORK_PREFIX_MAPPING = {
   testnet: "tbnb",
   mainnet: "bnb"
 } as const

@@ -46,7 +46,7 @@ const wsProtocols = ["ws:", "wss:"]
 const httpProtocols = ["http:", "https:"]
 const allProtocols = wsProtocols.concat(httpProtocols)
 
-class BaseRpc extends EventEmitter {
+export default class BaseRpc extends EventEmitter {
   private uri: string
   private websocket!: boolean
   public call!: BaseRpc["callWs"] | BaseRpc["callHttp"]
@@ -168,5 +168,3 @@ for (let name of methods) {
     })
   }
 }
-
-module.exports = BaseRpc
