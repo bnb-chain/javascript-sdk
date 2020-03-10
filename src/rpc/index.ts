@@ -82,7 +82,7 @@ class BaseRpc extends EventEmitter {
   }
 
   connectWs() {
-    this.ws = new Pumpify(ndjson.stringify(), websocket(this.uri))
+    this.ws = new Pumpify.obj(ndjson.stringify(), websocket(this.uri))
 
     this.ws.on("error", err => this.emit("error", err))
     this.ws.on("close", () => {
