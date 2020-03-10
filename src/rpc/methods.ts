@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   "subscribe",
   "unsubscribe",
   "unsubscribe_all",
@@ -24,4 +24,4 @@ module.exports = [
 
   "abci_query",
   "abci_info"
-]
+] as const

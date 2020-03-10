@@ -2,18 +2,19 @@
  * https://github.com/nomic-io/js-tendermint/blob/master/src/rpc.js
  */
 
-const is = require("is_js")
-const EventEmitter = require("events")
-const axios = require("axios")
-const url = require("url")
-const camel = require("camelcase")
-const websocket = require("websocket-stream")
-const ndjson = require("ndjson")
-const pumpify = require("pumpify").obj
-const methods = require("./methods.js")
+import is from "is_js"
+import { EventEmitter } from "events"
+import axios from "axios"
+import url from "url"
+import camel from "camelcase"
+import websocket from "websocket-stream"
+import ndjson from "ndjson"
+import Pumpify from "pumpify"
+import methods from "./methods"
 
-function convertHttpArgs(url, args) {
-  args = args || {}
+export type Args = { [k: string]: any }
+
+function convertHttpArgs(url: string, args: Args = {}) {
   const search = []
   for (let k in args) {
     if (is.string(args[k])) {
@@ -27,8 +28,7 @@ function convertHttpArgs(url, args) {
   return `${url}?${search.join("&")}`
 }
 
-function convertWsArgs(args) {
-  args = args || {}
+function convertWsArgs(args: Args = {}) {
   for (let k in args) {
     let v = args[k]
     if (typeof v === "number") {
@@ -47,6 +47,12 @@ const httpProtocols = ["http:", "https:"]
 const allProtocols = wsProtocols.concat(httpProtocols)
 
 class BaseRpc extends EventEmitter {
+  private uri: string
+  private websocket!: boolean
+  public call!: BaseRpc["callWs"] | BaseRpc["callHttp"]
+  private closed: boolean = false
+  private ws?: Pumpify
+
   constructor(uriString = "localhost:27146") {
     super()
 
@@ -54,7 +60,7 @@ class BaseRpc extends EventEmitter {
     let { protocol, hostname, port } = url.parse(uriString)
 
     // default to http
-    if (!allProtocols.includes(protocol)) {
+    if (!protocol || !allProtocols.includes(protocol)) {
       let uri = url.parse(`http://${uriString}`)
       protocol = uri.protocol
       hostname = uri.hostname
@@ -65,18 +71,18 @@ class BaseRpc extends EventEmitter {
       ? `${protocol}//${hostname}/`
       : `${protocol}//${hostname}:${port}/`
 
-    if (wsProtocols.includes(protocol)) {
+    if (protocol && wsProtocols.includes(protocol)) {
       this.websocket = true
       this.uri = `${this.uri}websocket`
       this.call = this.callWs
       this.connectWs()
-    } else if (httpProtocols.includes(protocol)) {
+    } else if (protocol && httpProtocols.includes(protocol)) {
       this.call = this.callHttp
     }
   }
 
   connectWs() {
-    this.ws = pumpify(ndjson.stringify(), websocket(this.uri))
+    this.ws = new Pumpify(ndjson.stringify(), websocket(this.uri))
 
     this.ws.on("error", err => this.emit("error", err))
     this.ws.on("close", () => {
@@ -90,7 +96,7 @@ class BaseRpc extends EventEmitter {
     })
   }
 
-  callHttp(method, args) {
+  callHttp(method: string, args?: Args) {
     let url = this.uri + method
     url = convertHttpArgs(url, args)
     return axios({
@@ -110,7 +116,7 @@ class BaseRpc extends EventEmitter {
     )
   }
 
-  callWs(method, args, listener) {
+  callWs(method: string, args?: Args, listener?: (value: any) => void) {
     let self = this
     return new Promise((resolve, reject) => {
       let id = Math.random().toString(36)
@@ -123,7 +129,7 @@ class BaseRpc extends EventEmitter {
         // events get passed to listener
         this.on(id + "#event", (err, res) => {
           if (err) return self.emit("error", err)
-          listener(res.data.value)
+          return listener(res.data.value)
         })
 
         // promise resolves on successful subscription or error
@@ -138,7 +144,8 @@ class BaseRpc extends EventEmitter {
           resolve(res)
         })
       }
-      this.ws.write({ jsonrpc: "2.0", id, method, params })
+
+      this.ws?.write({ jsonrpc: "2.0", id, method, params })
     })
   }
 
@@ -151,7 +158,11 @@ class BaseRpc extends EventEmitter {
 
 // add methods to Client class based on methods defined in './methods.js'
 for (let name of methods) {
-  BaseRpc.prototype[camel(name)] = function(args, listener) {
+  ;(BaseRpc as any).prototype[camel(name)] = function(
+    this: BaseRpc,
+    args?: Args,
+    listener?: Parameters<BaseRpc["call"]>[2]
+  ) {
     return this.call(name, args, listener).then(res => {
       return res
     })

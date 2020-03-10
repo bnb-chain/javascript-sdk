@@ -63,3 +63,8 @@ declare module "protocol-buffers-encodings" {
     encodingLength: (val: any) => number
   }
 }
+
+declare module "ndjson" {
+  const stringify: () => Stream
+  export default { stringify }
+}
