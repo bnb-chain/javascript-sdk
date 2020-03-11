@@ -543,9 +543,9 @@ export class BncClient {
   }
 
   /**
-   * Set account flags 
+   * Set account flags
    * @param {String} address
-   * @param {Number} flags new value of account flags 
+   * @param {Number} flags new value of account flags
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
@@ -675,8 +675,8 @@ export class BncClient {
 
   /**
    * get markets
+   * @param {Number} limit max 1000 is default
    * @param {Number} offset from beggining, default 0
-   * @param {Number} limit, max 1000 is default
    * @return {Promise} resolves with http response
    */
   async getMarkets(limit = 1000, offset = 0) {
