@@ -6,11 +6,9 @@ import is from "is_js"
 import { EventEmitter } from "events"
 import axios from "axios"
 import url from "url"
-import camel from "camelcase"
 import websocket from "websocket-stream"
 import ndjson from "ndjson"
 import Pumpify from "pumpify"
-import methods from "./methods"
 
 export type Args = { [k: string]: any }
 
@@ -154,17 +152,39 @@ export default class BaseRpc extends EventEmitter {
     if (!this.ws) return
     this.ws.destroy()
   }
-}
 
-// add methods to Client class based on methods defined in './methods.js'
-for (let name of methods) {
-  ;(BaseRpc as any).prototype[camel(name)] = function(
-    this: BaseRpc,
+  private createCallBasedMethod = (name: string) => (
     args?: Args,
     listener?: Parameters<BaseRpc["call"]>[2]
-  ) {
+  ) => {
     return this.call(name, args, listener).then(res => {
       return res
     })
   }
+
+  subscribe = this.createCallBasedMethod("subscribe")
+  unsubscribe = this.createCallBasedMethod("unsubscribe")
+  unsubscribeAll = this.createCallBasedMethod("unsubscribe_all")
+
+  status = this.createCallBasedMethod("status")
+  netInfo = this.createCallBasedMethod("net_info")
+  blockchain = this.createCallBasedMethod("blockchain")
+  genesis = this.createCallBasedMethod("genesis")
+  health = this.createCallBasedMethod("health")
+  block = this.createCallBasedMethod("block")
+  blockResults = this.createCallBasedMethod("block_results")
+  validators = this.createCallBasedMethod("validators")
+  consensusState = this.createCallBasedMethod("consensus_state")
+  dumpConsensusState = this.createCallBasedMethod("dump_consensus_state")
+  broadcastTxCommit = this.createCallBasedMethod("broadcast_tx_commit")
+  broadcastTxSync = this.createCallBasedMethod("broadcast_tx_sync")
+  broadcastTxAsync = this.createCallBasedMethod("broadcast_tx_async")
+  unconfirmedTxs = this.createCallBasedMethod("unconfirmed_txs")
+  numUnconfirmedTxs = this.createCallBasedMethod("num_unconfirmed_txs")
+  commit = this.createCallBasedMethod("commit")
+  tx = this.createCallBasedMethod("tx")
+  txSearch = this.createCallBasedMethod("tx_search")
+
+  abciQuery = this.createCallBasedMethod("abci_query")
+  abciInfo = this.createCallBasedMethod("abci_info")
 }
