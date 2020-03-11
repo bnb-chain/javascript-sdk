@@ -9,7 +9,7 @@
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
     "build": "rm -rf lib && tsc --emitDeclarationOnly && npx babel src -d lib",
-    "build:docs": "npx jsdoc-to-markdown -f src/**/*.js > docs/jsdoc.md",
+    "build:docs": "jsdoc2md --files src/**/*.ts --configure ./jsdoc2md.json > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
@@ -75,7 +75,8 @@
     "http-server": "^0.11.1",
     "husky": "^3.0.0",
     "jest": "^25.1.0",
-    "jsdoc-to-markdown": "^5.0.0",
+    "jsdoc-babel": "^0.5.0",
+    "jsdoc-to-markdown": "^5.0.3",
     "prettier": "^1.19.1",
     "qunit": "^2.9.2",
     "ts-jest": "^25.2.1",
