@@ -6,12 +6,6 @@ export abstract class BaseMsg {
   public abstract getMsg(): Msg
 }
 
-export interface CancelOrderMsg {
-  sender: string
-  symbol: string
-  refid: string
-}
-
 export interface Coin {
   denom: string
   amount: string

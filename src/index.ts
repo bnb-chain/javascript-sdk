@@ -18,3 +18,5 @@ module.exports.amino = amino
 module.exports.utils = utils
 module.exports.ledger = Ledger
 module.exports.rpc = rpc
+
+export default BncClient

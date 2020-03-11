@@ -43,8 +43,8 @@ export class NewOrderMsg extends BaseMsg {
   getMsg() {
     const data: NewOrderData = {
       sender: crypto.decodeAddress(this.address),
-      aminoPrefix: this.aminoPrefix,
-      ...this.newOrder
+      ...this.newOrder,
+      aminoPrefix: this.aminoPrefix
     }
 
     return data

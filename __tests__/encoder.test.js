@@ -99,7 +99,7 @@ describe("encoder", () => {
           side: 1,
           price: 100000000,
           quantity: 1200000000,
-          timeinforce: 1,
+          timeinforce: 1
           aminoPrefix: TxAminoPrefix.NewOrderMsg
         }
       ],

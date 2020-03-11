@@ -1,19 +1,26 @@
-import { TxAminoPrefix, StdSignMsg, Msg } from "../src/types/stdTx"
-// import { NewOrderMsg } from "../src/types/msg"
+import { StdSignMsg } from "../src/types/stdTx"
 import { NewOrderMsg, NewOrder } from "../src/types/newOrder"
+import { CancelOrderMsg } from "../src/types/cancelOrder"
 import Transaction from "../src/tx"
-import * as crypto from "../src/crypto"
-
-const mnemonic =
-  "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
+import { getClient, privateKey, address } from "./utils"
 
 describe("Transaction", () => {
-  it("build placeOrder tx", () => {
-    const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
-    const address = crypto.getAddressFromPrivateKey(privateKey)
+  beforeEach(() => {
+    jest.setTimeout(50000)
+  })
+
+  it("build newOrder tx and send to blockchain", async () => {
+    const client = await getClient(true)
+
+    const account = await client._httpClient.request(
+      "get",
+      `/api/v1/account/${address}`
+    )
+    const sequence = account.result && account.result.sequence
+    const accountNumber = account.result && account.result.account_number
 
     const newOrder: NewOrder = {
-      id: "BA36F0FAD74D8F41045463E4774F328F4AF779E5-2554",
+      id: `BA36F0FAD74D8F41045463E4774F328F4AF779E5-${sequence! + 1}`,
       symbol: "BNB_BTC.B-918",
       ordertype: 2,
       side: 2,
@@ -26,15 +33,56 @@ describe("Transaction", () => {
 
     const data: StdSignMsg = {
       chainId: "Binance-Chain-Nile",
-      accountNumber: 32550,
-      sequence: 2553,
-      msg: newOrderMsg,
+      accountNumber: accountNumber,
+      sequence: sequence,
+      baseMsg: newOrderMsg,
       memo: "",
       source: 1
     }
 
     const tx = new Transaction(data)
     const txBytes = tx.sign(privateKey).serialize()
-    console.log(txBytes)
+    const res = await client.sendRawTransaction(txBytes)
+    expect(res.status).toBe(200)
+  })
+
+  //
+  it("build cancelOrder tx and send to blockchain", async () => {
+    const client = await getClient(true)
+
+    const account = await client._httpClient.request(
+      "get",
+      `/api/v1/account/${address}`
+    )
+    const sequence = account.result && account.result.sequence
+    const accountNumber = account.result && account.result.account_number
+    const symbol = "BNB_BTC.B-918"
+    const orderId = `BA36F0FAD74D8F41045463E4774F328F4AF779E5-2556`
+
+    const cancelOrderMsg: CancelOrderMsg = new CancelOrderMsg(
+      address,
+      symbol,
+      orderId
+    )
+
+    const data: StdSignMsg = {
+      chainId: "Binance-Chain-Nile",
+      accountNumber: accountNumber,
+      sequence: sequence,
+      baseMsg: cancelOrderMsg,
+      memo: "",
+      source: 1
+    }
+
+    const tx = new Transaction(data)
+    const txBytes = tx.sign(privateKey).serialize()
+    try {
+      const res = await client.sendRawTransaction(txBytes)
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("Failed to find order")) {
+        expect(1).toBeTruthy()
+      }
+    }
   })
 })

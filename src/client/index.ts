@@ -12,7 +12,7 @@ import Big, { BigSource } from "big.js"
 import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
 import { StdSignMsg, TxAminoPrefix } from "../types/stdTx"
-import { Msg, NewOrderMsg } from "../types/msg"
+import { Msg, SignMsg, BaseMsg } from "../types/msg"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -44,7 +44,7 @@ export type Transfer = { to: string; coins: Coin[] }
 export const DefaultSigningDelegate = async function(
   this: BncClient,
   tx: Transaction,
-  signMsg
+  signMsg?: any
 ): Promise<Transaction> {
   return tx.sign(this.privateKey, signMsg)
 }
@@ -568,7 +568,7 @@ export class BncClient {
     const bigPrice = new Big(price)
     const bigQuantity = new Big(quantity)
 
-    const placeOrderMsg: NewOrderMsg = {
+    const placeOrderMsg = {
       sender: accCode,
       id: `${accCode.toString("hex")}-${sequence! + 1}`.toUpperCase(),
       symbol: symbol,
@@ -714,8 +714,8 @@ export class BncClient {
    * @return {Transaction} signed transaction
    */
   async _prepareTransaction(
-    msg: Msg,
-    stdSignMsg: StdSignMsg,
+    msg: any,
+    stdSignMsg: any,
     address: string,
     sequence: string | number | null = null,
     memo: string = ""
@@ -732,32 +732,17 @@ export class BncClient {
       await this._setPkPromise
     }
 
-    const data: StdSignMsg = {
-      chainId: this.chainId!,
+    const tx = new Transaction({
       accountNumber:
         typeof this.account_number !== "number"
           ? parseInt(this.account_number!)
           : this.account_number,
-      sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
-      msgs: [msg],
+      chainId: this.chainId!,
       memo: memo,
+      msg,
+      sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
       source: this._source
-    }
-
-    const tx = new Transaction(data)
-
-    // const tx = new Transaction({
-    //   account_number:
-    //     typeof this.account_number !== "number"
-    //       ? parseInt(this.account_number!)
-    //       : this.account_number,
-    //   chain_id: this.chainId!,
-    //   memo: memo,
-    //   msg,
-    //   sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
-    //   source: this._source,
-    //   type: msg.msgType
-    // })
+    })
     return this._signingDelegate.call(this, tx, stdSignMsg)
   }
 

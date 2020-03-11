@@ -4,7 +4,8 @@ export interface StdSignMsg {
   chainId: string
   accountNumber: number
   sequence: number
-  msg: BaseMsg
+  baseMsg?: BaseMsg
+  msg?: Msg
   memo: string
   source: number
   data?: Buffer | null | string

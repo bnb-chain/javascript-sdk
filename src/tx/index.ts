@@ -2,7 +2,7 @@ import { curve } from "elliptic"
 import * as crypto from "../crypto"
 import * as encoder from "../encoder"
 import { UVarInt } from "../encoder/varint"
-import { BaseMsg, SignData, SignMsg } from "../types/msg"
+import { BaseMsg, SignMsg } from "../types/msg"
 import { StdSignMsg, StdSignature, StdTx, TxAminoPrefix } from "../types/stdTx"
 
 /**
@@ -31,7 +31,10 @@ class Transaction {
   private sequence: NonNullable<StdSignMsg["sequence"]>
   private account_number: NonNullable<StdSignMsg["accountNumber"]>
   private chain_id: StdSignMsg["chainId"]
-  private msg: NonNullable<BaseMsg>
+
+  // DEPRECATED: Retained for backward compatibility use baseMsg
+  private msg?: any
+  private baseMsg?: NonNullable<BaseMsg>
   private memo: StdSignMsg["memo"]
   private source: NonNullable<StdSignMsg["source"]>
   private signatures: Array<StdSignature>
@@ -42,14 +45,11 @@ class Transaction {
       throw new Error("chain id should not be null")
     }
 
-    if (!data.msg) {
-      throw new Error("Transaction type should not be null")
-    }
-
     this.sequence = data.sequence || 0
     this.account_number = data.accountNumber || 0
     this.chain_id = data.chainId
     this.msg = data.msg
+    this.baseMsg = data.baseMsg
     this.memo = data.memo
     this.source = data.source || 0 // default value is 0
     this.signatures = []
@@ -57,11 +57,11 @@ class Transaction {
 
   /**
    * generate the sign bytes for a transaction, given a msg
-   * @param {Object} concrete msg object
+   * @param {SignMsg} concrete msg object
    * @return {Buffer}
    **/
   getSignBytes(msg?: SignMsg) {
-    msg = msg || this.msg.getSignMsg()
+    msg = msg || (this.baseMsg && this.baseMsg.getSignMsg())
     const signMsg = {
       account_number: this.account_number.toString(),
       chain_id: this.chain_id,
@@ -97,7 +97,7 @@ class Transaction {
   /**
    * sign transaction with a given private key and msg
    * @param {string} privateKey private key hex string
-   * @param {Object} concrete msg object
+   * @param {SignMsg} concrete msg object
    * @return {Transaction}
    **/
   sign(privateKey: string, msg?: SignMsg) {
@@ -111,29 +111,26 @@ class Transaction {
       signBytes.toString("hex"),
       privKeyBuf
     )
-    console.log("s: " + signature.toString("hex"))
     this.addSignature(crypto.generatePubKey(privKeyBuf), signature)
     return this
   }
 
   /**
    * encode signed transaction to hex which is compatible with amino
-   * @param {object} opts msg field
    */
   serialize(): string {
     if (!this.signatures) {
       throw new Error("need signature")
     }
-
+    const msg = this.msg || (this.baseMsg && this.baseMsg.getMsg())
     const stdTx: StdTx = {
-      msg: [this.msg.getMsg()],
+      msg: [msg],
       signatures: this.signatures,
       memo: this.memo,
       source: this.source, // sdk value is 0, web wallet value is 1
       data: "",
       aminoPrefix: TxAminoPrefix.StdTx
     }
-
     const bytes = encoder.marshalBinary(stdTx)
     return bytes.toString("hex")
   }
