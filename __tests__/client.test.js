@@ -218,13 +218,13 @@ it("transfer placeOrder cancelOrder only", async () => {
     0.0001,
     sequence + 1
   )
-  console.log(res1)
   expect(res1.status).toBe(200)
 
   await wait(5000)
 
   const orderId = `${accCode.toString("hex")}-${sequence + 2}`.toUpperCase()
   const res2 = await client.cancelOrder(addr, symbol, orderId, sequence + 2)
+
   expect(res2.status).toBe(200)
 })
 
@@ -460,7 +460,6 @@ it("issue token", async () => {
     totalSupply,
     true
   )
-  console.log(res)
   expect(res.status).toBe(200)
 })
 

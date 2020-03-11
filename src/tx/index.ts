@@ -32,8 +32,12 @@ class Transaction {
   private account_number: NonNullable<StdSignMsg["accountNumber"]>
   private chain_id: StdSignMsg["chainId"]
 
-  // DEPRECATED: Retained for backward compatibility use baseMsg
+  // DEPRECATED: Retained for backward compatibility,
+  // TODO will remove
   private msg?: any
+
+  // Recommend
+  // TODO will make it required and will do validation
   private baseMsg?: NonNullable<BaseMsg>
   private memo: StdSignMsg["memo"]
   private source: NonNullable<StdSignMsg["source"]>

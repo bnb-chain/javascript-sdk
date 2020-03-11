@@ -2,13 +2,7 @@ import { StdSignMsg } from "../src/types/stdTx"
 import { NewOrderMsg, NewOrder } from "../src/types/newOrder"
 import { CancelOrderMsg } from "../src/types/cancelOrder"
 import Transaction from "../src/tx"
-import {
-  Coin,
-  SignedSend,
-  SendData,
-  SignInputOutput,
-  SendMsg
-} from "../src/types/send"
+import { SignInputOutput, SendMsg } from "../src/types/send"
 import { getClient, privateKey, address, targetAddress } from "./utils"
 
 describe("Transaction", () => {

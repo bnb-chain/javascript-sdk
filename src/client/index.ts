@@ -11,8 +11,7 @@ import Gov from "../gov/"
 import Big, { BigSource } from "big.js"
 import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
-import { StdSignMsg, TxAminoPrefix } from "../types/stdTx"
-import { Msg, SignMsg, BaseMsg } from "../types/msg"
+import { TxAminoPrefix } from "../types/stdTx"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -345,7 +344,7 @@ export class BncClient {
           coins: [coin]
         }
       ],
-      msgType: "MsgSend"
+      aminoPrefix: TxAminoPrefix.MsgSend
     }
 
     const signMsg = {
@@ -454,7 +453,7 @@ export class BncClient {
     const msg = {
       inputs,
       outputs: transfers,
-      msgType: "MsgSend"
+      aminoPrefix: TxAminoPrefix.MsgSend
     }
 
     const signInputs = [{ address: fromAddress, coins: [] }]
@@ -503,7 +502,7 @@ export class BncClient {
       sender: accCode,
       symbol: symbol,
       refid: refid,
-      msgType: "CancelOrderMsg"
+      aminoPrefix: TxAminoPrefix.CancelOrderMsg
     }
 
     const signMsg = {
@@ -580,6 +579,8 @@ export class BncClient {
       aminoPrefix: TxAminoPrefix.NewOrderMsg
     }
 
+    console.log(placeOrderMsg)
+
     const signMsg = {
       id: placeOrderMsg.id,
       ordertype: placeOrderMsg.ordertype,
@@ -652,7 +653,7 @@ export class BncClient {
       base_asset_symbol: baseAsset,
       quote_asset_symbol: quoteAsset,
       init_price: init_price,
-      msgType: "ListMsg"
+      aminoPrefix: TxAminoPrefix.ListMsg
     }
 
     const signMsg = {
@@ -686,7 +687,7 @@ export class BncClient {
     const msg = {
       from: accCode,
       flags: flags,
-      msgType: "SetAccountFlagsMsg"
+      aminoPrefix: TxAminoPrefix.SetAccountFlagsMsg
     }
 
     const signMsg = {
@@ -792,8 +793,8 @@ export class BncClient {
    * @return {Promise} resolves with response (success or fail)
    */
   async _sendTransaction(
-    msg,
-    stdSignMsg,
+    msg: any,
+    stdSignMsg: any,
     address: string,
     sequence: string | number | null = null,
     memo: string = "",

@@ -6,7 +6,6 @@ import { string as VarString } from "protocol-buffers-encodings"
 import is from "is_js"
 import { UVarInt } from "./varint"
 import typeToTyp3 from "../utils/encoderHelper"
-// import { TypePrefixes, TxTypes } from "../types/stdTx"
 
 const sortObject = (obj: any): object | null => {
   if (obj === null) return null
