@@ -22,11 +22,11 @@ describe("Transaction", () => {
     const accountNumber = account.result && account.result.account_number
     const newOrder: NewOrder = {
       id: `BA36F0FAD74D8F41045463E4774F328F4AF779E5-${sequence! + 1}`,
-      symbol: "BNB_BTC.B-918",
+      symbol: "BNB_USDT.B-B7C",
       ordertype: 2,
       side: 2,
-      price: 2200400,
-      quantity: 100000000,
+      price: 1254290000,
+      quantity: 10000000,
       timeinforce: 1
     }
 
@@ -43,8 +43,12 @@ describe("Transaction", () => {
 
     const tx = new Transaction(data)
     const txBytes = tx.sign(privateKey).serialize()
-    const res = await client.sendRawTransaction(txBytes)
-    expect(res.status).toBe(200)
+    try {
+      const res = await client.sendRawTransaction(txBytes)
+      expect(res.status).toBe(200)
+    } catch (error) {
+      expect(error.message).toBe("do not have enough token to lock")
+    }
   })
 
   //

@@ -94,6 +94,14 @@ export const getClient = async (
   return client
 }
 
+export const wait = ms => {
+  return new Promise(function(resolve) {
+    setTimeout(function() {
+      resolve()
+    }, ms)
+  })
+}
+
 export const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
 
 export const address = crypto.getAddressFromPrivateKey(privateKey)
