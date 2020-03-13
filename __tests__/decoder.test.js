@@ -1,5 +1,6 @@
 import * as decoder from "../src/decoder/"
 import * as encoder from "../src/encoder/"
+import { TxAminoPrefix } from "../src/types/stdTx"
 
 class Msg {
   constructor(opts) {
@@ -9,11 +10,11 @@ class Msg {
     this.price = opts.price || 0
     this.bool = opts.timeinforce || false
     this.quantity = opts.quantity || 0
-    // this.coin = []
+    this.coin = []
   }
 }
 
-Msg.prototype.msgType = "NewOrderMsg"
+Msg.prototype.msgType = TxAminoPrefix.NewOrderMsg
 
 describe("decoder", () => {
   it("decode type", () => {
@@ -29,12 +30,11 @@ describe("decoder", () => {
           amount: 1000000000
         }
       ],
-      msgType: "NewOrderMsg"
+      aminoPrefix: TxAminoPrefix.NewOrderMsg
     }
 
     const msgObj = new Msg(opt)
 
-    console.log(msgObj)
     const result = new Msg()
 
     let bytes = encoder.marshalBinary(msgObj)

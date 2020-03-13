@@ -50,5 +50,7 @@ export enum TxAminoPrefix {
   DepositHTLTMsg = "63986496",
   ClaimHTLTMsg = "C1665300",
   RefundHTLTMsg = "3454A27C",
-  SetAccountFlagsMsg = "BEA6E301"
+  SetAccountFlagsMsg = "BEA6E301",
+  BnbchainAccount = "4BDC4C27",
+  BnbchainToken = "140364E6"
 }

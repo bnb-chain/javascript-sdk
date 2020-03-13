@@ -89,11 +89,16 @@ export const checkAddress = (address: string, hrp: string): boolean => {
  * @param {*} type the output type (default: hex)
  */
 export const encodeAddress = (
-  value: string,
+  value: string | Buffer,
   prefix: string = "tbnb",
   type: BufferEncoding = "hex"
 ): string => {
-  const words = bech32.toWords(Buffer.from(value, type))
+  let words
+  if (Buffer.isBuffer(value)) {
+    words = bech32.toWords(Buffer.from(value))
+  } else {
+    words = bech32.toWords(Buffer.from(value, type))
+  }
   return bech32.encode(prefix, words)
 }
 

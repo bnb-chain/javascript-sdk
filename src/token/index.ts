@@ -273,7 +273,6 @@ class TokenManagement {
       mintSignMsg,
       fromAddress
     )
-    console.log(signedTx)
     return this._bncClient._broadcastDelegate(signedTx)
   }
 

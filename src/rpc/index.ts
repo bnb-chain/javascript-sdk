@@ -46,7 +46,6 @@ const allProtocols = wsProtocols.concat(httpProtocols)
 
 export default class BaseRpc extends EventEmitter {
   private uri: string
-  private websocket!: boolean
   public call!: BaseRpc["callWs"] | BaseRpc["callHttp"]
   private closed: boolean = false
   private ws?: Pumpify
@@ -70,7 +69,6 @@ export default class BaseRpc extends EventEmitter {
       : `${protocol}//${hostname}:${port}/`
 
     if (protocol && wsProtocols.includes(protocol)) {
-      this.websocket = true
       this.uri = `${this.uri}websocket`
       this.call = this.callWs
       this.connectWs()
@@ -156,7 +154,7 @@ export default class BaseRpc extends EventEmitter {
   private createCallBasedMethod = (name: string) => (
     args?: Args,
     listener?: Parameters<BaseRpc["call"]>[2]
-  ) => {
+  ): any => {
     return this.call(name, args, listener).then(res => {
       return res
     })

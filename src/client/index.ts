@@ -142,7 +142,7 @@ export class BncClient {
   public addressPrefix: typeof NETWORK_PREFIX_MAPPING[keyof typeof NETWORK_PREFIX_MAPPING] =
     "tbnb"
   public network: keyof typeof NETWORK_PREFIX_MAPPING = "testnet"
-  public privateKey?: string
+  public privateKey: string
   public address?: string
   public _setPkPromise?: ReturnType<HttpRequest["request"]>
   public account_number?: string | number
@@ -168,6 +168,7 @@ export class BncClient {
     this.tokens = new TokenManagement(this)
     this.swap = new Swap(this)
     this.gov = new Gov(this)
+    this.privateKey = ""
   }
 
   /**
@@ -578,8 +579,6 @@ export class BncClient {
       timeinforce: timeinforce,
       aminoPrefix: TxAminoPrefix.NewOrderMsg
     }
-
-    console.log(placeOrderMsg)
 
     const signMsg = {
       id: placeOrderMsg.id,

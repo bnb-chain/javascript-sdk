@@ -118,13 +118,15 @@ const decodeObjectBinary = (
   }
 
   // If registered concrete, consume and verify prefix bytes.
-  if (type.msgType) {
+  if (type.aminoPrefix) {
     bytes = bytes.slice(4)
     objectOffset += 4
   }
 
   let lastFieldNum = 0
-  const keys = Object.keys(type)
+
+  let keys = Object.keys(type).filter(key => key !== "aminoPrefix")
+
   keys.forEach((key, index) => {
     if (is.array(type[key])) {
       const { offset, val } = decodeArrayBinary(bytes, type[key][0])

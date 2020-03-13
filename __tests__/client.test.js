@@ -110,7 +110,6 @@ it("get swaps", async () => {
     "4dd95fadfb6c064dcb99234301bf22978ade9ad49ca7a4c708305c8fea6549d8"
   let res = await client.getSwapByID(swapID)
   expect(res.status).toBe(200)
-  console.log(res)
 
   res = await client.getSwapByCreator(
     "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd",
@@ -118,7 +117,6 @@ it("get swaps", async () => {
     0
   )
   expect(res.status).toBe(200)
-  console.log(res)
 
   res = await client.getSwapByRecipient(
     "tbnb1prrujx8kkukrcrppklggadhuvegfnx8pemsq77",
@@ -126,7 +124,6 @@ it("get swaps", async () => {
     0
   )
   expect(res.status).toBe(200)
-  console.log(res)
 })
 
 it("works with a custom signing delegate", async () => {
@@ -498,7 +495,6 @@ it("time relock token", async () => {
     amount,
     timeLock
   )
-  console.log(res)
   expect(res.status).toBe(200)
 })
 
@@ -507,7 +503,6 @@ it("time unlock token", async () => {
   const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
   const id = 2248
   const res = await client.tokens.timeUnlock(addr, id)
-  console.log(res)
   expect(res.status).toBe(200)
 })
 
@@ -538,7 +533,6 @@ it("htlt", async () => {
     400,
     false
   )
-  console.log(res)
   console.log(calculateSwapID(randomNumberHash, from, ""))
   expect(res.status).toBe(200)
 })
@@ -555,7 +549,6 @@ it("deposit HTLT", async () => {
     }
   ]
   const res = await client.swap.depositHTLT(from, swapID, amount)
-  console.log(res)
   expect(res.status).toBe(200)
 })
 
@@ -567,7 +560,6 @@ it("claim HTLT", async () => {
   const randomNumber =
     "e8eae926261ab77d018202434791a335249b470246a7b02e28c3b2fb6ffad8f3"
   const res = await client.swap.claimHTLT(from, swapID, randomNumber)
-  console.log(res)
   expect(res.status).toBe(200)
 })
 
@@ -577,7 +569,6 @@ it("refund HTLT", async () => {
   const swapID =
     "61daf59e977c5f718f5aaedeaf69ccbea1c376db5274a84bca88848696164ffe"
   const res = await client.swap.refundHTLT(from, swapID)
-  console.log(res)
   expect(res.status).toBe(200)
 })
 
@@ -653,7 +644,6 @@ it("depositProposal", async () => {
     }
   ]
   const res = await client.gov.deposit(494, addr, coins)
-  console.log(res)
   expect(res.status).toBe(200)
   expect(res.result[0].code).toBe(0)
 })
@@ -662,7 +652,6 @@ it("voteProposal", async () => {
   const client = await getClient(true)
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
   const res = await client.gov.vote(494, addr, voteOption.OptionYes)
-  console.log(res)
   expect(res.status).toBe(200)
   expect(res.result[0].code).toBe(0)
 })
@@ -672,7 +661,6 @@ it("list MINT", async () => {
   const addr = crypto.getAddressFromPrivateKey(client.privateKey)
   try {
     const res = await client.list(addr, 620, "MINT-200", "BNB", 1)
-    console.log(res)
     expect(res.status).toBe(200)
     expect(res.result[0].code).toBe(0)
   } catch (err) {
