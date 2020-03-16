@@ -5,8 +5,7 @@ import { TxAminoPrefix } from "../src/types/stdTx"
 describe("encoder", () => {
   it("encode time", () => {
     let encodedTime = encoder.encodeTime("1973-11-29T21:33:09.123456789Z")
-    encodedTime = encodedTime.toString("hex")
-    expect(encodedTime).toBe("0915cd5b07000000001515cd5b07")
+    expect(encodedTime.toString('hex')).toBe("0915cd5b07000000001515cd5b07")
   })
 
   it("encode number", () => {

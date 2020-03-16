@@ -15,7 +15,7 @@ const tradePair = "BNB_USDT.B-B7C"
 
 describe("rpc", () => {
   beforeEach(() => {
-    jest.setTimeout(200000)
+    jest.setTimeout(50000)
   })
 
   it("rest status", async () => {

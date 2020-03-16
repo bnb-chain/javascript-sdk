@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "typings": "typings/src/index.d.ts",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --coverage",
+    "test": "cross-env NODE_ENV=test jest",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
     "build": "rm -rf lib && tsc",
