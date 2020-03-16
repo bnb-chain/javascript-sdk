@@ -1,4 +1,3 @@
-// import * as crypto from "../src/crypto"
 import { crypto } from "../src"
 import * as bip39 from "bip39"
 

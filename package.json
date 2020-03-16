@@ -5,10 +5,10 @@
   "main": "lib/index.js",
   "typings": "typings/src/index.d.ts",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --coverage",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
-    "build": "rm -rf lib && tsc --emitDeclarationOnly && npx babel src -d lib",
+    "build": "rm -rf lib && tsc",
     "build:docs": "jsdoc2md --files src/**/*.ts --configure ./jsdoc2md.json > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__",
@@ -66,7 +66,9 @@
     "babel-core": "^7.0.0-0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^23.6.0",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-latest": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "browserify": "^16.2.3",
     "buffer": "^5.2.1",
@@ -80,18 +82,8 @@
     "prettier": "^1.19.1",
     "qunit": "^2.9.2",
     "ts-jest": "^25.2.1",
-    "typescript": "^3.8.3"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-typescript"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-async-to-generator",
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-transform-runtime"
-    ]
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0"
   },
   "files": [
     "lib/*"
