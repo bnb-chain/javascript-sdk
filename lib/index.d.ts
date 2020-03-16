@@ -6,6 +6,7 @@ import * as types from "./types";
 import rpc from "./rpc/client";
 import ledger from "./ledger";
 import Transaction from "./tx";
+import "../src/declarations";
 declare const BncClient: typeof client.BncClient;
 declare const amino: {
     unMarshalBinaryLengthPrefixed: (bytes: Buffer, type: any) => object;
