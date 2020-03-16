@@ -1,7 +1,7 @@
 {
   "include": ["src", "types"],
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "target": "es5",
     "module": "commonjs",
     "lib": ["dom", "esnext"],
