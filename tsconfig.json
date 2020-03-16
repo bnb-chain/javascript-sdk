@@ -3,7 +3,7 @@
   "compilerOptions": {
     "allowJs": true,
     "target": "es5",
-    "module": "esnext",
+    "module": "commonjs",
     "lib": ["dom", "esnext"],
     "importHelpers": true,
     "declaration": true,
