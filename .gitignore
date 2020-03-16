@@ -32,7 +32,6 @@ tests-ledger/buffer-polyfill.js
 
 # build result
 /lib
-# /typings
 
 # editor
 /.vscode
@@ -47,5 +46,4 @@ tests-ledger/buffer-polyfill.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-yarn.lock
 package-lock.json
