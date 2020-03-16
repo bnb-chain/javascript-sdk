@@ -19,7 +19,7 @@ declare class Client extends BaseRpc {
      * @return {Promise}
      */
     broadcastDelegate(signedTx: Transaction): Promise<any>;
-    getBech32Prefix(): "" | "tbnb" | "bnb";
+    getBech32Prefix(): "tbnb" | "bnb" | "";
     /**
      * @param {String} symbol - required
      * @returns {Object} token detail info

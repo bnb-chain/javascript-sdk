@@ -7,7 +7,7 @@ import * as types from "./types"
 import rpc from "./rpc/client"
 import ledger from "./ledger"
 import Transaction from "./tx"
-import "../src/declarations"
+// import "../src/declarations"
 
 const { BncClient } = client
 const amino = { ...encoder, ...decoder }

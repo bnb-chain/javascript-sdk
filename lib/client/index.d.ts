@@ -302,57 +302,57 @@ export declare class BncClient {
      * @param {Number} offset from beggining, default 0
      * @return {Promise} resolves with http response
      */
-    getMarkets(limit?: number, offset?: number): Promise<never[] | {
+    getMarkets(limit?: number, offset?: number): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * get transactions for an account
      * @param {String} address optional address
      * @param {Number} offset from beggining, default 0
      * @return {Promise} resolves with http response
      */
-    getTransactions(address?: string | undefined, offset?: number): Promise<never[] | {
+    getTransactions(address?: string | undefined, offset?: number): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * get transaction
      * @param {String} hash the transaction hash
      * @return {Promise} resolves with http response
      */
-    getTx(hash: string): Promise<never[] | {
+    getTx(hash: string): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * get depth for a given market
      * @param {String} symbol the market pair
      * @return {Promise} resolves with http response
      */
-    getDepth(symbol?: string): Promise<never[] | {
+    getDepth(symbol?: string): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * get open orders for an address
      * @param {String} address binance address
      * @param {String} symbol binance BEP2 symbol
      * @return {Promise} resolves with http response
      */
-    getOpenOrders(address?: string): Promise<never[] | {
+    getOpenOrders(address?: string): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * get atomic swap
      * @param {String} swapID: ID of an existing swap
      * @return {Promise} AtomicSwap
      */
-    getSwapByID(swapID: string): Promise<never[] | {
+    getSwapByID(swapID: string): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * query atomic swap list by creator address
      * @param {String} creator: swap creator address
@@ -360,10 +360,10 @@ export declare class BncClient {
      * @param {Number} limit, max 1000 is default
      * @return {Promise} Array of AtomicSwap
      */
-    getSwapByCreator(creator: string, limit?: number, offset?: number): Promise<never[] | {
+    getSwapByCreator(creator: string, limit?: number, offset?: number): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * query atomic swap list by recipient address
      * @param {String} recipient: the recipient address of the swap
@@ -371,10 +371,10 @@ export declare class BncClient {
      * @param {Number} limit, max 1000 is default
      * @return {Promise} Array of AtomicSwap
      */
-    getSwapByRecipient(recipient: string, limit?: number, offset?: number): Promise<never[] | {
+    getSwapByRecipient(recipient: string, limit?: number, offset?: number): Promise<{
         result: any;
         status: number;
-    }>;
+    } | never[]>;
     /**
      * Creates a private key and returns it and its address.
      * @return {object} the private key and address in an object.
