@@ -9,7 +9,7 @@
     "declaration": true,
     "sourceMap": true,
     "rootDir": "./src",
-    "outDir": "./lib",
+    "outDir": "typings",
     "strict": true,
     "skipLibCheck": true,
     "noUnusedLocals": true,
