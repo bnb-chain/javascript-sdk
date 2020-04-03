@@ -38,7 +38,7 @@ const Ledger: any = {
   }
 }
 
-Ledger.transports = module.exports = Ledger
+module.exports = Ledger
 
 export default Ledger
 
