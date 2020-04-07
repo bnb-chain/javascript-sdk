@@ -24,10 +24,10 @@ export interface StdTx {
   memo: string
   source: number
   data?: Buffer | null | string
-  aminoPrefix: TxAminoPrefix
+  aminoPrefix: AminoPrefix
 }
 
-export enum TxAminoPrefix {
+export enum AminoPrefix {
   MsgSend = "2A2C87FA",
   NewOrderMsg = "CE6DC043",
   CancelOrderMsg = "166E681B",

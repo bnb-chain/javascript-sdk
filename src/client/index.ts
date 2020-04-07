@@ -11,7 +11,7 @@ import Gov from "../gov/"
 import Big, { BigSource } from "big.js"
 import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
-import { TxAminoPrefix } from "../types/stdTx"
+import { AminoPrefix } from "../types/stdTx"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -345,7 +345,7 @@ export class BncClient {
           coins: [coin]
         }
       ],
-      aminoPrefix: TxAminoPrefix.MsgSend
+      aminoPrefix: AminoPrefix.MsgSend
     }
 
     const signMsg = {
@@ -454,7 +454,7 @@ export class BncClient {
     const msg = {
       inputs,
       outputs: transfers,
-      aminoPrefix: TxAminoPrefix.MsgSend
+      aminoPrefix: AminoPrefix.MsgSend
     }
 
     const signInputs = [{ address: fromAddress, coins: [] }]
@@ -503,7 +503,7 @@ export class BncClient {
       sender: accCode,
       symbol: symbol,
       refid: refid,
-      aminoPrefix: TxAminoPrefix.CancelOrderMsg
+      aminoPrefix: AminoPrefix.CancelOrderMsg
     }
 
     const signMsg = {
@@ -577,7 +577,7 @@ export class BncClient {
       price: parseFloat(bigPrice.mul(BASENUMBER).toString()),
       quantity: parseFloat(bigQuantity.mul(BASENUMBER).toString()),
       timeinforce: timeinforce,
-      aminoPrefix: TxAminoPrefix.NewOrderMsg
+      aminoPrefix: AminoPrefix.NewOrderMsg
     }
 
     const signMsg = {
@@ -652,7 +652,7 @@ export class BncClient {
       base_asset_symbol: baseAsset,
       quote_asset_symbol: quoteAsset,
       init_price: init_price,
-      aminoPrefix: TxAminoPrefix.ListMsg
+      aminoPrefix: AminoPrefix.ListMsg
     }
 
     const signMsg = {
@@ -686,7 +686,7 @@ export class BncClient {
     const msg = {
       from: accCode,
       flags: flags,
-      aminoPrefix: TxAminoPrefix.SetAccountFlagsMsg
+      aminoPrefix: AminoPrefix.SetAccountFlagsMsg
     }
 
     const signMsg = {

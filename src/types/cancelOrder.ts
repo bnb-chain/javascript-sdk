@@ -1,6 +1,6 @@
 import { BaseMsg, Msg, SignMsg } from "./msg"
 import * as crypto from "../crypto"
-import { TxAminoPrefix } from "./stdTx"
+import { AminoPrefix } from "./stdTx"
 
 export interface SignedCancelOrder extends SignMsg {
   sender: string
@@ -12,14 +12,14 @@ export interface CancelOrderData extends Msg {
   sender: Buffer
   symbol: string
   refid: string
-  aminoPrefix: TxAminoPrefix
+  aminoPrefix: AminoPrefix
 }
 
 export class CancelOrderMsg extends BaseMsg {
   private address: string
   private symbol: string
   private orderId: string
-  public readonly aminoPrefix: TxAminoPrefix = TxAminoPrefix.CancelOrderMsg
+  public readonly aminoPrefix: AminoPrefix = AminoPrefix.CancelOrderMsg
   constructor(address: string, sybmol: string, orderId: string) {
     super()
     this.address = address

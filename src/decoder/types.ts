@@ -1,8 +1,8 @@
 import { Coin as CoinType } from "../types/send"
-import { TxAminoPrefix } from "../types/stdTx"
+import { AminoPrefix } from "../types/stdTx"
 
 export class Token {
-  public aminoPrefix = TxAminoPrefix.BnbchainToken
+  public aminoPrefix = AminoPrefix.BnbchainToken
 
   public name: string
   public symbol: string
@@ -92,7 +92,7 @@ export class BaseAccount {
 }
 
 export class AppAccount {
-  public aminoPrefix = TxAminoPrefix.BnbchainAccount
+  public aminoPrefix = AminoPrefix.BnbchainAccount
 
   public base: BaseAccount
   public name: string
@@ -229,7 +229,7 @@ export class OrderBook {
 }
 
 export class SubmitProposalMsg {
-  public aminoPrefix = TxAminoPrefix.MsgSubmitProposal
+  public aminoPrefix = AminoPrefix.MsgSubmitProposal
 
   public title: string
   public description: string

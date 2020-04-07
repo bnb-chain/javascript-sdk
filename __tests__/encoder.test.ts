@@ -1,6 +1,6 @@
 import * as encoder from "../src/encoder"
 import { UVarInt } from "../src/encoder/varint"
-import { TxAminoPrefix } from "../src/types/stdTx"
+import { AminoPrefix } from "../src/types/stdTx"
 
 describe("encoder", () => {
   it("encode time", () => {
@@ -99,7 +99,7 @@ describe("encoder", () => {
           price: 100000000,
           quantity: 1200000000,
           timeinforce: 1
-          aminoPrefix: TxAminoPrefix.NewOrderMsg
+          aminoPrefix: AminoPrefix.NewOrderMsg
         }
       ],
       signatures: [
@@ -215,7 +215,7 @@ describe("encoder", () => {
         }
       ],
       memo: "",
-      aminoPrefix: TxAminoPrefix.StdTx
+      aminoPrefix: AminoPrefix.StdTx
     }
 
     const bytes = encoder.marshalBinary(stdTx)

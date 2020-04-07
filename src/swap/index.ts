@@ -8,7 +8,7 @@ import * as crypto from "../crypto/"
 import { checkCoins } from "../utils/validateHelper"
 import { BncClient } from "../client"
 import { Coin } from "../utils/coin"
-import { TxAminoPrefix } from "../types/stdTx"
+import { AminoPrefix } from "../types/stdTx"
 
 class Swap {
   static instance: Swap
@@ -64,7 +64,7 @@ class Swap {
       expected_income: expectedIncome,
       height_span: heightSpan,
       cross_chain: crossChain,
-      aminoPrefix: TxAminoPrefix.HTLTMsg
+      aminoPrefix: AminoPrefix.HTLTMsg
     }
 
     const signHTLTMsg = {
@@ -101,7 +101,7 @@ class Swap {
       from: crypto.decodeAddress(from),
       amount: amount,
       swap_id: Buffer.from(swapID, "hex"),
-      aminoPrefix: TxAminoPrefix.DepositHTLTMsg
+      aminoPrefix: AminoPrefix.DepositHTLTMsg
     }
 
     const signDepositHTLTMsg = {
@@ -130,7 +130,7 @@ class Swap {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, "hex"),
       random_number: Buffer.from(randomNumber, "hex"),
-      aminoPrefix: TxAminoPrefix.ClaimHTLTMsg
+      aminoPrefix: AminoPrefix.ClaimHTLTMsg
     }
 
     const signClaimHTLTMsg = {
@@ -157,7 +157,7 @@ class Swap {
     const refundHTLTMsg = {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, "hex"),
-      aminoPrefix: TxAminoPrefix.RefundHTLTMsg
+      aminoPrefix: AminoPrefix.RefundHTLTMsg
     }
 
     const signRefundHTLTMsg = {

@@ -10,7 +10,7 @@ import { validateSymbol } from "../utils/validateHelper"
 import { checkCoins } from "../utils/validateHelper"
 import HttpRequest from "../utils/request"
 import { Coin } from "../utils/coin"
-import { TxAminoPrefix } from "../types/stdTx"
+import { AminoPrefix } from "../types/stdTx"
 
 const MAXTOTALSUPPLY = 9000000000000000000
 
@@ -106,7 +106,7 @@ class TokenManagement {
       symbol,
       total_supply: totalSupply,
       mintable,
-      aminoPrefix: TxAminoPrefix.IssueMsg
+      aminoPrefix: AminoPrefix.IssueMsg
     }
 
     const signIssueMsg = {
@@ -147,7 +147,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: TxAminoPrefix.FreezeMsg
+      aminoPrefix: AminoPrefix.FreezeMsg
     }
 
     const freezeSignMsg = {
@@ -186,7 +186,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: TxAminoPrefix.UnfreezeMsg
+      aminoPrefix: AminoPrefix.UnfreezeMsg
     }
 
     const unfreezeSignMsg = {
@@ -224,7 +224,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: TxAminoPrefix.BurnMsg
+      aminoPrefix: AminoPrefix.BurnMsg
     }
 
     const burnSignMsg = {
@@ -259,7 +259,7 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: TxAminoPrefix.MintMsg
+      aminoPrefix: AminoPrefix.MintMsg
     }
 
     const mintSignMsg = {
@@ -304,7 +304,7 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      aminoPrefix: TxAminoPrefix.MintMsg
+      aminoPrefix: AminoPrefix.MintMsg
     }
 
     const signTimeLockMsg = {
@@ -353,7 +353,7 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      aminoPrefix: TxAminoPrefix.TimeRelockMsg
+      aminoPrefix: AminoPrefix.TimeRelockMsg
     }
 
     const signTimeRelockMsg = {
@@ -382,7 +382,7 @@ class TokenManagement {
     const timeUnlockMsg = {
       from: crypto.decodeAddress(fromAddress),
       time_lock_id: id,
-      aminoPrefix: TxAminoPrefix.TimeUnlockMsg
+      aminoPrefix: AminoPrefix.TimeUnlockMsg
     }
 
     const signTimeUnlockMsg = {

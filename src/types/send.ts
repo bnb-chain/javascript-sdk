@@ -1,6 +1,6 @@
 import { BaseMsg, Msg, SignMsg } from "./msg"
 import * as crypto from "../crypto"
-import { TxAminoPrefix } from "./stdTx"
+import { AminoPrefix } from "./stdTx"
 import Big from "big.js"
 
 export interface Coin {
@@ -26,7 +26,7 @@ export interface SignedSend extends SignMsg {
 export interface SendData extends Msg {
   inputs: InputOutput[]
   outputs: InputOutput[]
-  aminoPrefix: TxAminoPrefix
+  aminoPrefix: AminoPrefix
 }
 
 /**
@@ -35,7 +35,7 @@ export interface SendData extends Msg {
 export class SendMsg extends BaseMsg {
   private sender: string
   private outputs: SignInputOutput[]
-  public readonly aminoPrefix: TxAminoPrefix = TxAminoPrefix.MsgSend
+  public readonly aminoPrefix: AminoPrefix = AminoPrefix.MsgSend
   constructor(sender: string, outputs: SignInputOutput[]) {
     super()
     this.sender = sender

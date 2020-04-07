@@ -3,7 +3,7 @@ import * as crypto from "../crypto"
 import * as encoder from "../encoder"
 import { UVarInt } from "../encoder/varint"
 import { BaseMsg, SignMsg } from "../types/msg"
-import { StdSignMsg, StdSignature, StdTx, TxAminoPrefix } from "../types/stdTx"
+import { StdSignMsg, StdSignature, StdTx, AminoPrefix } from "../types/stdTx"
 
 /**
  * Creates a new transaction object.
@@ -133,7 +133,7 @@ class Transaction {
       memo: this.memo,
       source: this.source, // sdk value is 0, web wallet value is 1
       data: "",
-      aminoPrefix: TxAminoPrefix.StdTx
+      aminoPrefix: AminoPrefix.StdTx
     }
     const bytes = encoder.marshalBinary(stdTx)
     return bytes.toString("hex")

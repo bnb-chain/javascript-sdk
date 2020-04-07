@@ -1,6 +1,6 @@
 import { BaseMsg, Msg, SignMsg } from "./msg"
 import * as crypto from "../crypto"
-import { TxAminoPrefix } from "./stdTx"
+import { AminoPrefix } from "./stdTx"
 
 export interface NewOrder {
   id: string
@@ -18,13 +18,13 @@ export interface SignedNewOrder extends SignMsg, NewOrder {
 
 export interface NewOrderData extends Msg, NewOrder {
   sender: Buffer
-  aminoPrefix: TxAminoPrefix
+  aminoPrefix: AminoPrefix
 }
 
 export class NewOrderMsg extends BaseMsg {
   private newOrder: NewOrder
   private address: string
-  public readonly aminoPrefix: TxAminoPrefix = TxAminoPrefix.NewOrderMsg
+  public readonly aminoPrefix: AminoPrefix = AminoPrefix.NewOrderMsg
 
   constructor(data: NewOrder, address: string) {
     super()

@@ -1,6 +1,6 @@
 import * as decoder from "../src/decoder/"
 import * as encoder from "../src/encoder/"
-import { TxAminoPrefix } from "../src/types/stdTx"
+import { AminoPrefix } from "../src/types/stdTx"
 
 class Msg {
   constructor(opts) {
@@ -14,7 +14,7 @@ class Msg {
   }
 }
 
-Msg.prototype.msgType = TxAminoPrefix.NewOrderMsg
+Msg.prototype.msgType = AminoPrefix.NewOrderMsg
 
 describe("decoder", () => {
   it("decode type", () => {
@@ -30,7 +30,7 @@ describe("decoder", () => {
           amount: 1000000000
         }
       ],
-      aminoPrefix: TxAminoPrefix.NewOrderMsg
+      aminoPrefix: AminoPrefix.NewOrderMsg
     }
 
     const msgObj = new Msg(opt)
