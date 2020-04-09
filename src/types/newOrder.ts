@@ -49,4 +49,18 @@ export class NewOrderMsg extends BaseMsg {
 
     return data
   }
+
+  static defaultMsg() {
+    return {
+      sender: Buffer.from(""),
+      id: "",
+      symbol: "",
+      orderType: 0,
+      side: 0,
+      price: 0,
+      quantity: 0,
+      timeinforce: 0,
+      aminoPrefix: AminoPrefix.NewOrderMsg
+    }
+  }
 }

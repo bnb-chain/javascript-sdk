@@ -115,6 +115,7 @@ describe("rpc", () => {
       prove: true
     }
     const result = await client.tx(params)
+    console.log(result)
     expect(result.tx_result).toBeTruthy()
     client.close()
   })
@@ -205,5 +206,15 @@ describe("rpc", () => {
         expect(events.step).toBe("RoundStepPropose")
       })
     })
+  })
+
+  it("getTxByHash", async () => {
+    const client = getClient("https")
+    const hashStr =
+      "2029ED36444DFE12E6A235CFE8B1C81B7F31014D23790E382056B395EC1171FE"
+    const result = await client.getTxByHash(hashStr, true)
+    expect(result).toBeTruthy()
+    expect(result.height).toBeTruthy()
+    expect(result.hash).toBe(hashStr)
   })
 })

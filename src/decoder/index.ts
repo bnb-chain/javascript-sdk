@@ -222,3 +222,5 @@ export const decodeFieldNumberAndTyp3 = (bytes: Buffer): any => {
 
   return { fieldNum, typ }
 }
+
+export * from "./types"

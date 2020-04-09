@@ -47,4 +47,13 @@ export class CancelOrderMsg extends BaseMsg {
 
     return data
   }
+
+  static defaultMsg() {
+    return {
+      sender: Buffer.from(""),
+      symbol: "",
+      refid: "",
+      aminoPrefix: AminoPrefix.CancelOrderMsg
+    }
+  }
 }

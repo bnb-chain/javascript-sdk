@@ -87,4 +87,12 @@ export class SendMsg extends BaseMsg {
 
     return msg
   }
+
+  static defaultMsg() {
+    return {
+      inputs: [{ address: Buffer.from(""), coins: [{ denom: "", amount: 0 }] }],
+      outpus: [{ address: Buffer.from(""), coins: [{ denom: "", amount: 0 }] }],
+      aminoPrefix: AminoPrefix.MsgSend
+    }
+  }
 }

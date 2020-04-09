@@ -9,11 +9,11 @@ import {
   TradingPair,
   OrderBook,
   TokenOfList,
-  TokenBalance
-} from "../decoder/types"
-import * as decoder from "../decoder"
+  TokenBalance,
+  unMarshalBinaryLengthPrefixed
+} from "../decoder"
 import * as crypto from "../crypto"
-import BaseRpc from "./"
+import BaseRpc from "."
 import {
   validateSymbol,
   validateTradingPair,
@@ -21,8 +21,16 @@ import {
 } from "../utils/validateHelper"
 import { NETWORK_PREFIX_MAPPING } from "../client"
 import Transaction from "../tx"
-import { abciQueryResponseResult } from "../types/abciResponse"
-import { Coin } from "../types/send"
+import {
+  Coin,
+  AminoPrefix,
+  NewOrderMsg,
+  CancelOrderMsg,
+  SendMsg,
+  abciQueryResponseResult,
+  StdTx,
+  BaseMsg
+} from "../types"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -39,6 +47,19 @@ const convertObjectArrayNum = <T extends { [k: string]: BigSource }>(
       item[key] = divide(item[key]) as any
     })
   })
+}
+
+const getMsgByAminoPrefix = (aminoPrefix: string) => {
+  switch (aminoPrefix.toUpperCase()) {
+    case AminoPrefix.NewOrderMsg:
+      return NewOrderMsg
+    case AminoPrefix.CancelOrderMsg:
+      return CancelOrderMsg
+    case AminoPrefix.MsgSend:
+      return SendMsg
+    default:
+      return BaseMsg
+  }
 }
 
 /**
@@ -103,7 +124,7 @@ class Client extends BaseRpc {
     const res: abciQueryResponseResult = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const tokenInfo = new Token()
-    decoder.unMarshalBinaryLengthPrefixed(bytes, tokenInfo)
+    unMarshalBinaryLengthPrefixed(bytes, tokenInfo)
     const bech32Prefix = this.getBech32Prefix()
     const ownerAddress = crypto.encodeAddress(tokenInfo.owner, bech32Prefix)
 
@@ -124,12 +145,12 @@ class Client extends BaseRpc {
     const res: abciQueryResponseResult = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const tokenArr = [new TokenOfList()]
-    const { val: tokenList }: any = decoder.unMarshalBinaryLengthPrefixed(
+    const { val: tokenList }: any = unMarshalBinaryLengthPrefixed(
       bytes,
       tokenArr
     )
 
-    decoder.unMarshalBinaryLengthPrefixed(bytes, tokenList)
+    unMarshalBinaryLengthPrefixed(bytes, tokenList)
 
     return tokenList.map((item: TokenOfList) => ({
       ...item,
@@ -147,7 +168,7 @@ class Client extends BaseRpc {
     })
     const accountInfo = new AppAccount()
     const bytes = Buffer.from(res.response.value, "base64")
-    decoder.unMarshalBinaryBare(bytes, accountInfo)
+    unMarshalBinaryBare(bytes, accountInfo)
     const bech32Prefix = this.getBech32Prefix()
 
     return {
@@ -216,7 +237,7 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = [new OpenOrder()]
-    const { val: openOrders }: any = decoder.unMarshalBinaryLengthPrefixed(
+    const { val: openOrders }: any = unMarshalBinaryLengthPrefixed(
       bytes,
       result
     )
@@ -235,7 +256,7 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = [new TradingPair()]
-    const { val: tradingPairs }: any = decoder.unMarshalBinaryLengthPrefixed(
+    const { val: tradingPairs }: any = unMarshalBinaryLengthPrefixed(
       bytes,
       result
     )
@@ -253,10 +274,7 @@ class Client extends BaseRpc {
     const res = await this.abciQuery({ path })
     const bytes = Buffer.from(res.response.value, "base64")
     const result = new OrderBook()
-    const { val: depth }: any = decoder.unMarshalBinaryLengthPrefixed(
-      bytes,
-      result
-    )
+    const { val: depth }: any = unMarshalBinaryLengthPrefixed(bytes, result)
     convertObjectArrayNum(depth.levels, [
       "buyQty",
       "buyPrice",
@@ -264,6 +282,40 @@ class Client extends BaseRpc {
       "sellPrice"
     ])
     return depth
+  }
+
+  async getTxByHash(hash: Buffer | string, prove: boolean = true) {
+    if (!Buffer.isBuffer(hash)) {
+      hash = Buffer.from(hash, "hex")
+    }
+
+    const res = await this.tx({
+      hash,
+      prove
+    })
+
+    const txBytes = Buffer.from(res.tx, "base64")
+    const msgAminoPrefix = txBytes.slice(8, 12).toString("hex")
+    const msgType = getMsgByAminoPrefix(msgAminoPrefix)
+    const type: StdTx = {
+      msg: [msgType.defaultMsg()],
+      signatures: [
+        {
+          pub_key: Buffer.from(""),
+          signature: Buffer.from(""),
+          account_number: 0,
+          sequence: 0
+        }
+      ],
+      memo: "",
+      source: 0,
+      data: "",
+      aminoPrefix: AminoPrefix.StdTx
+    }
+
+    const { val: result }: any = unMarshalBinaryLengthPrefixed(txBytes, type)
+    //TODO remove aminoPrefix
+    return { ...res, tx: result }
   }
 }
 
