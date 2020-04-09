@@ -1,6 +1,6 @@
-import { BaseMsg, Msg, SignMsg } from "./msg"
-import * as crypto from "../crypto"
-import { AminoPrefix } from "./stdTx"
+import { BaseMsg, Msg, SignMsg } from "../"
+import * as crypto from "../../../crypto"
+import { AminoPrefix } from "../../tx"
 
 export interface SignedCancelOrder extends SignMsg {
   sender: string

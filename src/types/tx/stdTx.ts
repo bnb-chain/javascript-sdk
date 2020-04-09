@@ -1,4 +1,4 @@
-import { BaseMsg, Msg } from "./msg"
+import { BaseMsg, Msg } from "../msg"
 
 export interface StdSignMsg {
   chainId: string

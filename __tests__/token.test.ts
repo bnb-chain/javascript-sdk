@@ -42,6 +42,7 @@ describe("token management", () => {
       amount,
       timeLock
     )
+
     expect(res.status).toBe(200)
   })
 

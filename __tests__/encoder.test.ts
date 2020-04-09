@@ -1,6 +1,6 @@
 import * as encoder from "../src/encoder"
 import { UVarInt } from "../src/encoder/varint"
-import { AminoPrefix } from "../src/types/stdTx"
+import { AminoPrefix } from "../src/types/"
 
 describe("encoder", () => {
   it("encode time", () => {

@@ -1,6 +1,6 @@
 import * as decoder from "../src/decoder/"
 import * as encoder from "../src/encoder/"
-import { AminoPrefix } from "../src/types/stdTx"
+import { AminoPrefix } from "../src/types/"
 
 class Msg {
   constructor(opts) {

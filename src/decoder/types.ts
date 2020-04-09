@@ -1,5 +1,4 @@
-import { Coin as CoinType } from "../types/send"
-import { AminoPrefix } from "../types/stdTx"
+import { Coin as CoinType, AminoPrefix } from "../types/"
 
 export class Token {
   public aminoPrefix = AminoPrefix.BnbchainToken

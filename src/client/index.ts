@@ -11,7 +11,7 @@ import Gov from "../gov/"
 import Big, { BigSource } from "big.js"
 import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
-import { AminoPrefix } from "../types/stdTx"
+import { AminoPrefix } from "../types/"
 
 const BASENUMBER = Math.pow(10, 8)
 

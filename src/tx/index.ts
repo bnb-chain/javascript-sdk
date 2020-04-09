@@ -3,7 +3,7 @@ import * as crypto from "../crypto"
 import * as encoder from "../encoder"
 import { UVarInt } from "../encoder/varint"
 import { BaseMsg, SignMsg } from "../types/msg"
-import { StdSignMsg, StdSignature, StdTx, AminoPrefix } from "../types/stdTx"
+import { StdSignMsg, StdSignature, StdTx, AminoPrefix } from "../types/"
 
 /**
  * Creates a new transaction object.

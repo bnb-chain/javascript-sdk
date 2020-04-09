@@ -10,7 +10,8 @@ import {
   OrderBook,
   TokenOfList,
   TokenBalance,
-  unMarshalBinaryLengthPrefixed
+  unMarshalBinaryLengthPrefixed,
+  unMarshalBinaryBare
 } from "../decoder"
 import * as crypto from "../crypto"
 import BaseRpc from "."
@@ -29,7 +30,8 @@ import {
   SendMsg,
   abciQueryResponseResult,
   StdTx,
-  BaseMsg
+  BaseMsg,
+  ResponseDeliverTx
 } from "../types"
 
 const BASENUMBER = Math.pow(10, 8)
@@ -314,8 +316,38 @@ class Client extends BaseRpc {
     }
 
     const { val: result }: any = unMarshalBinaryLengthPrefixed(txBytes, type)
+
+    const txResult = this.parseTxResult(res.tx_result)
+
     //TODO remove aminoPrefix
-    return { ...res, tx: result }
+    return { ...res, tx: result, tx_result: txResult }
+  }
+
+  private parseTxResult(txResult: ResponseDeliverTx) {
+    if (txResult.data) {
+      txResult.data = Buffer.from(txResult.data, "base64").toString()
+    }
+
+    if (txResult.events && txResult.events.length > 0) {
+      for (let i = 0; i < txResult.events.length; i++) {
+        const event = txResult.events[i]
+        if (event.attributes && event.attributes.length > 0) {
+          event.attributes = event.attributes.map(item => ({
+            key: Buffer.from(item.key, "base64").toString(),
+            value: Buffer.from(item.value, "base64").toString()
+          }))
+        }
+      }
+    }
+
+    if (txResult.tags && txResult.tags.length > 0) {
+      txResult.tags = txResult.tags.map(item => ({
+        key: Buffer.from(item.key, "base64").toString(),
+        value: Buffer.from(item.value, "base64").toString()
+      }))
+    }
+
+    return { ...txResult }
   }
 }
 

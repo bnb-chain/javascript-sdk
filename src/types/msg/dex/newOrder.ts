@@ -1,6 +1,7 @@
-import { BaseMsg, Msg, SignMsg } from "./msg"
-import * as crypto from "../crypto"
-import { AminoPrefix } from "./stdTx"
+import { BaseMsg, Msg, SignMsg } from "../"
+import * as crypto from "../../../crypto"
+import { AminoPrefix } from "../../tx"
+import Big from "big.js"
 
 export interface NewOrder {
   id: string
@@ -21,6 +22,8 @@ export interface NewOrderData extends Msg, NewOrder {
   aminoPrefix: AminoPrefix
 }
 
+const BASENUMBER = Math.pow(10, 8)
+
 export class NewOrderMsg extends BaseMsg {
   private newOrder: NewOrder
   private address: string
@@ -28,7 +31,12 @@ export class NewOrderMsg extends BaseMsg {
 
   constructor(data: NewOrder, address: string) {
     super()
+    const bigPrice = new Big(data.price)
+    const bigQuantity = new Big(data.quantity)
+
     this.newOrder = data
+    this.newOrder.price = Number(bigPrice.mul(BASENUMBER).toString())
+    this.newOrder.quantity = Number(bigQuantity.mul(BASENUMBER).toString())
     this.address = address
   }
 
@@ -43,7 +51,13 @@ export class NewOrderMsg extends BaseMsg {
   getMsg() {
     const data: NewOrderData = {
       sender: crypto.decodeAddress(this.address),
-      ...this.newOrder,
+      id: this.newOrder.id,
+      symbol: this.newOrder.symbol,
+      ordertype: this.newOrder.ordertype,
+      side: this.newOrder.side,
+      price: this.newOrder.price,
+      quantity: this.newOrder.quantity,
+      timeinforce: this.newOrder.timeinforce,
       aminoPrefix: this.aminoPrefix
     }
 

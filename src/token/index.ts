@@ -10,7 +10,7 @@ import { validateSymbol } from "../utils/validateHelper"
 import { checkCoins } from "../utils/validateHelper"
 import HttpRequest from "../utils/request"
 import { Coin } from "../utils/coin"
-import { AminoPrefix } from "../types/stdTx"
+import { AminoPrefix } from "../types"
 
 const MAXTOTALSUPPLY = 9000000000000000000
 
