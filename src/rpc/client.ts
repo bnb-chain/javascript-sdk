@@ -1,7 +1,7 @@
 /**
  * @module rpc
  */
-import { Big, BigSource } from "big.js"
+import { Big } from "big.js"
 import {
   Token,
   AppAccount,
@@ -25,44 +25,12 @@ import Transaction from "../tx"
 import {
   Coin,
   AminoPrefix,
-  NewOrderMsg,
-  CancelOrderMsg,
-  SendMsg,
   abciQueryResponseResult,
   StdTx,
-  BaseMsg,
   ResponseDeliverTx
 } from "../types"
 
-const BASENUMBER = Math.pow(10, 8)
-
-const divide = (num: BigSource) => {
-  return +new Big(num).div(BASENUMBER).toString()
-}
-
-const convertObjectArrayNum = <T extends { [k: string]: BigSource }>(
-  objArr: Array<T>,
-  keys: Array<keyof T>
-): void => {
-  objArr.forEach(item => {
-    keys.forEach(key => {
-      item[key] = divide(item[key]) as any
-    })
-  })
-}
-
-const getMsgByAminoPrefix = (aminoPrefix: string) => {
-  switch (aminoPrefix.toUpperCase()) {
-    case AminoPrefix.NewOrderMsg:
-      return NewOrderMsg
-    case AminoPrefix.CancelOrderMsg:
-      return CancelOrderMsg
-    case AminoPrefix.MsgSend:
-      return SendMsg
-    default:
-      return BaseMsg
-  }
-}
+import { convertObjectArrayNum, getMsgByAminoPrefix } from "./helper"
 
 /**
  * The Binance Chain Node rpc client
