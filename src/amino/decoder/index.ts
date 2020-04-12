@@ -10,7 +10,7 @@ import {
 } from "protocol-buffers-encodings"
 import is from "is_js"
 
-import typeToTyp3 from "../utils/encoderHelper"
+import typeToTyp3 from "../../utils/encoderHelper"
 
 const decoder = (bytes: Buffer, varType: any) => {
   const val = varType.decode(bytes, 0)
@@ -222,5 +222,3 @@ export const decodeFieldNumberAndTyp3 = (bytes: Buffer): any => {
 
   return { fieldNum, typ }
 }
-
-export * from "./types"

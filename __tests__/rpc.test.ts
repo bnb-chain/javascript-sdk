@@ -1,4 +1,4 @@
-import rpcClient from "../src/rpc/client"
+import { rpc as rpcClient } from "../src"
 
 const NETWORK = "testnet"
 const getClient = type => {
@@ -115,7 +115,6 @@ describe("rpc", () => {
       prove: true
     }
     const result = await client.tx(params)
-    console.log(result)
     expect(result.tx_result).toBeTruthy()
     client.close()
   })

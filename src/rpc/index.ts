@@ -1,188 +1,319 @@
 /**
- * https://github.com/nomic-io/js-tendermint/blob/master/src/rpc.js
+ * @module rpc
  */
+import { Big } from "big.js"
+import { unMarshalBinaryLengthPrefixed, unMarshalBinaryBare } from "../amino"
+import * as crypto from "../crypto"
+import BaseRpc from "./baseRpc"
+import {
+  validateSymbol,
+  validateTradingPair,
+  validateOffsetLimit
+} from "../utils"
+import { NETWORK_PREFIX_MAPPING } from "../client"
+import Transaction from "../tx"
+import {
+  Token,
+  AppAccount,
+  OpenOrder,
+  TradingPair,
+  OrderBook,
+  TokenOfList,
+  TokenBalance,
+  Coin,
+  AminoPrefix,
+  abciQueryResponseResult,
+  StdTx,
+  ResponseDeliverTx
+} from "../types"
 
-import is from "is_js"
-import { EventEmitter } from "events"
-import axios from "axios"
-import url from "url"
-import websocket from "websocket-stream"
-import ndjson from "ndjson"
-import Pumpify from "pumpify"
+import { convertObjectArrayNum, getMsgByAminoPrefix } from "../utils"
 
-export type Args = { [k: string]: any }
+/**
+ * The Binance Chain Node rpc client
+ */
+class RpcClient extends BaseRpc {
+  private netWork: keyof typeof NETWORK_PREFIX_MAPPING
 
-function convertHttpArgs(url: string, args: Args = {}) {
-  const search = []
-  for (let k in args) {
-    if (is.string(args[k])) {
-      search.push(`${k}="${args[k]}"`)
-    } else if (Buffer.isBuffer(args[k])) {
-      search.push(`${k}=0x${args[k].toString("hex")}`)
-    } else {
-      search.push(`${k}=${args[k]}`)
-    }
-  }
-  return `${url}?${search.join("&")}`
-}
-
-function convertWsArgs(args: Args = {}) {
-  for (let k in args) {
-    let v = args[k]
-    if (typeof v === "number") {
-      args[k] = String(v)
-    } else if (Buffer.isBuffer(v)) {
-      args[k] = "0x" + v.toString("hex")
-    } else if (v instanceof Uint8Array) {
-      args[k] = "0x" + Buffer.from(v).toString("hex")
-    }
-  }
-  return args
-}
-
-const wsProtocols = ["ws:", "wss:"]
-const httpProtocols = ["http:", "https:"]
-const allProtocols = wsProtocols.concat(httpProtocols)
-
-export default class BaseRpc extends EventEmitter {
-  private uri: string
-  public call!: BaseRpc["callWs"] | BaseRpc["callHttp"]
-  private closed: boolean = false
-  private ws?: Pumpify
-
-  constructor(uriString = "localhost:27146") {
-    super()
-
-    // parse full-node URI
-    let { protocol, hostname, port } = url.parse(uriString)
-
-    // default to http
-    if (!protocol || !allProtocols.includes(protocol)) {
-      let uri = url.parse(`http://${uriString}`)
-      protocol = uri.protocol
-      hostname = uri.hostname
-      port = uri.port
-    }
-
-    this.uri = !port
-      ? `${protocol}//${hostname}/`
-      : `${protocol}//${hostname}:${port}/`
-
-    if (protocol && wsProtocols.includes(protocol)) {
-      this.uri = `${this.uri}websocket`
-      this.call = this.callWs
-      this.connectWs()
-    } else if (protocol && httpProtocols.includes(protocol)) {
-      this.call = this.callHttp
-    }
+  /**
+   * @param {String} uriString dataseed address
+   * @param {String} netWork Binance Chain network
+   */
+  constructor(
+    uriString: string = "localhost:27146",
+    netWork: keyof typeof NETWORK_PREFIX_MAPPING
+  ) {
+    super(uriString)
+    this.netWork = netWork || "mainnet"
   }
 
-  connectWs() {
-    this.ws = new Pumpify.obj(ndjson.stringify(), websocket(this.uri))
-
-    this.ws.on("error", err => this.emit("error", err))
-    this.ws.on("close", () => {
-      if (this.closed) return
-      this.emit("error", Error("websocket disconnected"))
+  /**
+   * The RPC broadcast delegate broadcasts a transaction via RPC. This is intended for optional use as BncClient's broadcast delegate.
+   * @param {Transaction} signedTx the signed transaction
+   * @return {Promise}
+   */
+  async broadcastDelegate(signedTx: Transaction) {
+    // amino encode the signed TX
+    const encoded = signedTx.serialize()
+    // broadcast it via RPC; we have to use a promise here because that's
+    // what the BncClient expects as the return value of this function.
+    const res: any = await this.broadcastTxSync({
+      tx: Buffer.from(encoded, "hex")
     })
-    this.ws.on("data", data => {
-      data = JSON.parse(data)
-      if (!data.id) return
-      this.emit(data.id, data.error, data.result)
-    })
-  }
-
-  callHttp(method: string, args?: Args) {
-    let url = this.uri + method
-    url = convertHttpArgs(url, args)
-    return axios({
-      url: url
-    }).then(
-      function({ data }) {
-        if (data.error) {
-          let err = Error(data.error.message)
-          Object.assign(err, data.error)
-          throw err
-        }
-        return data.result
-      },
-      function(err) {
-        throw Error(err)
-      }
-    )
-  }
-
-  callWs(method: string, args?: Args, listener?: (value: any) => void) {
-    let self = this
-    return new Promise((resolve, reject) => {
-      let id = Math.random().toString(36)
-      let params = convertWsArgs(args)
-      if (method === "subscribe") {
-        if (typeof listener !== "function") {
-          throw Error("Must provide listener function")
-        }
-
-        // events get passed to listener
-        this.on(id + "#event", (err, res) => {
-          if (err) return self.emit("error", err)
-          return listener(res.data.value)
-        })
-
-        // promise resolves on successful subscription or error
-        this.on(id, err => {
-          if (err) return reject(err)
-          resolve()
-        })
-      } else {
-        // response goes to promise
-        this.once(id, (err, res) => {
-          if (err) return reject(err)
-          resolve(res)
-        })
-      }
-
-      this.ws?.write({ jsonrpc: "2.0", id, method, params })
-    })
-  }
-
-  close() {
-    this.closed = true
-    if (!this.ws) return
-    this.ws.destroy()
-  }
-
-  private createCallBasedMethod = (name: string) => (
-    args?: Args,
-    listener?: Parameters<BaseRpc["call"]>[2]
-  ): any => {
-    return this.call(name, args, listener).then(res => {
+    if (`${res.code}` === "0") {
       return res
-    })
+    } else {
+      throw new Error(`broadcastDelegate: non-zero status code ${res.code}`)
+    }
   }
 
-  subscribe = this.createCallBasedMethod("subscribe")
-  unsubscribe = this.createCallBasedMethod("unsubscribe")
-  unsubscribeAll = this.createCallBasedMethod("unsubscribe_all")
+  getBech32Prefix() {
+    if (this.netWork === "mainnet") {
+      return "bnb"
+    }
 
-  status = this.createCallBasedMethod("status")
-  netInfo = this.createCallBasedMethod("net_info")
-  blockchain = this.createCallBasedMethod("blockchain")
-  genesis = this.createCallBasedMethod("genesis")
-  health = this.createCallBasedMethod("health")
-  block = this.createCallBasedMethod("block")
-  blockResults = this.createCallBasedMethod("block_results")
-  validators = this.createCallBasedMethod("validators")
-  consensusState = this.createCallBasedMethod("consensus_state")
-  dumpConsensusState = this.createCallBasedMethod("dump_consensus_state")
-  broadcastTxCommit = this.createCallBasedMethod("broadcast_tx_commit")
-  broadcastTxSync = this.createCallBasedMethod("broadcast_tx_sync")
-  broadcastTxAsync = this.createCallBasedMethod("broadcast_tx_async")
-  unconfirmedTxs = this.createCallBasedMethod("unconfirmed_txs")
-  numUnconfirmedTxs = this.createCallBasedMethod("num_unconfirmed_txs")
-  commit = this.createCallBasedMethod("commit")
-  tx = this.createCallBasedMethod("tx")
-  txSearch = this.createCallBasedMethod("tx_search")
+    if (this.netWork === "testnet") {
+      return "tbnb"
+    }
 
-  abciQuery = this.createCallBasedMethod("abci_query")
-  abciInfo = this.createCallBasedMethod("abci_info")
+    return ""
+  }
+
+  /**
+   * @param {String} symbol - required
+   * @returns {Object} token detail info
+   */
+  async getTokenInfo(symbol: string) {
+    validateSymbol(symbol)
+
+    const path = "/tokens/info/" + symbol
+
+    const res: abciQueryResponseResult = await this.abciQuery({ path })
+    const bytes = Buffer.from(res.response.value, "base64")
+    const tokenInfo = new Token()
+    unMarshalBinaryLengthPrefixed(bytes, tokenInfo)
+    const bech32Prefix = this.getBech32Prefix()
+    const ownerAddress = crypto.encodeAddress(tokenInfo.owner, bech32Prefix)
+
+    delete tokenInfo.aminoPrefix
+    //TODO all the result contains aminoPrefix, need to improve
+    return { ...tokenInfo, owner: ownerAddress }
+  }
+
+  /**
+   * get tokens by offset and limit
+   * @param {Number} offset
+   * @param {Number} limit
+   * @returns {Array} token list
+   */
+  async listAllTokens(offset: number, limit: number) {
+    validateOffsetLimit(offset, limit)
+    const path = `tokens/list/${offset}/${limit}`
+    const res: abciQueryResponseResult = await this.abciQuery({ path })
+    const bytes = Buffer.from(res.response.value, "base64")
+    const tokenArr = [new TokenOfList()]
+    const { val: tokenList }: any = unMarshalBinaryLengthPrefixed(
+      bytes,
+      tokenArr
+    )
+
+    unMarshalBinaryLengthPrefixed(bytes, tokenList)
+
+    return tokenList.map((item: TokenOfList) => ({
+      ...item,
+      owner: crypto.encodeAddress(item.owner, this.getBech32Prefix())
+    }))
+  }
+
+  /**
+   * @param {String} address
+   * @returns {Object} Account info
+   */
+  async getAccount(address: string) {
+    const res: any = await this.abciQuery({
+      path: `/account/${address}`
+    })
+    const accountInfo = new AppAccount()
+    const bytes = Buffer.from(res.response.value, "base64")
+    unMarshalBinaryBare(bytes, accountInfo)
+    const bech32Prefix = this.getBech32Prefix()
+
+    return {
+      name: accountInfo.name,
+      locked: accountInfo.locked,
+      frozen: accountInfo.frozen,
+      base: {
+        ...accountInfo.base,
+        address: crypto.encodeAddress(accountInfo.base.address, bech32Prefix)
+      }
+    }
+  }
+
+  /**
+   * @param {Array} balances
+   */
+  async getBalances(address: string) {
+    const account = await this.getAccount(address)
+    let coins: Coin[] = []
+    const balances: TokenBalance[] = []
+    if (account) {
+      coins = (account.base && account.base.coins) || []
+      convertObjectArrayNum<any>(coins, ["amount"])
+      convertObjectArrayNum<any>(account.locked, ["amount"])
+      convertObjectArrayNum<any>(account.frozen, ["amount"])
+    }
+
+    coins.forEach(item => {
+      const locked: any =
+        account.locked.find(lockedItem => item.denom === lockedItem.denom) || {}
+      const frozen: any =
+        account.frozen.find(frozenItem => item.denom === frozenItem.denom) || {}
+      const bal = new TokenBalance()
+      bal.symbol = item.denom
+      bal.free = +new Big(item.amount).toString()
+      bal.locked = locked.amount || 0
+      bal.frozen = frozen.amount || 0
+      balances.push(bal)
+    })
+
+    return balances
+  }
+
+  /**
+   * get balance by symbol and address
+   * @param {String} address
+   * @param {String} symbol
+   * @returns {Object}
+   */
+  async getBalance(address: string, symbol: string) {
+    validateSymbol(symbol)
+    const balances = await this.getBalances(address)
+    const bal = balances.find(
+      item => item.symbol.toUpperCase() === symbol.toUpperCase()
+    )
+    return bal
+  }
+
+  /**
+   * @param {String} address
+   * @param {String} symbol
+   * @returns {Object}
+   */
+  async getOpenOrders(address: string, symbol: string) {
+    const path = `/dex/openorders/${symbol}/${address}`
+    const res = await this.abciQuery({ path })
+    const bytes = Buffer.from(res.response.value, "base64")
+    const result = [new OpenOrder()]
+    const { val: openOrders }: any = unMarshalBinaryLengthPrefixed(
+      bytes,
+      result
+    )
+    convertObjectArrayNum(openOrders, ["price", "quantity", "cumQty"])
+    return openOrders
+  }
+
+  /**
+   * @param {Number} offset
+   * @param {Number} limit
+   * @returns {Array}
+   */
+  async getTradingPairs(offset: number, limit: number) {
+    validateOffsetLimit(offset, limit)
+    const path = `/dex/pairs/${offset}/${limit}`
+    const res = await this.abciQuery({ path })
+    const bytes = Buffer.from(res.response.value, "base64")
+    const result = [new TradingPair()]
+    const { val: tradingPairs }: any = unMarshalBinaryLengthPrefixed(
+      bytes,
+      result
+    )
+    convertObjectArrayNum(tradingPairs, ["list_price", "tick_size", "lot_size"])
+    return tradingPairs
+  }
+
+  /**
+   * @param {String} tradePair
+   * @returns {Array}
+   */
+  async getDepth(tradePair: string) {
+    validateTradingPair(tradePair)
+    const path = `dex/orderbook/${tradePair}`
+    const res = await this.abciQuery({ path })
+    const bytes = Buffer.from(res.response.value, "base64")
+    const result = new OrderBook()
+    const { val: depth }: any = unMarshalBinaryLengthPrefixed(bytes, result)
+    convertObjectArrayNum(depth.levels, [
+      "buyQty",
+      "buyPrice",
+      "sellQty",
+      "sellPrice"
+    ])
+    return depth
+  }
+
+  async getTxByHash(hash: Buffer | string, prove: boolean = true) {
+    if (!Buffer.isBuffer(hash)) {
+      hash = Buffer.from(hash, "hex")
+    }
+
+    const res = await this.tx({
+      hash,
+      prove
+    })
+
+    const txBytes = Buffer.from(res.tx, "base64")
+    const msgAminoPrefix = txBytes.slice(8, 12).toString("hex")
+    const msgType = getMsgByAminoPrefix(msgAminoPrefix)
+    const type: StdTx = {
+      msg: [msgType.defaultMsg()],
+      signatures: [
+        {
+          pub_key: Buffer.from(""),
+          signature: Buffer.from(""),
+          account_number: 0,
+          sequence: 0
+        }
+      ],
+      memo: "",
+      source: 0,
+      data: "",
+      aminoPrefix: AminoPrefix.StdTx
+    }
+
+    const { val: result }: any = unMarshalBinaryLengthPrefixed(txBytes, type)
+
+    const txResult = this.parseTxResult(res.tx_result)
+
+    //TODO remove aminoPrefix
+    return { ...res, tx: result, tx_result: txResult }
+  }
+
+  private parseTxResult(txResult: ResponseDeliverTx) {
+    if (txResult.data) {
+      txResult.data = Buffer.from(txResult.data, "base64").toString()
+    }
+
+    if (txResult.events && txResult.events.length > 0) {
+      for (let i = 0; i < txResult.events.length; i++) {
+        const event = txResult.events[i]
+        if (event.attributes && event.attributes.length > 0) {
+          event.attributes = event.attributes.map(item => ({
+            key: Buffer.from(item.key, "base64").toString(),
+            value: Buffer.from(item.value, "base64").toString()
+          }))
+        }
+      }
+    }
+
+    if (txResult.tags && txResult.tags.length > 0) {
+      txResult.tags = txResult.tags.map(item => ({
+        key: Buffer.from(item.key, "base64").toString(),
+        value: Buffer.from(item.value, "base64").toString()
+      }))
+    }
+
+    return { ...txResult }
+  }
 }
+
+export default RpcClient

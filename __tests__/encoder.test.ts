@@ -1,52 +1,50 @@
-import * as encoder from "../src/encoder"
-import { UVarInt } from "../src/encoder/varint"
+import { amino } from "../src/"
 import { AminoPrefix } from "../src/types/"
 
 describe("encoder", () => {
   it("encode time", () => {
-    let encodedTime = encoder.encodeTime("1973-11-29T21:33:09.123456789Z")
+    let encodedTime = amino.encodeTime("1973-11-29T21:33:09.123456789Z")
     expect(encodedTime.toString('hex')).toBe("0915cd5b07000000001515cd5b07")
   })
 
   it("encode number", () => {
-    let encodedNumber = encoder.encodeNumber(100000)
+    let encodedNumber = amino.encodeNumber(100000)
     encodedNumber = encodedNumber.toString("hex")
     expect(encodedNumber).toBe("a08d06")
   })
 
   it("encode negtive number", () => {
     expect(() => {
-      encoder.encodeNumber(-100000)
+      amino.encodeNumber(-100000)
     }).toThrow()
   })
 
   it("encode big number", () => {
-    let encodedNumber = encoder.encodeNumber(Math.pow(10, 18))
+    let encodedNumber = amino.encodeNumber(Math.pow(10, 18))
     encodedNumber = encodedNumber.toString("hex")
     expect(encodedNumber).toBe("808090bbbad6adf00d")
   })
 
   it("UVarInt", () => {
-    let encodedNumber = UVarInt.encode(17)
+    let encodedNumber = amino.UVarInt.encode(17)
     encodedNumber = encodedNumber.toString("hex")
     expect(encodedNumber).toBe("11")
   })
 
   it("encode bool", () => {
-    let encodedTrue = encoder.encodeBool(true)
+    let encodedTrue = amino.encodeBool(true)
     encodedTrue = encodedTrue.toString("hex")
     expect(encodedTrue).toBe("01")
 
-    let encodedFalse = encoder.encodeBool(false)
+    let encodedFalse = amino.encodeBool(false)
     encodedFalse = encodedFalse.toString("hex")
     expect(encodedFalse).toBe("00")
   })
 
   it("encode string", () => {
     const str = "You are beautiful"
-    let encodedString = encoder.encodeString(str)
-    encodedString = encodedString.toString("hex")
-    expect(encodedString).toBe("11596f75206172652062656175746966756c")
+    let encodedString = amino.encodeString(str)
+    expect(encodedString.toString("hex")).toBe("11596f75206172652062656175746966756c")
   })
 
   it("convertObjectToSignBytes", () => {
@@ -60,7 +58,7 @@ describe("encoder", () => {
       ],
       address: 1
     }
-    const str = encoder.convertObjectToSignBytes(jsonObj)
+    const str = amino.convertObjectToSignBytes(jsonObj)
     expect(str.toString()).toBe(
       '{"address":1,"sender":2,"symbol":3,"zlast":[{"a":"z","z":"z"},{"a":"z","z":"a"}]}'
     )
@@ -218,7 +216,7 @@ describe("encoder", () => {
       aminoPrefix: AminoPrefix.StdTx
     }
 
-    const bytes = encoder.marshalBinary(stdTx)
+    const bytes = amino.marshalBinary(stdTx)
     expect(bytes).toBe(
       "db01f0625dee0a65ce6dc0430a14b6561dcc104130059a7c08f48c64610c1f6f9064122b423635363144434331303431333030353941374330384634384336343631304331463646393036342d31311a0b4254432d3543345f424e42200228013080c2d72f3880989abc044001126e0a26eb5ae9872103baf53d1424f8ea83d03a82f6d157b5401c4ea57ffb8317872e15a19fc9b7ad7b1240e79a6606d28cf07b9cc6f566b524a5282b13beccc3162376c79f392620c95a447b19f64e761e22a7a3bc311a780e7d9fdd521e2f7edec25308c5bac6aa1c0a311801200a"
     )

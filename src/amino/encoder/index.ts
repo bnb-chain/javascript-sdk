@@ -5,7 +5,7 @@
 import { string as VarString } from "protocol-buffers-encodings"
 import is from "is_js"
 import { UVarInt } from "./varint"
-import typeToTyp3 from "../utils/encoderHelper"
+import typeToTyp3 from "../../utils/encoderHelper"
 
 const sortObject = (obj: any): object | null => {
   if (obj === null) return null
@@ -233,3 +233,5 @@ const isDefaultValue = (obj: any) => {
     (is.boolean(obj) && !obj)
   )
 }
+
+export * from "./varint"

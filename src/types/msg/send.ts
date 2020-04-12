@@ -1,11 +1,11 @@
 import { BaseMsg, Msg, SignMsg } from "./"
 import * as crypto from "../../crypto"
 import { AminoPrefix } from "../tx"
-import Big from "big.js"
+import Big, { BigSource } from "big.js"
 
 export interface Coin {
   denom: string
-  amount: number
+  amount: BigSource
 }
 
 export interface SignInputOutput {

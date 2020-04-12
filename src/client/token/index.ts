@@ -4,13 +4,13 @@
 import Big, { BigSource } from "big.js"
 
 // import { TxTypes } from "../tx/"
-import * as crypto from "../crypto/"
-import { api, BncClient } from "../client/"
-import { validateSymbol } from "../utils/validateHelper"
-import { checkCoins } from "../utils/validateHelper"
-import HttpRequest from "../utils/request"
-import { Coin } from "../utils/coin"
-import { AminoPrefix } from "../types"
+import * as crypto from "../../crypto"
+import { api, BncClient } from ".."
+import { validateSymbol } from "../../utils/validateHelper"
+import { checkCoins } from "../../utils/validateHelper"
+import HttpRequest from "../../utils/request"
+import { Coin } from "../../types"
+import { AminoPrefix } from "../../types"
 
 const MAXTOTALSUPPLY = 9000000000000000000
 

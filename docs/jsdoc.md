@@ -3,8 +3,6 @@
 <dl>
 <dt><a href="#module_crypto">crypto</a></dt>
 <dd></dd>
-<dt><a href="#amino.module_encode">encode</a></dt>
-<dd></dd>
 <dt><a href="#module_ledger">ledger</a></dt>
 <dd></dd>
 <dt><a href="#module_utils">utils</a></dt>
@@ -16,18 +14,10 @@
 <dl>
 <dt><a href="#BncClient">BncClient</a></dt>
 <dd><p>The Binance Chain client.</p></dd>
-<dt><a href="#Gov">Gov</a></dt>
-<dd></dd>
-<dt><a href="#Client">Client</a></dt>
+<dt><a href="#RpcClient">RpcClient</a></dt>
 <dd><p>The Binance Chain Node rpc client</p></dd>
-<dt><a href="#Swap">Swap</a></dt>
-<dd></dd>
-<dt><a href="#TokenManagement">TokenManagement</a></dt>
-<dd></dd>
 <dt><a href="#Transaction">Transaction</a></dt>
 <dd><p>Creates a new transaction object.</p></dd>
-<dt><a href="#SendMsg">SendMsg</a></dt>
-<dd><p>Only support transfers of one-to-one, one-to-many</p></dd>
 </dl>
 
 ## Members
@@ -39,17 +29,8 @@
 <dd><p>The Ledger signing delegate.</p></dd>
 <dt><a href="#LedgerSigningDelegate">LedgerSigningDelegate</a></dt>
 <dd><p>validate the input number.</p></dd>
-<dt><a href="#unMarshalBinaryLengthPrefixed">unMarshalBinaryLengthPrefixed</a> ⇒ <code>Object</code></dt>
-<dd><p>js amino UnmarshalBinaryBare</p></dd>
 <dt><a href="#checkNumber">checkNumber</a></dt>
 <dd><p>basic validation of coins</p></dd>
-</dl>
-
-## Constants
-
-<dl>
-<dt><a href="#voteOption">voteOption</a></dt>
-<dd><p>VoteOption</p></dd>
 </dl>
 
 ## Functions
@@ -59,8 +40,6 @@
 <dd><p>The default signing delegate which uses the local private key.</p></dd>
 <dt><a href="#calInputCoins">calInputCoins(inputs, coins)</a></dt>
 <dd><p>sum corresponding input coin</p></dd>
-<dt><a href="#unMarshalBinaryLengthPrefixed">unMarshalBinaryLengthPrefixed(bytes, type)</a> ⇒ <code>Object</code></dt>
-<dd><p>js amino UnmarshalBinaryLengthPrefixed</p></dd>
 <dt><a href="#checkNumber">checkNumber(value)</a></dt>
 <dd><p>validate the input number.</p></dd>
 </dl>
@@ -290,149 +269,6 @@ generator point to get the pubkey.</p>
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>string</code> | <p>the bech32 address to decode</p> |
-
-<a name="amino.module_encode"></a>
-
-## encode
-
-* [encode](#amino.module_encode)
-    * _static_
-        * [.encodeNumber](#amino.module_encode.encodeNumber)
-        * [.encodeBool](#amino.module_encode.encodeBool)
-        * [.encodeString](#amino.module_encode.encodeString)
-        * [.encodeTime](#amino.module_encode.encodeTime) ⇒ <code>Buffer</code>
-        * [.convertObjectToSignBytes](#amino.module_encode.convertObjectToSignBytes)
-        * [.marshalBinary](#amino.module_encode.marshalBinary)
-        * [.marshalBinaryBare](#amino.module_encode.marshalBinaryBare) ⇒ <code>Buffer</code>
-        * [.encodeBinary](#amino.module_encode.encodeBinary) ⇒ <code>Buffer</code>
-        * [.encodeBinaryByteArray](#amino.module_encode.encodeBinaryByteArray) ⇒ <code>Buffer</code>
-        * [.encodeObjectBinary](#amino.module_encode.encodeObjectBinary) ⇒ <code>Buffer</code>
-    * _inner_
-        * [~encodeNumber(num)](#amino.module_encode..encodeNumber)
-
-<a name="amino.module_encode.encodeNumber"></a>
-
-### encode.encodeNumber
-<p>encode bool</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-
-| Param |
-| --- |
-| b | 
-
-<a name="amino.module_encode.encodeBool"></a>
-
-### encode.encodeBool
-<p>encode string</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-
-| Param |
-| --- |
-| str | 
-
-<a name="amino.module_encode.encodeString"></a>
-
-### encode.encodeString
-<p>encode time</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-
-| Param |
-| --- |
-| value | 
-
-<a name="amino.module_encode.encodeTime"></a>
-
-### encode.encodeTime ⇒ <code>Buffer</code>
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-**Returns**: <code>Buffer</code> - <p>bytes</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| obj | <code>object</code> | <ul> <li></li> </ul> |
-
-<a name="amino.module_encode.convertObjectToSignBytes"></a>
-
-### encode.convertObjectToSignBytes
-<p>js amino MarshalBinary</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-
-| Param | Type |
-| --- | --- |
-| obj | <code>Object</code> | 
-
-<a name="amino.module_encode.marshalBinary"></a>
-
-### encode.marshalBinary
-<p>js amino MarshalBinaryBare</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-
-| Param | Type |
-| --- | --- |
-| obj | <code>Object</code> | 
-
-<a name="amino.module_encode.marshalBinaryBare"></a>
-
-### encode.marshalBinaryBare ⇒ <code>Buffer</code>
-<p>This is the main entrypoint for encoding all types in binary form.</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-**Returns**: <code>Buffer</code> - <p>binary of object.</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| js | <code>\*</code> | <p>data type (not null, not undefined)</p> |
-| field | <code>Number</code> | <p>index of object</p> |
-| isByteLenPrefix | <code>Boolean</code> |  |
-
-<a name="amino.module_encode.encodeBinary"></a>
-
-### encode.encodeBinary ⇒ <code>Buffer</code>
-<p>prefixed with bytes length</p>
-
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-**Returns**: <code>Buffer</code> - <p>with bytes length prefixed</p>  
-
-| Param | Type |
-| --- | --- |
-| bytes | <code>Buffer</code> | 
-
-<a name="amino.module_encode.encodeBinaryByteArray"></a>
-
-### encode.encodeBinaryByteArray ⇒ <code>Buffer</code>
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-**Returns**: <code>Buffer</code> - <p>with bytes length prefixed</p>  
-
-| Param | Type |
-| --- | --- |
-| obj | <code>Object</code> | 
-
-<a name="amino.module_encode.encodeObjectBinary"></a>
-
-### encode.encodeObjectBinary ⇒ <code>Buffer</code>
-**Kind**: static property of [<code>encode</code>](#amino.module_encode)  
-**Returns**: <code>Buffer</code> - <p>bytes of array</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| fieldNum | <code>Number</code> | <p>object field index</p> |
-| arr | <code>Array</code> |  |
-| isByteLenPrefix | <code>Boolean</code> |  |
-
-<a name="amino.module_encode..encodeNumber"></a>
-
-### encode~encodeNumber(num)
-<p>encode number</p>
-
-**Kind**: inner method of [<code>encode</code>](#amino.module_encode)  
-
-| Param |
-| --- |
-| num | 
 
 <a name="module_ledger"></a>
 
@@ -1368,156 +1204,61 @@ mnemonic
 <p>Returns the address for the current account if setPrivateKey has been called on this client.</p>
 
 **Kind**: instance method of [<code>BncClient</code>](#BncClient)  
-<a name="Gov"></a>
+<a name="RpcClient"></a>
 
-## Gov
-**Kind**: global class  
-
-* [Gov](#Gov)
-    * [new Gov(bncClient)](#new_Gov_new)
-    * [.submitListProposal(listParams)](#Gov+submitListProposal)
-    * [.submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod)](#Gov+submitProposal) ⇒ <code>Promise</code>
-    * [.deposit(proposalId, address, coins)](#Gov+deposit)
-    * [.vote(proposalId, voter, option)](#Gov+vote)
-
-<a name="new_Gov_new"></a>
-
-### new Gov(bncClient)
-
-| Param | Type |
-| --- | --- |
-| bncClient | <code>Object</code> | 
-
-<a name="Gov+submitListProposal"></a>
-
-### gov.submitListProposal(listParams)
-<p>Submit a list proposal along with an initial deposit</p>
-
-**Kind**: instance method of [<code>Gov</code>](#Gov)  
-
-| Param | Type |
-| --- | --- |
-| listParams | <code>Object</code> | 
-
-**Example**  
-```js
-var listParams = {
- title: 'New trading pair',
- description: '',
- baseAsset: 'BTC',
- quoteAsset: 'BNB',
- initPrice: 1,
- address: '',
- initialDeposit: 2000,
- expireTime: 1570665600,
- votingPeriod: 604800
-}
-```
-<a name="Gov+submitProposal"></a>
-
-### gov.submitProposal(address, title, description, proposalType, initialDeposit, votingPeriod) ⇒ <code>Promise</code>
-<p>Submit a proposal along with an initial deposit.
-Proposal title, description, type and deposit can
-be given directly or through a proposal JSON file.</p>
-
-**Kind**: instance method of [<code>Gov</code>](#Gov)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| address | <code>String</code> | 
-| title | <code>String</code> | 
-| description | <code>String</code> | 
-| proposalType | <code>Number</code> | 
-| initialDeposit | <code>Number</code> | 
-| votingPeriod | <code>String</code> | 
-
-<a name="Gov+deposit"></a>
-
-### gov.deposit(proposalId, address, coins)
-<p>Deposit tokens for activing proposal</p>
-
-**Kind**: instance method of [<code>Gov</code>](#Gov)  
-
-| Param | Type |
-| --- | --- |
-| proposalId | <code>Number</code> | 
-| address | <code>String</code> | 
-| coins | <code>Array</code> | 
-
-**Example**  
-```js
-var coins = [{
-  "denom": "BNB",
-  "amount": 10
-}]
-```
-<a name="Gov+vote"></a>
-
-### gov.vote(proposalId, voter, option)
-**Kind**: instance method of [<code>Gov</code>](#Gov)  
-
-| Param | Type |
-| --- | --- |
-| proposalId | <code>Number</code> | 
-| voter | <code>String</code> | 
-| option | <code>VoteOption</code> | 
-
-<a name="Client"></a>
-
-## Client
+## RpcClient
 <p>The Binance Chain Node rpc client</p>
 
 **Kind**: global class  
 
-* [Client](#Client)
-    * [new Client(uriString, netWork)](#new_Client_new)
-    * [.broadcastDelegate(signedTx)](#Client+broadcastDelegate) ⇒ <code>Promise</code>
-    * [.getTokenInfo(symbol)](#Client+getTokenInfo) ⇒ <code>Object</code>
-    * [.listAllTokens(offset, limit)](#Client+listAllTokens) ⇒ <code>Array</code>
-    * [.getAccount(address)](#Client+getAccount) ⇒ <code>Object</code>
-    * [.getBalances(balances)](#Client+getBalances)
-    * [.getBalance(address, symbol)](#Client+getBalance) ⇒ <code>Object</code>
-    * [.getOpenOrders(address, symbol)](#Client+getOpenOrders) ⇒ <code>Object</code>
-    * [.getTradingPairs(offset, limit)](#Client+getTradingPairs) ⇒ <code>Array</code>
-    * [.getDepth(tradePair)](#Client+getDepth) ⇒ <code>Array</code>
+* [RpcClient](#RpcClient)
+    * [new RpcClient(uriString, netWork)](#new_RpcClient_new)
+    * [.broadcastDelegate(signedTx)](#RpcClient+broadcastDelegate) ⇒ <code>Promise</code>
+    * [.getTokenInfo(symbol)](#RpcClient+getTokenInfo) ⇒ <code>Object</code>
+    * [.listAllTokens(offset, limit)](#RpcClient+listAllTokens) ⇒ <code>Array</code>
+    * [.getAccount(address)](#RpcClient+getAccount) ⇒ <code>Object</code>
+    * [.getBalances(balances)](#RpcClient+getBalances)
+    * [.getBalance(address, symbol)](#RpcClient+getBalance) ⇒ <code>Object</code>
+    * [.getOpenOrders(address, symbol)](#RpcClient+getOpenOrders) ⇒ <code>Object</code>
+    * [.getTradingPairs(offset, limit)](#RpcClient+getTradingPairs) ⇒ <code>Array</code>
+    * [.getDepth(tradePair)](#RpcClient+getDepth) ⇒ <code>Array</code>
 
-<a name="new_Client_new"></a>
+<a name="new_RpcClient_new"></a>
 
-### new Client(uriString, netWork)
+### new RpcClient(uriString, netWork)
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | uriString | <code>String</code> | <code>localhost:27146</code> | <p>dataseed address</p> |
 | netWork | <code>String</code> |  | <p>Binance Chain network</p> |
 
-<a name="Client+broadcastDelegate"></a>
+<a name="RpcClient+broadcastDelegate"></a>
 
-### client.broadcastDelegate(signedTx) ⇒ <code>Promise</code>
+### rpcClient.broadcastDelegate(signedTx) ⇒ <code>Promise</code>
 <p>The RPC broadcast delegate broadcasts a transaction via RPC. This is intended for optional use as BncClient's broadcast delegate.</p>
 
-**Kind**: instance method of [<code>Client</code>](#Client)  
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | signedTx | [<code>Transaction</code>](#Transaction) | <p>the signed transaction</p> |
 
-<a name="Client+getTokenInfo"></a>
+<a name="RpcClient+getTokenInfo"></a>
 
-### client.getTokenInfo(symbol) ⇒ <code>Object</code>
-**Kind**: instance method of [<code>Client</code>](#Client)  
+### rpcClient.getTokenInfo(symbol) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 **Returns**: <code>Object</code> - <p>token detail info</p>  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | symbol | <code>String</code> | <p>required</p> |
 
-<a name="Client+listAllTokens"></a>
+<a name="RpcClient+listAllTokens"></a>
 
-### client.listAllTokens(offset, limit) ⇒ <code>Array</code>
+### rpcClient.listAllTokens(offset, limit) ⇒ <code>Array</code>
 <p>get tokens by offset and limit</p>
 
-**Kind**: instance method of [<code>Client</code>](#Client)  
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 **Returns**: <code>Array</code> - <p>token list</p>  
 
 | Param | Type |
@@ -1525,287 +1266,65 @@ var coins = [{
 | offset | <code>Number</code> | 
 | limit | <code>Number</code> | 
 
-<a name="Client+getAccount"></a>
+<a name="RpcClient+getAccount"></a>
 
-### client.getAccount(address) ⇒ <code>Object</code>
-**Kind**: instance method of [<code>Client</code>](#Client)  
+### rpcClient.getAccount(address) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 **Returns**: <code>Object</code> - <p>Account info</p>  
 
 | Param | Type |
 | --- | --- |
 | address | <code>String</code> | 
 
-<a name="Client+getBalances"></a>
+<a name="RpcClient+getBalances"></a>
 
-### client.getBalances(balances)
-**Kind**: instance method of [<code>Client</code>](#Client)  
+### rpcClient.getBalances(balances)
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 
 | Param | Type |
 | --- | --- |
 | balances | <code>Array</code> | 
 
-<a name="Client+getBalance"></a>
+<a name="RpcClient+getBalance"></a>
 
-### client.getBalance(address, symbol) ⇒ <code>Object</code>
+### rpcClient.getBalance(address, symbol) ⇒ <code>Object</code>
 <p>get balance by symbol and address</p>
 
-**Kind**: instance method of [<code>Client</code>](#Client)  
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 
 | Param | Type |
 | --- | --- |
 | address | <code>String</code> | 
 | symbol | <code>String</code> | 
 
-<a name="Client+getOpenOrders"></a>
+<a name="RpcClient+getOpenOrders"></a>
 
-### client.getOpenOrders(address, symbol) ⇒ <code>Object</code>
-**Kind**: instance method of [<code>Client</code>](#Client)  
+### rpcClient.getOpenOrders(address, symbol) ⇒ <code>Object</code>
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 
 | Param | Type |
 | --- | --- |
 | address | <code>String</code> | 
 | symbol | <code>String</code> | 
 
-<a name="Client+getTradingPairs"></a>
+<a name="RpcClient+getTradingPairs"></a>
 
-### client.getTradingPairs(offset, limit) ⇒ <code>Array</code>
-**Kind**: instance method of [<code>Client</code>](#Client)  
+### rpcClient.getTradingPairs(offset, limit) ⇒ <code>Array</code>
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 
 | Param | Type |
 | --- | --- |
 | offset | <code>Number</code> | 
 | limit | <code>Number</code> | 
 
-<a name="Client+getDepth"></a>
+<a name="RpcClient+getDepth"></a>
 
-### client.getDepth(tradePair) ⇒ <code>Array</code>
-**Kind**: instance method of [<code>Client</code>](#Client)  
+### rpcClient.getDepth(tradePair) ⇒ <code>Array</code>
+**Kind**: instance method of [<code>RpcClient</code>](#RpcClient)  
 
 | Param | Type |
 | --- | --- |
 | tradePair | <code>String</code> | 
-
-<a name="Swap"></a>
-
-## Swap
-**Kind**: global class  
-
-* [Swap](#Swap)
-    * [new Swap(bncClient)](#new_Swap_new)
-    * [.HTLT(from, recipient, recipientOtherChain, senderOtherChain, randomNumberHash, timestamp, amount, expectedIncome, heightSpan, crossChain)](#Swap+HTLT) ⇒ <code>Promise</code>
-    * [.depositHTLT(from, swapID, amount)](#Swap+depositHTLT) ⇒ <code>Promise</code>
-    * [.claimHTLT(from, swapID, randomNumber)](#Swap+claimHTLT) ⇒ <code>Promise</code>
-    * [.refundHTLT(from, swapID)](#Swap+refundHTLT) ⇒ <code>Promise</code>
-
-<a name="new_Swap_new"></a>
-
-### new Swap(bncClient)
-
-| Param | Type |
-| --- | --- |
-| bncClient | <code>Object</code> | 
-
-<a name="Swap+HTLT"></a>
-
-### swap.HTLT(from, recipient, recipientOtherChain, senderOtherChain, randomNumberHash, timestamp, amount, expectedIncome, heightSpan, crossChain) ⇒ <code>Promise</code>
-<p>HTLT(Hash timer locked transfer, create an atomic swap)</p>
-
-**Kind**: instance method of [<code>Swap</code>](#Swap)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| from | <code>String</code> | 
-| recipient | <code>String</code> | 
-| recipientOtherChain | <code>String</code> | 
-| senderOtherChain | <code>String</code> | 
-| randomNumberHash | <code>String</code> | 
-| timestamp | <code>Number</code> | 
-| amount | <code>Array</code> | 
-| expectedIncome | <code>String</code> | 
-| heightSpan | <code>Number</code> | 
-| crossChain | <code>boolean</code> | 
-
-<a name="Swap+depositHTLT"></a>
-
-### swap.depositHTLT(from, swapID, amount) ⇒ <code>Promise</code>
-<p>depositHTLT(deposit assets to an existing swap)</p>
-
-**Kind**: instance method of [<code>Swap</code>](#Swap)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| from | <code>String</code> | 
-| swapID | <code>String</code> | 
-| amount | <code>Array</code> | 
-
-<a name="Swap+claimHTLT"></a>
-
-### swap.claimHTLT(from, swapID, randomNumber) ⇒ <code>Promise</code>
-<p>claimHTLT(claim assets from an swap)</p>
-
-**Kind**: instance method of [<code>Swap</code>](#Swap)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| from | <code>String</code> | 
-| swapID | <code>String</code> | 
-| randomNumber | <code>String</code> | 
-
-<a name="Swap+refundHTLT"></a>
-
-### swap.refundHTLT(from, swapID) ⇒ <code>Promise</code>
-<p>refundHTLT(refund assets from an swap)</p>
-
-**Kind**: instance method of [<code>Swap</code>](#Swap)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| from | <code>String</code> | 
-| swapID | <code>String</code> | 
-
-<a name="TokenManagement"></a>
-
-## TokenManagement
-**Kind**: global class  
-
-* [TokenManagement](#TokenManagement)
-    * [new TokenManagement(bncClient)](#new_TokenManagement_new)
-    * [.issue(senderAddress, tokenName, symbol, totalSupply, mintable)](#TokenManagement+issue) ⇒ <code>Promise</code>
-    * [.freeze(fromAddress, symbol, amount)](#TokenManagement+freeze) ⇒ <code>Promise</code>
-    * [.unfreeze(fromAddress, symbol, amount)](#TokenManagement+unfreeze) ⇒ <code>Promise</code>
-    * [.burn(fromAddress, symbol, amount)](#TokenManagement+burn) ⇒ <code>Promise</code>
-    * [.mint(fromAddress, symbol, amount)](#TokenManagement+mint) ⇒ <code>Promise</code>
-    * [.timeLock(fromAddress, description, amount, lockTime)](#TokenManagement+timeLock) ⇒ <code>Promise</code>
-    * [.timeRelock(fromAddress, id, description, amount, lockTime)](#TokenManagement+timeRelock) ⇒ <code>Promise</code>
-    * [.timeUnlock(fromAddress, id)](#TokenManagement+timeUnlock) ⇒ <code>Promise</code>
-
-<a name="new_TokenManagement_new"></a>
-
-### new TokenManagement(bncClient)
-
-| Param | Type |
-| --- | --- |
-| bncClient | <code>Object</code> | 
-
-<a name="TokenManagement+issue"></a>
-
-### tokenManagement.issue(senderAddress, tokenName, symbol, totalSupply, mintable) ⇒ <code>Promise</code>
-<p>create a new asset on Binance Chain</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| senderAddress | <code>String</code> |  | <p>senderAddress</p> |
-| tokenName | <code>String</code> |  | <p>tokenName</p> |
-| symbol | <code>String</code> |  | <p>symbol</p> |
-| totalSupply | <code>Number</code> | <code>0</code> | <p>totalSupply</p> |
-| mintable | <code>Boolean</code> | <code>false</code> | <p>mintable</p> |
-
-<a name="TokenManagement+freeze"></a>
-
-### tokenManagement.freeze(fromAddress, symbol, amount) ⇒ <code>Promise</code>
-<p>freeze some amount of token</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| symbol | <code>String</code> | 
-| amount | <code>String</code> | 
-
-<a name="TokenManagement+unfreeze"></a>
-
-### tokenManagement.unfreeze(fromAddress, symbol, amount) ⇒ <code>Promise</code>
-<p>unfreeze some amount of token</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| symbol | <code>String</code> | 
-| amount | <code>String</code> | 
-
-<a name="TokenManagement+burn"></a>
-
-### tokenManagement.burn(fromAddress, symbol, amount) ⇒ <code>Promise</code>
-<p>burn some amount of token</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| symbol | <code>String</code> | 
-| amount | <code>Number</code> | 
-
-<a name="TokenManagement+mint"></a>
-
-### tokenManagement.mint(fromAddress, symbol, amount) ⇒ <code>Promise</code>
-<p>mint tokens for an existing token</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| symbol | <code>String</code> | 
-| amount | <code>Number</code> | 
-
-<a name="TokenManagement+timeLock"></a>
-
-### tokenManagement.timeLock(fromAddress, description, amount, lockTime) ⇒ <code>Promise</code>
-<p>lock token for a while</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| description | <code>String</code> | 
-| amount | <code>Array</code> | 
-| lockTime | <code>Number</code> | 
-
-<a name="TokenManagement+timeRelock"></a>
-
-### tokenManagement.timeRelock(fromAddress, id, description, amount, lockTime) ⇒ <code>Promise</code>
-<p>lock more token or increase locked period</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| id | <code>Number</code> | 
-| description | <code>String</code> | 
-| amount | <code>Array</code> | 
-| lockTime | <code>Number</code> | 
-
-<a name="TokenManagement+timeUnlock"></a>
-
-### tokenManagement.timeUnlock(fromAddress, id) ⇒ <code>Promise</code>
-<p>unlock locked tokens</p>
-
-**Kind**: instance method of [<code>TokenManagement</code>](#TokenManagement)  
-**Returns**: <code>Promise</code> - <p>resolves with response (success or fail)</p>  
-
-| Param | Type |
-| --- | --- |
-| fromAddress | <code>String</code> | 
-| id | <code>Number</code> | 
 
 <a name="Transaction"></a>
 
@@ -1907,12 +1426,6 @@ var tx = new Transaction(rawTx);
 | --- | --- |
 | unencodedPubKey | <code>Elliptic.PublicKey</code> | 
 
-<a name="SendMsg"></a>
-
-## SendMsg
-<p>Only support transfers of one-to-one, one-to-many</p>
-
-**Kind**: global class  
 <a name="DefaultSigningDelegate"></a>
 
 ## DefaultSigningDelegate
@@ -1949,18 +1462,6 @@ var tx = new Transaction(rawTx);
 | --- | --- |
 | outputs | <code>Array</code> | 
 
-<a name="unMarshalBinaryLengthPrefixed"></a>
-
-## unMarshalBinaryLengthPrefixed ⇒ <code>Object</code>
-<p>js amino UnmarshalBinaryBare</p>
-
-**Kind**: global variable  
-
-| Param | Type |
-| --- | --- |
-| bytes | <code>Buffer</code> | 
-| type | <code>Object</code> | 
-
 <a name="checkNumber"></a>
 
 ## checkNumber
@@ -1972,20 +1473,6 @@ var tx = new Transaction(rawTx);
 | --- | --- |
 | coins | <code>Array</code> | 
 
-<a name="voteOption"></a>
-
-## voteOption
-<p>VoteOption</p>
-
-**Kind**: global constant  
-**Example**  
-```js
-OptionEmpty - 0x00
-OptionYes - 0x01
-OptionAbstain - 0x02
-OptionNo - 0x03
-OptionNoWithVeto - 0x04
-```
 <a name="DefaultSigningDelegate"></a>
 
 ## DefaultSigningDelegate(tx, signMsg) ⇒ [<code>Transaction</code>](#Transaction)
@@ -2009,18 +1496,6 @@ OptionNoWithVeto - 0x04
 | --- | --- |
 | inputs | <code>Array</code> | 
 | coins | <code>Array</code> | 
-
-<a name="unMarshalBinaryLengthPrefixed"></a>
-
-## unMarshalBinaryLengthPrefixed(bytes, type) ⇒ <code>Object</code>
-<p>js amino UnmarshalBinaryLengthPrefixed</p>
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| bytes | <code>Buffer</code> | 
-| type | <code>Object</code> | 
 
 <a name="checkNumber"></a>
 

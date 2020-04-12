@@ -1,7 +1,7 @@
 import { getClient } from "./utils"
 import * as crypto from "../src/crypto"
-import { voteOption } from "../src/gov/"
-import { calculateRandomNumberHash } from "../src/utils/index"
+import { voteOption } from "../src/client/gov/"
+import { calculateRandomNumberHash } from "../src/utils"
 
 describe("token management", () => {
   beforeEach(() => {

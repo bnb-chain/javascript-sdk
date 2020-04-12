@@ -1,4 +1,4 @@
-import { checkNumber } from "../src/utils/validateHelper"
+import { checkNumber } from "../src/utils/"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 import { getClient, mnemonic, keystores, targetAddress, wait } from "./utils"

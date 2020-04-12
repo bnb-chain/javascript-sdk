@@ -1,4 +1,5 @@
-import { Coin as CoinType, AminoPrefix } from "../types/"
+import { AminoPrefix } from "../tx"
+import { Coin } from "../msg"
 
 export class Token {
   public aminoPrefix = AminoPrefix.BnbchainToken
@@ -56,16 +57,6 @@ export class TokenOfList {
   }
 }
 
-export class Coin {
-  public denom: CoinType["denom"]
-  public amount: CoinType["amount"]
-
-  constructor(opts: Partial<CoinType> = {}) {
-    this.denom = opts.denom || ""
-    this.amount = opts.amount || 0
-  }
-}
-
 export class BaseAccount {
   public address: Buffer
   public coins: Coin[]
@@ -83,7 +74,7 @@ export class BaseAccount {
     }> = {}
   ) {
     this.address = opts.address || Buffer.alloc(0)
-    this.coins = opts.coins || [new Coin()]
+    this.coins = opts.coins || [{ denom: "", amount: 0 }]
     this.public_key = opts.public_key || Buffer.alloc(0)
     this.account_number = opts.account_number || 0
     this.sequence = opts.sequence || 0
@@ -108,8 +99,8 @@ export class AppAccount {
   ) {
     this.base = opts.base || new BaseAccount()
     this.name = opts.name || ""
-    this.locked = opts.locked || [new Coin()]
-    this.frozen = opts.frozen || [new Coin()]
+    this.locked = opts.locked || [{ denom: "", amount: 0 }]
+    this.frozen = opts.frozen || [{ denom: "", amount: 0 }]
   }
 }
 

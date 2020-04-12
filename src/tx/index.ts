@@ -1,9 +1,20 @@
 import { curve } from "elliptic"
-import * as crypto from "../crypto"
-import * as encoder from "../encoder"
-import { UVarInt } from "../encoder/varint"
-import { BaseMsg, SignMsg } from "../types/msg"
-import { StdSignMsg, StdSignature, StdTx, AminoPrefix } from "../types/"
+import { crypto } from "../"
+import {
+  convertObjectToSignBytes,
+  UVarInt,
+  marshalBinary,
+  encodeBinaryByteArray
+} from "../amino"
+
+import {
+  BaseMsg,
+  SignMsg,
+  StdSignMsg,
+  StdSignature,
+  StdTx,
+  AminoPrefix
+} from "../types/"
 
 /**
  * Creates a new transaction object.
@@ -76,7 +87,7 @@ class Transaction {
       source: this.source.toString()
     }
 
-    return encoder.convertObjectToSignBytes(signMsg)
+    return convertObjectToSignBytes(signMsg)
   }
 
   /**
@@ -135,7 +146,7 @@ class Transaction {
       data: "",
       aminoPrefix: AminoPrefix.StdTx
     }
-    const bytes = encoder.marshalBinary(stdTx)
+    const bytes = marshalBinary(stdTx)
     return bytes.toString("hex")
   }
 
@@ -156,7 +167,7 @@ class Transaction {
       x.toArrayLike(Buffer, "be", 32)
     ])
     // prefixed with length
-    pubBz = encoder.encodeBinaryByteArray(pubBz)
+    pubBz = encodeBinaryByteArray(pubBz)
     // add the amino prefix
     pubBz = Buffer.concat([Buffer.from("EB5AE987", "hex"), pubBz])
     return pubBz

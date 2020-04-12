@@ -5,13 +5,12 @@ import * as crypto from "../crypto"
 import Transaction from "../tx"
 import HttpRequest from "../utils/request"
 import { checkNumber } from "../utils/validateHelper"
-import TokenManagement from "../token/"
-import Swap from "../swap/"
-import Gov from "../gov/"
+import TokenManagement from "./token"
+import Swap from "./swap"
+import Gov from "./gov"
 import Big, { BigSource } from "big.js"
-import { Coin } from "../utils/coin"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
-import { AminoPrefix } from "../types/"
+import { AminoPrefix, Coin } from "../types/"
 
 const BASENUMBER = Math.pow(10, 8)
 

@@ -1,5 +1,4 @@
-import * as decoder from "../src/decoder/"
-import * as encoder from "../src/encoder/"
+import { amino } from "../src"
 import { AminoPrefix } from "../src/types/"
 
 class Msg {
@@ -37,9 +36,9 @@ describe("decoder", () => {
 
     const result = new Msg()
 
-    let bytes = encoder.marshalBinary(msgObj)
+    let bytes = amino.marshalBinary(msgObj)
     bytes = Buffer.from(bytes, "hex")
-    decoder.unMarshalBinaryLengthPrefixed(bytes, result)
+    amino.unMarshalBinaryLengthPrefixed(bytes, result)
     expect(JSON.stringify(result)).toBe(JSON.stringify(msgObj))
   })
 })

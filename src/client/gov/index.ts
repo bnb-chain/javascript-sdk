@@ -2,12 +2,12 @@
  * @module gov
  */
 import Big, { BigSource } from "big.js"
-import * as crypto from "../crypto/"
-import { checkCoins } from "../utils/validateHelper"
+import * as crypto from "../../crypto"
+import { checkCoins } from "../../utils/validateHelper"
 import proposalType from "./proposalType"
-import { Coin } from "../utils/coin"
+import { Coin } from "../../types"
 
-import { BncClient } from "../client" // This is a circular dependecy; should be changed to `import type` asap
+import { BncClient } from ".." // This is a circular dependecy; should be changed to `import type` asap
 
 const BASENUMBER = Math.pow(10, 8)
 
