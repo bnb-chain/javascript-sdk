@@ -20,12 +20,11 @@ export class MintTokenMsg extends BaseMsg {
   private from: string
   private symbol: string
   private amount: number
-  public readonly aminoPrefix: AminoPrefix = AminoPrefix.MintMsg
 
   constructor({
     address,
     sybmol,
-    amount,
+    amount
   }: {
     address: string
     sybmol: string
@@ -41,7 +40,7 @@ export class MintTokenMsg extends BaseMsg {
     const signMsg: SignedMintTokenMsg = {
       from: this.from,
       amount: Number(new Big(this.amount).mul(Math.pow(10, 8)).toString()),
-      symbol: this.symbol,
+      symbol: this.symbol
     }
 
     return signMsg
@@ -52,7 +51,7 @@ export class MintTokenMsg extends BaseMsg {
       from: crypto.decodeAddress(this.from),
       symbol: this.symbol,
       amount: Number(new Big(this.amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: this.aminoPrefix,
+      aminoPrefix: AminoPrefix.MintMsg
     }
 
     return data
@@ -63,7 +62,7 @@ export class MintTokenMsg extends BaseMsg {
       from: Buffer.from(""),
       symbol: "",
       amount: 0,
-      aminoPrefix: AminoPrefix.MintMsg,
+      aminoPrefix: AminoPrefix.MintMsg
     }
   }
 }

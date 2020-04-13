@@ -16,6 +16,7 @@ import {
 } from "../src/types"
 import Transaction from "../src/tx"
 import { getClient, privateKey, address, targetAddress } from "./utils"
+import { types } from "../lib"
 
 const buildAndSendTx = async (msg) => {
   const client = await getClient(true)
@@ -81,8 +82,8 @@ describe("Transaction", () => {
     try {
       const symbol = "BNB_BTC.B-918"
       const orderId = `BA36F0FAD74D8F41045463E4774F328F4AF779E5-2556`
-
-      const cancelOrderMsg: CancelOrderMsg = new CancelOrderMsg(
+      // console.log(types.CancelOrderMsg)
+      const cancelOrderMsg: CancelOrderMsg = new types.CancelOrderMsg(
         address,
         symbol,
         orderId

@@ -16,11 +16,10 @@ export interface TimeUnlockData extends Msg {
 export class TimeUnlockMsg extends BaseMsg {
   private from: string
   private time_lock_id: number
-  public readonly aminoPrefix: AminoPrefix = AminoPrefix.TimeUnlockMsg
 
   constructor({
     address,
-    time_lock_id,
+    time_lock_id
   }: {
     address: string
     time_lock_id: number
@@ -33,7 +32,7 @@ export class TimeUnlockMsg extends BaseMsg {
   getSignMsg() {
     const signMsg: SignedTimeUnlockMsg = {
       from: this.from,
-      time_lock_id: this.time_lock_id,
+      time_lock_id: this.time_lock_id
     }
 
     return signMsg
@@ -43,7 +42,7 @@ export class TimeUnlockMsg extends BaseMsg {
     const data: TimeUnlockData = {
       from: crypto.decodeAddress(this.from),
       time_lock_id: this.time_lock_id,
-      aminoPrefix: this.aminoPrefix,
+      aminoPrefix: AminoPrefix.TimeUnlockMsg
     }
 
     return data
@@ -53,7 +52,7 @@ export class TimeUnlockMsg extends BaseMsg {
     return {
       from: Buffer.from(""),
       time_lock_id: 0,
-      aminoPrefix: AminoPrefix.TimeUnlockMsg,
+      aminoPrefix: AminoPrefix.TimeUnlockMsg
     }
   }
 }

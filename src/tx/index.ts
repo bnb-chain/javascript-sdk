@@ -155,7 +155,7 @@ class Transaction {
    * @param {Elliptic.PublicKey} unencodedPubKey
    * @return {Buffer}
    */
-  _serializePubKey(unencodedPubKey: curve.base.BasePoint) {
+  private _serializePubKey(unencodedPubKey: curve.base.BasePoint) {
     let format = 0x2
     const y = unencodedPubKey.getY()
     const x = unencodedPubKey.getX()

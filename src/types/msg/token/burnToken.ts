@@ -19,12 +19,11 @@ export class BurnTokenMsg extends BaseMsg {
   private from: string
   private symbol: string
   private amount: number
-  public readonly aminoPrefix: AminoPrefix = AminoPrefix.BurnMsg
 
   constructor({
     address,
     sybmol,
-    amount,
+    amount
   }: {
     address: string
     sybmol: string
@@ -40,7 +39,7 @@ export class BurnTokenMsg extends BaseMsg {
     const signMsg: SignedBurnToken = {
       from: this.from,
       symbol: this.symbol,
-      amount: this.amount,
+      amount: this.amount
     }
 
     return signMsg
@@ -51,7 +50,7 @@ export class BurnTokenMsg extends BaseMsg {
       from: crypto.decodeAddress(this.from),
       symbol: this.symbol,
       amount: this.amount,
-      aminoPrefix: this.aminoPrefix,
+      aminoPrefix: AminoPrefix.BurnMsg
     }
 
     return data
@@ -62,7 +61,7 @@ export class BurnTokenMsg extends BaseMsg {
       from: Buffer.from(""),
       symbol: "",
       amount: 0,
-      aminoPrefix: AminoPrefix.BurnMsg,
+      aminoPrefix: AminoPrefix.BurnMsg
     }
   }
 }

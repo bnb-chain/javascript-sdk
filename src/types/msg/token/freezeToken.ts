@@ -19,12 +19,11 @@ export class FreezeTokenMsg extends BaseMsg {
   private from: string
   private symbol: string
   private amount: number
-  public readonly aminoPrefix: AminoPrefix = AminoPrefix.FreezeMsg
 
   constructor({
     address,
     sybmol,
-    amount,
+    amount
   }: {
     address: string
     sybmol: string
@@ -40,7 +39,7 @@ export class FreezeTokenMsg extends BaseMsg {
     const signMsg: SignedFreezeToken = {
       from: this.from,
       symbol: this.symbol,
-      amount: this.amount,
+      amount: this.amount
     }
 
     return signMsg
@@ -51,7 +50,7 @@ export class FreezeTokenMsg extends BaseMsg {
       from: crypto.decodeAddress(this.from),
       symbol: this.symbol,
       amount: this.amount,
-      aminoPrefix: this.aminoPrefix,
+      aminoPrefix: AminoPrefix.FreezeMsg
     }
 
     return data
@@ -62,7 +61,7 @@ export class FreezeTokenMsg extends BaseMsg {
       from: Buffer.from(""),
       symbol: "",
       amount: 0,
-      aminoPrefix: AminoPrefix.FreezeMsg,
+      aminoPrefix: AminoPrefix.FreezeMsg
     }
   }
 }

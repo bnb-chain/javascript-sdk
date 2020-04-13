@@ -19,7 +19,7 @@ export class CancelOrderMsg extends BaseMsg {
   private address: string
   private symbol: string
   private orderId: string
-  public readonly aminoPrefix: AminoPrefix = AminoPrefix.CancelOrderMsg
+
   constructor(address: string, sybmol: string, orderId: string) {
     super()
     this.address = address
@@ -31,7 +31,7 @@ export class CancelOrderMsg extends BaseMsg {
     const signMsg: SignedCancelOrder = {
       sender: this.address,
       symbol: this.symbol,
-      refid: this.orderId,
+      refid: this.orderId
     }
 
     return signMsg
@@ -42,7 +42,7 @@ export class CancelOrderMsg extends BaseMsg {
       sender: crypto.decodeAddress(this.address),
       symbol: this.symbol,
       refid: this.orderId,
-      aminoPrefix: this.aminoPrefix,
+      aminoPrefix: AminoPrefix.CancelOrderMsg
     }
 
     return data
@@ -53,7 +53,7 @@ export class CancelOrderMsg extends BaseMsg {
       sender: Buffer.from(""),
       symbol: "",
       refid: "",
-      aminoPrefix: AminoPrefix.CancelOrderMsg,
+      aminoPrefix: AminoPrefix.CancelOrderMsg
     }
   }
 }
