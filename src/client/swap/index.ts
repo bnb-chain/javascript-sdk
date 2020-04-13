@@ -64,7 +64,7 @@ class Swap {
       expected_income: expectedIncome,
       height_span: heightSpan,
       cross_chain: crossChain,
-      aminoPrefix: AminoPrefix.HTLTMsg
+      aminoPrefix: AminoPrefix.HTLTMsg,
     }
 
     const signHTLTMsg = {
@@ -77,7 +77,7 @@ class Swap {
       amount: amount,
       expected_income: expectedIncome,
       height_span: heightSpan,
-      cross_chain: crossChain
+      cross_chain: crossChain,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -101,13 +101,13 @@ class Swap {
       from: crypto.decodeAddress(from),
       amount: amount,
       swap_id: Buffer.from(swapID, "hex"),
-      aminoPrefix: AminoPrefix.DepositHTLTMsg
+      aminoPrefix: AminoPrefix.DepositHTLTMsg,
     }
 
     const signDepositHTLTMsg = {
       from: from,
       amount: amount,
-      swap_id: swapID
+      swap_id: swapID,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -130,13 +130,13 @@ class Swap {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, "hex"),
       random_number: Buffer.from(randomNumber, "hex"),
-      aminoPrefix: AminoPrefix.ClaimHTLTMsg
+      aminoPrefix: AminoPrefix.ClaimHTLTMsg,
     }
 
     const signClaimHTLTMsg = {
       from: from,
       swap_id: swapID,
-      random_number: randomNumber
+      random_number: randomNumber,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -157,12 +157,12 @@ class Swap {
     const refundHTLTMsg = {
       from: crypto.decodeAddress(from),
       swap_id: Buffer.from(swapID, "hex"),
-      aminoPrefix: AminoPrefix.RefundHTLTMsg
+      aminoPrefix: AminoPrefix.RefundHTLTMsg,
     }
 
     const signRefundHTLTMsg = {
       from: from,
-      swap_id: swapID
+      swap_id: swapID,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(

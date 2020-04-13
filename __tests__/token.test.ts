@@ -32,8 +32,8 @@ describe("token management", () => {
     const amount = [
       {
         denom: "BNB",
-        amount: 100000
-      }
+        amount: 100000,
+      },
     ]
     const timeLock = Math.floor(Date.now() / 1000) + 100
     const res = await client.tokens.timeLock(
@@ -53,8 +53,8 @@ describe("token management", () => {
     const amount = [
       {
         denom: "BNB",
-        amount: 150000
-      }
+        amount: 150000,
+      },
     ]
     const id = 2248
     const timeLock = Math.floor(Date.now() / 1000) + 200
@@ -87,8 +87,8 @@ describe("token management", () => {
     const amount = [
       {
         denom: "BNB",
-        amount: 100000
-      }
+        amount: 100000,
+      },
     ]
     const expectedIncome = "100000:BNB"
     const res = await client.swap.HTLT(
@@ -114,8 +114,8 @@ describe("token management", () => {
     const amount = [
       {
         denom: "BNB",
-        amount: 100000
-      }
+        amount: 100000,
+      },
     ]
     const res = await client.swap.depositHTLT(from, swapID, amount)
     expect(res.status).toBe(200)
@@ -195,7 +195,7 @@ describe("token management", () => {
       address: addr,
       initialDeposit: 2000,
       expireTime: date.setHours(date.getHours() + 1),
-      votingPeriod: 300
+      votingPeriod: 300,
     }
 
     const res = await client.gov.submitListProposal(params)
@@ -209,8 +209,8 @@ describe("token management", () => {
     const coins = [
       {
         denom: "BNB",
-        amount: 1000
-      }
+        amount: 1000,
+      },
     ]
     const res = await client.gov.deposit(494, addr, coins)
     expect(res.status).toBe(200)

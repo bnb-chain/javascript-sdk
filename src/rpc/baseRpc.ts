@@ -80,12 +80,12 @@ export default class BaseRpc extends EventEmitter {
   connectWs() {
     this.ws = new Pumpify.obj(ndjson.stringify(), websocket(this.uri))
 
-    this.ws.on("error", err => this.emit("error", err))
+    this.ws.on("error", (err) => this.emit("error", err))
     this.ws.on("close", () => {
       if (this.closed) return
       this.emit("error", Error("websocket disconnected"))
     })
-    this.ws.on("data", data => {
+    this.ws.on("data", (data) => {
       data = JSON.parse(data)
       if (!data.id) return
       this.emit(data.id, data.error, data.result)
@@ -96,9 +96,9 @@ export default class BaseRpc extends EventEmitter {
     let url = this.uri + method
     url = convertHttpArgs(url, args)
     return axios({
-      url: url
+      url: url,
     }).then(
-      function({ data }) {
+      function ({ data }) {
         if (data.error) {
           let err = Error(data.error.message)
           Object.assign(err, data.error)
@@ -106,7 +106,7 @@ export default class BaseRpc extends EventEmitter {
         }
         return data.result
       },
-      function(err) {
+      function (err) {
         throw Error(err)
       }
     )
@@ -129,7 +129,7 @@ export default class BaseRpc extends EventEmitter {
         })
 
         // promise resolves on successful subscription or error
-        this.on(id, err => {
+        this.on(id, (err) => {
           if (err) return reject(err)
           resolve()
         })
@@ -155,7 +155,7 @@ export default class BaseRpc extends EventEmitter {
     args?: Args,
     listener?: Parameters<BaseRpc["call"]>[2]
   ): any => {
-    return this.call(name, args, listener).then(res => {
+    return this.call(name, args, listener).then((res) => {
       return res
     })
   }

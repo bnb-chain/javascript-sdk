@@ -43,7 +43,7 @@ export class NewOrderMsg extends BaseMsg {
   getSignMsg() {
     const signMsg: SignedNewOrder = {
       sender: this.address,
-      ...this.newOrder
+      ...this.newOrder,
     }
     return signMsg
   }
@@ -58,7 +58,7 @@ export class NewOrderMsg extends BaseMsg {
       price: this.newOrder.price,
       quantity: this.newOrder.quantity,
       timeinforce: this.newOrder.timeinforce,
-      aminoPrefix: this.aminoPrefix
+      aminoPrefix: this.aminoPrefix,
     }
 
     return data
@@ -74,7 +74,7 @@ export class NewOrderMsg extends BaseMsg {
       price: 0,
       quantity: 0,
       timeinforce: 0,
-      aminoPrefix: AminoPrefix.NewOrderMsg
+      aminoPrefix: AminoPrefix.NewOrderMsg,
     }
   }
 }

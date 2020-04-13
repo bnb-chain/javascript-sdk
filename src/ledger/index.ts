@@ -34,8 +34,8 @@ const Ledger: any = {
     node:
       !isBrowser && moduleExists(LEDGER_NODE_HID_TRANSPORT_MODULE)
         ? require(LEDGER_NODE_HID_TRANSPORT_MODULE).default
-        : null
-  }
+        : null,
+  },
 }
 
 module.exports = Ledger

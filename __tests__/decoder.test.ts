@@ -26,10 +26,10 @@ describe("decoder", () => {
       coins: [
         {
           denom: "BNB",
-          amount: 1000000000
-        }
+          amount: 1000000000,
+        },
       ],
-      aminoPrefix: AminoPrefix.NewOrderMsg
+      aminoPrefix: AminoPrefix.NewOrderMsg,
     }
 
     const msgObj = new Msg(opt)

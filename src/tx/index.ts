@@ -4,7 +4,7 @@ import {
   convertObjectToSignBytes,
   UVarInt,
   marshalBinary,
-  encodeBinaryByteArray
+  encodeBinaryByteArray,
 } from "../amino"
 
 import {
@@ -13,7 +13,7 @@ import {
   StdSignMsg,
   StdSignature,
   StdTx,
-  AminoPrefix
+  AminoPrefix,
 } from "../types/"
 
 /**
@@ -84,7 +84,7 @@ class Transaction {
       memo: this.memo,
       msgs: [msg],
       sequence: this.sequence.toString(),
-      source: this.source.toString()
+      source: this.source.toString(),
     }
 
     return convertObjectToSignBytes(signMsg)
@@ -103,8 +103,8 @@ class Transaction {
         pub_key: pubKeyBuf,
         signature: signature,
         account_number: this.account_number,
-        sequence: this.sequence
-      }
+        sequence: this.sequence,
+      },
     ]
     return this
   }
@@ -144,7 +144,7 @@ class Transaction {
       memo: this.memo,
       source: this.source, // sdk value is 0, web wallet value is 1
       data: "",
-      aminoPrefix: AminoPrefix.StdTx
+      aminoPrefix: AminoPrefix.StdTx,
     }
     const bytes = marshalBinary(stdTx)
     return bytes.toString("hex")
@@ -164,7 +164,7 @@ class Transaction {
     }
     let pubBz = Buffer.concat([
       UVarInt.encode(format),
-      x.toArrayLike(Buffer, "be", 32)
+      x.toArrayLike(Buffer, "be", 32),
     ])
     // prefixed with length
     pubBz = encodeBinaryByteArray(pubBz)

@@ -27,7 +27,7 @@ class HttpRequest {
     const options = {
       method,
       url: path,
-      ...opts
+      ...opts,
     }
 
     if (params) {
@@ -40,10 +40,10 @@ class HttpRequest {
 
     return this.httpClient
       .request(options)
-      .then(response => {
+      .then((response) => {
         return { result: response.data, status: response.status }
       })
-      .catch(err => {
+      .catch((err) => {
         let error = err
         try {
           const msgObj = err.response && err.response.data

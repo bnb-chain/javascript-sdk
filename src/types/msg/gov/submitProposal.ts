@@ -10,7 +10,7 @@ const proposalTypeMapping = {
   0x03: "SoftwareUpgrade",
   0x05: "FeeChange",
   0x06: "CreateValidator",
-  0x07: "RemoveValidator"
+  0x07: "RemoveValidator",
 } as const
 
 export interface SignedSubmitProposal extends SignMsg {
@@ -46,7 +46,7 @@ export class SubmitProposalMsg extends BaseMsg {
     proposal_type,
     initialDeposit,
     voting_period,
-    description
+    description,
   }: {
     title: string
     description: string
@@ -74,9 +74,9 @@ export class SubmitProposalMsg extends BaseMsg {
       initial_deposit: [
         {
           denom: "BNB",
-          amount: new Big(this.initialDeposit).mul(Math.pow(10, 8)).toString()
-        }
-      ]
+          amount: new Big(this.initialDeposit).mul(Math.pow(10, 8)).toString(),
+        },
+      ],
     }
 
     return signMsg
@@ -91,11 +91,11 @@ export class SubmitProposalMsg extends BaseMsg {
       initial_deposit: [
         {
           denom: "BNB",
-          amount: +new Big(this.initialDeposit).mul(Math.pow(10, 8)).toString()
-        }
+          amount: +new Big(this.initialDeposit).mul(Math.pow(10, 8)).toString(),
+        },
       ],
       voting_period: this.voting_period,
-      aminoPrefix: AminoPrefix.MsgSubmitProposal
+      aminoPrefix: AminoPrefix.MsgSubmitProposal,
     }
 
     return data
@@ -109,7 +109,7 @@ export class SubmitProposalMsg extends BaseMsg {
       proposer: Buffer.from(""),
       inital_deposit: [{ denom: "", amount: 0 }],
       voting_period: 0,
-      aminoPrefix: AminoPrefix.MsgSubmitProposal
+      aminoPrefix: AminoPrefix.MsgSubmitProposal,
     }
   }
 }

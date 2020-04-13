@@ -6,7 +6,7 @@ import {
   string as varString,
   bool as varBool,
   bytes as varBytes,
-  varint
+  varint,
 } from "protocol-buffers-encodings"
 import is from "is_js"
 
@@ -125,7 +125,7 @@ const decodeObjectBinary = (
 
   let lastFieldNum = 0
 
-  let keys = Object.keys(type).filter(key => key !== "aminoPrefix")
+  let keys = Object.keys(type).filter((key) => key !== "aminoPrefix")
 
   keys.forEach((key, index) => {
     if (is.array(type[key])) {

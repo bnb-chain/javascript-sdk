@@ -43,8 +43,8 @@ export class SendMsg extends BaseMsg {
   }
 
   calInputCoins(inputsCoins: Coin[], coins: Coin[]) {
-    coins.forEach(coin => {
-      const existCoin = inputsCoins.find(c => c.denom === coin.denom)
+    coins.forEach((coin) => {
+      const existCoin = inputsCoins.find((c) => c.denom === coin.denom)
       if (existCoin) {
         const existAmount = new Big(existCoin.amount)
         existCoin.amount = Number(existAmount.plus(coin.amount).toString())
@@ -57,10 +57,10 @@ export class SendMsg extends BaseMsg {
   getSignMsg() {
     const signMsg: SignedSend = {
       inputs: [{ address: this.sender, coins: [] }],
-      outputs: this.outputs
+      outputs: this.outputs,
     }
 
-    this.outputs.forEach(item => {
+    this.outputs.forEach((item) => {
       this.calInputCoins(signMsg.inputs[0].coins, item.coins)
     })
 
@@ -71,15 +71,15 @@ export class SendMsg extends BaseMsg {
     const msg: SendData = {
       inputs: [{ address: crypto.decodeAddress(this.sender), coins: [] }],
       outputs: [],
-      aminoPrefix: this.aminoPrefix
+      aminoPrefix: this.aminoPrefix,
     }
 
-    this.outputs.forEach(item => {
+    this.outputs.forEach((item) => {
       this.calInputCoins(msg.inputs[0].coins, item.coins)
 
       const output: InputOutput = {
         address: crypto.decodeAddress(item.address),
-        coins: item.coins
+        coins: item.coins,
       }
 
       msg.outputs.push(output)
@@ -92,7 +92,7 @@ export class SendMsg extends BaseMsg {
     return {
       inputs: [{ address: Buffer.from(""), coins: [{ denom: "", amount: 0 }] }],
       outpus: [{ address: Buffer.from(""), coins: [{ denom: "", amount: 0 }] }],
-      aminoPrefix: AminoPrefix.MsgSend
+      aminoPrefix: AminoPrefix.MsgSend,
     }
   }
 }

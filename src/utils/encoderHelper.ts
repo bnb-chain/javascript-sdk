@@ -22,7 +22,7 @@ export default (type: any): 0 | 1 | 2 => {
   throw new Error(`Invalid type "${type}"`) // Is this what's expected?
 }
 
-export const size = function<T>(
+export const size = function <T>(
   items: T[],
   iter: (it: T, index: number, acc: number) => number,
   acc: number

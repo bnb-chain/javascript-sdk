@@ -1,7 +1,7 @@
 import { rpc as rpcClient } from "../src"
 
 const NETWORK = "testnet"
-const getClient = type => {
+const getClient = (type) => {
   let uri = "https://data-seed-pre-0-s3.binance.org"
   if (type === "wss") {
     uri = "wss://data-seed-pre-0-s3.binance.org"
@@ -84,7 +84,7 @@ describe("rpc", () => {
       query: "tx.height=8669273",
       prove: true,
       page: 1,
-      perPage: 10
+      perPage: 10,
     }
 
     const result = await client.txSearch(params)
@@ -97,7 +97,7 @@ describe("rpc", () => {
       query: "tx.height=8669273",
       prove: true,
       page: 1,
-      perPage: 10
+      perPage: 10,
     }
 
     const result = await client.txSearch(params)
@@ -112,7 +112,7 @@ describe("rpc", () => {
         "41EB40A5E21D4946BECD922426EDE4789A07384D446A90C499F93344B3B2659B",
         "hex"
       ),
-      prove: true
+      prove: true,
     }
     const result = await client.tx(params)
     expect(result.tx_result).toBeTruthy()
@@ -198,8 +198,8 @@ describe("rpc", () => {
 
   it("subscribe", async () => {
     const client = getClient("wss")
-    await new Promise(resolve => {
-      client.subscribe({ query: "tm.event = 'CompleteProposal'" }, events => {
+    await new Promise((resolve) => {
+      client.subscribe({ query: "tm.event = 'CompleteProposal'" }, (events) => {
         resolve(events)
         expect(events).toBeTruthy()
         expect(events.step).toBe("RoundStepPropose")

@@ -23,7 +23,7 @@ export const checkNumber = (value: BigSource, name = "input number") => {
  */
 export const checkCoins = (coins: Coin[]) => {
   coins = coins || []
-  coins.forEach(coin => {
+  coins.forEach((coin) => {
     checkNumber(coin.amount)
     if (!coin.denom) {
       throw new Error("invalid denmon")

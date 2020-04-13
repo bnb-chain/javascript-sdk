@@ -157,7 +157,7 @@ describe("client", () => {
     )
     const sequence = account.result && account.result.sequence
 
-    client.setBroadcastDelegate(signedTx => {
+    client.setBroadcastDelegate((signedTx) => {
       expect(signedTx instanceof Transaction).toBeTruthy()
       expect(signedTx.signatures.length).toBeTruthy()
       return "broadcastDelegateResult"

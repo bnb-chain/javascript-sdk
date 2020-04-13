@@ -243,7 +243,7 @@ export const generateKeyStore = (
     dklen: 32,
     salt: salt.toString("hex"),
     c: 262144,
-    prf: "hmac-sha256"
+    prf: "hmac-sha256",
   }
 
   const derivedKey = cryp.pbkdf2Sync(
@@ -260,26 +260,26 @@ export const generateKeyStore = (
 
   const ciphertext = Buffer.concat([
     cipher.update(Buffer.from(privateKeyHex, "hex")),
-    cipher.final()
+    cipher.final(),
   ])
   const bufferValue = Buffer.concat([derivedKey.slice(16, 32), ciphertext])
 
   return {
     version: 1,
     id: uuid.v4({
-      random: cryp.randomBytes(16)
+      random: cryp.randomBytes(16),
     }),
     crypto: {
       ciphertext: ciphertext.toString("hex"),
       cipherparams: {
-        iv: iv.toString("hex")
+        iv: iv.toString("hex"),
       },
       cipher: cipherAlg,
       kdf,
       kdfparams,
       // mac must use sha3 according to web3 secret storage spec
-      mac: sha3(bufferValue.toString("hex"))
-    }
+      mac: sha3(bufferValue.toString("hex")),
+    },
   }
 }
 
@@ -333,7 +333,7 @@ export const getPrivateKeyFromKeyStore = (
   )
   const privateKey = Buffer.concat([
     decipher.update(ciphertext),
-    decipher.final()
+    decipher.final(),
   ]).toString("hex")
 
   return privateKey

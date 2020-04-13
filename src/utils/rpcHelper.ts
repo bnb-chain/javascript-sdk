@@ -12,7 +12,7 @@ import {
   TimeLockMsg,
   TimeUnlockMsg,
   MintTokenMsg,
-  TimeReLockMsg
+  TimeReLockMsg,
 } from "../types"
 
 export const BASENUMBER = Math.pow(10, 8)
@@ -25,8 +25,8 @@ export const convertObjectArrayNum = <T extends { [k: string]: BigSource }>(
   objArr: Array<T>,
   keys: Array<keyof T>
 ): void => {
-  objArr.forEach(item => {
-    keys.forEach(key => {
+  objArr.forEach((item) => {
+    keys.forEach((key) => {
       item[key] = divide(item[key]) as any
     })
   })

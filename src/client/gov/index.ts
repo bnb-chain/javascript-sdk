@@ -19,7 +19,7 @@ const proposalTypeMapping = {
   0x03: "SoftwareUpgrade",
   0x05: "FeeChange",
   0x06: "CreateValidator",
-  0x07: "RemoveValidator"
+  0x07: "RemoveValidator",
 } as const
 
 /**
@@ -36,7 +36,7 @@ export const voteOption = {
   OptionYes: 0x01,
   OptionAbstain: 0x02,
   OptionNo: 0x03,
-  OptionNoWithVeto: 0x04
+  OptionNoWithVeto: 0x04,
 } as const
 
 const voteOptionMapping = {
@@ -44,7 +44,7 @@ const voteOptionMapping = {
   0x01: "Yes",
   0x02: "Abstain",
   0x03: "No",
-  0x04: "NoWithVeto"
+  0x04: "NoWithVeto",
 }
 
 class Gov {
@@ -95,7 +95,7 @@ class Gov {
       quote_asset_symbol: listParams.quoteAsset,
       init_price: +new Big(listParams.initPrice).mul(BASENUMBER).toString(),
       description: listParams.description,
-      expire_time: new Date(listParams.expireTime).toISOString()
+      expire_time: new Date(listParams.expireTime).toISOString(),
     }
 
     const description = JSON.stringify(listTradingPairObj)
@@ -134,8 +134,8 @@ class Gov {
     const coins = [
       {
         denom: "BNB",
-        amount: new Big(initialDeposit).mul(BASENUMBER).toString()
-      }
+        amount: new Big(initialDeposit).mul(BASENUMBER).toString(),
+      },
     ]
 
     votingPeriod = +new Big(votingPeriod).mul(10 ** 9).toString()
@@ -148,11 +148,11 @@ class Gov {
       initial_deposit: [
         {
           denom: "BNB",
-          amount: +new Big(initialDeposit).mul(BASENUMBER).toString()
-        }
+          amount: +new Big(initialDeposit).mul(BASENUMBER).toString(),
+        },
       ],
       voting_period: votingPeriod,
-      msgType: "MsgSubmitProposal"
+      msgType: "MsgSubmitProposal",
     }
 
     const signMsg = {
@@ -161,7 +161,7 @@ class Gov {
       proposal_type: proposalTypeMapping[proposalType],
       proposer: address,
       title,
-      voting_period: votingPeriod.toString()
+      voting_period: votingPeriod.toString(),
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -189,10 +189,10 @@ class Gov {
     checkCoins(coins)
 
     const amount: Coin[] = []
-    coins.forEach(coin => {
+    coins.forEach((coin) => {
       amount.push({
         denom: coin.denom,
-        amount: +new Big(coin.amount).mul(BASENUMBER).toString()
+        amount: +new Big(coin.amount).mul(BASENUMBER).toString(),
       })
     })
 
@@ -200,16 +200,16 @@ class Gov {
       proposal_id: proposalId,
       depositer: accAddress,
       amount,
-      msgType: "MsgDeposit"
+      msgType: "MsgDeposit",
     }
 
     const signMsg = {
-      amount: amount.map(coin => ({
+      amount: amount.map((coin) => ({
         denom: coin.denom,
-        amount: String(coin.amount)
+        amount: String(coin.amount),
       })),
       depositer: address,
-      proposal_id: String(proposalId)
+      proposal_id: String(proposalId),
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -237,13 +237,13 @@ class Gov {
       proposal_id: proposalId,
       voter: accAddress,
       option,
-      msgType: "MsgVote"
+      msgType: "MsgVote",
     }
 
     const signMsg = {
       option: voteOptionMapping[option],
       proposal_id: String(proposalId),
-      voter
+      voter,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(

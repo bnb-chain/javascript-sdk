@@ -97,7 +97,7 @@ First three items in the derivation path will be hardened automatically hardened
 | INS   | byte (1) | Instruction ID         | 0x02      |
 | P1    | byte (1) | Packet Current Index   |           |
 | P2    | byte (1) | Packet Total Count     |
-|  |
+|       |
 | L     | byte (1) | Bytes in payload       | (depends) |
 
 The first packet/chunk includes only the derivation path

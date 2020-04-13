@@ -14,7 +14,7 @@ const sortObject = (obj: any): object | null => {
   if (Array.isArray(obj)) return obj.map(sortObject)
   const sortedKeys = Object.keys(obj).sort()
   const result: any = {}
-  sortedKeys.forEach(key => {
+  sortedKeys.forEach((key) => {
     result[key] = sortObject(obj[key])
   })
   return result
@@ -196,7 +196,7 @@ export const encodeArrayBinary = (
 ) => {
   const result: any[] = []
 
-  arr.forEach(item => {
+  arr.forEach((item) => {
     result.push(encodeTypeAndField(fieldNum, item))
 
     if (isDefaultValue(item)) {

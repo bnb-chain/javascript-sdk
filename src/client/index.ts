@@ -23,12 +23,12 @@ export const api = {
   getOpenOrders: "/api/v1/orders/open",
   getDepth: "/api/v1/depth",
   getTransactions: "/api/v1/transactions",
-  getTx: "/api/v1/tx"
+  getTx: "/api/v1/tx",
 }
 
 export const NETWORK_PREFIX_MAPPING = {
   testnet: "tbnb",
-  mainnet: "bnb"
+  mainnet: "bnb",
 } as const
 
 export type Transfer = { to: string; coins: Coin[] }
@@ -39,7 +39,7 @@ export type Transfer = { to: string; coins: Coin[] }
  * @param  {Object}      signMsg the canonical sign bytes for the msg
  * @return {Transaction}
  */
-export const DefaultSigningDelegate = async function(
+export const DefaultSigningDelegate = async function (
   this: BncClient,
   tx: Transaction,
   signMsg?: any
@@ -51,7 +51,7 @@ export const DefaultSigningDelegate = async function(
  * The default broadcast delegate which immediately broadcasts a transaction.
  * @param {Transaction} signedTx the signed transaction
  */
-export const DefaultBroadcastDelegate = async function(
+export const DefaultBroadcastDelegate = async function (
   this: BncClient,
   signedTx: Transaction
 ) {
@@ -73,7 +73,7 @@ export const LedgerSigningDelegate = (
   errCb: (error: any) => void,
   hdPath: number[]
 ): typeof DefaultSigningDelegate =>
-  async function(tx, signMsg) {
+  async function (tx, signMsg) {
     const signBytes = tx.getSignBytes(signMsg)
     preSignCb && preSignCb(signBytes)
     let pubKeyResp: PublicKey, sigResp: SignedSignature
@@ -97,9 +97,9 @@ export const LedgerSigningDelegate = (
  * @param {Array} outputs
  */
 const checkOutputs = (outputs: Transfer[]) => {
-  outputs.forEach(transfer => {
+  outputs.forEach((transfer) => {
     const coins = transfer.coins || []
-    coins.forEach(coin => {
+    coins.forEach((coin) => {
       checkNumber(coin.amount)
       if (!coin.denom) {
         throw new Error("invalid denmon")
@@ -114,8 +114,8 @@ const checkOutputs = (outputs: Transfer[]) => {
  * @param {Array} coins
  */
 const calInputCoins = (inputs: Array<{ coins: Coin[] }>, coins: Coin[]) => {
-  coins.forEach(coin => {
-    const existCoin = inputs[0].coins.find(c => c.denom === coin.denom)
+  coins.forEach((coin) => {
+    const existCoin = inputs[0].coins.find((c) => c.denom === coin.denom)
     if (existCoin) {
       const existAmount = new Big(existCoin.amount)
       existCoin.amount = Number(existAmount.plus(coin.amount).toString())
@@ -328,23 +328,23 @@ export class BncClient {
 
     const coin = {
       denom: asset,
-      amount: amount
+      amount: amount,
     }
 
     const msg = {
       inputs: [
         {
           address: accCode,
-          coins: [coin]
-        }
+          coins: [coin],
+        },
       ],
       outputs: [
         {
           address: toAccCode,
-          coins: [coin]
-        }
+          coins: [coin],
+        },
       ],
-      aminoPrefix: AminoPrefix.MsgSend
+      aminoPrefix: AminoPrefix.MsgSend,
     }
 
     const signMsg = {
@@ -354,10 +354,10 @@ export class BncClient {
           coins: [
             {
               amount: amount,
-              denom: asset
-            }
-          ]
-        }
+              denom: asset,
+            },
+          ],
+        },
       ],
       outputs: [
         {
@@ -365,11 +365,11 @@ export class BncClient {
           coins: [
             {
               amount: amount,
-              denom: asset
-            }
-          ]
-        }
-      ]
+              denom: asset,
+            },
+          ],
+        },
+      ],
     }
 
     const signedTx = await this._prepareTransaction(
@@ -429,9 +429,9 @@ export class BncClient {
     checkOutputs(outputs)
 
     //sort denom by alphbet and init amount
-    outputs.forEach(item => {
+    outputs.forEach((item) => {
       item.coins = item.coins.sort((a, b) => a.denom.localeCompare(b.denom))
-      item.coins.forEach(coin => {
+      item.coins.forEach((coin) => {
         const amount = new Big(coin.amount)
         coin.amount = Number(amount.mul(BASENUMBER).toString())
       })
@@ -444,7 +444,7 @@ export class BncClient {
     const inputs: AddressBufferCoins[] = [{ address: fromAddrCode, coins: [] }]
     const transfers: AddressBufferCoins[] = []
 
-    outputs.forEach(item => {
+    outputs.forEach((item) => {
       const toAddcCode = crypto.decodeAddress(item.to)
       calInputCoins(inputs, item.coins)
       transfers.push({ address: toAddcCode, coins: item.coins })
@@ -453,7 +453,7 @@ export class BncClient {
     const msg = {
       inputs,
       outputs: transfers,
-      aminoPrefix: AminoPrefix.MsgSend
+      aminoPrefix: AminoPrefix.MsgSend,
     }
 
     const signInputs = [{ address: fromAddress, coins: [] }]
@@ -461,7 +461,7 @@ export class BncClient {
 
     outputs.forEach((item, index) => {
       signOutputs.push({ address: item.to, coins: [] })
-      item.coins.forEach(c => {
+      item.coins.forEach((c) => {
         signOutputs[index].coins.push(c)
       })
       calInputCoins(signInputs, item.coins)
@@ -469,7 +469,7 @@ export class BncClient {
 
     const signMsg = {
       inputs: signInputs,
-      outputs: signOutputs
+      outputs: signOutputs,
     }
 
     const signedTx = await this._prepareTransaction(
@@ -502,13 +502,13 @@ export class BncClient {
       sender: accCode,
       symbol: symbol,
       refid: refid,
-      aminoPrefix: AminoPrefix.CancelOrderMsg
+      aminoPrefix: AminoPrefix.CancelOrderMsg,
     }
 
     const signMsg = {
       refid: refid,
       sender: fromAddress,
-      symbol: symbol
+      symbol: symbol,
     }
 
     const signedTx = await this._prepareTransaction(
@@ -576,7 +576,7 @@ export class BncClient {
       price: parseFloat(bigPrice.mul(BASENUMBER).toString()),
       quantity: parseFloat(bigQuantity.mul(BASENUMBER).toString()),
       timeinforce: timeinforce,
-      aminoPrefix: AminoPrefix.NewOrderMsg
+      aminoPrefix: AminoPrefix.NewOrderMsg,
     }
 
     const signMsg = {
@@ -587,7 +587,7 @@ export class BncClient {
       sender: address,
       side: placeOrderMsg.side,
       symbol: placeOrderMsg.symbol,
-      timeinforce: timeinforce
+      timeinforce: timeinforce,
     }
 
     checkNumber(placeOrderMsg.price, "price")
@@ -651,7 +651,7 @@ export class BncClient {
       base_asset_symbol: baseAsset,
       quote_asset_symbol: quoteAsset,
       init_price: init_price,
-      aminoPrefix: AminoPrefix.ListMsg
+      aminoPrefix: AminoPrefix.ListMsg,
     }
 
     const signMsg = {
@@ -659,7 +659,7 @@ export class BncClient {
       from: address,
       init_price: init_price,
       proposal_id: proposalId,
-      quote_asset_symbol: quoteAsset
+      quote_asset_symbol: quoteAsset,
     }
 
     const signedTx = await this._prepareTransaction(
@@ -685,12 +685,12 @@ export class BncClient {
     const msg = {
       from: accCode,
       flags: flags,
-      aminoPrefix: AminoPrefix.SetAccountFlagsMsg
+      aminoPrefix: AminoPrefix.SetAccountFlagsMsg,
     }
 
     const signMsg = {
       flags: flags,
-      from: address
+      from: address,
     }
 
     const signedTx = await this._prepareTransaction(
@@ -740,7 +740,7 @@ export class BncClient {
       memo: memo,
       msg,
       sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
-      source: this._source
+      source: this._source,
     })
     return this._signingDelegate.call(this, tx, stdSignMsg)
   }
@@ -769,8 +769,8 @@ export class BncClient {
     const opts = {
       data: signedBz,
       headers: {
-        "content-type": "text/plain"
-      }
+        "content-type": "text/plain",
+      },
     }
     return this._httpClient.request(
       "post",
@@ -1010,7 +1010,7 @@ export class BncClient {
     const privateKey = crypto.generatePrivateKey()
     return {
       privateKey,
-      address: crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix)
+      address: crypto.getAddressFromPrivateKey(privateKey, this.addressPrefix),
     }
   }
 
@@ -1036,7 +1036,7 @@ export class BncClient {
     return {
       privateKey,
       address,
-      keystore
+      keystore,
     }
   }
 
@@ -1059,7 +1059,7 @@ export class BncClient {
     return {
       privateKey,
       address,
-      mnemonic
+      mnemonic,
     }
   }
 
@@ -1083,7 +1083,7 @@ export class BncClient {
     )
     return {
       privateKey,
-      address
+      address,
     }
   }
 
@@ -1103,7 +1103,7 @@ export class BncClient {
     )
     return {
       privateKey,
-      address
+      address,
     }
   }
   // support an old method name containing a typo
@@ -1126,7 +1126,7 @@ export class BncClient {
     )
     return {
       privateKey,
-      address
+      address,
     }
   }
 

@@ -276,7 +276,7 @@ export const calculateRandomNumberHash = (
   const timestampBytes = Buffer.from(timestampHexStrFormat, "hex")
   const newBuffer = Buffer.concat([
     Buffer.from(randomNumber, "hex"),
-    timestampBytes
+    timestampBytes,
   ])
   return sha256(newBuffer.toString("hex"))
 }
@@ -302,7 +302,7 @@ export const calculateSwapID = (
   const newBuffer = Buffer.concat([
     randomNumberHashBytes,
     senderBytes,
-    sendOtherChainBytes
+    sendOtherChainBytes,
   ])
   return sha256(newBuffer.toString("hex"))
 }

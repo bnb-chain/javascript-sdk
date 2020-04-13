@@ -106,7 +106,7 @@ class TokenManagement {
       symbol,
       total_supply: totalSupply,
       mintable,
-      aminoPrefix: AminoPrefix.IssueMsg
+      aminoPrefix: AminoPrefix.IssueMsg,
     }
 
     const signIssueMsg = {
@@ -114,7 +114,7 @@ class TokenManagement {
       name: tokenName,
       symbol,
       total_supply: totalSupply,
-      mintable
+      mintable,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -147,13 +147,13 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: AminoPrefix.FreezeMsg
+      aminoPrefix: AminoPrefix.FreezeMsg,
     }
 
     const freezeSignMsg = {
       amount: amount,
       from: fromAddress,
-      symbol
+      symbol,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -186,13 +186,13 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: AminoPrefix.UnfreezeMsg
+      aminoPrefix: AminoPrefix.UnfreezeMsg,
     }
 
     const unfreezeSignMsg = {
       amount: amount,
       from: fromAddress,
-      symbol
+      symbol,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -224,13 +224,13 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: AminoPrefix.BurnMsg
+      aminoPrefix: AminoPrefix.BurnMsg,
     }
 
     const burnSignMsg = {
       amount: amount,
       from: fromAddress,
-      symbol
+      symbol,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -259,13 +259,13 @@ class TokenManagement {
       from: crypto.decodeAddress(fromAddress),
       symbol,
       amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
-      aminoPrefix: AminoPrefix.MintMsg
+      aminoPrefix: AminoPrefix.MintMsg,
     }
 
     const mintSignMsg = {
       amount: amount,
       from: fromAddress,
-      symbol
+      symbol,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -304,14 +304,14 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      aminoPrefix: AminoPrefix.MintMsg
+      aminoPrefix: AminoPrefix.MintMsg,
     }
 
     const signTimeLockMsg = {
       from: fromAddress,
       description: description,
       amount,
-      lock_time: lockTime
+      lock_time: lockTime,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -353,7 +353,7 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      aminoPrefix: AminoPrefix.TimeRelockMsg
+      aminoPrefix: AminoPrefix.TimeRelockMsg,
     }
 
     const signTimeRelockMsg = {
@@ -361,7 +361,7 @@ class TokenManagement {
       time_lock_id: id,
       description: description,
       amount,
-      lock_time: lockTime
+      lock_time: lockTime,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(
@@ -382,12 +382,12 @@ class TokenManagement {
     const timeUnlockMsg = {
       from: crypto.decodeAddress(fromAddress),
       time_lock_id: id,
-      aminoPrefix: AminoPrefix.TimeUnlockMsg
+      aminoPrefix: AminoPrefix.TimeUnlockMsg,
     }
 
     const signTimeUnlockMsg = {
       from: fromAddress,
-      time_lock_id: id
+      time_lock_id: id,
     }
 
     const signedTx = await this._bncClient._prepareTransaction(

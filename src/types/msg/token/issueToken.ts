@@ -32,7 +32,7 @@ export class IssueTokenMsg extends BaseMsg {
   getSignMsg() {
     const signMsg: SignedIssueTokenMsg = {
       from: this.from,
-      ...this.params
+      ...this.params,
     }
 
     return signMsg
@@ -45,7 +45,7 @@ export class IssueTokenMsg extends BaseMsg {
       symbol: this.params.symbol,
       total_supply: this.params.total_supply,
       mintable: this.params.mintable,
-      aminoPrefix: this.aminoPrefix
+      aminoPrefix: this.aminoPrefix,
     }
 
     return data
@@ -58,7 +58,7 @@ export class IssueTokenMsg extends BaseMsg {
       symbol: "",
       total_supply: 0,
       mintable: false,
-      aminoPrefix: AminoPrefix.IssueMsg
+      aminoPrefix: AminoPrefix.IssueMsg,
     }
   }
 }

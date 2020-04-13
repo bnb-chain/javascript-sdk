@@ -159,27 +159,27 @@ describe("dex", () => {
         coins: [
           {
             denom: "BNB",
-            amount: 0.01
+            amount: 0.01,
           },
           {
             denom: "USDT.B-B7C",
-            amount: 0.01
-          }
-        ]
+            amount: 0.01,
+          },
+        ],
       },
       {
         to: "tbnb1scjj8chhhp7lngdeflltzex22yaf9ep59ls4gk",
         coins: [
           {
             denom: "USDT.B-B7C",
-            amount: 0.02
+            amount: 0.02,
           },
           {
             denom: "BNB",
-            amount: 0.3
-          }
-        ]
-      }
+            amount: 0.3,
+          },
+        ],
+      },
     ]
 
     const { status } = await client.multiSend(addr, transfers)

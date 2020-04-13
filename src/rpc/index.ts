@@ -8,7 +8,7 @@ import BaseRpc from "./baseRpc"
 import {
   validateSymbol,
   validateTradingPair,
-  validateOffsetLimit
+  validateOffsetLimit,
 } from "../utils"
 import { NETWORK_PREFIX_MAPPING } from "../client"
 import Transaction from "../tx"
@@ -24,7 +24,7 @@ import {
   AminoPrefix,
   abciQueryResponseResult,
   StdTx,
-  ResponseDeliverTx
+  ResponseDeliverTx,
 } from "../types"
 
 import { convertObjectArrayNum, getMsgByAminoPrefix } from "../utils"
@@ -58,7 +58,7 @@ class RpcClient extends BaseRpc {
     // broadcast it via RPC; we have to use a promise here because that's
     // what the BncClient expects as the return value of this function.
     const res: any = await this.broadcastTxSync({
-      tx: Buffer.from(encoded, "hex")
+      tx: Buffer.from(encoded, "hex"),
     })
     if (`${res.code}` === "0") {
       return res
@@ -121,7 +121,7 @@ class RpcClient extends BaseRpc {
 
     return tokenList.map((item: TokenOfList) => ({
       ...item,
-      owner: crypto.encodeAddress(item.owner, this.getBech32Prefix())
+      owner: crypto.encodeAddress(item.owner, this.getBech32Prefix()),
     }))
   }
 
@@ -131,7 +131,7 @@ class RpcClient extends BaseRpc {
    */
   async getAccount(address: string) {
     const res: any = await this.abciQuery({
-      path: `/account/${address}`
+      path: `/account/${address}`,
     })
     const accountInfo = new AppAccount()
     const bytes = Buffer.from(res.response.value, "base64")
@@ -144,8 +144,8 @@ class RpcClient extends BaseRpc {
       frozen: accountInfo.frozen,
       base: {
         ...accountInfo.base,
-        address: crypto.encodeAddress(accountInfo.base.address, bech32Prefix)
-      }
+        address: crypto.encodeAddress(accountInfo.base.address, bech32Prefix),
+      },
     }
   }
 
@@ -163,11 +163,13 @@ class RpcClient extends BaseRpc {
       convertObjectArrayNum<any>(account.frozen, ["amount"])
     }
 
-    coins.forEach(item => {
+    coins.forEach((item) => {
       const locked: any =
-        account.locked.find(lockedItem => item.denom === lockedItem.denom) || {}
+        account.locked.find((lockedItem) => item.denom === lockedItem.denom) ||
+        {}
       const frozen: any =
-        account.frozen.find(frozenItem => item.denom === frozenItem.denom) || {}
+        account.frozen.find((frozenItem) => item.denom === frozenItem.denom) ||
+        {}
       const bal = new TokenBalance()
       bal.symbol = item.denom
       bal.free = +new Big(item.amount).toString()
@@ -189,7 +191,7 @@ class RpcClient extends BaseRpc {
     validateSymbol(symbol)
     const balances = await this.getBalances(address)
     const bal = balances.find(
-      item => item.symbol.toUpperCase() === symbol.toUpperCase()
+      (item) => item.symbol.toUpperCase() === symbol.toUpperCase()
     )
     return bal
   }
@@ -246,7 +248,7 @@ class RpcClient extends BaseRpc {
       "buyQty",
       "buyPrice",
       "sellQty",
-      "sellPrice"
+      "sellPrice",
     ])
     return depth
   }
@@ -258,7 +260,7 @@ class RpcClient extends BaseRpc {
 
     const res = await this.tx({
       hash,
-      prove
+      prove,
     })
 
     const txBytes = Buffer.from(res.tx, "base64")
@@ -271,13 +273,13 @@ class RpcClient extends BaseRpc {
           pub_key: Buffer.from(""),
           signature: Buffer.from(""),
           account_number: 0,
-          sequence: 0
-        }
+          sequence: 0,
+        },
       ],
       memo: "",
       source: 0,
       data: "",
-      aminoPrefix: AminoPrefix.StdTx
+      aminoPrefix: AminoPrefix.StdTx,
     }
 
     const { val: result }: any = unMarshalBinaryLengthPrefixed(txBytes, type)
@@ -297,18 +299,18 @@ class RpcClient extends BaseRpc {
       for (let i = 0; i < txResult.events.length; i++) {
         const event = txResult.events[i]
         if (event.attributes && event.attributes.length > 0) {
-          event.attributes = event.attributes.map(item => ({
+          event.attributes = event.attributes.map((item) => ({
             key: Buffer.from(item.key, "base64").toString(),
-            value: Buffer.from(item.value, "base64").toString()
+            value: Buffer.from(item.value, "base64").toString(),
           }))
         }
       }
     }
 
     if (txResult.tags && txResult.tags.length > 0) {
-      txResult.tags = txResult.tags.map(item => ({
+      txResult.tags = txResult.tags.map((item) => ({
         key: Buffer.from(item.key, "base64").toString(),
-        value: Buffer.from(item.value, "base64").toString()
+        value: Buffer.from(item.value, "base64").toString(),
       }))
     }
 

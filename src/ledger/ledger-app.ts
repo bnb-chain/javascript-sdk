@@ -585,7 +585,7 @@ class LedgerApp {
     const result: ReturnResponse = {}
     let data = Buffer.concat([
       this._serializeHRP(hrp),
-      this._serializeHDPath(hdPath)
+      this._serializeHDPath(hdPath),
     ])
     this._transport.setExchangeTimeout(this._interactiveTimeout)
     let apduResponse = await this._transport.send(

@@ -33,7 +33,7 @@ export class TimeReLockMsg extends BaseMsg {
     time_lock_id,
     description,
     amount,
-    lock_time
+    lock_time,
   }: {
     address: string
     time_lock_id: number
@@ -55,7 +55,7 @@ export class TimeReLockMsg extends BaseMsg {
       time_lock_id: this.time_lock_id,
       amount: this.amount,
       description: this.description,
-      lock_time: this.lock_time
+      lock_time: this.lock_time,
     }
 
     return signMsg
@@ -68,7 +68,7 @@ export class TimeReLockMsg extends BaseMsg {
       description: this.description,
       amount: this.amount,
       lock_time: this.lock_time,
-      aminoPrefix: this.aminoPrefix
+      aminoPrefix: this.aminoPrefix,
     }
 
     return data
@@ -80,7 +80,7 @@ export class TimeReLockMsg extends BaseMsg {
       description: "",
       amount: 0,
       lock_time: 0,
-      aminoPrefix: AminoPrefix.TimeRelockMsg
+      aminoPrefix: AminoPrefix.TimeRelockMsg,
     }
   }
 }

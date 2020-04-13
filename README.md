@@ -43,7 +43,7 @@ We often see Webpack builds failing with the SDK due to the `usb` dependency, bu
 
 ```js
 module.exports = {
-  plugins: [new webpack.IgnorePlugin(/^usb$/)]
+  plugins: [new webpack.IgnorePlugin(/^usb$/)],
 }
 ```
 
