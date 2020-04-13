@@ -23,5 +23,9 @@
       "*": ["src/*", "node_modules/*"]
     },
     "esModuleInterop": true
+  },
+  "typedocOptions": {
+    "mode": "file",
+    "out": "docs"
   }
 }
