@@ -173,7 +173,6 @@ describe("Transaction", () => {
       })
       await buildAndSendTx(issueMsg)
     } catch (err) {
-      console.log(err)
       if (err.message.includes("insufficient fund")) {
         expect(1).toBeTruthy()
         return
