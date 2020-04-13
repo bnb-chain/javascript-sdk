@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=test jest",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
-    "build": "yarn clean && tsc --emitDeclarationOnly && npx babel --extensions '.ts' src -d lib",
+    "build": "yarn clean && tsc --emitDeclarationOnly && babel --extensions '.ts' src -d lib",
     "build:docs": "jsdoc2md --files src/**/*.ts --configure ./jsdoc2md.json > docs/jsdoc.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint --fix src __tests__",
