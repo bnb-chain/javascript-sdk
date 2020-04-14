@@ -34,7 +34,7 @@ The Binance Chain Node rpc client
 
 \+ **new RpcClient**(`uriString`: string, `netWork`: keyof typeof NETWORK_PREFIX_MAPPING): *[RpcClient](rpcclient.md)*
 
-*Defined in [rpc/index.ts:36](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L36)*
+*Defined in [rpc/index.ts:36](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L36)*
 
 **Parameters:**
 
@@ -51,7 +51,7 @@ Name | Type | Default | Description |
 
 ▸ **broadcastDelegate**(`signedTx`: [Transaction](transaction.md)): *Promise‹any›*
 
-*Defined in [rpc/index.ts:55](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L55)*
+*Defined in [rpc/index.ts:55](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L55)*
 
 The RPC broadcast delegate broadcasts a transaction via RPC. This is intended for optional use as BncClient's broadcast delegate.
 
@@ -69,7 +69,7 @@ ___
 
 ▸ **getAccount**(`address`: string): *Promise‹object›*
 
-*Defined in [rpc/index.ts:132](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L132)*
+*Defined in [rpc/index.ts:132](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L132)*
 
 **Parameters:**
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **getBalance**(`address`: string, `symbol`: string): *Promise‹undefined | TokenBalance‹››*
 
-*Defined in [rpc/index.ts:190](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L190)*
+*Defined in [rpc/index.ts:190](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L190)*
 
 get balance by symbol and address
 
@@ -106,7 +106,7 @@ ___
 
 ▸ **getBalances**(`address`: string): *Promise‹TokenBalance‹›[]›*
 
-*Defined in [rpc/index.ts:155](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L155)*
+*Defined in [rpc/index.ts:155](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L155)*
 
 **Parameters:**
 
@@ -122,7 +122,7 @@ ___
 
 ▸ **getDepth**(`tradePair`: string): *Promise‹any›*
 
-*Defined in [rpc/index.ts:240](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L240)*
+*Defined in [rpc/index.ts:240](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L240)*
 
 **Parameters:**
 
@@ -138,7 +138,7 @@ ___
 
 ▸ **getOpenOrders**(`address`: string, `symbol`: string): *Promise‹any›*
 
-*Defined in [rpc/index.ts:204](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L204)*
+*Defined in [rpc/index.ts:204](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L204)*
 
 **Parameters:**
 
@@ -155,7 +155,7 @@ ___
 
 ▸ **getTokenInfo**(`symbol`: string): *Promise‹object›*
 
-*Defined in [rpc/index.ts:86](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L86)*
+*Defined in [rpc/index.ts:86](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L86)*
 
 **Parameters:**
 
@@ -173,7 +173,7 @@ ___
 
 ▸ **getTradingPairs**(`offset`: number, `limit`: number): *Promise‹any›*
 
-*Defined in [rpc/index.ts:222](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L222)*
+*Defined in [rpc/index.ts:222](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L222)*
 
 **Parameters:**
 
@@ -190,7 +190,7 @@ ___
 
 ▸ **listAllTokens**(`offset`: number, `limit`: number): *Promise‹any›*
 
-*Defined in [rpc/index.ts:109](https://github.com/binance-chain/javascript-sdk/blob/03c8bcb/src/rpc/index.ts#L109)*
+*Defined in [rpc/index.ts:109](https://github.com/binance-chain/javascript-sdk/blob/2c35593/src/rpc/index.ts#L109)*
 
 get tokens by offset and limit
 
