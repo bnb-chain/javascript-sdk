@@ -143,10 +143,12 @@ class TokenManagement {
       "free"
     )
 
+    amount = +Number(new Big(amount).mul(Math.pow(10, 8)).toString())
+
     const freezeMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
+      amount: amount,
       aminoPrefix: AminoPrefix.FreezeMsg,
     }
 
@@ -182,10 +184,12 @@ class TokenManagement {
       "frozen"
     )
 
+    amount = +Number(new Big(amount).mul(Math.pow(10, 8)).toString())
+
     const unfreezeMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
+      amount: amount,
       aminoPrefix: AminoPrefix.UnfreezeMsg,
     }
 
@@ -219,11 +223,11 @@ class TokenManagement {
       fromAddress,
       this._bncClient._httpClient
     )
-
+    amount = +Number(new Big(amount).mul(Math.pow(10, 8)).toString())
     const burnMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
+      amount: amount,
       aminoPrefix: AminoPrefix.BurnMsg,
     }
 
@@ -255,10 +259,12 @@ class TokenManagement {
       throw new Error("invalid amount")
     }
 
+    amount = Number(new Big(amount).mul(Math.pow(10, 8)).toString())
+
     const mintMsg = {
       from: crypto.decodeAddress(fromAddress),
       symbol,
-      amount: Number(new Big(amount).mul(Math.pow(10, 8)).toString()),
+      amount: amount,
       aminoPrefix: AminoPrefix.MintMsg,
     }
 
@@ -273,6 +279,7 @@ class TokenManagement {
       mintSignMsg,
       fromAddress
     )
+
     return this._bncClient._broadcastDelegate(signedTx)
   }
 
@@ -304,7 +311,7 @@ class TokenManagement {
       description,
       amount,
       lock_time: lockTime,
-      aminoPrefix: AminoPrefix.MintMsg,
+      aminoPrefix: AminoPrefix.TimeLockMsg,
     }
 
     const signTimeLockMsg = {

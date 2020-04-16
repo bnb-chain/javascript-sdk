@@ -55,7 +55,7 @@ export const DefaultBroadcastDelegate = async function (
   this: BncClient,
   signedTx: Transaction
 ) {
-  return this.sendTransaction(signedTx, false)
+  return this.sendTransaction(signedTx, true)
 }
 
 /**

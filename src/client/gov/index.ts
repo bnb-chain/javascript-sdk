@@ -5,7 +5,7 @@ import Big, { BigSource } from "big.js"
 import * as crypto from "../../crypto"
 import { checkCoins } from "../../utils/validateHelper"
 import proposalType from "./proposalType"
-import { Coin } from "../../types"
+import { Coin, AminoPrefix } from "../../types"
 
 import { BncClient } from ".." // This is a circular dependecy; should be changed to `import type` asap
 
@@ -152,7 +152,7 @@ class Gov {
         },
       ],
       voting_period: votingPeriod,
-      msgType: "MsgSubmitProposal",
+      aminoPrefix: AminoPrefix.MsgSubmitProposal,
     }
 
     const signMsg = {
@@ -200,7 +200,7 @@ class Gov {
       proposal_id: proposalId,
       depositer: accAddress,
       amount,
-      msgType: "MsgDeposit",
+      aminoPrefix: AminoPrefix.MsgDeposit,
     }
 
     const signMsg = {
@@ -237,7 +237,7 @@ class Gov {
       proposal_id: proposalId,
       voter: accAddress,
       option,
-      msgType: "MsgVote",
+      aminoPrefix: AminoPrefix.MsgVote,
     }
 
     const signMsg = {

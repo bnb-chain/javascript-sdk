@@ -14,15 +14,21 @@ describe("token management", () => {
     const symbol = "MINT"
     const tokenName = "test issue token"
     const totalSupply = 21000000
-
-    const res = await client.tokens.issue(
-      addr,
-      tokenName,
-      symbol,
-      totalSupply,
-      true
-    )
-    expect(res.status).toBe(200)
+    try {
+      const res = await client.tokens.issue(
+        addr,
+        tokenName,
+        symbol,
+        totalSupply,
+        true
+      )
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
+    }
   })
 
   it("time lock token", async () => {
@@ -46,7 +52,7 @@ describe("token management", () => {
     expect(res.status).toBe(200)
   })
 
-  it("time relock token", async () => {
+  it("timeRelock token", async () => {
     const client = await getClient(true)
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const description = "timerelock token test"
@@ -58,17 +64,24 @@ describe("token management", () => {
     ]
     const id = 2248
     const timeLock = Math.floor(Date.now() / 1000) + 200
-    const res = await client.tokens.timeRelock(
-      addr,
-      id,
-      description,
-      amount,
-      timeLock
-    )
-    expect(res.status).toBe(200)
+    try {
+      const res = await client.tokens.timeRelock(
+        addr,
+        id,
+        description,
+        amount,
+        timeLock
+      )
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("Time lock does not exist")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
+    }
   })
 
-  it("time unlock token", async () => {
+  it("timeUnlock token", async () => {
     const client = await getClient(true)
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const id = 2248
@@ -141,7 +154,7 @@ describe("token management", () => {
     expect(res.status).toBe(200)
   })
 
-  it("freeze token", async () => {
+  it("freezeToken", async () => {
     const client = await getClient(true)
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "XZJ-D9A"
@@ -151,7 +164,7 @@ describe("token management", () => {
     expect(status).toBe(200)
   })
 
-  it("unfreeze token", async () => {
+  it("unfreezeToken", async () => {
     const client = await getClient(true)
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "XZJ-D9A"
@@ -164,7 +177,7 @@ describe("token management", () => {
     }
   })
 
-  it("burn token", async () => {
+  it("burnToken", async () => {
     const client = await getClient(true)
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "XZJ-D9A"
@@ -173,7 +186,7 @@ describe("token management", () => {
     expect(status).toBe(200)
   })
 
-  it("mint token", async () => {
+  it("mintToken", async () => {
     const client = await getClient(true)
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "MINT-04F"

@@ -30,14 +30,7 @@ describe("dex", () => {
     await wait(3000)
 
     // acc needs .004 BNB to lock
-    const res1 = await client.placeOrder(
-      addr,
-      symbol,
-      2,
-      40,
-      0.0001,
-      sequence + 1
-    )
+    const res1 = await client.placeOrder(addr, symbol, 2, 40, 0.1, sequence + 1)
     expect(res1.status).toBe(200)
 
     await wait(5000)
@@ -91,7 +84,7 @@ describe("dex", () => {
 
     // acc needs .004 BNB to lock
     // IOC - auto cancels
-    const res1 = await client.placeOrder(addr, symbol, 2, 40, 0.0001, null, 3)
+    const res1 = await client.placeOrder(addr, symbol, 2, 40, 0.01, null, 3)
     expect(res1.status).toBe(200)
   })
 

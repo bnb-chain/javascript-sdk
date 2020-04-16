@@ -73,11 +73,17 @@ export const keystores = {
 
 export const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
+let client: any = {}
+
 export const getClient = async (
   useAwaitSetPrivateKey = true,
   doNotSetPrivateKey = false
 ) => {
-  const client = new BncClient("https://testnet-dex-asiapacific.binance.org")
+  if (client.chainId) {
+    return client
+  }
+
+  client = new BncClient("https://testnet-dex-asiapacific.binance.org")
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (!doNotSetPrivateKey) {
