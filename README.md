@@ -8,6 +8,8 @@ The Binance Chain JavaScript SDK allows browsers and node.js clients to interact
 * **accounts** - management of "accounts" and wallets, including seed and encrypted mnemonic generation.
 * **ledger** - Ledger Nano S/X support via HID, U2F and Web BLE (Bluetooth).
 * **rpc** - Node RPC client.
+* **transaction** - Transaction Class, build and sign.
+* **rpc** - Node RPC client.
 
 # Installation
 
@@ -30,6 +32,10 @@ $ npm i @binance-chain/javascript-sdk --no-optional
 If you **need** Ledger support with node.js:
 ```bash
 $ npm i @binance-chain/javascript-sdk
+```
+**Typescript support**
+```bash
+$ npm i @binance-chain/javascript-sdk@3.0.0-alpha.7
 ```
 
 ### Use with Webpack
