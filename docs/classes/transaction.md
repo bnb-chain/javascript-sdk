@@ -52,7 +52,7 @@ var tx = new Transaction(rawTx);
 
 ▸ **_serializePubKey**(`unencodedPubKey`: BasePoint): *Buffer‹›*
 
-*Defined in [tx/index.ts:158](https://github.com/binance-chain/javascript-sdk/blob/6d6dd38/src/tx/index.ts#L158)*
+*Defined in [tx/index.ts:158](https://github.com/binance-chain/javascript-sdk/blob/cd0d303/src/tx/index.ts#L158)*
 
 serializes a public key in a 33-byte compressed format.
 
@@ -70,7 +70,7 @@ ___
 
 ▸ **addSignature**(`pubKey`: BasePoint, `signature`: Buffer): *this*
 
-*Defined in [tx/index.ts:99](https://github.com/binance-chain/javascript-sdk/blob/6d6dd38/src/tx/index.ts#L99)*
+*Defined in [tx/index.ts:99](https://github.com/binance-chain/javascript-sdk/blob/cd0d303/src/tx/index.ts#L99)*
 
 attaches a signature to the transaction
 
@@ -89,7 +89,7 @@ ___
 
 ▸ **getSignBytes**(`msg?`: SignMsg): *Buffer‹›*
 
-*Defined in [tx/index.ts:78](https://github.com/binance-chain/javascript-sdk/blob/6d6dd38/src/tx/index.ts#L78)*
+*Defined in [tx/index.ts:78](https://github.com/binance-chain/javascript-sdk/blob/cd0d303/src/tx/index.ts#L78)*
 
 generate the sign bytes for a transaction, given a msg
 
@@ -107,7 +107,7 @@ ___
 
 ▸ **serialize**(): *string*
 
-*Defined in [tx/index.ts:136](https://github.com/binance-chain/javascript-sdk/blob/6d6dd38/src/tx/index.ts#L136)*
+*Defined in [tx/index.ts:136](https://github.com/binance-chain/javascript-sdk/blob/cd0d303/src/tx/index.ts#L136)*
 
 encode signed transaction to hex which is compatible with amino
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **sign**(`privateKey`: string, `msg?`: SignMsg): *this*
 
-*Defined in [tx/index.ts:118](https://github.com/binance-chain/javascript-sdk/blob/6d6dd38/src/tx/index.ts#L118)*
+*Defined in [tx/index.ts:118](https://github.com/binance-chain/javascript-sdk/blob/cd0d303/src/tx/index.ts#L118)*
 
 sign transaction with a given private key and msg
 
