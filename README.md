@@ -10,6 +10,8 @@ The Binance Chain JavaScript SDK allows browsers and node.js clients to interact
 * **rpc** - Node RPC client.
 * **transaction** - Transaction Class, build and sign.
 
+Please check ts branch for typescript
+
 # Installation
 
 Important, please follow the instructions for your OS below:
