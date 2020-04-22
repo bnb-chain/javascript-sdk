@@ -23,12 +23,13 @@
     "bip39": "^3.0.2",
     "bn.js": "^4.11.8",
     "camelcase": "^5.3.1",
-    "elliptic": "^6.0.0",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^3.1.9-1",
+    "elliptic": "^6.0.0",
     "eslint-utils": "^1.4.2",
     "events": "^3.0.0",
     "is_js": "^0.9.0",
+    "minimist": "^1.2.5",
     "ndjson": "^1.5.0",
     "protocol-buffers-encodings": "^1.1.0",
     "pumpify": "^1.5.1",
@@ -81,6 +82,7 @@
   "resolutions": {
     "**/**/handlebars": "^4.1.2",
     "**/**/ecstatic": "^3.3.2",
-    "**/**/mem": "^4.0.0"
+    "**/**/mem": "^4.0.0",
+    "**/**/minimist": "^1.2.5"
   }
 }
