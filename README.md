@@ -34,10 +34,6 @@ If you **need** Ledger support with node.js:
 ```bash
 $ npm i @binance-chain/javascript-sdk
 ```
-**Typescript support**
-```bash
-$ npm i @binance-chain/javascript-sdk@3.0.0-alpha.7
-```
 
 ### Use with Webpack
 
