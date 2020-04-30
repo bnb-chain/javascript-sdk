@@ -12,4 +12,11 @@ const { BncClient } = client
 
 export { Transaction, crypto, amino, utils, ledger, rpc, types }
 
-export default BncClient
+module.exports = BncClient
+module.exports.Transaction = Transaction
+
+module.exports.crypto = crypto
+module.exports.amino = amino
+module.exports.utils = utils
+module.exports.ledger = ledger
+module.exports.rpc = rpc
