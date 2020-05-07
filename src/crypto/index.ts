@@ -175,6 +175,7 @@ export const getAddressFromPublicKey = (
 /**
  * Gets an address from a private key.
  * @param {string} privateKeyHex the private key hexstring
+ * @param {string} prefix the address prefix
  */
 export const getAddressFromPrivateKey = (
   privateKeyHex: string,
