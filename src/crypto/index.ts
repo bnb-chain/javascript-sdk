@@ -359,6 +359,7 @@ export const generateMnemonic = (): string =>
 
 /**
  * Validates mnemonic phrase words.
+ * @ignore
  * @param {string} mnemonic the mnemonic phrase words
  * @return {bool} validation result
  */

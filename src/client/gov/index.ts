@@ -25,6 +25,7 @@ const proposalTypeMapping = {
 
 /**
  * VoteOption
+ * @ignore
  * @example
  * OptionEmpty - 0x00
  * OptionYes - 0x01

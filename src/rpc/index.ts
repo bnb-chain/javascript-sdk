@@ -1,6 +1,3 @@
-/**
- * @module rpc
- */
 import { Big } from "big.js"
 
 import { unMarshalBinaryLengthPrefixed, unMarshalBinaryBare } from "../amino"

@@ -32,6 +32,7 @@ export interface SendData extends Msg {
 }
 
 /**
+ * @ignore
  * Only support transfers of one-to-one, one-to-many
  */
 export class SendMsg extends BaseMsg {
