@@ -1,7 +1,3 @@
-/**
- * @module amino.encode
- */
-
 import is from "is_js"
 import { string as VarString } from "protocol-buffers-encodings"
 
@@ -24,12 +20,14 @@ const sortObject = (obj: any): any => {
 
 /**
  * encode number
+ * @category amino
  * @param num
  */
 export const encodeNumber = (num: number) => UVarInt.encode(num)
 
 /**
  * encode bool
+ * @category amino
  * @param b
  */
 export const encodeBool = (b: boolean) =>
@@ -37,6 +35,7 @@ export const encodeBool = (b: boolean) =>
 
 /**
  * encode string
+ * @category amino
  * @param str
  */
 export const encodeString = (str: string) => {
@@ -46,6 +45,7 @@ export const encodeString = (str: string) => {
 
 /**
  * encode time
+ * @category amino
  * @param value
  */
 export const encodeTime = (value: string | Date) => {
@@ -67,6 +67,7 @@ export const encodeTime = (value: string | Date) => {
 }
 
 /**
+ * @category amino
  * @param obj -- {object}
  * @return bytes {Buffer}
  */
@@ -75,6 +76,7 @@ export const convertObjectToSignBytes = (obj: any) =>
 
 /**
  * js amino MarshalBinary
+ * @category amino
  * @param {Object} obj
  *  */
 export const marshalBinary = (obj: any) => {
@@ -85,6 +87,7 @@ export const marshalBinary = (obj: any) => {
 
 /**
  * js amino MarshalBinaryBare
+ * @category amino
  * @param {Object} obj
  *  */
 export const marshalBinaryBare = (obj: any) => {
@@ -95,6 +98,7 @@ export const marshalBinaryBare = (obj: any) => {
 
 /**
  * This is the main entrypoint for encoding all types in binary form.
+ * @category amino
  * @param {*} js data type (not null, not undefined)
  * @param {Number} field index of object
  * @param {Boolean} isByteLenPrefix
@@ -139,6 +143,7 @@ export const encodeBinary = (
 
 /**
  * prefixed with bytes length
+ * @category amino
  * @param {Buffer} bytes
  * @return {Buffer} with bytes length prefixed
  */
@@ -148,7 +153,7 @@ export const encodeBinaryByteArray = (bytes: Buffer) => {
 }
 
 /**
- *
+ * @category amino
  * @param {Object} obj
  * @return {Buffer} with bytes length prefixed
  */
@@ -186,6 +191,7 @@ export const encodeObjectBinary = (obj: any, isByteLenPrefix?: boolean) => {
 }
 
 /**
+ * @category amino
  * @param {Number} fieldNum object field index
  * @param {Array} arr
  * @param {Boolean} isByteLenPrefix

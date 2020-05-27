@@ -1,7 +1,3 @@
-/**
- * @module crypto
- */
-
 import bech32 from "bech32"
 import * as bip32 from "bip32"
 import * as bip39 from "bip39"
@@ -48,6 +44,7 @@ const ec = new EC(CURVE)
 
 /**
  * Decodes an address in bech32 format.
+ * @category crypto
  * @param {string} value the bech32 address to decode
  */
 export const decodeAddress = (value: string): Buffer => {
@@ -57,6 +54,7 @@ export const decodeAddress = (value: string): Buffer => {
 
 /**
  * Checks whether an address is valid.
+ * @category crypto
  * @param {string} address the bech32 address to decode
  * @param {string} hrp the prefix to check for the bech32 address
  * @return {boolean}
@@ -84,6 +82,7 @@ export const checkAddress = (address: string, hrp: string): boolean => {
 
 /**
  * Encodes an address from input data bytes.
+ * @category crypto
  * @param {string} value the public key to encode
  * @param {*} prefix the address prefix
  * @param {*} type the output type (default: hex)
@@ -104,6 +103,7 @@ export const encodeAddress = (
 
 /**
  * Generates 32 bytes of random entropy
+ * @category crypto
  * @param {number} len output length (default: 32 bytes)
  * @returns {string} entropy bytes hexstring
  */
@@ -112,6 +112,7 @@ export const generatePrivateKey = (len: number = PRIVKEY_LEN): string =>
 
 /**
  * Generates an arrayBuffer filled with random bits.
+ * @category crypto
  * @param {number} length - Length of buffer.
  * @returns {ArrayBuffer}
  */
@@ -119,6 +120,7 @@ export const generateRandomArray = (length: number): ArrayBuffer =>
   csprng(length)
 
 /**
+ * @category crypto
  * @param {string} publicKey - Encoded public key
  * @return {Elliptic.PublicKey} public key hexstring
  */
@@ -129,6 +131,7 @@ export const getPublicKey = (publicKey: string) => {
 
 /**
  * Calculates the public key from a given private key.
+ * @category crypto
  * @param {string} privateKeyHex the private key hexstring
  * @return {string} public key hexstring
  */
@@ -145,6 +148,7 @@ export const getPublicKeyFromPrivateKey = (privateKeyHex: string): string => {
 /**
  * PubKey performs the point-scalar multiplication from the privKey on the
  * generator point to get the pubkey.
+ * @category crypto
  * @param {Buffer} privateKey
  * @return {Elliptic.PublicKey} PubKey
  * */
@@ -156,6 +160,7 @@ export const generatePubKey = (privateKey: Buffer): curve.base.BasePoint => {
 
 /**
  * Gets an address from a public key hex.
+ * @category crypto
  * @param {string} publicKeyHex the public key hexstring
  * @param {string} prefix the address prefix
  */
@@ -174,6 +179,7 @@ export const getAddressFromPublicKey = (
 
 /**
  * Gets an address from a private key.
+ * @category crypto
  * @param {string} privateKeyHex the private key hexstring
  * @param {string} prefix the address prefix
  */
@@ -189,6 +195,7 @@ export const getAddressFromPrivateKey = (
 
 /**
  * Generates a signature (64 byte <r,s>) for a transaction based on given private key.
+ * @category crypto
  * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
  * @param {string | Buffer} privateKey - The private key.
  * @return {Buffer} Signature. Does not include tx.
@@ -208,6 +215,7 @@ export const generateSignature = (
 
 /**
  * Verifies a signature (64 byte <r,s>) given the sign bytes and public key.
+ * @category crypto
  * @param {string} sigHex - The signature hexstring.
  * @param {string} signBytesHex - Unsigned transaction sign bytes hexstring.
  * @param {string} publicKeyHex - The public key.
@@ -227,6 +235,7 @@ export const verifySignature = (
 
 /**
  * Generates a keystore object (web3 secret storage format) given a private key to store and a password.
+ * @category crypto
  * @param {string} privateKeyHex the private key hexstring.
  * @param {string} password the password.
  * @return {object} the keystore object.
@@ -286,6 +295,7 @@ export const generateKeyStore = (
 
 /**
  * Gets a private key from a keystore given its password.
+ * @category crypto
  * @param {string} keystore the keystore in json format
  * @param {string} password the password.
  */
@@ -342,6 +352,7 @@ export const getPrivateKeyFromKeyStore = (
 
 /**
  * Generates mnemonic phrase words using random entropy.
+ * @category crypto
  */
 export const generateMnemonic = (): string =>
   bip39.generateMnemonic(MNEMONIC_LEN)
@@ -355,6 +366,7 @@ export const validateMnemonic = bip39.validateMnemonic
 
 /**
  * Get a private key from mnemonic words.
+ * @category crypto
  * @param {string} mnemonic the mnemonic phrase words
  * @param {Boolean} derive derive a private key using the default HD path (default: true)
  * @param {number} index the bip44 address index (default: 0)

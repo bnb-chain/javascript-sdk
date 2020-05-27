@@ -2,10 +2,6 @@ import { TransferInClaim, ClaimMsg, ClaimTypes } from "types"
 
 import { checkAddress, decodeAddress } from "../../crypto"
 
-/**
- * Transfer smart chain token to binance chain receiver
- * @param param -  TransferInParams
- */
 export const buildTransferInClaim = ({
   sequence,
   contract_address,
@@ -85,4 +81,6 @@ export const buildTransferInClaim = ({
     claim: claimBzStr,
     validator_address: fromAddress,
   })
+
+  return claimMsg
 }

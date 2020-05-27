@@ -1145,4 +1145,12 @@ export class BncClient {
     this.address = address
     return address
   }
+
+  /**
+   * Transfer smart chain token to binance chain receiver
+   * @param param -  TransferInParams
+   */
+  transferIn(param: string): string {
+    return param
+  }
 }

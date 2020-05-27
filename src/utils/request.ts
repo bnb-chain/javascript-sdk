@@ -1,8 +1,5 @@
 import axios, { AxiosInstance, Method, AxiosRequestConfig } from "axios"
 
-/**
- * @alias utils.HttpRequest
- */
 export class HttpRequest {
   private httpClient: AxiosInstance
 

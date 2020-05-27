@@ -1,7 +1,4 @@
 /* eslint-disable */
-/**
- * @module ledger
- */
 /********************************************************************************
  *   Binance Chain Ledger App Interface
  *   (c) 2018-2019 Binance

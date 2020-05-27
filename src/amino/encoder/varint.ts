@@ -19,6 +19,8 @@ function VarIntFunc(signed: boolean) {
     offset = offset || 0
     const nStr = n.toString()
     let bn = new BN(nStr, 10)
+    const num255 = new BN(0xff)
+    const num128 = new BN(0x80)
 
     // amino signed varint is multiplied by 2
     if (signed) {
@@ -27,7 +29,7 @@ function VarIntFunc(signed: boolean) {
 
     let i = 0
     while (bn.gten(0x80)) {
-      buffer[offset + i] = bn.andln(0xff) | 0x80
+      buffer[offset + i] = bn.and(num255).or(num128).toNumber()
       bn = bn.shrn(7)
       i++
     }

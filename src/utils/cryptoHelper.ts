@@ -1,7 +1,3 @@
-/**
- * @module utils
- */
-
 import hexEncoding from "crypto-js/enc-hex"
 import RIPEMD160 from "crypto-js/ripemd160"
 import SHA256 from "crypto-js/sha256"

@@ -1,8 +1,3 @@
-/* eslint-disable */
-/**
- * @module amino.decode
- */
-
 import is from "is_js"
 import {
   string as varString,
@@ -20,6 +15,7 @@ const decoder = (bytes: Buffer, varType: any) => {
 }
 
 /**
+ * @category amino
  * js amino UnmarshalBinaryLengthPrefixed
  * @param {Buffer} bytes
  * @param {Object} type
@@ -28,7 +24,7 @@ const decoder = (bytes: Buffer, varType: any) => {
 export const unMarshalBinaryLengthPrefixed = (
   bytes: Buffer,
   type: any
-): object => {
+): any => {
   if (bytes.length === 0) throw new TypeError("Cannot decode empty bytes")
 
   // read byte-length prefix
@@ -43,12 +39,13 @@ export const unMarshalBinaryLengthPrefixed = (
 }
 
 /**
+ * @category amino
  * js amino UnmarshalBinaryBare
  * @param {Buffer} bytes
  * @param {Object} type
  * @returns {Object}
  *  */
-export const unMarshalBinaryBare = (bytes: Buffer, type: any): object => {
+export const unMarshalBinaryBare = (bytes: Buffer, type: any): any => {
   if (!is.object(type)) throw new TypeError("type should be object")
 
   if (!Buffer.isBuffer(bytes)) throw new TypeError("bytes must be buffer")

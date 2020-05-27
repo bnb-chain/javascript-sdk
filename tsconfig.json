@@ -26,6 +26,7 @@
   },
   "typedocOptions": {
     "mode": "file",
-    "out": "docs"
+    "out": "docs",
+    "exclude": ["src/declarations.ts"]
   }
 }
