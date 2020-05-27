@@ -2,15 +2,10 @@
  * @module rpc
  */
 import { Big } from "big.js"
+
 import { unMarshalBinaryLengthPrefixed, unMarshalBinaryBare } from "../amino"
-import * as crypto from "../crypto"
-import BaseRpc from "./baseRpc"
-import {
-  validateSymbol,
-  validateTradingPair,
-  validateOffsetLimit,
-} from "../utils"
 import { NETWORK_PREFIX_MAPPING } from "../client"
+import * as crypto from "../crypto"
 import Transaction from "../tx"
 import {
   Token,
@@ -26,8 +21,15 @@ import {
   StdTx,
   ResponseDeliverTx,
 } from "../types"
+import {
+  validateSymbol,
+  validateTradingPair,
+  validateOffsetLimit,
+  convertObjectArrayNum,
+  getMsgByAminoPrefix,
+} from "../utils"
 
-import { convertObjectArrayNum, getMsgByAminoPrefix } from "../utils"
+import BaseRpc from "./baseRpc"
 
 /**
  * The Binance Chain Node rpc client
@@ -40,7 +42,7 @@ class RpcClient extends BaseRpc {
    * @param {String} netWork Binance Chain network
    */
   constructor(
-    uriString: string = "localhost:27146",
+    uriString = "localhost:27146",
     netWork: keyof typeof NETWORK_PREFIX_MAPPING
   ) {
     super(uriString)
@@ -253,7 +255,7 @@ class RpcClient extends BaseRpc {
     return depth
   }
 
-  async getTxByHash(hash: Buffer | string, prove: boolean = true) {
+  async getTxByHash(hash: Buffer | string, prove = true) {
     if (!Buffer.isBuffer(hash)) {
       hash = Buffer.from(hash, "hex")
     }

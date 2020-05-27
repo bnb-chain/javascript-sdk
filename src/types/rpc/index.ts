@@ -1,5 +1,5 @@
-import { AminoPrefix } from "../tx"
 import { Coin } from "../msg"
+import { AminoPrefix } from "../tx"
 
 export class Token {
   public aminoPrefix = AminoPrefix.BnbchainToken

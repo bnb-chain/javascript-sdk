@@ -28,6 +28,6 @@ export const size = function <T>(
   acc: number
 ): number {
   if (acc === undefined) acc = 0
-  for (var i = 0; i < items.length; ++i) acc += iter(items[i], i, acc)
+  for (let i = 0; i < items.length; ++i) acc += iter(items[i], i, acc)
   return acc
 }

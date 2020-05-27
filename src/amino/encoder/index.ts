@@ -2,12 +2,14 @@
  * @module amino.encode
  */
 
-import { string as VarString } from "protocol-buffers-encodings"
 import is from "is_js"
-import { UVarInt } from "./varint"
+import { string as VarString } from "protocol-buffers-encodings"
+
 import typeToTyp3 from "../../utils/encoderHelper"
 
-const sortObject = (obj: any): object | null => {
+import { UVarInt } from "./varint"
+
+const sortObject = (obj: any): any => {
   if (obj === null) return null
   if (typeof obj !== "object") return obj
   // arrays have typeof "object" in js!
@@ -38,7 +40,7 @@ export const encodeBool = (b: boolean) =>
  * @param str
  */
 export const encodeString = (str: string) => {
-  var buf = Buffer.alloc(VarString.encodingLength(str))
+  const buf = Buffer.alloc(VarString.encodingLength(str))
   return VarString.encode(str, buf, 0)
 }
 

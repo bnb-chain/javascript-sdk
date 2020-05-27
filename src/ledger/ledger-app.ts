@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @module ledger
  */
@@ -111,13 +112,7 @@ class LedgerApp {
     this._transport.setScrambleKey(SCRAMBLE_KEY)
   }
 
-  _serialize(
-    cla: number = CLA,
-    ins: number,
-    p1: number = 0,
-    p2: number = 0,
-    data: any = null
-  ) {
+  _serialize(cla: number = CLA, ins: number, p1 = 0, p2 = 0, data: any = null) {
     let size = 5
     if (data != null) {
       if (data.length > 255) {
@@ -125,7 +120,7 @@ class LedgerApp {
       }
       size += data.length
     }
-    let buffer = Buffer.alloc(size)
+    const buffer = Buffer.alloc(size)
 
     buffer[0] = cla
     buffer[1] = ins
@@ -145,7 +140,7 @@ class LedgerApp {
     if (hrp == null || hrp.length < 3 || hrp.length > 83) {
       throw new Error("Invalid HRP")
     }
-    let buf = Buffer.alloc(1 + hrp.length)
+    const buf = Buffer.alloc(1 + hrp.length)
     buf.writeUInt8(hrp.length, 0)
     buf.write(hrp, 1)
     return buf
@@ -158,7 +153,7 @@ class LedgerApp {
     if (path.length > 10) {
       throw new Error("Invalid path. Length should be <= 10")
     }
-    let buf = Buffer.alloc(1 + 4 * path.length)
+    const buf = Buffer.alloc(1 + 4 * path.length)
     buf.writeUInt8(path.length, 0)
     for (let i = 0; i < path.length; i++) {
       let v = path[i]
@@ -250,7 +245,7 @@ class LedgerApp {
     const result: Version = {}
     try {
       this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
-      let apduResponse = await this._transport.send(
+      const apduResponse = await this._transport.send(
         CLA,
         INS_GET_VERSION,
         0,
@@ -319,7 +314,7 @@ class LedgerApp {
     const result: PublicKey = {}
     try {
       this._transport.setExchangeTimeout(this._nonInteractiveTimeout)
-      let apduResponse = await this._transport.send(
+      const apduResponse = await this._transport.send(
         CLA,
         INS_PUBLIC_KEY_SECP256K1,
         0,
@@ -391,7 +386,7 @@ class LedgerApp {
   _signGetChunks(data: any, hdPath: number[]) {
     const chunks = []
     chunks.push(this._serializeHDPath(hdPath))
-    let buffer = Buffer.from(data)
+    const buffer = Buffer.from(data)
     for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
       let end = i + CHUNK_SIZE
       if (i > buffer.length) {
@@ -405,7 +400,7 @@ class LedgerApp {
   async _signSendChunk(chunkIdx: any, chunksCount: any, chunk: any) {
     const result: SignedSignature = {}
     try {
-      let apduResponse = await this._transport.send(
+      const apduResponse = await this._transport.send(
         CLA,
         INS_SIGN_SECP256K1,
         chunkIdx,
@@ -414,7 +409,7 @@ class LedgerApp {
       )
       if (!Buffer.isBuffer(apduResponse))
         throw new Error("expected apduResponse to be Buffer")
-      let returnCode = apduResponse.slice(-2)
+      const returnCode = apduResponse.slice(-2)
 
       result["return_code"] = returnCode[0] * 256 + returnCode[1]
       result["error_message"] = this._errorMessage(result["return_code"])
@@ -526,7 +521,7 @@ class LedgerApp {
       // decode DER string format
       let rOffset = 4
       let rLen = signature[3]
-      let sLen = signature[4 + rLen + 1] // skip over following 0x02 type prefix for s
+      const sLen = signature[4 + rLen + 1] // skip over following 0x02 type prefix for s
       let sOffset = signature.length - sLen
       // we can safely ignore the first byte in the 33 bytes cases
       if (rLen === 33) {
@@ -579,16 +574,16 @@ class LedgerApp {
    * @throws Will throw Error if a transport error occurs, or if the firmware app is not open.
    */
   async showAddress(
-    hrp: string = "bnb",
+    hrp = "bnb",
     hdPath: number[] = [44, 714, 0, 0, 0]
   ): Promise<ReturnResponse> {
     const result: ReturnResponse = {}
-    let data = Buffer.concat([
+    const data = Buffer.concat([
       this._serializeHRP(hrp),
       this._serializeHDPath(hdPath),
     ])
     this._transport.setExchangeTimeout(this._interactiveTimeout)
-    let apduResponse = await this._transport.send(
+    const apduResponse = await this._transport.send(
       CLA,
       INS_SHOW_ADDR_SECP256K1,
       0,
@@ -598,7 +593,7 @@ class LedgerApp {
     )
     if (!Buffer.isBuffer(apduResponse))
       throw new Error("expected apduResponse to be Buffer")
-    let returnCode = apduResponse.slice(-2)
+    const returnCode = apduResponse.slice(-2)
     result["return_code"] = returnCode[0] * 256 + returnCode[1]
     result["error_message"] = this._errorMessage(result["return_code"])
     if (result.return_code === 0x6a80) {

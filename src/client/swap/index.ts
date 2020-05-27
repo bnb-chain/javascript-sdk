@@ -4,11 +4,10 @@
 
 import { Buffer } from "buffer"
 
-import * as crypto from "../../crypto"
-import { checkCoins } from "../../utils/validateHelper"
 import { BncClient } from ".."
-import { Coin } from "../../types"
-import { AminoPrefix } from "../../types"
+import * as crypto from "../../crypto"
+import { Coin, AminoPrefix } from "../../types"
+import { checkCoins } from "../../utils/validateHelper"
 
 class Swap {
   static instance: Swap

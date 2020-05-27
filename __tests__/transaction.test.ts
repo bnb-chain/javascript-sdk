@@ -1,3 +1,4 @@
+import Transaction from "../src/tx"
 import {
   CancelOrderMsg,
   NewOrderMsg,
@@ -14,7 +15,7 @@ import {
   TimeReLockMsg,
   TimeUnlockMsg,
 } from "../src/types"
-import Transaction from "../src/tx"
+
 import { getClient, privateKey, address, targetAddress } from "./utils"
 
 const buildAndSendTx = async (msg) => {
@@ -189,7 +190,6 @@ describe("Transaction", () => {
       })
       await buildAndSendTx(freezeMsg)
     } catch (err) {
-      console.log(err)
       if (err.message.includes("insufficient fund")) {
         expect(1).toBeTruthy()
         return

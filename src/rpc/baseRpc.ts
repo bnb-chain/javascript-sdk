@@ -2,19 +2,19 @@
  * https://github.com/nomic-io/js-tendermint/blob/master/src/rpc.js
  */
 
-import is from "is_js"
-import { EventEmitter } from "events"
 import axios from "axios"
-import url from "url"
-import websocket from "websocket-stream"
+import { EventEmitter } from "events"
+import is from "is_js"
 import ndjson from "ndjson"
 import Pumpify from "pumpify"
+import url from "url"
+import websocket from "websocket-stream"
 
 export type Args = { [k: string]: any }
 
 function convertHttpArgs(url: string, args: Args = {}) {
   const search = []
-  for (let k in args) {
+  for (const k in args) {
     if (is.string(args[k])) {
       search.push(`${k}="${args[k]}"`)
     } else if (Buffer.isBuffer(args[k])) {
@@ -27,8 +27,8 @@ function convertHttpArgs(url: string, args: Args = {}) {
 }
 
 function convertWsArgs(args: Args = {}) {
-  for (let k in args) {
-    let v = args[k]
+  for (const k in args) {
+    const v = args[k]
     if (typeof v === "number") {
       args[k] = String(v)
     } else if (Buffer.isBuffer(v)) {
@@ -47,7 +47,7 @@ const allProtocols = wsProtocols.concat(httpProtocols)
 export default class BaseRpc extends EventEmitter {
   private uri: string
   public call!: BaseRpc["callWs"] | BaseRpc["callHttp"]
-  private closed: boolean = false
+  private closed = false
   private ws?: Pumpify
 
   constructor(uriString = "localhost:27146") {
@@ -58,7 +58,7 @@ export default class BaseRpc extends EventEmitter {
 
     // default to http
     if (!protocol || !allProtocols.includes(protocol)) {
-      let uri = url.parse(`http://${uriString}`)
+      const uri = url.parse(`http://${uriString}`)
       protocol = uri.protocol
       hostname = uri.hostname
       port = uri.port
@@ -100,7 +100,7 @@ export default class BaseRpc extends EventEmitter {
     }).then(
       function ({ data }) {
         if (data.error) {
-          let err = Error(data.error.message)
+          const err = Error(data.error.message)
           Object.assign(err, data.error)
           throw err
         }
@@ -113,10 +113,10 @@ export default class BaseRpc extends EventEmitter {
   }
 
   callWs(method: string, args?: Args, listener?: (value: any) => void) {
-    let self = this
+    const self = this
     return new Promise((resolve, reject) => {
-      let id = Math.random().toString(36)
-      let params = convertWsArgs(args)
+      const id = Math.random().toString(36)
+      const params = convertWsArgs(args)
       if (method === "subscribe") {
         if (typeof listener !== "function") {
           throw Error("Must provide listener function")

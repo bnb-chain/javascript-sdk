@@ -1,14 +1,15 @@
+/* eslint-disable */
 /**
  * @module amino.decode
  */
 
+import is from "is_js"
 import {
   string as varString,
   bool as varBool,
   bytes as varBytes,
   varint,
 } from "protocol-buffers-encodings"
-import is from "is_js"
 
 import typeToTyp3 from "../../utils/encoderHelper"
 
@@ -125,7 +126,7 @@ const decodeObjectBinary = (
 
   let lastFieldNum = 0
 
-  let keys = Object.keys(type).filter((key) => key !== "aminoPrefix")
+  const keys = Object.keys(type).filter((key) => key !== "aminoPrefix")
 
   keys.forEach((key, index) => {
     if (is.array(type[key])) {
@@ -215,7 +216,7 @@ export const decodeFieldNumberAndTyp3 = (bytes: Buffer): any => {
   const { val } = decoder(bytes, varint)
 
   const typ = val & 7
-  let fieldNum = val >> 3
+  const fieldNum = val >> 3
   if (fieldNum > 1 << (29 - 1)) {
     throw new Error(`invalid field num ${fieldNum}`)
   }

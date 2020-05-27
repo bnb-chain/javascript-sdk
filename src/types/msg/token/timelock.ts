@@ -1,7 +1,6 @@
-import { BaseMsg, Msg, SignMsg } from "../"
+import { BaseMsg, Msg, SignMsg, Coin } from "../"
 import * as crypto from "../../../crypto"
 import { AminoPrefix } from "../../tx"
-import { Coin } from "../"
 
 export interface SignedTimeLockMsg extends SignMsg {
   from: string
@@ -28,7 +27,7 @@ export class TimeLockMsg extends BaseMsg {
     address,
     description,
     amount,
-    lock_time
+    lock_time,
   }: {
     address: string
     description: string
@@ -47,7 +46,7 @@ export class TimeLockMsg extends BaseMsg {
       from: this.from,
       amount: this.amount,
       description: this.description,
-      lock_time: this.lock_time
+      lock_time: this.lock_time,
     }
 
     return signMsg
@@ -59,7 +58,7 @@ export class TimeLockMsg extends BaseMsg {
       description: this.description,
       amount: this.amount,
       lock_time: this.lock_time,
-      aminoPrefix: AminoPrefix.TimeLockMsg
+      aminoPrefix: AminoPrefix.TimeLockMsg,
     }
 
     return data
@@ -71,7 +70,7 @@ export class TimeLockMsg extends BaseMsg {
       description: "",
       amount: [{ denom: "", amount: 0 }],
       lock_time: 0,
-      aminoPrefix: AminoPrefix.TimeLockMsg
+      aminoPrefix: AminoPrefix.TimeLockMsg,
     }
   }
 }

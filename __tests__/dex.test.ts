@@ -1,5 +1,6 @@
-import { getClient, address, targetAddress, wait } from "./utils"
 import * as crypto from "../src/crypto"
+
+import { getClient, address, targetAddress, wait } from "./utils"
 
 describe("dex", () => {
   beforeEach(() => {
@@ -45,7 +46,7 @@ describe("dex", () => {
     jest.setTimeout(30000)
 
     const coin = "BNB"
-    let amount = 2.00177011
+    const amount = 2.00177011
     const client = await getClient(false)
     const addr = crypto.getAddressFromPrivateKey(client.privateKey)
     const account = await client._httpClient.request(

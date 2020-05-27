@@ -1,11 +1,11 @@
+import * as amino from "./amino"
 import * as client from "./client"
 import * as crypto from "./crypto"
-import * as amino from "./amino"
-import * as utils from "./utils"
-import * as types from "./types"
-import rpc from "./rpc"
 import ledger from "./ledger"
+import rpc from "./rpc"
 import Transaction from "./tx"
+import * as types from "./types"
+import * as utils from "./utils"
 import "./declarations"
 
 const { BncClient } = client

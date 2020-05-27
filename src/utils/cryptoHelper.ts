@@ -3,9 +3,10 @@
  */
 
 import hexEncoding from "crypto-js/enc-hex"
-import SHA3 from "crypto-js/sha3"
-import SHA256 from "crypto-js/sha256"
 import RIPEMD160 from "crypto-js/ripemd160"
+import SHA256 from "crypto-js/sha256"
+import SHA3 from "crypto-js/sha3"
+
 import * as crypto from "../crypto"
 
 /**
@@ -90,7 +91,7 @@ export const int2hex = (num: number) => {
   if (typeof num !== "number") {
     throw new Error("int2hex expects a number")
   }
-  let h = num.toString(16)
+  const h = num.toString(16)
   return h.length % 2 ? "0" + h : h
 }
 
@@ -101,11 +102,7 @@ export const int2hex = (num: number) => {
  * @param {Boolean} littleEndian - Encode the hex in little endian form
  * @return {string}
  */
-export const num2hexstring = (
-  num: number,
-  size: number = 1,
-  littleEndian: boolean = false
-) => {
+export const num2hexstring = (num: number, size = 1, littleEndian = false) => {
   if (typeof num !== "number") throw new Error("num must be numeric")
   if (num < 0) throw new RangeError("num is unsigned (>= 0)")
   if (size % 1 !== 0) throw new Error("size must be a whole integer")
@@ -169,7 +166,7 @@ export const hexXor = (str1: string, str2: string) => {
 export const reverseArray = (arr: any[]) => {
   if (typeof arr !== "object" || !arr.length)
     throw new Error("reverseArray expects an array")
-  let result = new Uint8Array(arr.length)
+  const result = new Uint8Array(arr.length)
   for (let i = 0; i < arr.length; i++) {
     result[i] = arr[arr.length - 1 - i]
   }

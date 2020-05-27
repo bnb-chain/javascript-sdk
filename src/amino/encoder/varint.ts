@@ -1,4 +1,4 @@
-const BN = require("bn.js")
+import BN from "bn.js"
 
 function VarIntFunc(signed: boolean) {
   const encodingLength = (n: number) => {
@@ -6,7 +6,7 @@ function VarIntFunc(signed: boolean) {
     if (n < 0) {
       throw Error("varint value is out of bounds")
     }
-    let bits = Math.log2(n + 1)
+    const bits = Math.log2(n + 1)
     return Math.ceil(bits / 7) || 1
   }
 

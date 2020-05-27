@@ -1,5 +1,6 @@
-import { Coin } from "../types"
 import Big, { BigSource } from "big.js"
+
+import { Coin } from "../types"
 
 const MAX_INT64 = Math.pow(2, 63)
 

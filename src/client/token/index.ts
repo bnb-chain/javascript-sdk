@@ -4,13 +4,11 @@
 import Big, { BigSource } from "big.js"
 
 // import { TxTypes } from "../tx/"
-import * as crypto from "../../crypto"
 import { api, BncClient } from ".."
-import { validateSymbol } from "../../utils/validateHelper"
-import { checkCoins } from "../../utils/validateHelper"
+import * as crypto from "../../crypto"
+import { Coin, AminoPrefix } from "../../types"
 import HttpRequest from "../../utils/request"
-import { Coin } from "../../types"
-import { AminoPrefix } from "../../types"
+import { validateSymbol, checkCoins } from "../../utils/validateHelper"
 
 const MAXTOTALSUPPLY = 9000000000000000000
 
@@ -43,7 +41,6 @@ const validateNonZeroAmount = async (
     }
   } catch (err) {
     //if get account failed. still broadcast
-    console.log(err)
   }
 }
 
@@ -77,8 +74,8 @@ class TokenManagement {
     senderAddress: string,
     tokenName: string,
     symbol: string,
-    totalSupply: number = 0,
-    mintable: boolean = false
+    totalSupply = 0,
+    mintable = false
   ) {
     if (!senderAddress) {
       throw new Error("sender address cannot be empty")

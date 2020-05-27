@@ -2,15 +2,15 @@
  * @module crypto
  */
 
-import csprng from "secure-random"
 import bech32 from "bech32"
-import cryp from "crypto-browserify"
-import uuid from "uuid"
-import is from "is_js"
 import * as bip32 from "bip32"
 import * as bip39 from "bip39"
+import cryp from "crypto-browserify"
 import { ec as EC, curve } from "elliptic"
+import is from "is_js"
+import csprng from "secure-random"
 import ecc from "tiny-secp256k1"
+import uuid from "uuid"
 
 import { ab2hexstring, sha3, sha256, sha256ripemd160 } from "../utils"
 
@@ -90,7 +90,7 @@ export const checkAddress = (address: string, hrp: string): boolean => {
  */
 export const encodeAddress = (
   value: string | Buffer,
-  prefix: string = "tbnb",
+  prefix = "tbnb",
   type: BufferEncoding = "hex"
 ): string => {
   let words
@@ -123,7 +123,7 @@ export const generateRandomArray = (length: number): ArrayBuffer =>
  * @return {Elliptic.PublicKey} public key hexstring
  */
 export const getPublicKey = (publicKey: string) => {
-  let keyPair = ec.keyFromPublic(publicKey, "hex")
+  const keyPair = ec.keyFromPublic(publicKey, "hex")
   return keyPair.getPublic()
 }
 
@@ -363,9 +363,9 @@ export const validateMnemonic = bip39.validateMnemonic
  */
 export const getPrivateKeyFromMnemonic = (
   mnemonic: string,
-  derive: boolean = true,
-  index: number = 0,
-  password: string = ""
+  derive = true,
+  index = 0,
+  password = ""
 ): string => {
   if (
     !bip39.validateMnemonic(mnemonic, bip39.wordlists.english) &&
