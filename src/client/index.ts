@@ -7,13 +7,15 @@ import Big, { BigSource } from "big.js"
 import * as crypto from "../crypto"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
 import Transaction from "../tx"
-import { AminoPrefix, Coin } from "../types/"
+import { AminoPrefix, Coin, TransferInClaim } from "../types/"
 import HttpRequest from "../utils/request"
 import { checkNumber } from "../utils/validateHelper"
 
 import Gov from "./gov"
 import Swap from "./swap"
 import TokenManagement from "./token"
+import { buildTransferInClaim } from "./bridge"
+import { checkAddress } from "../crypto"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -1144,13 +1146,5 @@ export class BncClient {
     )
     this.address = address
     return address
-  }
-
-  /**
-   * Transfer smart chain token to binance chain receiver
-   * @param param -  TransferInParams
-   */
-  transferIn(param: string): string {
-    return param
   }
 }

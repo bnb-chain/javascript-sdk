@@ -69,7 +69,7 @@ export class BindMsg extends BaseMsg {
       from: crypto.decodeAddress(this.from),
       symbol: this.symbol,
       amount: this.amount,
-      contract_address: crypto.decodeAddress(this.contract_address),
+      contract_address: Buffer.from(this.contract_address.slice(2)),
       contract_decimals: this.contract_decimals,
       expire_time: this.expire_time,
       aminoPrefix: AminoPrefix.BindMsg,

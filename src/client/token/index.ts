@@ -44,6 +44,9 @@ const validateNonZeroAmount = async (
   }
 }
 
+/**
+ * issue or view tokens
+ */
 class TokenManagement {
   static instance: TokenManagement
 
