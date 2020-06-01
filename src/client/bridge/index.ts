@@ -9,6 +9,7 @@ import {
   Coin,
   TransferOutMsg,
   UpdateBindClaim,
+  SkipSequenceClaim,
 } from "types"
 
 import { checkAddress, decodeAddress } from "../../crypto"
@@ -36,7 +37,7 @@ export class Bridge {
   /**
    * transfer smart chain token to binance chain receiver
    */
-  async transferIn({
+  public async transferIn({
     sequence,
     contract_address,
     refund_addresses,
@@ -118,7 +119,7 @@ export class Bridge {
   /**
    * refund tokens to sender if transfer to smart chain failed
    */
-  async transferOutRefund({
+  public async transferOutRefund({
     transfer_out_sequence,
     refund_address,
     refund_reason,
@@ -163,7 +164,7 @@ export class Bridge {
   /**
    * bind smart chain token to bep2 token
    */
-  async bind({
+  public async bind({
     contractAddress,
     contractDecimal,
     amount,
@@ -201,7 +202,7 @@ export class Bridge {
   /**
    * transfer bep2 token to smart chain
    */
-  async transferOut({
+  public async transferOut({
     toAddress,
     amount,
     expireTime,
@@ -233,7 +234,7 @@ export class Bridge {
   /**
    * update bind request when events from smart chain received
    */
-  async upateBind({
+  public async upateBind({
     sequence,
     contract_address,
     symbol,
@@ -264,6 +265,38 @@ export class Bridge {
       sequence,
       fromAddress,
       claim_type: ClaimTypes.ClaimTypeUpdateBind,
+    })
+  }
+
+  public async skipSequence({
+    sequence,
+    sequenceToSkip,
+    fromAddress,
+  }: {
+    sequence: number
+    sequenceToSkip: number
+    fromAddress: string
+  }) {
+    if (sequence < 0) {
+      throw new Error("sequence should not be less than 0")
+    }
+
+    if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
+      throw new Error("fromAddress is not a valid Binance Chain address")
+    }
+
+    const claimHex = Buffer.from(
+      JSON.stringify({
+        claim_type: ClaimTypes.ClaimTypeUpdateBind,
+        sequence: sequenceToSkip,
+      })
+    ).toString("hex")
+
+    return this.buildClaimAndBroadcast({
+      claimHex,
+      sequence,
+      fromAddress,
+      claim_type: ClaimTypes.ClaimTypeSkipSequence,
     })
   }
 

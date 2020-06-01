@@ -43,3 +43,8 @@ export interface UpdateBindClaim {
   symbol: string
   contract_address: string
 }
+
+export interface SkipSequenceClaim {
+  claim_type: ClaimTypes
+  sequenceToSkip: number
+}
