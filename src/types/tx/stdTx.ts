@@ -69,4 +69,9 @@ export enum AminoPrefix {
   ClaimMsg = "175A0521",
   BindMsg = "B9AE640C",
   TransferOutMsg = "800819C0",
+  IssueMiniMsg = "A3F16C41",
+  IssueTinyMsg = "ED2832D4",
+  SetURIMsg = "7B1D34E7",
+  ListMiniMsg = "4C264019",
+  MiniToken = "E0051C20",
 }

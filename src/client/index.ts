@@ -7,15 +7,14 @@ import Big, { BigSource } from "big.js"
 import * as crypto from "../crypto"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
 import Transaction from "../tx"
-import { AminoPrefix, Coin, TransferInClaim } from "../types/"
+import { AminoPrefix, Coin } from "../types/"
 import HttpRequest from "../utils/request"
 import { checkNumber } from "../utils/validateHelper"
 
 import Gov from "./gov"
 import Swap from "./swap"
-import TokenManagement from "./token"
-import { buildTransferInClaim } from "./bridge"
-import { checkAddress } from "../crypto"
+import TokenManagement, { validateMiniTokenSymbol } from "./token"
+import { ListMiniMsg } from "types/msg/dex/listMiniMsg"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -669,6 +668,54 @@ export class BncClient {
       address,
       sequence,
       ""
+    )
+    return this._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * list miniToken
+   */
+  async listMiniToken({
+    from,
+    baseAsset,
+    quoteAsset,
+    initPrice,
+    sequence = 0,
+  }: {
+    from: string
+    baseAsset: string
+    quoteAsset: string
+    initPrice: number
+    sequence?: number
+  }) {
+    validateMiniTokenSymbol(baseAsset)
+
+    if (initPrice <= 0) {
+      throw new Error("price should larger than 0")
+    }
+
+    if (!from) {
+      throw new Error("address should not be falsy")
+    }
+
+    if (!quoteAsset) {
+      throw new Error("quoteAsset should not be falsy")
+    }
+
+    const init_price = Number(new Big(initPrice).mul(BASENUMBER).toString())
+
+    const listMiniMsg = new ListMiniMsg({
+      from,
+      base_asset_symbol: baseAsset,
+      quote_asset_symbol: quoteAsset,
+      init_price,
+    })
+
+    const signedTx = await this._prepareTransaction(
+      listMiniMsg.getMsg(),
+      listMiniMsg.getSignMsg(),
+      from,
+      sequence
     )
     return this._broadcastDelegate(signedTx)
   }
