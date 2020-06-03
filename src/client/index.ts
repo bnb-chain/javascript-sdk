@@ -14,6 +14,7 @@ import { checkNumber } from "../utils/validateHelper"
 import Gov from "./gov"
 import Swap from "./swap"
 import TokenManagement, { validateMiniTokenSymbol } from "./token"
+import { Bridge } from "./bridge"
 import { ListMiniMsg } from "types/msg/dex/listMiniMsg"
 
 const BASENUMBER = Math.pow(10, 8)
@@ -141,6 +142,7 @@ export class BncClient {
   public tokens: TokenManagement
   public swap: Swap
   public gov: Gov
+  public bridge: Bridge
   public chainId?: string | null
   public addressPrefix: typeof NETWORK_PREFIX_MAPPING[keyof typeof NETWORK_PREFIX_MAPPING] =
     "tbnb"
@@ -167,6 +169,7 @@ export class BncClient {
     this.tokens = new TokenManagement(this)
     this.swap = new Swap(this)
     this.gov = new Gov(this)
+    this.bridge = new Bridge(this)
     this.privateKey = ""
   }
 
