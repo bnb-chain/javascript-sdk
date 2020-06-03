@@ -1,9 +1,4 @@
-/**
- * @module Token
- */
 import Big, { BigSource } from "big.js"
-
-// import { TxTypes } from "../tx/"
 import { IssueTinyTokenMsg } from "types/msg/token/issueTinyToken"
 import { SetTokenUriMsg } from "types/msg/token/setTokenUri"
 
