@@ -9,7 +9,6 @@ import {
   Coin,
   TransferOutMsg,
   UpdateBindClaim,
-  SkipSequenceClaim,
 } from "types"
 
 import { checkAddress, decodeAddress } from "../../crypto"
