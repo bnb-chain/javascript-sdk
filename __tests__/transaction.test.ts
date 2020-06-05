@@ -14,6 +14,7 @@ import {
   TimeLockMsg,
   TimeReLockMsg,
   TimeUnlockMsg,
+  TransferOutMsg,
 } from "../src/types"
 
 import { getClient, privateKey, address, targetAddress } from "./utils"
@@ -301,6 +302,23 @@ describe("Transaction", () => {
         expect(1).toBeTruthy()
         return
       }
+      throw err
+    }
+  })
+
+  it("transfer from bc to bsc", async () => {
+    try {
+      const toAddress = "0xc1c87c37be3Ef20273A4E8982293EEb6E08C620C"
+      const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+      const transferOutMsg = new TransferOutMsg({
+        from,
+        to: toAddress,
+        expire_time: 1597543193,
+        amount: { denom: "BNB", amount: 1 },
+      })
+
+      await buildAndSendTx(transferOutMsg)
+    } catch (err) {
       throw err
     }
   })

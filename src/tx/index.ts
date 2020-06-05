@@ -14,7 +14,7 @@ import {
   StdSignature,
   StdTx,
   AminoPrefix,
-} from "../types/"
+} from "../types"
 
 /**
  * Creates a new transaction object.
@@ -83,7 +83,6 @@ export default class Transaction {
       sequence: this.sequence.toString(),
       source: this.source.toString(),
     }
-
     return convertObjectToSignBytes(signMsg)
   }
 
@@ -170,34 +169,4 @@ export default class Transaction {
     pubBz = Buffer.concat([Buffer.from("EB5AE987", "hex"), pubBz])
     return pubBz
   }
-}
-
-export const buildSignedTransaction = ({
-  msg,
-  chainId,
-  accountNumber,
-  sequence,
-  source = 0,
-  memo,
-  privateKey,
-}: {
-  msg: BaseMsg
-  chainId: string
-  accountNumber: number
-  sequence: number
-  source: number
-  memo: string
-  privateKey: string
-}) => {
-  const data: StdSignMsg = {
-    chainId: chainId,
-    accountNumber: accountNumber,
-    sequence: sequence,
-    baseMsg: msg,
-    memo,
-    source,
-  }
-
-  const tx = new Transaction(data)
-  return tx.sign(privateKey).serialize()
 }

@@ -1,6 +1,3 @@
-/**
- * @module gov
- */
 import Big, { BigSource } from "big.js"
 
 import { BncClient } from ".." // This is a circular dependecy; should be changed to `import type` asap

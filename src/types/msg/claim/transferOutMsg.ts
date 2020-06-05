@@ -1,3 +1,5 @@
+import Big from "big.js"
+
 import { BaseMsg, Msg, SignMsg, Coin } from ".."
 import * as crypto from "../../../crypto"
 import { AminoPrefix } from "../../tx"
@@ -37,7 +39,10 @@ export class TransferOutMsg extends BaseMsg {
     super()
     this.from = from
     this.to = to
-    this.amount = amount
+    this.amount = {
+      ...amount,
+      amount: new Big(amount.amount).mul(Math.pow(10, 8)).toString(),
+    }
     this.expire_time = expire_time
   }
 
@@ -53,7 +58,7 @@ export class TransferOutMsg extends BaseMsg {
   getMsg(): TransferoutData {
     return {
       from: crypto.decodeAddress(this.from),
-      to: Buffer.from(this.to, "hex"),
+      to: Buffer.from(this.to.slice(2), "hex"),
       amount: this.amount,
       expire_time: this.expire_time,
       aminoPrefix: AminoPrefix.TransferOutMsg,

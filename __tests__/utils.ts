@@ -1,4 +1,4 @@
-import BncClient from "../src"
+import { BncClient } from "../src/client"
 import * as crypto from "../src/crypto"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
@@ -73,13 +73,13 @@ export const keystores = {
 
 export const targetAddress = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
 
-let client: any = {}
+let client: BncClient
 
 export const getClient = async (
   useAwaitSetPrivateKey = true,
   doNotSetPrivateKey = false
 ) => {
-  if (client.chainId) {
+  if (client && client.chainId) {
     return client
   }
 

@@ -1,10 +1,14 @@
 import Big, { BigSource } from "big.js"
-import { IssueTinyTokenMsg } from "types/msg/token/issueTinyToken"
-import { SetTokenUriMsg } from "types/msg/token/setTokenUri"
 
 import { api, BncClient } from ".."
 import * as crypto from "../../crypto"
-import { Coin, AminoPrefix, IssueMiniTokenMsg } from "../../types"
+import {
+  Coin,
+  AminoPrefix,
+  IssueMiniTokenMsg,
+  IssueTinyTokenMsg,
+  SetTokenUriMsg,
+} from "../../types"
 import HttpRequest from "../../utils/request"
 import { validateSymbol, checkCoins } from "../../utils/validateHelper"
 

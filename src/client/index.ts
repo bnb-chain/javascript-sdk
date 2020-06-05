@@ -1,13 +1,10 @@
 /* eslint-disable */
-/**
- * @module client
- */
 import Big, { BigSource } from "big.js"
 
 import * as crypto from "../crypto"
 import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
 import Transaction from "../tx"
-import { AminoPrefix, Coin } from "../types/"
+import { AminoPrefix, Coin, ListMiniMsg } from "../types/"
 import HttpRequest from "../utils/request"
 import { checkNumber } from "../utils/validateHelper"
 
@@ -15,7 +12,6 @@ import Gov from "./gov"
 import Swap from "./swap"
 import TokenManagement, { validateMiniTokenSymbol } from "./token"
 import { Bridge } from "./bridge"
-import { ListMiniMsg } from "types/msg/dex/listMiniMsg"
 
 const BASENUMBER = Math.pow(10, 8)
 

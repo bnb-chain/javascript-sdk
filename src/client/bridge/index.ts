@@ -1,4 +1,5 @@
-import { BncClient } from "client"
+import { BncClient } from "../"
+import { checkAddress, decodeAddress } from "../../crypto"
 import {
   TransferInClaim,
   ClaimMsg,
@@ -9,9 +10,7 @@ import {
   Coin,
   TransferOutMsg,
   UpdateBindClaim,
-} from "types"
-
-import { checkAddress, decodeAddress } from "../../crypto"
+} from "../../types"
 
 /**
  * Bridge
@@ -331,7 +330,6 @@ export class Bridge {
       fromAddress,
       sequence
     )
-
     return this._bncClient._broadcastDelegate(signedTx)
   }
 }
