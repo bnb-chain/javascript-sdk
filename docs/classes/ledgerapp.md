@@ -31,7 +31,7 @@ Ledger app interface.
 
 \+ **new LedgerApp**(`transport`: Transport, `interactiveTimeout`: number, `nonInteractiveTimeout`: number): *[LedgerApp](ledgerapp.md)*
 
-*Defined in [ledger/ledger-app.ts:91](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L91)*
+*Defined in [ledger/ledger-app.ts:91](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L91)*
 
 Constructs a new LedgerApp.
 
@@ -51,7 +51,7 @@ Name | Type | Default | Description |
 
 ▸ **getPublicKey**(`hdPath`: number[]): *Promise‹PublicKey›*
 
-*Defined in [ledger/ledger-app.ts:611](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L611)*
+*Defined in [ledger/ledger-app.ts:611](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L611)*
 
 Gets the public key from the Ledger app that is currently open on the device.
 
@@ -71,7 +71,7 @@ ___
 
 ▸ **getVersion**(): *Promise‹Version›*
 
-*Defined in [ledger/ledger-app.ts:241](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L241)*
+*Defined in [ledger/ledger-app.ts:241](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L241)*
 
 Gets the version of the Ledger app that is currently open on the device.
 
@@ -85,7 +85,7 @@ ___
 
 ▸ **publicKeySecp256k1**(`hdPath`: number[]): *Promise‹PublicKey›*
 
-*Defined in [ledger/ledger-app.ts:308](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L308)*
+*Defined in [ledger/ledger-app.ts:308](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L308)*
 
 Gets the public key from the Ledger app that is currently open on the device.
 
@@ -105,7 +105,7 @@ ___
 
 ▸ **showAddress**(`hrp`: string, `hdPath`: number[]): *Promise‹ReturnResponse›*
 
-*Defined in [ledger/ledger-app.ts:573](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L573)*
+*Defined in [ledger/ledger-app.ts:573](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L573)*
 
 Shows the user's address for the given HD path on the device display.
 
@@ -126,7 +126,7 @@ ___
 
 ▸ **sign**(`signBytes`: Buffer, `hdPath`: number[]): *Promise‹SignedSignature›*
 
-*Defined in [ledger/ledger-app.ts:621](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L621)*
+*Defined in [ledger/ledger-app.ts:621](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L621)*
 
 Sends a transaction sign doc to the Ledger app to be signed.
 
@@ -147,7 +147,7 @@ ___
 
 ▸ **signSecp256k1**(`signBytes`: Buffer, `hdPath`: number[]): *Promise‹SignedSignature›*
 
-*Defined in [ledger/ledger-app.ts:438](https://github.com/binance-chain/javascript-sdk/blob/2f1f2a6/src/ledger/ledger-app.ts#L438)*
+*Defined in [ledger/ledger-app.ts:438](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/ledger/ledger-app.ts#L438)*
 
 Sends a transaction sign doc to the Ledger app to be signed.
 

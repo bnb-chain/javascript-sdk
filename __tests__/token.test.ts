@@ -14,7 +14,7 @@ describe("token management", () => {
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "MINT"
     const tokenName = "test issue token"
-    const totalSupply = 21000000
+    const totalSupply = 8888
     try {
       const res = await client.tokens.issue(
         addr,
@@ -248,6 +248,31 @@ describe("token management", () => {
       expect(res.result[0].code).toBe(0)
     } catch (err) {
       expect(err.message).toBe("trading pair exists")
+    }
+  })
+
+  it("issue minitoken", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "TMINI"
+    const tokenName = "test issue mini token"
+    const totalSupply = 8888
+    const tokenUri = "https://google.com"
+    try {
+      const res = await client.tokens.issueMiniToken(
+        addr,
+        tokenName,
+        symbol,
+        totalSupply,
+        true,
+        tokenUri
+      )
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
     }
   })
 })
