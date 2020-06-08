@@ -1,6 +1,6 @@
 import { getClient } from "./utils"
 
-describe("token management", () => {
+describe("bridge", () => {
   beforeEach(() => {
     jest.setTimeout(50000)
   })

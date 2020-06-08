@@ -19,8 +19,8 @@ import {
 
 import { getClient, privateKey, address, targetAddress } from "./utils"
 
-const buildAndSendTx = async (msg) => {
-  const client = await getClient(true)
+const buildAndSendTx = async (msg, url) => {
+  const client = await getClient(true, false, url)
 
   const account = await client._httpClient.request(
     "get",

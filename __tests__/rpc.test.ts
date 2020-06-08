@@ -1,4 +1,4 @@
-import { rpc as rpcClient } from "../src"
+import * as rpcClient from "../src/rpc"
 
 const NETWORK = "testnet"
 const getClient = (type) => {

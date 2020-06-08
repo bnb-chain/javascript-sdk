@@ -77,13 +77,14 @@ let client: BncClient
 
 export const getClient = async (
   useAwaitSetPrivateKey = true,
-  doNotSetPrivateKey = false
+  doNotSetPrivateKey = false,
+  url = "https://testnet-dex-asiapacific.binance.org"
 ) => {
   if (client && client.chainId) {
     return client
   }
 
-  client = new BncClient("https://testnet-dex-asiapacific.binance.org")
+  client = new BncClient(url)
   await client.initChain()
   const privateKey = crypto.getPrivateKeyFromMnemonic(mnemonic)
   if (!doNotSetPrivateKey) {

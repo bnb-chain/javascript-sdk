@@ -1,4 +1,4 @@
-import { amino } from "../src/"
+import * as amino from "../src/amino"
 import { AminoPrefix } from "../src/types/"
 
 describe("encoder", () => {

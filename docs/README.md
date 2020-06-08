@@ -91,7 +91,7 @@ js amino UnmarshalBinaryLengthPrefixed Functions
 
 ▸ **DefaultBroadcastDelegate**(`this`: [BncClient](classes/bncclient.md), `signedTx`: [Transaction](classes/transaction.md)): *Promise‹object›*
 
-*Defined in [client/index.ts:55](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/client/index.ts#L55)*
+*Defined in [client/index.ts:55](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/index.ts#L55)*
 
 The default broadcast delegate which immediately broadcasts a transaction.
 
@@ -110,7 +110,7 @@ ___
 
 ▸ **DefaultSigningDelegate**(`this`: [BncClient](classes/bncclient.md), `tx`: [Transaction](classes/transaction.md), `signMsg?`: any): *Promise‹[Transaction](classes/transaction.md)›*
 
-*Defined in [client/index.ts:43](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/client/index.ts#L43)*
+*Defined in [client/index.ts:43](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/index.ts#L43)*
 
 The default signing delegate which uses the local private key.
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **LedgerSigningDelegate**(`ledgerApp`: [LedgerApp](classes/ledgerapp.md), `preSignCb`: function, `postSignCb`: function, `errCb`: function, `hdPath`: number[]): *typeof DefaultSigningDelegate*
 
-*Defined in [client/index.ts:70](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/client/index.ts#L70)*
+*Defined in [client/index.ts:70](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/index.ts#L70)*
 
 The Ledger signing delegate.
 
@@ -179,7 +179,7 @@ ___
 
 ▸ **ab2hexstring**(`arr`: any): *string*
 
-*Defined in [utils/cryptoHelper.ts:55](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L55)*
+*Defined in [utils/cryptoHelper.ts:55](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L55)*
 
 **Parameters:**
 
@@ -197,7 +197,7 @@ ___
 
 ▸ **ab2str**(`buf`: Uint8Array): *void*
 
-*Defined in [utils/cryptoHelper.ts:12](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L12)*
+*Defined in [utils/cryptoHelper.ts:12](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L12)*
 
 **Parameters:**
 
@@ -215,7 +215,7 @@ ___
 
 ▸ **calInputCoins**(`inputs`: Array‹object›, `coins`: Coin[]): *void*
 
-*Defined in [client/index.ts:117](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/client/index.ts#L117)*
+*Defined in [client/index.ts:117](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/index.ts#L117)*
 
 sum corresponding input coin
 
@@ -234,7 +234,7 @@ ___
 
 ▸ **calculateRandomNumberHash**(`randomNumber`: string, `timestamp`: number): *string*
 
-*Defined in [utils/cryptoHelper.ts:260](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L260)*
+*Defined in [utils/cryptoHelper.ts:260](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L260)*
 
 Computes sha256 of random number and timestamp
 
@@ -255,7 +255,7 @@ ___
 
 ▸ **calculateSwapID**(`randomNumberHash`: string, `sender`: string, `senderOtherChain`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:284](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L284)*
+*Defined in [utils/cryptoHelper.ts:284](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L284)*
 
 Computes swapID
 
@@ -277,7 +277,7 @@ ___
 
 ▸ **checkCoins**(`coins`: Coin[]): *void*
 
-*Defined in [utils/validateHelper.ts:25](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/validateHelper.ts#L25)*
+*Defined in [utils/validateHelper.ts:25](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/validateHelper.ts#L25)*
 
 basic validation of coins
 
@@ -295,7 +295,7 @@ ___
 
 ▸ **checkNumber**(`value`: BigSource, `name`: string): *void*
 
-*Defined in [utils/validateHelper.ts:11](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/validateHelper.ts#L11)*
+*Defined in [utils/validateHelper.ts:11](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/validateHelper.ts#L11)*
 
 validate the input number.
 
@@ -314,7 +314,7 @@ ___
 
 ▸ **checkOutputs**(`outputs`: Transfer[]): *void*
 
-*Defined in [client/index.ts:100](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/client/index.ts#L100)*
+*Defined in [client/index.ts:100](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/index.ts#L100)*
 
 validate the input number.
 
@@ -332,7 +332,7 @@ ___
 
 ▸ **ensureHex**(`str`: string): *void*
 
-*Defined in [utils/cryptoHelper.ts:212](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L212)*
+*Defined in [utils/cryptoHelper.ts:212](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L212)*
 
 Throws an error if input is not hexstring.
 
@@ -350,7 +350,7 @@ ___
 
 ▸ **hexXor**(`str1`: string, `str2`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:143](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L143)*
+*Defined in [utils/cryptoHelper.ts:143](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L143)*
 
 XORs two hexstrings
 
@@ -371,7 +371,7 @@ ___
 
 ▸ **hexstring2ab**(`str`: string): *Uint8Array‹›*
 
-*Defined in [utils/cryptoHelper.ts:39](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L39)*
+*Defined in [utils/cryptoHelper.ts:39](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L39)*
 
 **Parameters:**
 
@@ -387,7 +387,7 @@ ___
 
 ▸ **hexstring2str**(`hexstring`: string): *void*
 
-*Defined in [utils/cryptoHelper.ts:78](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L78)*
+*Defined in [utils/cryptoHelper.ts:78](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L78)*
 
 **Parameters:**
 
@@ -405,7 +405,7 @@ ___
 
 ▸ **int2hex**(`num`: number): *string*
 
-*Defined in [utils/cryptoHelper.ts:86](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L86)*
+*Defined in [utils/cryptoHelper.ts:86](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L86)*
 
 convert an integer to big endian hex and add leading zeros
 
@@ -423,7 +423,7 @@ ___
 
 ▸ **isHex**(`str`: string): *boolean*
 
-*Defined in [utils/cryptoHelper.ts:200](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L200)*
+*Defined in [utils/cryptoHelper.ts:200](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L200)*
 
 Checks if input is a hexstring. Empty string is considered a hexstring.
 
@@ -446,7 +446,7 @@ ___
 
 ▸ **num2VarInt**(`num`: number): *string*
 
-*Defined in [utils/cryptoHelper.ts:122](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L122)*
+*Defined in [utils/cryptoHelper.ts:122](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L122)*
 
 Converts a number to a variable length Int. Used for array length header
 
@@ -466,7 +466,7 @@ ___
 
 ▸ **num2hexstring**(`num`: number, `size`: number, `littleEndian`: boolean): *string*
 
-*Defined in [utils/cryptoHelper.ts:101](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L101)*
+*Defined in [utils/cryptoHelper.ts:101](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L101)*
 
 Converts a number to a big endian hexstring of a suitable size, optionally little endian
 
@@ -486,7 +486,7 @@ ___
 
 ▸ **reverseArray**(`arr`: any[]): *Uint8Array‹›*
 
-*Defined in [utils/cryptoHelper.ts:162](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L162)*
+*Defined in [utils/cryptoHelper.ts:162](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L162)*
 
 Reverses an array. Accepts arrayBuffer.
 
@@ -504,7 +504,7 @@ ___
 
 ▸ **reverseHex**(`hex`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:180](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L180)*
+*Defined in [utils/cryptoHelper.ts:180](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L180)*
 
 Reverses a HEX string, treating 2 chars as a byte.
 
@@ -527,7 +527,7 @@ ___
 
 ▸ **sha256**(`hex`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:235](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L235)*
+*Defined in [utils/cryptoHelper.ts:235](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L235)*
 
 Computes a single SHA256 digest.
 
@@ -547,7 +547,7 @@ ___
 
 ▸ **sha256ripemd160**(`hex`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:221](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L221)*
+*Defined in [utils/cryptoHelper.ts:221](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L221)*
 
 Computes a SHA256 followed by a RIPEMD160.
 
@@ -567,7 +567,7 @@ ___
 
 ▸ **sha3**(`hex`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:247](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L247)*
+*Defined in [utils/cryptoHelper.ts:247](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L247)*
 
 Computes a single SHA3 (Keccak) digest.
 
@@ -587,7 +587,7 @@ ___
 
 ▸ **str2ab**(`str`: string): *Uint8Array‹›*
 
-*Defined in [utils/cryptoHelper.ts:24](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L24)*
+*Defined in [utils/cryptoHelper.ts:24](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L24)*
 
 **Parameters:**
 
@@ -603,7 +603,7 @@ ___
 
 ▸ **str2hexstring**(`str`: string): *string*
 
-*Defined in [utils/cryptoHelper.ts:72](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/utils/cryptoHelper.ts#L72)*
+*Defined in [utils/cryptoHelper.ts:72](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/utils/cryptoHelper.ts#L72)*
 
 **Parameters:**
 
@@ -623,7 +623,7 @@ ___
 
 ▸ **convertObjectToSignBytes**(`obj`: any): *Buffer‹›*
 
-*Defined in [amino/encoder/index.ts:74](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L74)*
+*Defined in [amino/encoder/index.ts:74](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L74)*
 
 **Parameters:**
 
@@ -641,7 +641,7 @@ ___
 
 ▸ **encodeArrayBinary**(`fieldNum`: number | undefined, `arr`: any[], `isByteLenPrefix?`: undefined | false | true): *Buffer‹›*
 
-*Defined in [amino/encoder/index.ts:200](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L200)*
+*Defined in [amino/encoder/index.ts:200](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L200)*
 
 **Parameters:**
 
@@ -661,7 +661,7 @@ ___
 
 ▸ **encodeBinary**(`val`: any, `fieldNum?`: undefined | number, `isByteLenPrefix?`: undefined | false | true): *any*
 
-*Defined in [amino/encoder/index.ts:107](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L107)*
+*Defined in [amino/encoder/index.ts:107](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L107)*
 
 This is the main entrypoint for encoding all types in binary form.
 
@@ -683,7 +683,7 @@ ___
 
 ▸ **encodeBinaryByteArray**(`bytes`: Buffer): *Buffer‹›*
 
-*Defined in [amino/encoder/index.ts:150](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L150)*
+*Defined in [amino/encoder/index.ts:150](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L150)*
 
 prefixed with bytes length
 
@@ -703,7 +703,7 @@ ___
 
 ▸ **encodeBool**(`b`: boolean): *any*
 
-*Defined in [amino/encoder/index.ts:33](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L33)*
+*Defined in [amino/encoder/index.ts:33](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L33)*
 
 encode bool
 
@@ -721,7 +721,7 @@ ___
 
 ▸ **encodeNumber**(`num`: number): *any*
 
-*Defined in [amino/encoder/index.ts:26](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L26)*
+*Defined in [amino/encoder/index.ts:26](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L26)*
 
 encode number
 
@@ -739,7 +739,7 @@ ___
 
 ▸ **encodeObjectBinary**(`obj`: any, `isByteLenPrefix?`: undefined | false | true): *Buffer‹›*
 
-*Defined in [amino/encoder/index.ts:160](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L160)*
+*Defined in [amino/encoder/index.ts:160](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L160)*
 
 **Parameters:**
 
@@ -758,7 +758,7 @@ ___
 
 ▸ **encodeString**(`str`: string): *Buffer‹›*
 
-*Defined in [amino/encoder/index.ts:41](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L41)*
+*Defined in [amino/encoder/index.ts:41](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L41)*
 
 encode string
 
@@ -776,7 +776,7 @@ ___
 
 ▸ **encodeTime**(`value`: string | Date): *Buffer‹›*
 
-*Defined in [amino/encoder/index.ts:51](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L51)*
+*Defined in [amino/encoder/index.ts:51](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L51)*
 
 encode time
 
@@ -794,7 +794,7 @@ ___
 
 ▸ **marshalBinary**(`obj`: any): *any*
 
-*Defined in [amino/encoder/index.ts:82](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L82)*
+*Defined in [amino/encoder/index.ts:82](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L82)*
 
 js amino MarshalBinary
 
@@ -812,7 +812,7 @@ ___
 
 ▸ **marshalBinaryBare**(`obj`: any): *any*
 
-*Defined in [amino/encoder/index.ts:93](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/encoder/index.ts#L93)*
+*Defined in [amino/encoder/index.ts:93](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/encoder/index.ts#L93)*
 
 js amino MarshalBinaryBare
 
@@ -833,7 +833,7 @@ js amino UnmarshalBinaryBare Functions
 
 ▸ **unMarshalBinaryBare**(`bytes`: Buffer, `type`: any): *any*
 
-*Defined in [amino/decoder/index.ts:48](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/decoder/index.ts#L48)*
+*Defined in [amino/decoder/index.ts:48](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/decoder/index.ts#L48)*
 
 **Parameters:**
 
@@ -853,7 +853,7 @@ js amino UnmarshalBinaryLengthPrefixed Functions
 
 ▸ **unMarshalBinaryLengthPrefixed**(`bytes`: Buffer, `type`: any): *any*
 
-*Defined in [amino/decoder/index.ts:24](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/amino/decoder/index.ts#L24)*
+*Defined in [amino/decoder/index.ts:24](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/amino/decoder/index.ts#L24)*
 
 **Parameters:**
 
@@ -872,7 +872,7 @@ ___
 
 ▸ **checkAddress**(`address`: string, `hrp`: string): *boolean*
 
-*Defined in [crypto/index.ts:62](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L62)*
+*Defined in [crypto/index.ts:62](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L62)*
 
 Checks whether an address is valid.
 
@@ -891,7 +891,7 @@ ___
 
 ▸ **decodeAddress**(`value`: string): *Buffer*
 
-*Defined in [crypto/index.ts:50](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L50)*
+*Defined in [crypto/index.ts:50](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L50)*
 
 Decodes an address in bech32 format.
 
@@ -909,7 +909,7 @@ ___
 
 ▸ **encodeAddress**(`value`: string | Buffer, `prefix`: string, `type`: BufferEncoding): *string*
 
-*Defined in [crypto/index.ts:90](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L90)*
+*Defined in [crypto/index.ts:90](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L90)*
 
 Encodes an address from input data bytes.
 
@@ -929,7 +929,7 @@ ___
 
 ▸ **generateKeyStore**(`privateKeyHex`: string, `password`: string): *KeyStore*
 
-*Defined in [crypto/index.ts:243](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L243)*
+*Defined in [crypto/index.ts:243](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L243)*
 
 Generates a keystore object (web3 secret storage format) given a private key to store and a password.
 
@@ -950,7 +950,7 @@ ___
 
 ▸ **generateMnemonic**(): *string*
 
-*Defined in [crypto/index.ts:357](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L357)*
+*Defined in [crypto/index.ts:357](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L357)*
 
 Generates mnemonic phrase words using random entropy.
 
@@ -962,7 +962,7 @@ ___
 
 ▸ **generatePrivateKey**(`len`: number): *string*
 
-*Defined in [crypto/index.ts:110](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L110)*
+*Defined in [crypto/index.ts:110](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L110)*
 
 Generates 32 bytes of random entropy
 
@@ -982,7 +982,7 @@ ___
 
 ▸ **generatePubKey**(`privateKey`: Buffer): *BasePoint*
 
-*Defined in [crypto/index.ts:155](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L155)*
+*Defined in [crypto/index.ts:155](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L155)*
 
 PubKey performs the point-scalar multiplication from the privKey on the
 generator point to get the pubkey.
@@ -1003,7 +1003,7 @@ ___
 
 ▸ **generateRandomArray**(`length`: number): *ArrayBuffer*
 
-*Defined in [crypto/index.ts:119](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L119)*
+*Defined in [crypto/index.ts:119](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L119)*
 
 Generates an arrayBuffer filled with random bits.
 
@@ -1021,7 +1021,7 @@ ___
 
 ▸ **generateSignature**(`signBytesHex`: string, `privateKey`: string | Buffer): *Buffer*
 
-*Defined in [crypto/index.ts:203](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L203)*
+*Defined in [crypto/index.ts:203](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L203)*
 
 Generates a signature (64 byte <r,s>) for a transaction based on given private key.
 
@@ -1042,7 +1042,7 @@ ___
 
 ▸ **getAddressFromPrivateKey**(`privateKeyHex`: string, `prefix?`: undefined | string): *string*
 
-*Defined in [crypto/index.ts:186](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L186)*
+*Defined in [crypto/index.ts:186](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L186)*
 
 Gets an address from a private key.
 
@@ -1061,7 +1061,7 @@ ___
 
 ▸ **getAddressFromPublicKey**(`publicKeyHex`: string, `prefix?`: undefined | string): *string*
 
-*Defined in [crypto/index.ts:167](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L167)*
+*Defined in [crypto/index.ts:167](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L167)*
 
 Gets an address from a public key hex.
 
@@ -1080,7 +1080,7 @@ ___
 
 ▸ **getPrivateKeyFromKeyStore**(`keystore`: string, `password`: string): *string*
 
-*Defined in [crypto/index.ts:302](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L302)*
+*Defined in [crypto/index.ts:302](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L302)*
 
 Gets a private key from a keystore given its password.
 
@@ -1099,7 +1099,7 @@ ___
 
 ▸ **getPrivateKeyFromMnemonic**(`mnemonic`: string, `derive`: boolean, `index`: number, `password`: string): *string*
 
-*Defined in [crypto/index.ts:377](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L377)*
+*Defined in [crypto/index.ts:377](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L377)*
 
 Get a private key from mnemonic words.
 
@@ -1122,7 +1122,7 @@ ___
 
 ▸ **getPublicKey**(`publicKey`: string): *BasePoint‹›*
 
-*Defined in [crypto/index.ts:127](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L127)*
+*Defined in [crypto/index.ts:127](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L127)*
 
 **Parameters:**
 
@@ -1140,7 +1140,7 @@ ___
 
 ▸ **getPublicKeyFromPrivateKey**(`privateKeyHex`: string): *string*
 
-*Defined in [crypto/index.ts:138](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L138)*
+*Defined in [crypto/index.ts:138](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L138)*
 
 Calculates the public key from a given private key.
 
@@ -1160,7 +1160,7 @@ ___
 
 ▸ **verifySignature**(`sigHex`: string, `signBytesHex`: string, `publicKeyHex`: string): *boolean*
 
-*Defined in [crypto/index.ts:224](https://github.com/binance-chain/javascript-sdk/blob/419c3d2/src/crypto/index.ts#L224)*
+*Defined in [crypto/index.ts:224](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/crypto/index.ts#L224)*
 
 Verifies a signature (64 byte <r,s>) given the sign bytes and public key.
 

@@ -1,12 +1,12 @@
 import { curve } from "elliptic"
 
-import { crypto } from "../"
 import {
   convertObjectToSignBytes,
   UVarInt,
   marshalBinary,
   encodeBinaryByteArray,
 } from "../amino"
+import * as crypto from "../crypto"
 import {
   BaseMsg,
   SignMsg,

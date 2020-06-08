@@ -1,6 +1,6 @@
 import * as bip39 from "bip39"
 
-import { crypto } from "../src"
+import * as crypto from "../src/crypto"
 
 const privateKey = crypto.generatePrivateKey()
 const keyStore = crypto.generateKeyStore(privateKey, "1234567")
