@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 declare module "is_js" {
   export const boolean: (a: any) => a is boolean
   export const number: (a: any) => a is number

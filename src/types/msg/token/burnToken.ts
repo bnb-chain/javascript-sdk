@@ -23,7 +23,7 @@ export class BurnTokenMsg extends BaseMsg {
   constructor({
     address,
     sybmol,
-    amount
+    amount,
   }: {
     address: string
     sybmol: string
@@ -39,7 +39,7 @@ export class BurnTokenMsg extends BaseMsg {
     const signMsg: SignedBurnToken = {
       from: this.from,
       symbol: this.symbol,
-      amount: this.amount
+      amount: this.amount,
     }
 
     return signMsg
@@ -50,7 +50,7 @@ export class BurnTokenMsg extends BaseMsg {
       from: crypto.decodeAddress(this.from),
       symbol: this.symbol,
       amount: this.amount,
-      aminoPrefix: AminoPrefix.BurnMsg
+      aminoPrefix: AminoPrefix.BurnMsg,
     }
 
     return data
@@ -61,7 +61,7 @@ export class BurnTokenMsg extends BaseMsg {
       from: Buffer.from(""),
       symbol: "",
       amount: 0,
-      aminoPrefix: AminoPrefix.BurnMsg
+      aminoPrefix: AminoPrefix.BurnMsg,
     }
   }
 }

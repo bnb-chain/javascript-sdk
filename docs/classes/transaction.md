@@ -52,7 +52,7 @@ var tx = new Transaction(rawTx);
 
 ▸ **_serializePubKey**(`unencodedPubKey`: BasePoint): *Buffer‹›*
 
-*Defined in [tx/index.ts:158](https://github.com/binance-chain/javascript-sdk/blob/da1c1f0/src/tx/index.ts#L158)*
+*Defined in [tx/index.ts:154](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/tx/index.ts#L154)*
 
 serializes a public key in a 33-byte compressed format.
 
@@ -68,9 +68,9 @@ ___
 
 ###  addSignature
 
-▸ **addSignature**(`pubKey`: BasePoint, `signature`: Buffer): *this*
+▸ **addSignature**(`pubKey`: BasePoint, `signature`: Buffer): *[Transaction](transaction.md)*
 
-*Defined in [tx/index.ts:99](https://github.com/binance-chain/javascript-sdk/blob/da1c1f0/src/tx/index.ts#L99)*
+*Defined in [tx/index.ts:95](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/tx/index.ts#L95)*
 
 attaches a signature to the transaction
 
@@ -81,15 +81,15 @@ Name | Type |
 `pubKey` | BasePoint |
 `signature` | Buffer |
 
-**Returns:** *this*
+**Returns:** *[Transaction](transaction.md)*
 
 ___
 
 ###  getSignBytes
 
-▸ **getSignBytes**(`msg?`: SignMsg): *Buffer‹›*
+▸ **getSignBytes**(`msg?`: SignMsg): *Buffer*
 
-*Defined in [tx/index.ts:78](https://github.com/binance-chain/javascript-sdk/blob/da1c1f0/src/tx/index.ts#L78)*
+*Defined in [tx/index.ts:75](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/tx/index.ts#L75)*
 
 generate the sign bytes for a transaction, given a msg
 
@@ -99,7 +99,7 @@ Name | Type |
 ------ | ------ |
 `msg?` | SignMsg |
 
-**Returns:** *Buffer‹›*
+**Returns:** *Buffer*
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 ▸ **serialize**(): *string*
 
-*Defined in [tx/index.ts:136](https://github.com/binance-chain/javascript-sdk/blob/da1c1f0/src/tx/index.ts#L136)*
+*Defined in [tx/index.ts:132](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/tx/index.ts#L132)*
 
 encode signed transaction to hex which is compatible with amino
 
@@ -117,9 +117,9 @@ ___
 
 ###  sign
 
-▸ **sign**(`privateKey`: string, `msg?`: SignMsg): *this*
+▸ **sign**(`privateKey`: string, `msg?`: SignMsg): *[Transaction](transaction.md)*
 
-*Defined in [tx/index.ts:118](https://github.com/binance-chain/javascript-sdk/blob/da1c1f0/src/tx/index.ts#L118)*
+*Defined in [tx/index.ts:114](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/tx/index.ts#L114)*
 
 sign transaction with a given private key and msg
 
@@ -130,4 +130,4 @@ Name | Type | Description |
 `privateKey` | string | private key hex string |
 `msg?` | SignMsg | - |
 
-**Returns:** *this*
+**Returns:** *[Transaction](transaction.md)*

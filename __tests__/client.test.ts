@@ -1,6 +1,7 @@
-import { checkNumber } from "../src/utils/"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
+import { checkNumber } from "../src/utils/"
+
 import { getClient, mnemonic, keystores, targetAddress, wait } from "./utils"
 
 const waitSeconds = 0

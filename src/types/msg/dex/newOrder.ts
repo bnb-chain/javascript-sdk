@@ -1,7 +1,8 @@
+import Big from "big.js"
+
 import { BaseMsg, Msg, SignMsg } from "../"
 import * as crypto from "../../../crypto"
 import { AminoPrefix } from "../../tx"
-import Big from "big.js"
 
 export interface NewOrder {
   id: string

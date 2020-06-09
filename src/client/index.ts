@@ -1,16 +1,17 @@
-/**
- * @module client
- */
+/* eslint-disable */
+import Big, { BigSource } from "big.js"
+
 import * as crypto from "../crypto"
+import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
 import Transaction from "../tx"
+import { AminoPrefix, Coin, ListMiniMsg } from "../types/"
 import HttpRequest from "../utils/request"
 import { checkNumber } from "../utils/validateHelper"
-import TokenManagement from "./token"
-import Swap from "./swap"
+
 import Gov from "./gov"
-import Big, { BigSource } from "big.js"
-import LedgerApp, { PublicKey, SignedSignature } from "../ledger/ledger-app"
-import { AminoPrefix, Coin } from "../types/"
+import Swap from "./swap"
+import TokenManagement, { validateMiniTokenSymbol } from "./token"
+import { Bridge } from "./bridge"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -137,6 +138,7 @@ export class BncClient {
   public tokens: TokenManagement
   public swap: Swap
   public gov: Gov
+  public bridge: Bridge
   public chainId?: string | null
   public addressPrefix: typeof NETWORK_PREFIX_MAPPING[keyof typeof NETWORK_PREFIX_MAPPING] =
     "tbnb"
@@ -151,11 +153,7 @@ export class BncClient {
    * @param {Boolean} useAsyncBroadcast use async broadcast mode, faster but less guarantees (default off)
    * @param {Number} source where does this transaction come from (default 0)
    */
-  constructor(
-    server: string,
-    useAsyncBroadcast: boolean = false,
-    source: number = 0
-  ) {
+  constructor(server: string, useAsyncBroadcast = false, source = 0) {
     if (!server) {
       throw new Error("Binance chain server should not be null")
     }
@@ -167,6 +165,7 @@ export class BncClient {
     this.tokens = new TokenManagement(this)
     this.swap = new Swap(this)
     this.gov = new Gov(this)
+    this.bridge = new Bridge(this)
     this.privateKey = ""
   }
 
@@ -197,7 +196,7 @@ export class BncClient {
    * @param {boolean} localOnly set this to true if you will supply an account_number yourself via `setAccountNumber`. Warning: You must do that if you set this to true!
    * @return {Promise}
    */
-  async setPrivateKey(privateKey: string, localOnly: boolean = false) {
+  async setPrivateKey(privateKey: string, localOnly = false) {
     if (privateKey !== this.privateKey) {
       const address = crypto.getAddressFromPrivateKey(
         privateKey,
@@ -240,7 +239,7 @@ export class BncClient {
    * @param {Boolean} useAsyncBroadcast
    * @return {BncClient} this instance (for chaining)
    */
-  useAsyncBroadcast(useAsyncBroadcast: boolean = true): BncClient {
+  useAsyncBroadcast(useAsyncBroadcast = true): BncClient {
     this._useAsyncBroadcast = useAsyncBroadcast
     return this
   }
@@ -415,7 +414,7 @@ export class BncClient {
   async multiSend(
     fromAddress: string,
     outputs: Transfer[],
-    memo: string = "",
+    memo = "",
     sequence = null
   ) {
     if (!fromAddress) {
@@ -539,7 +538,7 @@ export class BncClient {
     price: number,
     quantity: number,
     sequence: number | null = null,
-    timeinforce: number = 1
+    timeinforce = 1
   ) {
     if (!address) {
       throw new Error("address should not be falsy")
@@ -673,6 +672,54 @@ export class BncClient {
   }
 
   /**
+   * list miniToken
+   */
+  async listMiniToken({
+    from,
+    baseAsset,
+    quoteAsset,
+    initPrice,
+    sequence = null,
+  }: {
+    from: string
+    baseAsset: string
+    quoteAsset: string
+    initPrice: number
+    sequence?: number | null
+  }) {
+    validateMiniTokenSymbol(baseAsset)
+
+    if (initPrice <= 0) {
+      throw new Error("price should larger than 0")
+    }
+
+    if (!from) {
+      throw new Error("address should not be falsy")
+    }
+
+    if (!quoteAsset) {
+      throw new Error("quoteAsset should not be falsy")
+    }
+
+    const init_price = Number(new Big(initPrice).mul(BASENUMBER).toString())
+
+    const listMiniMsg = new ListMiniMsg({
+      from,
+      base_asset_symbol: baseAsset,
+      quote_asset_symbol: quoteAsset,
+      init_price,
+    })
+
+    const signedTx = await this._prepareTransaction(
+      listMiniMsg.getMsg(),
+      listMiniMsg.getSignMsg(),
+      from,
+      sequence
+    )
+    return this._broadcastDelegate(signedTx)
+  }
+
+  /**
    * Set account flags
    * @param {String} address
    * @param {Number} flags new value of account flags
@@ -717,7 +764,7 @@ export class BncClient {
     stdSignMsg: any,
     address: string,
     sequence: string | number | null = null,
-    memo: string = ""
+    memo = ""
   ) {
     if ((!this.account_number || (sequence !== 0 && !sequence)) && address) {
       const data = await this._httpClient.request(
@@ -762,10 +809,7 @@ export class BncClient {
    * @param {Boolean} sync use synchronous mode, optional
    * @return {Promise} resolves with response (success or fail)
    */
-  async sendRawTransaction(
-    signedBz: string,
-    sync: boolean = !this._useAsyncBroadcast
-  ) {
+  async sendRawTransaction(signedBz: string, sync = !this._useAsyncBroadcast) {
     const opts = {
       data: signedBz,
       headers: {
@@ -795,8 +839,8 @@ export class BncClient {
     stdSignMsg: any,
     address: string,
     sequence: string | number | null = null,
-    memo: string = "",
-    sync: boolean = !this._useAsyncBroadcast
+    memo = "",
+    sync = !this._useAsyncBroadcast
   ) {
     const signedTx = await this._prepareTransaction(
       msg,
@@ -900,7 +944,7 @@ export class BncClient {
    * @param {String} symbol the market pair
    * @return {Promise} resolves with http response
    */
-  async getDepth(symbol: string = "BNB_BUSD-BD1") {
+  async getDepth(symbol = "BNB_BUSD-BD1") {
     try {
       const data = await this._httpClient.request(
         "get",
@@ -957,11 +1001,7 @@ export class BncClient {
    * @param {Number} limit, max 1000 is default
    * @return {Promise} Array of AtomicSwap
    */
-  async getSwapByCreator(
-    creator: string,
-    limit: number = 100,
-    offset: number = 0
-  ) {
+  async getSwapByCreator(creator: string, limit = 100, offset = 0) {
     try {
       const data = await this._httpClient.request(
         "get",
@@ -981,11 +1021,7 @@ export class BncClient {
    * @param {Number} limit, max 1000 is default
    * @return {Promise} Array of AtomicSwap
    */
-  async getSwapByRecipient(
-    recipient: string,
-    limit: number = 100,
-    offset: number = 0
-  ) {
+  async getSwapByRecipient(recipient: string, limit = 100, offset = 0) {
     try {
       const data = await this._httpClient.request(
         "get",

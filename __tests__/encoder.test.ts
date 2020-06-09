@@ -1,10 +1,10 @@
-import { amino } from "../src/"
+import * as amino from "../src/amino"
 import { AminoPrefix } from "../src/types/"
 
 describe("encoder", () => {
   it("encode time", () => {
-    let encodedTime = amino.encodeTime("1973-11-29T21:33:09.123456789Z")
-    expect(encodedTime.toString('hex')).toBe("0915cd5b07000000001515cd5b07")
+    const encodedTime = amino.encodeTime("1973-11-29T21:33:09.123456789Z")
+    expect(encodedTime.toString("hex")).toBe("0915cd5b07000000001515cd5b07")
   })
 
   it("encode number", () => {
@@ -43,8 +43,10 @@ describe("encoder", () => {
 
   it("encode string", () => {
     const str = "You are beautiful"
-    let encodedString = amino.encodeString(str)
-    expect(encodedString.toString("hex")).toBe("11596f75206172652062656175746966756c")
+    const encodedString = amino.encodeString(str)
+    expect(encodedString.toString("hex")).toBe(
+      "11596f75206172652062656175746966756c"
+    )
   })
 
   it("convertObjectToSignBytes", () => {
@@ -54,9 +56,9 @@ describe("encoder", () => {
       symbol: 3,
       zlast: [
         { z: "z", a: "z" },
-        { z: "a", a: "z" }
+        { z: "a", a: "z" },
       ],
-      address: 1
+      address: 1,
     }
     const str = amino.convertObjectToSignBytes(jsonObj)
     expect(str.toString()).toBe(
@@ -88,7 +90,7 @@ describe("encoder", () => {
             31,
             111,
             144,
-            100
+            100,
           ]),
           id: "B6561DCC104130059A7C08F48C64610C1F6F9064-11",
           symbol: "BTC-5C4_BNB",
@@ -96,9 +98,9 @@ describe("encoder", () => {
           side: 1,
           price: 100000000,
           quantity: 1200000000,
-          timeinforce: 1
-          aminoPrefix: AminoPrefix.NewOrderMsg
-        }
+          timeinforce: 1,
+          aminoPrefix: AminoPrefix.NewOrderMsg,
+        },
       ],
       signatures: [
         {
@@ -140,7 +142,7 @@ describe("encoder", () => {
             201,
             183,
             173,
-            123
+            123,
           ]),
           signature: Buffer.from([
             231,
@@ -206,14 +208,14 @@ describe("encoder", () => {
             170,
             28,
             10,
-            49
+            49,
           ]),
           account_number: 1,
-          sequence: 10
-        }
+          sequence: 10,
+        },
       ],
       memo: "",
-      aminoPrefix: AminoPrefix.StdTx
+      aminoPrefix: AminoPrefix.StdTx,
     }
 
     const bytes = amino.marshalBinary(stdTx)

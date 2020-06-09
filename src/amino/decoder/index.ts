@@ -1,14 +1,10 @@
-/**
- * @module amino.decode
- */
-
+import is from "is_js"
 import {
   string as varString,
   bool as varBool,
   bytes as varBytes,
   varint,
 } from "protocol-buffers-encodings"
-import is from "is_js"
 
 import typeToTyp3 from "../../utils/encoderHelper"
 
@@ -19,6 +15,7 @@ const decoder = (bytes: Buffer, varType: any) => {
 }
 
 /**
+ * @category amino
  * js amino UnmarshalBinaryLengthPrefixed
  * @param {Buffer} bytes
  * @param {Object} type
@@ -27,7 +24,7 @@ const decoder = (bytes: Buffer, varType: any) => {
 export const unMarshalBinaryLengthPrefixed = (
   bytes: Buffer,
   type: any
-): object => {
+): any => {
   if (bytes.length === 0) throw new TypeError("Cannot decode empty bytes")
 
   // read byte-length prefix
@@ -42,12 +39,13 @@ export const unMarshalBinaryLengthPrefixed = (
 }
 
 /**
+ * @category amino
  * js amino UnmarshalBinaryBare
  * @param {Buffer} bytes
  * @param {Object} type
  * @returns {Object}
  *  */
-export const unMarshalBinaryBare = (bytes: Buffer, type: any): object => {
+export const unMarshalBinaryBare = (bytes: Buffer, type: any): any => {
   if (!is.object(type)) throw new TypeError("type should be object")
 
   if (!Buffer.isBuffer(bytes)) throw new TypeError("bytes must be buffer")
@@ -125,7 +123,7 @@ const decodeObjectBinary = (
 
   let lastFieldNum = 0
 
-  let keys = Object.keys(type).filter((key) => key !== "aminoPrefix")
+  const keys = Object.keys(type).filter((key) => key !== "aminoPrefix")
 
   keys.forEach((key, index) => {
     if (is.array(type[key])) {
@@ -215,7 +213,7 @@ export const decodeFieldNumberAndTyp3 = (bytes: Buffer): any => {
   const { val } = decoder(bytes, varint)
 
   const typ = val & 7
-  let fieldNum = val >> 3
+  const fieldNum = val >> 3
   if (fieldNum > 1 << (29 - 1)) {
     throw new Error(`invalid field num ${fieldNum}`)
   }

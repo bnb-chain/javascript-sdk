@@ -1,12 +1,12 @@
 import { curve } from "elliptic"
-import { crypto } from "../"
+
 import {
   convertObjectToSignBytes,
   UVarInt,
   marshalBinary,
   encodeBinaryByteArray,
 } from "../amino"
-
+import * as crypto from "../crypto"
 import {
   BaseMsg,
   SignMsg,
@@ -14,7 +14,7 @@ import {
   StdSignature,
   StdTx,
   AminoPrefix,
-} from "../types/"
+} from "../types"
 
 /**
  * Creates a new transaction object.
@@ -38,17 +38,14 @@ import {
  * @param {Number} data.sequence transaction counts
  * @param {Number} data.source where does this transaction come from
  */
-class Transaction {
+export default class Transaction {
   private sequence: NonNullable<StdSignMsg["sequence"]>
   private account_number: NonNullable<StdSignMsg["accountNumber"]>
   private chain_id: StdSignMsg["chainId"]
 
   // DEPRECATED: Retained for backward compatibility,
-  // TODO will remove
   private msg?: any
 
-  // Recommend
-  // TODO will make it required and will do validation
   private baseMsg?: NonNullable<BaseMsg>
   private memo: StdSignMsg["memo"]
   private source: NonNullable<StdSignMsg["source"]>
@@ -75,7 +72,7 @@ class Transaction {
    * @param {SignMsg} concrete msg object
    * @return {Buffer}
    **/
-  getSignBytes(msg?: SignMsg) {
+  getSignBytes(msg?: SignMsg): Buffer {
     msg = msg || (this.baseMsg && this.baseMsg.getSignMsg())
     const signMsg = {
       account_number: this.account_number.toString(),
@@ -86,7 +83,6 @@ class Transaction {
       sequence: this.sequence.toString(),
       source: this.source.toString(),
     }
-
     return convertObjectToSignBytes(signMsg)
   }
 
@@ -96,7 +92,7 @@ class Transaction {
    * @param {Buffer} signature
    * @return {Transaction}
    **/
-  addSignature(pubKey: curve.base.BasePoint, signature: Buffer) {
+  addSignature(pubKey: curve.base.BasePoint, signature: Buffer): Transaction {
     const pubKeyBuf = this._serializePubKey(pubKey) // => Buffer
     this.signatures = [
       {
@@ -115,7 +111,7 @@ class Transaction {
    * @param {SignMsg} concrete msg object
    * @return {Transaction}
    **/
-  sign(privateKey: string, msg?: SignMsg) {
+  sign(privateKey: string, msg?: SignMsg): Transaction {
     if (!privateKey) {
       throw new Error("private key should not be null")
     }
@@ -166,6 +162,7 @@ class Transaction {
       UVarInt.encode(format),
       x.toArrayLike(Buffer, "be", 32),
     ])
+
     // prefixed with length
     pubBz = encodeBinaryByteArray(pubBz)
     // add the amino prefix
@@ -173,12 +170,3 @@ class Transaction {
     return pubBz
   }
 }
-
-// Transaction.TxTypes = TxTypes
-// Transaction.TypePrefixes = TypePrefixes
-
-// DEPRECATED: Retained for backward compatibility
-// Transaction.txType = TxTypes
-// Transaction.typePrefix = TypePrefixes
-
-export default Transaction

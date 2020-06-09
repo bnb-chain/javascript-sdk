@@ -1,18 +1,20 @@
-/**
- * @module Token
- */
 import Big, { BigSource } from "big.js"
 
-// import { TxTypes } from "../tx/"
-import * as crypto from "../../crypto"
 import { api, BncClient } from ".."
-import { validateSymbol } from "../../utils/validateHelper"
-import { checkCoins } from "../../utils/validateHelper"
+import * as crypto from "../../crypto"
+import {
+  Coin,
+  AminoPrefix,
+  IssueMiniTokenMsg,
+  IssueTinyTokenMsg,
+  SetTokenUriMsg,
+} from "../../types"
 import HttpRequest from "../../utils/request"
-import { Coin } from "../../types"
-import { AminoPrefix } from "../../types"
+import { validateSymbol, checkCoins } from "../../utils/validateHelper"
 
 const MAXTOTALSUPPLY = 9000000000000000000
+const MINI_TOKEN_MAX_TOTAL_SUPPAY = 1000000
+const TINY_TOKEN_MAX_TOTAL_SUPPAY = 10000
 
 const validateNonZeroAmount = async (
   amountParam: BigSource,
@@ -43,10 +45,39 @@ const validateNonZeroAmount = async (
     }
   } catch (err) {
     //if get account failed. still broadcast
-    console.log(err)
   }
 }
 
+export const validateMiniTokenSymbol = (symbol: string) => {
+  if (!symbol) {
+    throw new Error("suffixed token symbol cannot be empty")
+  }
+
+  const splitedSymbol = symbol.split("-")
+  if (splitedSymbol.length != 2) {
+    throw new Error("suffixed mini-token symbol must contain a hyphen ('-')")
+  }
+
+  if (!splitedSymbol[1]) {
+    throw new Error(
+      `suffixed mini-token symbol must contain just one hyphen (" - ")`
+    )
+  }
+
+  if (!/^[a-zA-z\d]{3,8}$/.test(splitedSymbol[0])) {
+    throw new Error(
+      "symbol should be alphanumeric and length is limited to 3~8"
+    )
+  }
+
+  if (!splitedSymbol[1].endsWith("M")) {
+    throw new Error("mini-token symbol suffix must end with M")
+  }
+}
+
+/**
+ * issue or view tokens
+ */
 class TokenManagement {
   static instance: TokenManagement
 
@@ -77,8 +108,8 @@ class TokenManagement {
     senderAddress: string,
     tokenName: string,
     symbol: string,
-    totalSupply: number = 0,
-    mintable: boolean = false
+    totalSupply = 0,
+    mintable = false
   ) {
     if (!senderAddress) {
       throw new Error("sender address cannot be empty")
@@ -121,6 +152,154 @@ class TokenManagement {
       issueMsg,
       signIssueMsg,
       senderAddress
+    )
+    return this._bncClient._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * issue a new mini-token, total supply should be less than 1M
+   * @param {String} - senderAddress
+   * @param {String} - tokenName
+   * @param {String} - symbol
+   * @param {Number} - totalSupply
+   * @param {Boolean} - mintable
+   * @param {string} - token_uri
+   * @returns {Promise} resolves with response (success or fail)
+   */
+  async issueMiniToken(
+    senderAddress: string,
+    tokenName: string,
+    symbol: string,
+    totalSupply = 0,
+    mintable = false,
+    tokenUri?: string
+  ) {
+    if (!senderAddress) {
+      throw new Error("sender address cannot be empty")
+    }
+
+    if (tokenName.length > 32) {
+      throw new Error("token name is limited to 32 characters")
+    }
+
+    if (!/^[a-zA-z\d]{3,8}$/.test(symbol)) {
+      throw new Error(
+        "symbol should be alphanumeric and length is limited to 3~8"
+      )
+    }
+
+    if (totalSupply <= 0 || totalSupply > MINI_TOKEN_MAX_TOTAL_SUPPAY) {
+      throw new Error("invalid supply amount")
+    }
+
+    totalSupply = Number(new Big(totalSupply).mul(Math.pow(10, 8)).toString())
+
+    const issueMiniMsg = new IssueMiniTokenMsg({
+      name: tokenName,
+      symbol,
+      total_supply: totalSupply,
+      mintable,
+      token_uri: tokenUri,
+      from: senderAddress,
+    })
+
+    const signedTx = await this._bncClient._prepareTransaction(
+      issueMiniMsg.getMsg(),
+      issueMiniMsg.getSignMsg(),
+      senderAddress
+    )
+
+    return this._bncClient._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * issue a new tiny-token, total supply should be less than 10K
+   * @param {String} - senderAddress
+   * @param {String} - tokenName
+   * @param {String} - symbol
+   * @param {Number} - totalSupply
+   * @param {Boolean} - mintable
+   * @param {string} - token_uri
+   * @returns {Promise} resolves with response (success or fail)
+   */
+  async issueTinyToken(
+    senderAddress: string,
+    tokenName: string,
+    symbol: string,
+    totalSupply = 0,
+    mintable = false,
+    tokenUri?: string
+  ) {
+    if (!senderAddress) {
+      throw new Error("sender address cannot be empty")
+    }
+
+    if (tokenName.length > 32) {
+      throw new Error("token name is limited to 32 characters")
+    }
+
+    if (!/^[a-zA-z\d]{3,8}$/.test(symbol)) {
+      throw new Error(
+        "symbol should be alphanumeric and length is limited to 3~8"
+      )
+    }
+
+    if (totalSupply <= 0 || totalSupply > TINY_TOKEN_MAX_TOTAL_SUPPAY) {
+      throw new Error("invalid supply amount")
+    }
+
+    totalSupply = Number(new Big(totalSupply).mul(Math.pow(10, 8)).toString())
+
+    const issueMiniMsg = new IssueTinyTokenMsg({
+      name: tokenName,
+      symbol,
+      total_supply: totalSupply,
+      mintable,
+      token_uri: tokenUri,
+      from: senderAddress,
+    })
+
+    const signedTx = await this._bncClient._prepareTransaction(
+      issueMiniMsg.getMsg(),
+      issueMiniMsg.getSignMsg(),
+      senderAddress
+    )
+
+    return this._bncClient._broadcastDelegate(signedTx)
+  }
+
+  /**
+   * set token URI of mini-token
+   */
+  async setTokenUri({
+    fromAddress,
+    tokenUri,
+    symbol,
+  }: {
+    fromAddress: string
+    tokenUri: string
+    symbol: string
+  }) {
+    validateMiniTokenSymbol(symbol)
+
+    if (tokenUri.length > 2048) {
+      throw new Error("uri cannot be longer than 2048 characters")
+    }
+
+    if (!fromAddress) {
+      throw new Error("address cannot be empty")
+    }
+
+    const setUriMsg = new SetTokenUriMsg({
+      from: fromAddress,
+      token_uri: tokenUri,
+      symbol,
+    })
+
+    const signedTx = await this._bncClient._prepareTransaction(
+      setUriMsg.getMsg(),
+      setUriMsg.getSignMsg(),
+      fromAddress
     )
     return this._bncClient._broadcastDelegate(signedTx)
   }

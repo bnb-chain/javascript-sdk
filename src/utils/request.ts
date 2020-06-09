@@ -1,9 +1,6 @@
 import axios, { AxiosInstance, Method, AxiosRequestConfig } from "axios"
 
-/**
- * @alias utils.HttpRequest
- */
-class HttpRequest {
+export class HttpRequest {
   private httpClient: AxiosInstance
 
   constructor(baseURL: string) {

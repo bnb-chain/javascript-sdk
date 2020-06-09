@@ -1,4 +1,4 @@
-const BN = require("bn.js")
+import BN from "bn.js"
 
 function VarIntFunc(signed: boolean) {
   const encodingLength = (n: number) => {
@@ -6,7 +6,7 @@ function VarIntFunc(signed: boolean) {
     if (n < 0) {
       throw Error("varint value is out of bounds")
     }
-    let bits = Math.log2(n + 1)
+    const bits = Math.log2(n + 1)
     return Math.ceil(bits / 7) || 1
   }
 
@@ -19,6 +19,8 @@ function VarIntFunc(signed: boolean) {
     offset = offset || 0
     const nStr = n.toString()
     let bn = new BN(nStr, 10)
+    const num255 = new BN(0xff)
+    const num128 = new BN(0x80)
 
     // amino signed varint is multiplied by 2
     if (signed) {
@@ -27,7 +29,7 @@ function VarIntFunc(signed: boolean) {
 
     let i = 0
     while (bn.gten(0x80)) {
-      buffer[offset + i] = bn.andln(0xff) | 0x80
+      buffer[offset + i] = bn.and(num255).or(num128).toNumber()
       bn = bn.shrn(7)
       i++
     }

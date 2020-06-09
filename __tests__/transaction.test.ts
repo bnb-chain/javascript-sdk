@@ -1,3 +1,4 @@
+import Transaction from "../src/tx"
 import {
   CancelOrderMsg,
   NewOrderMsg,
@@ -13,12 +14,13 @@ import {
   TimeLockMsg,
   TimeReLockMsg,
   TimeUnlockMsg,
+  TransferOutMsg,
 } from "../src/types"
-import Transaction from "../src/tx"
+
 import { getClient, privateKey, address, targetAddress } from "./utils"
 
-const buildAndSendTx = async (msg) => {
-  const client = await getClient(true)
+const buildAndSendTx = async (msg, url?: string) => {
+  const client = await getClient(true, false, url)
 
   const account = await client._httpClient.request(
     "get",
@@ -28,8 +30,10 @@ const buildAndSendTx = async (msg) => {
   const sequence = account.result && account.result.sequence
   const accountNumber = account.result && account.result.account_number
 
+  const node = await client._httpClient.request("get", `/api/v1/node-info`)
+
   const data: StdSignMsg = {
-    chainId: "Binance-Chain-Nile",
+    chainId: node.result.node_info.network,
     accountNumber: accountNumber,
     sequence: sequence,
     baseMsg: msg,
@@ -189,7 +193,6 @@ describe("Transaction", () => {
       })
       await buildAndSendTx(freezeMsg)
     } catch (err) {
-      console.log(err)
       if (err.message.includes("insufficient fund")) {
         expect(1).toBeTruthy()
         return
@@ -301,6 +304,23 @@ describe("Transaction", () => {
         expect(1).toBeTruthy()
         return
       }
+      throw err
+    }
+  })
+
+  it("transfer from bc to bsc", async () => {
+    try {
+      const toAddress = "0xc1c87c37be3Ef20273A4E8982293EEb6E08C620C"
+      const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+      const transferOutMsg = new TransferOutMsg({
+        from,
+        to: toAddress,
+        expire_time: 1597543193,
+        amount: { denom: "BNB", amount: 1 },
+      })
+
+      await buildAndSendTx(transferOutMsg, "https://testnet-kongo.defibit.io/")
+    } catch (err) {
       throw err
     }
   })

@@ -1,7 +1,8 @@
-import { getClient } from "./utils"
-import * as crypto from "../src/crypto"
 import { voteOption } from "../src/client/gov/"
+import * as crypto from "../src/crypto"
 import { calculateRandomNumberHash } from "../src/utils"
+
+import { getClient } from "./utils"
 
 describe("token management", () => {
   beforeEach(() => {
@@ -13,7 +14,7 @@ describe("token management", () => {
     const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const symbol = "MINT"
     const tokenName = "test issue token"
-    const totalSupply = 21000000
+    const totalSupply = 8888
     try {
       const res = await client.tokens.issue(
         addr,
@@ -247,6 +248,76 @@ describe("token management", () => {
       expect(res.result[0].code).toBe(0)
     } catch (err) {
       expect(err.message).toBe("trading pair exists")
+    }
+  })
+
+  it("issue minitoken", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "TMINI"
+    const tokenName = "test issue mini token"
+    const totalSupply = 8888
+    const tokenUri = "https://google.com"
+    try {
+      const res = await client.tokens.issueMiniToken(
+        addr,
+        tokenName,
+        symbol,
+        totalSupply,
+        true,
+        tokenUri
+      )
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
+    }
+  })
+
+  it("issue tinyToken", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "TTMI"
+    const tokenName = "test issue mini token"
+    const totalSupply = 111
+    const tokenUri = "https://google.com"
+    try {
+      const res = await client.tokens.issueTinyToken(
+        addr,
+        tokenName,
+        symbol,
+        totalSupply,
+        true,
+        tokenUri
+      )
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
+    }
+  })
+
+  it("list mini token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "TTMI-9F9M"
+    try {
+      const res = await client.listMiniToken({
+        from: addr,
+        baseAsset: symbol,
+        quoteAsset: "BNB",
+        initPrice: 1,
+      })
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
     }
   })
 })

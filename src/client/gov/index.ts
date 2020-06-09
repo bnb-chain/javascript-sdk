@@ -1,13 +1,11 @@
-/**
- * @module gov
- */
 import Big, { BigSource } from "big.js"
-import * as crypto from "../../crypto"
-import { checkCoins } from "../../utils/validateHelper"
-import proposalType from "./proposalType"
-import { Coin, AminoPrefix } from "../../types"
 
 import { BncClient } from ".." // This is a circular dependecy; should be changed to `import type` asap
+import * as crypto from "../../crypto"
+import { Coin, AminoPrefix } from "../../types"
+import { checkCoins } from "../../utils/validateHelper"
+
+import proposalType from "./proposalType"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -24,6 +22,7 @@ const proposalTypeMapping = {
 
 /**
  * VoteOption
+ * @ignore
  * @example
  * OptionEmpty - 0x00
  * OptionYes - 0x01

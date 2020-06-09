@@ -1,5 +1,6 @@
-import { crypto } from "../src"
 import * as bip39 from "bip39"
+
+import * as crypto from "../src/crypto"
 
 const privateKey = crypto.generatePrivateKey()
 const keyStore = crypto.generateKeyStore(privateKey, "1234567")
@@ -46,7 +47,7 @@ describe("crypto", () => {
   })
 
   it("decodeAddress", () => {
-    let address = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const address = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
     const decod = crypto.decodeAddress(address)
     expect(decod.toString("hex")).toBe(
       "ba36f0fad74d8f41045463e4774f328f4af779e5"
