@@ -17,8 +17,8 @@ Bridge
 ### Methods
 
 * [bind](bridge.md#bind)
+* [transferFromBcToBsc](bridge.md#transferfrombctobsc)
 * [transferIn](bridge.md#transferin)
-* [transferOut](bridge.md#transferout)
 * [transferOutRefund](bridge.md#transferoutrefund)
 * [upateBind](bridge.md#upatebind)
 
@@ -28,7 +28,7 @@ Bridge
 
 \+ **new Bridge**(`bncClient`: [BncClient](bncclient.md)): *[Bridge](bridge.md)*
 
-*Defined in [client/bridge/index.ts:21](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/bridge/index.ts#L21)*
+*Defined in [client/bridge/index.ts:20](https://github.com/binance-chain/javascript-sdk/blob/1213aa0/src/client/bridge/index.ts#L20)*
 
 **Parameters:**
 
@@ -44,9 +44,27 @@ Name | Type | Description |
 
 ▸ **bind**(`__namedParameters`: object): *Promise‹object›*
 
-*Defined in [client/bridge/index.ts:165](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/bridge/index.ts#L165)*
+*Defined in [client/bridge/index.ts:164](https://github.com/binance-chain/javascript-sdk/blob/1213aa0/src/client/bridge/index.ts#L164)*
 
 bind smart chain token to bep2 token
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`__namedParameters` | object |
+
+**Returns:** *Promise‹object›*
+
+___
+
+###  transferFromBcToBsc
+
+▸ **transferFromBcToBsc**(`__namedParameters`: object): *Promise‹object›*
+
+*Defined in [client/bridge/index.ts:202](https://github.com/binance-chain/javascript-sdk/blob/1213aa0/src/client/bridge/index.ts#L202)*
+
+transfer token from Binance Chain to Binance Smart Chain
 
 **Parameters:**
 
@@ -62,27 +80,9 @@ ___
 
 ▸ **transferIn**(`__namedParameters`: object): *Promise‹object›*
 
-*Defined in [client/bridge/index.ts:38](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/bridge/index.ts#L38)*
+*Defined in [client/bridge/index.ts:37](https://github.com/binance-chain/javascript-sdk/blob/1213aa0/src/client/bridge/index.ts#L37)*
 
 transfer smart chain token to binance chain receiver
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`__namedParameters` | object |
-
-**Returns:** *Promise‹object›*
-
-___
-
-###  transferOut
-
-▸ **transferOut**(`__namedParameters`: object): *Promise‹object›*
-
-*Defined in [client/bridge/index.ts:203](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/bridge/index.ts#L203)*
-
-transfer bep2 token to smart chain
 
 **Parameters:**
 
@@ -98,7 +98,7 @@ ___
 
 ▸ **transferOutRefund**(`__namedParameters`: object): *Promise‹object›*
 
-*Defined in [client/bridge/index.ts:120](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/bridge/index.ts#L120)*
+*Defined in [client/bridge/index.ts:119](https://github.com/binance-chain/javascript-sdk/blob/1213aa0/src/client/bridge/index.ts#L119)*
 
 refund tokens to sender if transfer to smart chain failed
 
@@ -116,7 +116,7 @@ ___
 
 ▸ **upateBind**(`__namedParameters`: object): *Promise‹object›*
 
-*Defined in [client/bridge/index.ts:235](https://github.com/binance-chain/javascript-sdk/blob/70b36e2/src/client/bridge/index.ts#L235)*
+*Defined in [client/bridge/index.ts:236](https://github.com/binance-chain/javascript-sdk/blob/1213aa0/src/client/bridge/index.ts#L236)*
 
 update bind request when events from smart chain received
 

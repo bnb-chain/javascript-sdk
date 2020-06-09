@@ -41,7 +41,7 @@ export class TransferOutMsg extends BaseMsg {
     this.to = to
     this.amount = {
       ...amount,
-      amount: new Big(amount.amount).mul(Math.pow(10, 8)).toString(),
+      amount: Number(new Big(amount.amount).mul(Math.pow(10, 8)).toString()),
     }
     this.expire_time = expire_time
   }

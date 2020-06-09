@@ -275,4 +275,29 @@ describe("token management", () => {
       throw err
     }
   })
+
+  it("issue tinyToken", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "TTMI"
+    const tokenName = "test issue mini token"
+    const totalSupply = 111
+    const tokenUri = "https://google.com"
+    try {
+      const res = await client.tokens.issueTinyToken(
+        addr,
+        tokenName,
+        symbol,
+        totalSupply,
+        true,
+        tokenUri
+      )
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
+    }
+  })
 })

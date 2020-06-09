@@ -19,7 +19,7 @@ import {
 
 import { getClient, privateKey, address, targetAddress } from "./utils"
 
-const buildAndSendTx = async (msg, url) => {
+const buildAndSendTx = async (msg, url?: string) => {
   const client = await getClient(true, false, url)
 
   const account = await client._httpClient.request(
@@ -30,8 +30,10 @@ const buildAndSendTx = async (msg, url) => {
   const sequence = account.result && account.result.sequence
   const accountNumber = account.result && account.result.account_number
 
+  const node = await client._httpClient.request("get", `/api/v1/node-info`)
+
   const data: StdSignMsg = {
-    chainId: "Binance-Chain-Nile",
+    chainId: node.result.node_info.network,
     accountNumber: accountNumber,
     sequence: sequence,
     baseMsg: msg,
@@ -317,7 +319,7 @@ describe("Transaction", () => {
         amount: { denom: "BNB", amount: 1 },
       })
 
-      await buildAndSendTx(transferOutMsg)
+      await buildAndSendTx(transferOutMsg, "https://testnet-kongo.defibit.io/")
     } catch (err) {
       throw err
     }

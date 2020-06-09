@@ -7,7 +7,6 @@ import {
   TransferOutRefundClaim,
   BindMsg,
   BaseMsg,
-  Coin,
   TransferOutMsg,
   UpdateBindClaim,
 } from "../../types"
@@ -198,16 +197,18 @@ export class Bridge {
   }
 
   /**
-   * transfer bep2 token to smart chain
+   * transfer token from Binance Chain to Binance Smart Chain
    */
-  public async transferOut({
+  public async transferFromBcToBsc({
     toAddress,
     amount,
+    symbol,
     expireTime,
     fromAddress,
   }: {
     toAddress: string
-    amount: Coin
+    amount: number
+    symbol: string
     expireTime: number
     fromAddress: string
   }) {
@@ -222,7 +223,7 @@ export class Bridge {
     const transferOut = new TransferOutMsg({
       from: fromAddress,
       to: toAddress,
-      amount,
+      amount: { denom: symbol, amount },
       expire_time: expireTime,
     })
 
