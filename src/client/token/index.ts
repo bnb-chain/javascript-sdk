@@ -58,7 +58,7 @@ export const validateMiniTokenSymbol = (symbol: string) => {
     throw new Error("suffixed mini-token symbol must contain a hyphen ('-')")
   }
 
-  if (splitedSymbol[1]) {
+  if (!splitedSymbol[1]) {
     throw new Error(
       `suffixed mini-token symbol must contain just one hyphen (" - ")`
     )

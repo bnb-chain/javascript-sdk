@@ -300,4 +300,24 @@ describe("token management", () => {
       throw err
     }
   })
+
+  it("list mini token", async () => {
+    const client = await getClient(true)
+    const addr = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+    const symbol = "TTMI-9F9M"
+    try {
+      const res = await client.listMiniToken({
+        from: addr,
+        baseAsset: symbol,
+        quoteAsset: "BNB",
+        initPrice: 1,
+      })
+      expect(res.status).toBe(200)
+    } catch (err) {
+      if (err.message.includes("insufficient fund")) {
+        expect(1).toBeTruthy()
+      }
+      throw err
+    }
+  })
 })

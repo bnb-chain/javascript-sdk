@@ -679,13 +679,13 @@ export class BncClient {
     baseAsset,
     quoteAsset,
     initPrice,
-    sequence = 0,
+    sequence = null,
   }: {
     from: string
     baseAsset: string
     quoteAsset: string
     initPrice: number
-    sequence?: number
+    sequence?: number | null
   }) {
     validateMiniTokenSymbol(baseAsset)
 
