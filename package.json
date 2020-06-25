@@ -3,7 +3,7 @@
   "version": "3.0.2-alpha.8",
   "license": "Apache-2.0",
   "main": "lib/index.js",
-  "typings": "typings/index.d.ts",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
@@ -11,7 +11,7 @@
     "build": "yarn clean && tsc --emitDeclarationOnly && yarn build:docs && babel --extensions '.ts' src -d lib",
     "build:docs": "rimraf docs && typedoc --plugin typedoc-plugin-markdown --excludeExternals --excludeNotDocumented --readme none",
     "prepublishOnly": "npm run build",
-    "clean": "rimraf lib typings",
+    "clean": "rimraf lib",
     "lint": "eslint '**/*.{ts,js}'",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
   },
