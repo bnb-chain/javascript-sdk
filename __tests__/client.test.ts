@@ -215,15 +215,32 @@ describe("client", () => {
   it("set account flags", async () => {
     wait(waitSeconds)
     const client = await getClient(true)
-    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
     const res = await client.setAccountFlags(addr, 0x00)
     expect(res.status).toBe(200)
     expect(res.result[0].code).toBe(0)
   })
 
+  it("can't get private key", async () => {
+    const client = await getClient(true, true)
+    expect(client.getPrivateKey()).toBeNull()
+  })
+
+  it("get private key", async () => {
+    const client = await getClient()
+    expect(client.getPrivateKey()).not.toBeNull()
+  })
+
+  it("remove private key", async () => {
+    const client = await getClient()
+    expect(client.getPrivateKey()).not.toBeNull()
+    client.removePrivateKey()
+    expect(client.getPrivateKey()).toBeNull()
+  })
+
   it("works with a custom signing delegate", async () => {
     const client = await getClient(true)
-    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
     const account = await client._httpClient.request(
       "get",
       `/api/v1/account/${addr}`
@@ -255,7 +272,7 @@ describe("client", () => {
   it("works with a custom broadcast delegate", async () => {
     await wait(waitSeconds)
     const client = await getClient(true)
-    const addr = crypto.getAddressFromPrivateKey(client.privateKey)
+    const addr = crypto.getAddressFromPrivateKey(client.getPrivateKey())
     const account = await client._httpClient.request(
       "get",
       `/api/v1/account/${addr}`
