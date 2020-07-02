@@ -37,6 +37,7 @@
     "bip32": "^2.0.5",
     "bip39": "^3.0.2",
     "bn.js": "^4.11.8",
+    "camelcase": "^5.3.1",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^3.1.9-1",
     "elliptic": "^6.0.0",
@@ -44,6 +45,7 @@
     "events": "^3.0.0",
     "is_js": "^0.9.0",
     "lodash": "^4.17.15",
+    "minimist": "^1.2.5",
     "ndjson": "^1.5.0",
     "protocol-buffers-encodings": "^1.1.0",
     "pumpify": "^2.0.1",
@@ -112,8 +114,9 @@
   ],
   "resolutions": {
     "**/**/handlebars": "^4.1.2",
-    "**/**/ecstatic": "^3.3.2",
-    "**/**/mem": "^4.0.0"
+    "**/**/ecstatic": "^4.1.4",
+    "**/**/mem": "^4.0.0",
+    "**/**/minimist": "^1.2.5"
   },
   "husky": {
     "hooks": {

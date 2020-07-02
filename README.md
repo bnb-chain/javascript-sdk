@@ -31,7 +31,9 @@ If you **do not** need Ledger support with node.js:
 ```bash
 $ npm i @binance-chain/javascript-sdk --no-optional
 ```
+
 **Or**
+
 ```bash
 $ yarn add @binance-chain/javascript-sdk --no-optional
 ```
@@ -41,7 +43,9 @@ If you **need** Ledger support with node.js:
 ```bash
 $ npm i @binance-chain/javascript-sdk
 ```
+
 **Or**
+
 ```bash
 $ yarn add @binance-chain/javascript-sdk
 ```
