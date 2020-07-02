@@ -11,4 +11,3 @@ export { default as rpc } from "./rpc"
 export { default as Transaction } from "./tx"
 
 export { BncClient, crypto, amino, types, utils }
-export default BncClient
