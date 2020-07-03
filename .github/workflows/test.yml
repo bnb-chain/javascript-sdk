@@ -6,11 +6,11 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.0
+      - uses: actions/setup-node@v1
         with:
           node-version: 12.x
 
@@ -22,3 +22,6 @@ jobs:
 
       - name: Lint
         run: yarn lint
+
+      - name: Check types
+        run: yarn tsc --noEmit
