@@ -14,7 +14,8 @@ with Binance Chain. It includes the following core components.
 - **transaction** - Transaction Class, build and sign.
 
 You can find more detailed documentation and examples in our
-[Documentation](./docs/README.md) pages.
+[Documentation](https://github.com/binance-chain/javascript-sdk/blob/master/docs/README.md)
+pages.
 
 ## Installation
 
