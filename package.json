@@ -4,14 +4,17 @@
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "files": [
+    "lib/*"
+  ],
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
-    "build": "yarn clean && tsc --emitDeclarationOnly && yarn build:docs && babel --extensions '.ts' src -d lib",
-    "build:docs": "rimraf docs && typedoc --plugin typedoc-plugin-markdown --excludeExternals --excludeNotDocumented --readme none",
+    "build": "rimraf lib && tsc --emitDeclarationOnly && babel --extensions '.ts' src -d lib",
+    "build:docs": "rimraf docs && typedoc --excludeExternals --excludeNotDocumented --readme none",
     "prepublishOnly": "npm run build",
-    "clean": "rimraf lib",
+    "clean": "rimraf lib docs",
     "lint": "eslint '**/*.{ts,js}'",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
   },
@@ -104,14 +107,9 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
     "typedoc": "^0.17.7",
-    "typedoc-plugin-markdown": "^2.2.17",
     "typescript": "^3.9.3",
     "utf-8-validate": "^5.0.2"
   },
-  "files": [
-    "lib/*",
-    "typings/*"
-  ],
   "resolutions": {
     "**/**/handlebars": "^4.1.2",
     "**/**/ecstatic": "^4.1.4",
