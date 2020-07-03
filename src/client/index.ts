@@ -338,7 +338,7 @@ export class BncClient {
     amount: BigSource,
     asset: string,
     memo = "",
-    sequence = null
+    sequence: number | null = null
   ) {
     const accCode = crypto.decodeAddress(fromAddress)
     const toAccCode = crypto.decodeAddress(toAddress)
@@ -438,7 +438,7 @@ export class BncClient {
     fromAddress: string,
     outputs: Transfer[],
     memo = "",
-    sequence = null
+    sequence: number | null = null
   ) {
     if (!fromAddress) {
       throw new Error("fromAddress should not be falsy")
@@ -641,7 +641,7 @@ export class BncClient {
     baseAsset: string,
     quoteAsset: string,
     initPrice: number,
-    sequence = null
+    sequence: number | null = null
   ) {
     const accCode = crypto.decodeAddress(address)
 
@@ -749,7 +749,11 @@ export class BncClient {
    * @param {Number} sequence optional sequence
    * @return {Promise} resolves with response (success or fail)
    */
-  async setAccountFlags(address: string, flags: number, sequence = null) {
+  async setAccountFlags(
+    address: string,
+    flags: number,
+    sequence: number | null = null
+  ) {
     const accCode = crypto.decodeAddress(address)
 
     const msg = {
