@@ -30,7 +30,6 @@ jobs:
         uses: cycjimmy/semantic-release-action@v2
         with:
           semantic_version: 17
-          dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
