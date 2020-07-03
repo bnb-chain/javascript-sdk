@@ -458,7 +458,7 @@ ___
 
 ###  list
 
-▸ **list**(`address`: string, `proposalId`: number, `baseAsset`: string, `quoteAsset`: string, `initPrice`: number, `sequence`: null): *Promise‹object›*
+▸ **list**(`address`: string, `proposalId`: number, `baseAsset`: string, `quoteAsset`: string, `initPrice`: number, `sequence`: number | null): *Promise‹object›*
 
 **Parameters:**
 
@@ -469,7 +469,7 @@ Name | Type | Default | Description |
 `baseAsset` | string | - | - |
 `quoteAsset` | string | - | - |
 `initPrice` | number | - | - |
-`sequence` | null | null | optional sequence |
+`sequence` | number &#124; null | null | optional sequence |
 
 **Returns:** *Promise‹object›*
 
@@ -501,7 +501,7 @@ ___
 
 ###  multiSend
 
-▸ **multiSend**(`fromAddress`: string, `outputs`: Transfer[], `memo`: string, `sequence`: null): *Promise‹object›*
+▸ **multiSend**(`fromAddress`: string, `outputs`: Transfer[], `memo`: string, `sequence`: number | null): *Promise‹object›*
 
 Create and sign a multi send tx
 
@@ -535,7 +535,7 @@ Name | Type | Default | Description |
 `fromAddress` | string | - | - |
 `outputs` | Transfer[] | - | - |
 `memo` | string | "" | optional memo |
-`sequence` | null | null | optional sequence |
+`sequence` | number &#124; null | null | optional sequence |
 
 **Returns:** *Promise‹object›*
 
@@ -680,7 +680,7 @@ ___
 
 ###  setAccountFlags
 
-▸ **setAccountFlags**(`address`: string, `flags`: number, `sequence`: null): *Promise‹object›*
+▸ **setAccountFlags**(`address`: string, `flags`: number, `sequence`: number | null): *Promise‹object›*
 
 Set account flags
 
@@ -690,7 +690,7 @@ Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `address` | string | - | - |
 `flags` | number | - | new value of account flags |
-`sequence` | null | null | optional sequence |
+`sequence` | number &#124; null | null | optional sequence |
 
 **Returns:** *Promise‹object›*
 
@@ -769,7 +769,7 @@ ___
 
 ###  transfer
 
-▸ **transfer**(`fromAddress`: string, `toAddress`: string, `amount`: BigSource, `asset`: string, `memo`: string, `sequence`: null): *Promise‹object›*
+▸ **transfer**(`fromAddress`: string, `toAddress`: string, `amount`: BigSource, `asset`: string, `memo`: string, `sequence`: number | null): *Promise‹object›*
 
 Transfer tokens from one address to another.
 
@@ -782,7 +782,7 @@ Name | Type | Default | Description |
 `amount` | BigSource | - | - |
 `asset` | string | - | - |
 `memo` | string | "" | optional memo |
-`sequence` | null | null | optional sequence |
+`sequence` | number &#124; null | null | optional sequence |
 
 **Returns:** *Promise‹object›*
 
