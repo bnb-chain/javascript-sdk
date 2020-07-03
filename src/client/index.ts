@@ -46,8 +46,10 @@ export const DefaultSigningDelegate = async function (
   signMsg?: any
 ): Promise<Transaction> {
   const privateKey = this.getPrivateKey()
-  if(!privateKey) {
-    return Promise.reject('Private key has to be set before signing a transaction')
+  if (!privateKey) {
+    return Promise.reject(
+      "Private key has to be set before signing a transaction"
+    )
   }
   return tx.sign(privateKey, signMsg)
 }

@@ -1,1175 +1,241 @@
-[@binance-chain/javascript-sdk](README.md)
-
-# @binance-chain/javascript-sdk
-
-## Index
-
-### Classes
-
-* [BncClient](classes/bncclient.md)
-* [Bridge](classes/bridge.md)
-* [LedgerApp](classes/ledgerapp.md)
-* [RpcClient](classes/rpcclient.md)
-* [TokenManagement](classes/tokenmanagement.md)
-* [Transaction](classes/transaction.md)
-
-### Other Functions
-
-* [DefaultBroadcastDelegate](README.md#const-defaultbroadcastdelegate)
-* [DefaultSigningDelegate](README.md#const-defaultsigningdelegate)
-* [LedgerSigningDelegate](README.md#const-ledgersigningdelegate)
-* [ab2hexstring](README.md#const-ab2hexstring)
-* [ab2str](README.md#const-ab2str)
-* [calInputCoins](README.md#const-calinputcoins)
-* [calculateRandomNumberHash](README.md#const-calculaterandomnumberhash)
-* [calculateSwapID](README.md#const-calculateswapid)
-* [checkCoins](README.md#const-checkcoins)
-* [checkNumber](README.md#const-checknumber)
-* [checkOutputs](README.md#const-checkoutputs)
-* [ensureHex](README.md#const-ensurehex)
-* [hexXor](README.md#const-hexxor)
-* [hexstring2ab](README.md#const-hexstring2ab)
-* [hexstring2str](README.md#const-hexstring2str)
-* [int2hex](README.md#const-int2hex)
-* [isHex](README.md#const-ishex)
-* [num2VarInt](README.md#const-num2varint)
-* [num2hexstring](README.md#const-num2hexstring)
-* [reverseArray](README.md#const-reversearray)
-* [reverseHex](README.md#const-reversehex)
-* [sha256](README.md#const-sha256)
-* [sha256ripemd160](README.md#const-sha256ripemd160)
-* [sha3](README.md#const-sha3)
-* [str2ab](README.md#const-str2ab)
-* [str2hexstring](README.md#const-str2hexstring)
+## Terms
 
-### amino Functions
+- **Account** refers to a private/public keypair with a corresponding address.
+  The address is derived from a hardcoded derivation path of `44'/714'/0'/0/0`
+  from the seed.
+- **Keystore** refers to an Ethereum-like encrypted keystore JSON blob
+  containing the seed.
+- **Mnemonic** refers to a phrase of words that can be remembered and used to
+  recover the seed.
 
-* [convertObjectToSignBytes](README.md#const-convertobjecttosignbytes)
-* [encodeArrayBinary](README.md#const-encodearraybinary)
-* [encodeBinary](README.md#const-encodebinary)
-* [encodeBinaryByteArray](README.md#const-encodebinarybytearray)
-* [encodeBool](README.md#const-encodebool)
-* [encodeNumber](README.md#const-encodenumber)
-* [encodeObjectBinary](README.md#const-encodeobjectbinary)
-* [encodeString](README.md#const-encodestring)
-* [encodeTime](README.md#const-encodetime)
-* [marshalBinary](README.md#const-marshalbinary)
-* [marshalBinaryBare](README.md#const-marshalbinarybare)
+## Creating a Client
 
-### amino
-js amino UnmarshalBinaryBare Functions
+```js
+//common
+const { BncClient } = require("@binance-chain/javascript-sdk")
 
-* [unMarshalBinaryBare](README.md#const-unmarshalbinarybare)
+//es6
+import { BncClient } from "@binance-chain/javascript-sdk"
 
-### amino
-js amino UnmarshalBinaryLengthPrefixed Functions
+const client = new BncClient("https://xxx.api.com/")
+client.initChain()
+```
 
-* [unMarshalBinaryLengthPrefixed](README.md#const-unmarshalbinarylengthprefixed)
+## Creating an Account
 
-### crypto Functions
+```js
+client.createAccount()
 
-* [checkAddress](README.md#const-checkaddress)
-* [decodeAddress](README.md#const-decodeaddress)
-* [encodeAddress](README.md#const-encodeaddress)
-* [generateKeyStore](README.md#const-generatekeystore)
-* [generateMnemonic](README.md#const-generatemnemonic)
-* [generatePrivateKey](README.md#const-generateprivatekey)
-* [generatePubKey](README.md#const-generatepubkey)
-* [generateRandomArray](README.md#const-generaterandomarray)
-* [generateSignature](README.md#const-generatesignature)
-* [getAddressFromPrivateKey](README.md#const-getaddressfromprivatekey)
-* [getAddressFromPublicKey](README.md#const-getaddressfrompublickey)
-* [getPrivateKeyFromKeyStore](README.md#const-getprivatekeyfromkeystore)
-* [getPrivateKeyFromMnemonic](README.md#const-getprivatekeyfrommnemonic)
-* [getPublicKey](README.md#const-getpublickey)
-* [getPublicKeyFromPrivateKey](README.md#const-getpublickeyfromprivatekey)
-* [verifySignature](README.md#const-verifysignature)
+client.createAccountWithKeystore([password])
 
-## Other Functions
+client.createAccountWithMneomnic()
+```
 
-### `Const` DefaultBroadcastDelegate
+### Parameters
 
-▸ **DefaultBroadcastDelegate**(`this`: [BncClient](classes/bncclient.md), `signedTx`: [Transaction](classes/transaction.md)): *Promise‹object›*
+- password - **String**
 
-*Defined in [client/index.ts:55](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/client/index.ts#L55)*
+### Returns
 
-The default broadcast delegate which immediately broadcasts a transaction.
+- Object - The account object with the following structure:
 
-**Parameters:**
+  - address - **String**: The account address.
 
-Name | Type | Description |
------- | ------ | ------ |
-`this` | [BncClient](classes/bncclient.md) | - |
-`signedTx` | [Transaction](classes/transaction.md) | the signed transaction  |
+  - privateKey - **String**: The accounts private key. This should never be
+    shared or stored unencrypted in localstorage! Also make sure to null the
+    memory after usage.
 
-**Returns:** *Promise‹object›*
+  - keystore - **Object**: The encrypted keystore JSON
 
-___
+  - mnemonic - **String**: mnemonic sentence -- a group of easy to remember
+    words that can be used to recover the seed.
 
-### `Const` DefaultSigningDelegate
+## Recover an Account from Keystore or Mnemonic
 
-▸ **DefaultSigningDelegate**(`this`: [BncClient](classes/bncclient.md), `tx`: [Transaction](classes/transaction.md), `signMsg?`: any): *Promise‹[Transaction](classes/transaction.md)›*
+```js
+client.recoverAccountFromKeystore(keystore, password)
 
-*Defined in [client/index.ts:43](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/client/index.ts#L43)*
+client.recoverAccountFromMneomnic(mnemonic)
 
-The default signing delegate which uses the local private key.
+client.recoverAccountFromPrivateKey(privateKey)
+```
 
-**Parameters:**
+### Parameters
 
-Name | Type | Description |
------- | ------ | ------ |
-`this` | [BncClient](classes/bncclient.md) | - |
-`tx` | [Transaction](classes/transaction.md) | the transaction |
-`signMsg?` | any | the canonical sign bytes for the msg |
+- keystore - **Object**: Keystore JSON object.
 
-**Returns:** *Promise‹[Transaction](classes/transaction.md)›*
+- password - **String**: The password used for encryption
 
-___
+- mnemonic - **String**: mnemonic sentence.
 
-### `Const` LedgerSigningDelegate
+### Returns
 
-▸ **LedgerSigningDelegate**(`ledgerApp`: [LedgerApp](classes/ledgerapp.md), `preSignCb`: function, `postSignCb`: function, `errCb`: function, `hdPath`: number[]): *typeof DefaultSigningDelegate*
+- Object - The account object with the following structure:
 
-*Defined in [client/index.ts:70](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/client/index.ts#L70)*
+  - address - **String**: The account address.
 
-The Ledger signing delegate.
+  - privateKey - **String**: The accounts private key. This should never be
+    shared or stored unencrypted in localStorage! Also make sure to null the
+    memory after usage.
 
-**Parameters:**
+### Get Balances
 
-▪ **ledgerApp**: *[LedgerApp](classes/ledgerapp.md)*
+```js
+client.getBalance(address)
+```
 
-▪ **preSignCb**: *function*
+### Parameters
 
-▸ (`preSignCb`: Buffer): *void*
+- address - **String**: a valid Binance Chain address.
 
-**Parameters:**
+### Returns (example)
 
-Name | Type |
------- | ------ |
-`preSignCb` | Buffer |
+```js
+;[
+  {
+    symbol: "BNB",
+    free: "3999.41000000",
+    locked: "1000.00000000",
+    frozen: "0.00000000",
+  },
+]
+```
 
-▪ **postSignCb**: *function*
+## Place an Order
 
-▸ (`pubKeyResp`: PublicKey, `sigResp`: SignedSignature): *void*
+```js
+client.placeOrder(address, symbol, side, price, quantity, sequence)
+```
 
-**Parameters:**
+### Parameters
 
-Name | Type |
------- | ------ |
-`pubKeyResp` | PublicKey |
-`sigResp` | SignedSignature |
+- address - **String**: a valid binance chain address
 
-▪ **errCb**: *function*
+- symbol - **String**: an active market pair
 
-▸ (`error`: any): *void*
+- side - **String**: buy or sell, value can only be 1(buy) or 2(sell)
 
-**Parameters:**
+- price - **Number**: the price of trade pair
 
-Name | Type |
------- | ------ |
-`error` | any |
+- quantity - **Number**: the amount of symbol
 
-▪ **hdPath**: *number[]*
+- sequence - **Number**: sequence from account
 
-**Returns:** *typeof DefaultSigningDelegate*
+### Returns (example)
 
-___
+```js
+{
+  "result": {
+    "code": 0,
+    "data": "{type:dex/NewOrderResponse,value:{order_id:BA36F0FAD74D8F41045463E4774F328F4AF779E5-80}}",
+    "hash": "641F4333F05B2374700E191EE6B6B03F9A543514",
+    "log": "Msg 0: ",
+    "ok": true
+  },
+  "status": 200
+}
 
-### `Const` ab2hexstring
+```
 
-▸ **ab2hexstring**(`arr`: any): *string*
+## Transfer Tokens
 
-*Defined in [utils/cryptoHelper.ts:55](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L55)*
+```js
+client.transfer(fromAddress, toAddress, amount, asset, memo, sequence)
+```
 
-**Parameters:**
+### Parameters
 
-Name | Type |
------- | ------ |
-`arr` | any |
+- fromAddress - **String**: a valid binance chain address.
 
-**Returns:** *string*
+- toAddress - **String**: a valid binance chain address.
 
-HEX string
+- amount - **Number**
 
-___
+- asset - **String**
 
-### `Const` ab2str
+- memo - **String**
 
-▸ **ab2str**(`buf`: Uint8Array): *void*
+- sequence - **Number**: sequence from account
 
-*Defined in [utils/cryptoHelper.ts:12](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L12)*
+### Returns (example)
 
-**Parameters:**
+```js
+{
+  "result": [
+    {
+      "code": 0,
+      "hash": "1C1AC45E4E9D213606660264F906310458AEA449",
+      "log": "Msg 0: ",
+      "ok": true
+    }
+  ],
+  "status": 200
+}
+```
 
-Name | Type |
------- | ------ |
-`buf` | Uint8Array |
+### Cancel an Order
 
-**Returns:** *void*
+```js
+client.cancelOrder(fromAddress, symbols, orderIds, refids, sequence)
+```
 
-ASCII string
+### Parameters
 
-___
+- fromAddress - **String**: a valid binance chain address.
 
-### `Const` calInputCoins
+- symbols - **Array[String]**
 
-▸ **calInputCoins**(`inputs`: Array‹object›, `coins`: Coin[]): *void*
+- orderIds - **Array[Number]**
 
-*Defined in [client/index.ts:117](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/client/index.ts#L117)*
+- refids - **Array[Number]**
 
-sum corresponding input coin
+- sequence - **Number**
 
-**Parameters:**
+### Returns (example)
 
-Name | Type | Description |
------- | ------ | ------ |
-`inputs` | Array‹object› | - |
-`coins` | Coin[] |   |
+```js
+{
+  "result": {
+    "code": 0,
+    "hash": "79D09209710E32D75935186830AF4309D2A2D9C5",
+    "log": "Msg 0: ",
+    "ok": true
+  },
+  "status": 200
+}
+```
 
-**Returns:** *void*
+### Get an Account
 
-___
+```js
+client.getAccount(address)
+```
 
-### `Const` calculateRandomNumberHash
+### Parameters
 
-▸ **calculateRandomNumberHash**(`randomNumber`: string, `timestamp`: number): *string*
+- address - **String**: a valid Binance Chain address.
 
-*Defined in [utils/cryptoHelper.ts:260](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L260)*
+### Returns (example)
 
-Computes sha256 of random number and timestamp
+```js
+{
+  "address": "bnc1hgm0p7khfk85zpz5v0j8wnej3a90w7098fpxyh",
+  "public_key": [],
+  "account_number": 9,
+  "sequence": 81,
+  "balances": [
+    {
+      "symbol": "BNB",
+      "free": "9834046.15286760",
+      "locked": "145.00000000",
+      "frozen": "0.00000000"
+    }
+  ]
+}
+```
 
-**Parameters:**
+## Other pages
 
-Name | Type |
------- | ------ |
-`randomNumber` | string |
-`timestamp` | number |
-
-**Returns:** *string*
-
-sha256 result
-
-___
-
-### `Const` calculateSwapID
-
-▸ **calculateSwapID**(`randomNumberHash`: string, `sender`: string, `senderOtherChain`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:284](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L284)*
-
-Computes swapID
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`randomNumberHash` | string |
-`sender` | string |
-`senderOtherChain` | string |
-
-**Returns:** *string*
-
-sha256 result
-
-___
-
-### `Const` checkCoins
-
-▸ **checkCoins**(`coins`: Coin[]): *void*
-
-*Defined in [utils/validateHelper.ts:25](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/validateHelper.ts#L25)*
-
-basic validation of coins
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`coins` | Coin[] |   |
-
-**Returns:** *void*
-
-___
-
-### `Const` checkNumber
-
-▸ **checkNumber**(`value`: BigSource, `name`: string): *void*
-
-*Defined in [utils/validateHelper.ts:11](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/validateHelper.ts#L11)*
-
-validate the input number.
-
-**Parameters:**
-
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`value` | BigSource | - |   |
-`name` | string | "input number" | - |
-
-**Returns:** *void*
-
-___
-
-### `Const` checkOutputs
-
-▸ **checkOutputs**(`outputs`: Transfer[]): *void*
-
-*Defined in [client/index.ts:100](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/client/index.ts#L100)*
-
-validate the input number.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`outputs` | Transfer[] |   |
-
-**Returns:** *void*
-
-___
-
-### `Const` ensureHex
-
-▸ **ensureHex**(`str`: string): *void*
-
-*Defined in [utils/cryptoHelper.ts:212](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L212)*
-
-Throws an error if input is not hexstring.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`str` | string |   |
-
-**Returns:** *void*
-
-___
-
-### `Const` hexXor
-
-▸ **hexXor**(`str1`: string, `str2`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:143](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L143)*
-
-XORs two hexstrings
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`str1` | string | HEX string |
-`str2` | string | HEX string |
-
-**Returns:** *string*
-
-XOR output as a HEX string
-
-___
-
-### `Const` hexstring2ab
-
-▸ **hexstring2ab**(`str`: string): *Uint8Array‹›*
-
-*Defined in [utils/cryptoHelper.ts:39](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L39)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`str` | string | HEX string |
-
-**Returns:** *Uint8Array‹›*
-
-___
-
-### `Const` hexstring2str
-
-▸ **hexstring2str**(`hexstring`: string): *void*
-
-*Defined in [utils/cryptoHelper.ts:78](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L78)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`hexstring` | string | HEX string |
-
-**Returns:** *void*
-
-ASCII string
-
-___
-
-### `Const` int2hex
-
-▸ **int2hex**(`num`: number): *string*
-
-*Defined in [utils/cryptoHelper.ts:86](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L86)*
-
-convert an integer to big endian hex and add leading zeros
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`num` | number |
-
-**Returns:** *string*
-
-___
-
-### `Const` isHex
-
-▸ **isHex**(`str`: string): *boolean*
-
-*Defined in [utils/cryptoHelper.ts:200](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L200)*
-
-Checks if input is a hexstring. Empty string is considered a hexstring.
-
-**`example`** 
-isHex('0101') = true
-isHex('') = true
-isHex('0x01') = false
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`str` | string |
-
-**Returns:** *boolean*
-
-___
-
-### `Const` num2VarInt
-
-▸ **num2VarInt**(`num`: number): *string*
-
-*Defined in [utils/cryptoHelper.ts:122](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L122)*
-
-Converts a number to a variable length Int. Used for array length header
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`num` | number | The number |
-
-**Returns:** *string*
-
-hexstring of the variable Int.
-
-___
-
-### `Const` num2hexstring
-
-▸ **num2hexstring**(`num`: number, `size`: number, `littleEndian`: boolean): *string*
-
-*Defined in [utils/cryptoHelper.ts:101](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L101)*
-
-Converts a number to a big endian hexstring of a suitable size, optionally little endian
-
-**Parameters:**
-
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`num` | number | - | - |
-`size` | number | 1 | The required size in bytes, eg 1 for Uint8, 2 for Uint16. Defaults to 1. |
-`littleEndian` | boolean | false | Encode the hex in little endian form |
-
-**Returns:** *string*
-
-___
-
-### `Const` reverseArray
-
-▸ **reverseArray**(`arr`: any[]): *Uint8Array‹›*
-
-*Defined in [utils/cryptoHelper.ts:162](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L162)*
-
-Reverses an array. Accepts arrayBuffer.
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`arr` | any[] |
-
-**Returns:** *Uint8Array‹›*
-
-___
-
-### `Const` reverseHex
-
-▸ **reverseHex**(`hex`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:180](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L180)*
-
-Reverses a HEX string, treating 2 chars as a byte.
-
-**`example`** 
-reverseHex('abcdef') = 'efcdab'
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`hex` | string | HEX string |
-
-**Returns:** *string*
-
-HEX string reversed in 2s.
-
-___
-
-### `Const` sha256
-
-▸ **sha256**(`hex`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:235](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L235)*
-
-Computes a single SHA256 digest.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`hex` | string | message to hash |
-
-**Returns:** *string*
-
-hash output
-
-___
-
-### `Const` sha256ripemd160
-
-▸ **sha256ripemd160**(`hex`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:221](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L221)*
-
-Computes a SHA256 followed by a RIPEMD160.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`hex` | string | message to hash |
-
-**Returns:** *string*
-
-hash output
-
-___
-
-### `Const` sha3
-
-▸ **sha3**(`hex`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:247](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L247)*
-
-Computes a single SHA3 (Keccak) digest.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`hex` | string | message to hash |
-
-**Returns:** *string*
-
-hash output
-
-___
-
-### `Const` str2ab
-
-▸ **str2ab**(`str`: string): *Uint8Array‹›*
-
-*Defined in [utils/cryptoHelper.ts:24](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L24)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`str` | string | ASCII string |
-
-**Returns:** *Uint8Array‹›*
-
-___
-
-### `Const` str2hexstring
-
-▸ **str2hexstring**(`str`: string): *string*
-
-*Defined in [utils/cryptoHelper.ts:72](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/utils/cryptoHelper.ts#L72)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`str` | string | ASCII string |
-
-**Returns:** *string*
-
-HEX string
-
-___
-
-## amino Functions
-
-### `Const` convertObjectToSignBytes
-
-▸ **convertObjectToSignBytes**(`obj`: any): *Buffer‹›*
-
-*Defined in [amino/encoder/index.ts:74](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L74)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`obj` | any | -- {object} |
-
-**Returns:** *Buffer‹›*
-
-bytes {Buffer}
-
-___
-
-### `Const` encodeArrayBinary
-
-▸ **encodeArrayBinary**(`fieldNum`: number | undefined, `arr`: any[], `isByteLenPrefix?`: undefined | false | true): *Buffer‹›*
-
-*Defined in [amino/encoder/index.ts:200](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L200)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`fieldNum` | number &#124; undefined | object field index |
-`arr` | any[] | - |
-`isByteLenPrefix?` | undefined &#124; false &#124; true | - |
-
-**Returns:** *Buffer‹›*
-
-bytes of array
-
-___
-
-### `Const` encodeBinary
-
-▸ **encodeBinary**(`val`: any, `fieldNum?`: undefined | number, `isByteLenPrefix?`: undefined | false | true): *any*
-
-*Defined in [amino/encoder/index.ts:107](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L107)*
-
-This is the main entrypoint for encoding all types in binary form.
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`val` | any |
-`fieldNum?` | undefined &#124; number |
-`isByteLenPrefix?` | undefined &#124; false &#124; true |
-
-**Returns:** *any*
-
-binary of object.
-
-___
-
-### `Const` encodeBinaryByteArray
-
-▸ **encodeBinaryByteArray**(`bytes`: Buffer): *Buffer‹›*
-
-*Defined in [amino/encoder/index.ts:150](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L150)*
-
-prefixed with bytes length
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`bytes` | Buffer |
-
-**Returns:** *Buffer‹›*
-
-with bytes length prefixed
-
-___
-
-### `Const` encodeBool
-
-▸ **encodeBool**(`b`: boolean): *any*
-
-*Defined in [amino/encoder/index.ts:33](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L33)*
-
-encode bool
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`b` | boolean |   |
-
-**Returns:** *any*
-
-___
-
-### `Const` encodeNumber
-
-▸ **encodeNumber**(`num`: number): *any*
-
-*Defined in [amino/encoder/index.ts:26](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L26)*
-
-encode number
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`num` | number |   |
-
-**Returns:** *any*
-
-___
-
-### `Const` encodeObjectBinary
-
-▸ **encodeObjectBinary**(`obj`: any, `isByteLenPrefix?`: undefined | false | true): *Buffer‹›*
-
-*Defined in [amino/encoder/index.ts:160](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L160)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`obj` | any |
-`isByteLenPrefix?` | undefined &#124; false &#124; true |
-
-**Returns:** *Buffer‹›*
-
-with bytes length prefixed
-
-___
-
-### `Const` encodeString
-
-▸ **encodeString**(`str`: string): *Buffer‹›*
-
-*Defined in [amino/encoder/index.ts:41](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L41)*
-
-encode string
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`str` | string |   |
-
-**Returns:** *Buffer‹›*
-
-___
-
-### `Const` encodeTime
-
-▸ **encodeTime**(`value`: string | Date): *Buffer‹›*
-
-*Defined in [amino/encoder/index.ts:51](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L51)*
-
-encode time
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`value` | string &#124; Date |   |
-
-**Returns:** *Buffer‹›*
-
-___
-
-### `Const` marshalBinary
-
-▸ **marshalBinary**(`obj`: any): *any*
-
-*Defined in [amino/encoder/index.ts:82](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L82)*
-
-js amino MarshalBinary
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`obj` | any |   |
-
-**Returns:** *any*
-
-___
-
-### `Const` marshalBinaryBare
-
-▸ **marshalBinaryBare**(`obj`: any): *any*
-
-*Defined in [amino/encoder/index.ts:93](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/encoder/index.ts#L93)*
-
-js amino MarshalBinaryBare
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`obj` | any |   |
-
-**Returns:** *any*
-
-___
-
-## amino
-js amino UnmarshalBinaryBare Functions
-
-### `Const` unMarshalBinaryBare
-
-▸ **unMarshalBinaryBare**(`bytes`: Buffer, `type`: any): *any*
-
-*Defined in [amino/decoder/index.ts:48](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/decoder/index.ts#L48)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`bytes` | Buffer |
-`type` | any |
-
-**Returns:** *any*
-
-___
-
-## amino
-js amino UnmarshalBinaryLengthPrefixed Functions
-
-### `Const` unMarshalBinaryLengthPrefixed
-
-▸ **unMarshalBinaryLengthPrefixed**(`bytes`: Buffer, `type`: any): *any*
-
-*Defined in [amino/decoder/index.ts:24](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/amino/decoder/index.ts#L24)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`bytes` | Buffer |
-`type` | any |
-
-**Returns:** *any*
-
-___
-
-## crypto Functions
-
-### `Const` checkAddress
-
-▸ **checkAddress**(`address`: string, `hrp`: string): *boolean*
-
-*Defined in [crypto/index.ts:62](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L62)*
-
-Checks whether an address is valid.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`address` | string | the bech32 address to decode |
-`hrp` | string | the prefix to check for the bech32 address |
-
-**Returns:** *boolean*
-
-___
-
-### `Const` decodeAddress
-
-▸ **decodeAddress**(`value`: string): *Buffer*
-
-*Defined in [crypto/index.ts:50](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L50)*
-
-Decodes an address in bech32 format.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`value` | string | the bech32 address to decode  |
-
-**Returns:** *Buffer*
-
-___
-
-### `Const` encodeAddress
-
-▸ **encodeAddress**(`value`: string | Buffer, `prefix`: string, `type`: BufferEncoding): *string*
-
-*Defined in [crypto/index.ts:90](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L90)*
-
-Encodes an address from input data bytes.
-
-**Parameters:**
-
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`value` | string &#124; Buffer | - | the public key to encode |
-`prefix` | string | "tbnb" | the address prefix |
-`type` | BufferEncoding | "hex" | the output type (default: hex)  |
-
-**Returns:** *string*
-
-___
-
-### `Const` generateKeyStore
-
-▸ **generateKeyStore**(`privateKeyHex`: string, `password`: string): *KeyStore*
-
-*Defined in [crypto/index.ts:243](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L243)*
-
-Generates a keystore object (web3 secret storage format) given a private key to store and a password.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`privateKeyHex` | string | the private key hexstring. |
-`password` | string | the password. |
-
-**Returns:** *KeyStore*
-
-the keystore object.
-
-___
-
-### `Const` generateMnemonic
-
-▸ **generateMnemonic**(): *string*
-
-*Defined in [crypto/index.ts:357](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L357)*
-
-Generates mnemonic phrase words using random entropy.
-
-**Returns:** *string*
-
-___
-
-### `Const` generatePrivateKey
-
-▸ **generatePrivateKey**(`len`: number): *string*
-
-*Defined in [crypto/index.ts:110](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L110)*
-
-Generates 32 bytes of random entropy
-
-**Parameters:**
-
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`len` | number | PRIVKEY_LEN | output length (default: 32 bytes) |
-
-**Returns:** *string*
-
-entropy bytes hexstring
-
-___
-
-### `Const` generatePubKey
-
-▸ **generatePubKey**(`privateKey`: Buffer): *BasePoint*
-
-*Defined in [crypto/index.ts:155](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L155)*
-
-PubKey performs the point-scalar multiplication from the privKey on the
-generator point to get the pubkey.
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`privateKey` | Buffer |
-
-**Returns:** *BasePoint*
-
-PubKey
-
-___
-
-### `Const` generateRandomArray
-
-▸ **generateRandomArray**(`length`: number): *ArrayBuffer*
-
-*Defined in [crypto/index.ts:119](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L119)*
-
-Generates an arrayBuffer filled with random bits.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`length` | number | Length of buffer. |
-
-**Returns:** *ArrayBuffer*
-
-___
-
-### `Const` generateSignature
-
-▸ **generateSignature**(`signBytesHex`: string, `privateKey`: string | Buffer): *Buffer*
-
-*Defined in [crypto/index.ts:203](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L203)*
-
-Generates a signature (64 byte <r,s>) for a transaction based on given private key.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`signBytesHex` | string | Unsigned transaction sign bytes hexstring. |
-`privateKey` | string &#124; Buffer | The private key. |
-
-**Returns:** *Buffer*
-
-Signature. Does not include tx.
-
-___
-
-### `Const` getAddressFromPrivateKey
-
-▸ **getAddressFromPrivateKey**(`privateKeyHex`: string, `prefix?`: undefined | string): *string*
-
-*Defined in [crypto/index.ts:186](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L186)*
-
-Gets an address from a private key.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`privateKeyHex` | string | the private key hexstring |
-`prefix?` | undefined &#124; string | the address prefix  |
-
-**Returns:** *string*
-
-___
-
-### `Const` getAddressFromPublicKey
-
-▸ **getAddressFromPublicKey**(`publicKeyHex`: string, `prefix?`: undefined | string): *string*
-
-*Defined in [crypto/index.ts:167](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L167)*
-
-Gets an address from a public key hex.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`publicKeyHex` | string | the public key hexstring |
-`prefix?` | undefined &#124; string | the address prefix  |
-
-**Returns:** *string*
-
-___
-
-### `Const` getPrivateKeyFromKeyStore
-
-▸ **getPrivateKeyFromKeyStore**(`keystore`: string, `password`: string): *string*
-
-*Defined in [crypto/index.ts:302](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L302)*
-
-Gets a private key from a keystore given its password.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`keystore` | string | the keystore in json format |
-`password` | string | the password.  |
-
-**Returns:** *string*
-
-___
-
-### `Const` getPrivateKeyFromMnemonic
-
-▸ **getPrivateKeyFromMnemonic**(`mnemonic`: string, `derive`: boolean, `index`: number, `password`: string): *string*
-
-*Defined in [crypto/index.ts:377](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L377)*
-
-Get a private key from mnemonic words.
-
-**Parameters:**
-
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`mnemonic` | string | - | the mnemonic phrase words |
-`derive` | boolean | true | derive a private key using the default HD path (default: true) |
-`index` | number | 0 | the bip44 address index (default: 0) |
-`password` | string | "" | according to bip39 |
-
-**Returns:** *string*
-
-hexstring
-
-___
-
-### `Const` getPublicKey
-
-▸ **getPublicKey**(`publicKey`: string): *BasePoint‹›*
-
-*Defined in [crypto/index.ts:127](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L127)*
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`publicKey` | string | Encoded public key |
-
-**Returns:** *BasePoint‹›*
-
-public key hexstring
-
-___
-
-### `Const` getPublicKeyFromPrivateKey
-
-▸ **getPublicKeyFromPrivateKey**(`privateKeyHex`: string): *string*
-
-*Defined in [crypto/index.ts:138](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L138)*
-
-Calculates the public key from a given private key.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`privateKeyHex` | string | the private key hexstring |
-
-**Returns:** *string*
-
-public key hexstring
-
-___
-
-### `Const` verifySignature
-
-▸ **verifySignature**(`sigHex`: string, `signBytesHex`: string, `publicKeyHex`: string): *boolean*
-
-*Defined in [crypto/index.ts:224](https://github.com/binance-chain/javascript-sdk/blob/567ede2/src/crypto/index.ts#L224)*
-
-Verifies a signature (64 byte <r,s>) given the sign bytes and public key.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`sigHex` | string | The signature hexstring. |
-`signBytesHex` | string | Unsigned transaction sign bytes hexstring. |
-`publicKeyHex` | string | The public key. |
-
-**Returns:** *boolean*
+- [API Documentation](./api-docs/README.md)
+- [API Examples](./examples.md)
+- [Supported Transaction Types](./transaction-types.md)

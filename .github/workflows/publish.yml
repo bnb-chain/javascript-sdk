@@ -1,0 +1,36 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - semantic
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Build documentation
+        run: yarn build:docs
+
+      - name: Publish
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          semantic_version: 17
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

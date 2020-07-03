@@ -1,15 +1,18 @@
 {
   "name": "@binance-chain/javascript-sdk",
-  "version": "3.0.2-alpha.11",
+  "version": "0.0.0-development",
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "files": [
+    "lib/*"
+  ],
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
+    "test:ledger": "qunit --require babel-polyfiltypl tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
-    "build": "yarn clean && tsc --emitDeclarationOnly && yarn build:docs && babel --extensions '.ts' src -d lib",
-    "build:docs": "rimraf docs && typedoc --plugin typedoc-plugin-markdown --excludeExternals --excludeNotDocumented --readme none",
+    "build": "rimraf lib && tsc --emitDeclarationOnly && babel --extensions '.ts' src -d lib",
+    "build:docs": "rimraf docs/api-docs && typedoc --excludeExternals --excludeNotDocumented --readme none --out docs/api-docs --hideBreadcrumbs --disableSources",
     "prepublishOnly": "npm run build",
     "clean": "rimraf lib",
     "lint": "eslint '**/*.{ts,js}'",
@@ -103,15 +106,11 @@
     "qunit": "^2.9.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
-    "typedoc": "^0.17.7",
-    "typedoc-plugin-markdown": "^2.2.17",
+    "typedoc": "^0.17.8",
+    "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "^3.9.3",
     "utf-8-validate": "^5.0.2"
   },
-  "files": [
-    "lib/*",
-    "typings/*"
-  ],
   "resolutions": {
     "**/**/handlebars": "^4.1.2",
     "**/**/ecstatic": "^4.1.4",
@@ -120,7 +119,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint"
+      "pre-commit": "yarn lint && yarn build:docs"
     }
   }
 }

@@ -7864,7 +7864,7 @@ typedoc-default-themes@^0.10.2:
   dependencies:
     lunr "^2.3.8"
 
-typedoc-plugin-markdown@^2.2.17:
+typedoc-plugin-markdown@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-2.3.1.tgz#c4c6c3228f625b24875e87cc1622b9a259b914ce"
   integrity sha512-7rlmg1tLjddYy11uznHCAlyoOpxdWnFXqGEZ7j2mJ4KJg2avwWgEpw6SFZVofgPCGn36zklpFS51lHxYSRTLVQ==
@@ -7872,7 +7872,7 @@ typedoc-plugin-markdown@^2.2.17:
     fs-extra "^9.0.0"
     handlebars "^4.7.6"
 
-typedoc@^0.17.7:
+typedoc@^0.17.8:
   version "0.17.8"
   resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.17.8.tgz#96b67e9454aa7853bfc4dc9a55c8a07adfd5478e"
   integrity sha512-/OyrHCJ8jtzu+QZ+771YaxQ9s4g5Z3XsQE3Ma7q+BL392xxBn4UMvvCdVnqKC2T/dz03/VXSLVKOP3lHmDdc/w==
