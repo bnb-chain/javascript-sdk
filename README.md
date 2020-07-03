@@ -13,6 +13,9 @@ with Binance Chain. It includes the following core components.
 - **rpc** - Node RPC client.
 - **transaction** - Transaction Class, build and sign.
 
+You can find more detailed documentation and examples in our
+[Documentation](./docs/README.md) pages.
+
 ## Installation
 
 If you **do not** need Ledger support with Node.js:
@@ -60,11 +63,6 @@ module.exports = {
   plugins: [new webpack.IgnorePlugin(/^usb$/)],
 }
 ```
-
-## API
-
-For up-to-date API documentation, please check the
-[wiki](https://github.com/binance-chain/javascript-sdk/wiki).
 
 ## Testing
 
