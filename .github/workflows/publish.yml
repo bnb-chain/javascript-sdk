@@ -36,7 +36,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish docs
-        if: steps.semantic.outputs.new_release_published == 'true'
+        # if: steps.semantic.outputs.new_release_published == 'true'
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
