@@ -107,6 +107,7 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
     "typedoc": "^0.17.7",
+    "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "^3.9.3",
     "utf-8-validate": "^5.0.2"
   },
