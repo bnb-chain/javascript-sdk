@@ -20,8 +20,8 @@ import {
  * Creates a new transaction object.
  * @example
  * var rawTx = {
- *   account_number: 1,
- *   chain_id: 'bnbchain-1000',
+ *   accountNumber: 1,
+ *   chainId: 'bnbchain-1000',
  *   memo: '',
  *   msg: {},
  *   type: 'NewOrderMsg',
@@ -40,8 +40,8 @@ import {
  */
 export default class Transaction {
   private sequence: NonNullable<StdSignMsg["sequence"]>
-  private account_number: NonNullable<StdSignMsg["accountNumber"]>
-  private chain_id: StdSignMsg["chainId"]
+  private accountNumber: NonNullable<StdSignMsg["accountNumber"]>
+  private chainId: StdSignMsg["chainId"]
 
   // DEPRECATED: Retained for backward compatibility,
   private msg?: any
@@ -58,8 +58,8 @@ export default class Transaction {
     }
 
     this.sequence = data.sequence || 0
-    this.account_number = data.accountNumber || 0
-    this.chain_id = data.chainId
+    this.accountNumber = data.accountNumber || 0
+    this.chainId = data.chainId
     this.msg = data.msg
     this.baseMsg = data.baseMsg
     this.memo = data.memo
@@ -75,8 +75,8 @@ export default class Transaction {
   getSignBytes(msg?: SignMsg): Buffer {
     msg = msg || (this.baseMsg && this.baseMsg.getSignMsg())
     const signMsg = {
-      account_number: this.account_number.toString(),
-      chain_id: this.chain_id,
+      account_number: this.accountNumber.toString(),
+      chain_id: this.chainId,
       data: null,
       memo: this.memo,
       msgs: [msg],
@@ -98,7 +98,7 @@ export default class Transaction {
       {
         pub_key: pubKeyBuf,
         signature: signature,
-        account_number: this.account_number,
+        account_number: this.accountNumber,
         sequence: this.sequence,
       },
     ]
