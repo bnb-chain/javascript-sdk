@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - master
+      - semantic
 
 jobs:
   publish:
@@ -26,7 +26,19 @@ jobs:
         run: yarn build:docs
 
       - name: Publish
-        run: yarn semantic-release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          semantic_version: 17
+          dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish docs
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
+          external_repository: binance-chain-npm/js-sdk-docs
+          publish_dir: ./docs
