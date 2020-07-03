@@ -19,10 +19,10 @@ jobs:
       - name: Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Dependencies
+      - name: Build
         run: yarn build
 
-      - name: Dependencies
+      - name: Build documentation
         run: yarn build:docs
 
       - name: Publish
@@ -35,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish docs
+      - name: Publish documentation
         # if: steps.semantic.outputs.new_release_published == 'true'
         uses: docker://decathlon/wiki-page-creator-action:latest
         env:
