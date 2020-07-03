@@ -12,9 +12,8 @@
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
     "build": "rimraf lib && tsc --emitDeclarationOnly && babel --extensions '.ts' src -d lib",
-    "build:docs": "rimraf docs && typedoc --excludeExternals --excludeNotDocumented --readme none",
     "prepublishOnly": "npm run build",
-    "clean": "rimraf lib docs",
+    "clean": "rimraf lib",
     "lint": "eslint '**/*.{ts,js}'",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
   },
@@ -106,8 +105,6 @@
     "qunit": "^2.9.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
-    "typedoc": "^0.17.7",
-    "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "^3.9.3",
     "utf-8-validate": "^5.0.2"
   },
