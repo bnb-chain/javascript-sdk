@@ -1,25 +1,40 @@
 {
   "name": "@binance-chain/javascript-sdk",
-  "version": "2.16.4",
+  "version": "3.0.2-alpha.11",
   "license": "Apache-2.0",
   "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
-    "build": "rm -rf lib && npx babel src -d lib",
-    "build:docs": "npx jsdoc-to-markdown -f src/**/*.js > docs/jsdoc.md",
+    "build": "yarn clean && tsc --emitDeclarationOnly && yarn build:docs && babel --extensions '.ts' src -d lib",
+    "build:docs": "rimraf docs && typedoc --plugin typedoc-plugin-markdown --excludeExternals --excludeNotDocumented --readme none",
     "prepublishOnly": "npm run build",
-    "lint": "eslint --fix src __tests__"
+    "clean": "rimraf lib",
+    "lint": "eslint '**/*.{ts,js}'",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
-    "@ledgerhq/hw-transport-u2f": "^4.78.0",
-    "@ledgerhq/hw-transport-web-ble": "^4.78.0",
+    "@babel/runtime": "^7.10.4",
+    "@ledgerhq/hw-transport-u2f": "^5.9.0",
+    "@ledgerhq/hw-transport-web-ble": "^5.9.0",
+    "@types/bech32": "^1.1.2",
+    "@types/big.js": "^4.0.5",
+    "@types/bn.js": "^4.11.6",
+    "@types/crypto-js": "^3.1.43",
+    "@types/elliptic": "^6.4.12",
+    "@types/jest": "^25.1.4",
+    "@types/ledgerhq__hw-transport": "^4.21.2",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.9.0",
+    "@types/pumpify": "^1.4.1",
+    "@types/tiny-secp256k1": "^1.0.0",
+    "@types/uuid": "^7.0.0",
     "axios": "^0.19.0",
     "bech32": "^1.1.3",
     "big.js": "^5.2.2",
-    "bip32": "^1",
+    "bip32": "^2.0.5",
     "bip39": "^3.0.2",
     "bn.js": "^4.11.8",
     "camelcase": "^5.3.1",
@@ -29,60 +44,83 @@
     "eslint-utils": "^1.4.2",
     "events": "^3.0.0",
     "is_js": "^0.9.0",
+    "lodash": "^4.17.15",
     "minimist": "^1.2.5",
     "ndjson": "^1.5.0",
     "protocol-buffers-encodings": "^1.1.0",
-    "pumpify": "^1.5.1",
-    "safe-buffer": "^5.1.2",
+    "pumpify": "^2.0.1",
     "secure-random": "^1.1.2",
     "tiny-secp256k1": "^1.1.3",
     "url": "^0.11.0",
     "uuid": "^3.3.2",
-    "varstruct": "^6.1.2",
     "websocket-stream": "^5.5.0"
   },
   "optionalDependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^4.78.0"
+    "@ledgerhq/hw-transport-node-hid": "^5.10.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-transform-async-to-generator": "^7.4.4",
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-async-to-generator": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/bech32": "^1.1.2",
+    "@types/big.js": "^4.0.5",
+    "@types/bn.js": "^4.11.6",
+    "@types/crypto-js": "^3.1.43",
+    "@types/elliptic": "^6.4.12",
+    "@types/jest": "^25.1.4",
+    "@types/ledgerhq__hw-transport": "^4.21.2",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.9.0",
+    "@types/pumpify": "^1.4.1",
+    "@types/tiny-secp256k1": "^1.0.0",
+    "@types/uuid": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^3.0.0",
+    "@typescript-eslint/parser": "^3.1.0",
     "babel-core": "^7.0.0-0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^23.6.0",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-latest": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "browserify": "^16.2.3",
     "buffer": "^5.2.1",
+    "bufferutil": "^4.0.1",
+    "builtin-modules": "^3.1.0",
     "cross-env": "^5.2.0",
-    "eslint": "^5.11.1",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
     "http-server": "^0.11.1",
-    "husky": "^3.0.0",
-    "jest": "^24.8.0",
-    "jsdoc-to-markdown": "^5.0.0",
-    "qunit": "^2.9.2"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-async-to-generator",
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-transform-runtime"
-    ]
+    "husky": "^4.2.5",
+    "jest": "^25.1.0",
+    "prettier": "^2.0.4",
+    "qunit": "^2.9.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.1",
+    "typedoc": "^0.17.7",
+    "typedoc-plugin-markdown": "^2.2.17",
+    "typescript": "^3.9.3",
+    "utf-8-validate": "^5.0.2"
   },
   "files": [
-    "lib/*"
+    "lib/*",
+    "typings/*"
   ],
   "resolutions": {
     "**/**/handlebars": "^4.1.2",
     "**/**/ecstatic": "^4.1.4",
     "**/**/mem": "^4.0.0",
     "**/**/minimist": "^1.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
   }
 }

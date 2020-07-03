@@ -18,7 +18,7 @@
 require("babel-polyfill")
 
 const SDK = module.exports
-const Ledger = SDK.Ledger = {}
+const Ledger = (SDK.Ledger = {})
 
 SDK.crypto = require("../lib/crypto")
 Ledger.app = require("../lib/ledger/ledger-app")

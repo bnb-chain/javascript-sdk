@@ -1,15 +1,19 @@
 module.exports = {
-      testMatch: [
-        '**/*test.js?(x)',
-      ],
-      testPathIgnorePatterns: [
-        '<rootDir>/node_modules/',
-      ],
-      rootDir: '',
-      moduleNameMapper: {
-        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-          '<rootDir>/__mocks__/fileMock.js',
-      },
-      moduleFileExtensions: ['js','json','jsx','node'],
-      testEnvironment: "node"
-  }
+  testMatch: ["**/*test.(ts|js)"],
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/lib/",
+    "<rootDir>/typings",
+  ],
+  transform: {
+    "^.+\\.(ts|js)?$": "ts-jest",
+  },
+  rootDir: "",
+  moduleFileExtensions: ["ts", "js", "json", "node"],
+  testEnvironment: "node",
+  globals: {
+    "ts-jest": {
+      diagnostics: false,
+    },
+  },
+}

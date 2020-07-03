@@ -1,23 +1,43 @@
 module.exports = {
-  parserOptions: {
-    parser: require.resolve("babel-eslint"),
-    ecmaVersion: 2018,
-    sourceType: "module"
-  },
+  root: true,
+  parser: "@typescript-eslint/parser",
   env: {
     es6: true,
     node: true,
     browser: true,
-    jest: true
+    jest: true,
   },
-  extends: "eslint:recommended",
+  extends: [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended",
+  ],
   rules: {
-    indent: ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    quotes: ["warn", "double"],
-    semi: ["warn", "never"],
+    "no-console": ["error"],
+    "import/named": ["off"],
+    "import/no-unresolved": ["off"],
+    "import/default": ["off"],
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        groups: [
+          ["builtin", "external"],
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+        ],
+        alphabetize: { order: "asc", caseInsensitive: true },
+      },
+    ],
     "no-buffer-constructor": 1,
-    indent: ["error", 2, { SwitchCase: 1 }],
-    "no-console": ["warn"]
-  }
+    "linebreak-style": ["error", "unix"],
+    "@typescript-eslint/explicit-function-return-type": ["off"],
+    "@typescript-eslint/no-this-alias": ["off"],
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
+  },
 }

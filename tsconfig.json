@@ -1,0 +1,32 @@
+{
+  "include": ["src", "types"],
+  "compilerOptions": {
+    "allowJs": false,
+    "target": "es5",
+    "module": "ESNext",
+    "lib": ["dom", "esnext"],
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "outDir": "lib",
+    "strict": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "removeComments": false,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["src/*", "node_modules/*"]
+    },
+    "esModuleInterop": true
+  },
+  "typedocOptions": {
+    "mode": "file",
+    "out": "docs",
+    "exclude": ["src/declarations.ts"]
+  }
+}
