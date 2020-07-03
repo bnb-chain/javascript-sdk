@@ -12,7 +12,7 @@
     "test:ledger": "qunit --require babel-polyfiltypl tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
     "build": "rimraf lib && tsc --emitDeclarationOnly && babel --extensions '.ts' src -d lib",
-    "build:docs": "rimraf docs/api-docs && typedoc --excludeExternals --excludeNotDocumented --readme none --out docs/api-docs --hideBreadcrumbs",
+    "build:docs": "rimraf docs/api-docs && typedoc --excludeExternals --excludeNotDocumented --readme none --out docs/api-docs --hideBreadcrumbs --disableSources",
     "prepublishOnly": "npm run build",
     "clean": "rimraf lib",
     "lint": "eslint '**/*.{ts,js}'",

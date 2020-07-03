@@ -63,8 +63,6 @@ The Binance Chain client.
 
 \+ **new BncClient**(`server`: string, `useAsyncBroadcast`: boolean, `source`: number): *[BncClient](bncclient.md)*
 
-*Defined in [src/client/index.ts:156](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L156)*
-
 **Parameters:**
 
 Name | Type | Default | Description |
@@ -80,8 +78,6 @@ Name | Type | Default | Description |
 ###  _prepareTransaction
 
 ▸ **_prepareTransaction**(`msg`: any, `stdSignMsg`: any, `address`: string, `sequence`: string | number | null, `memo`: string): *Promise‹[Transaction](transaction.md)‹››*
-
-*Defined in [src/client/index.ts:785](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L785)*
 
 Prepare a serialized raw transaction for sending to the blockchain.
 
@@ -104,8 +100,6 @@ ___
 ###  _sendTransaction
 
 ▸ **_sendTransaction**(`msg`: any, `stdSignMsg`: any, `address`: string, `sequence`: string | number | null, `memo`: string, `sync`: boolean): *Promise‹object›*
-
-*Defined in [src/client/index.ts:860](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L860)*
 
 Broadcast a raw transaction to the blockchain.
 
@@ -130,8 +124,6 @@ ___
 
 ▸ **cancelOrder**(`fromAddress`: string, `symbol`: string, `refid`: string, `sequence`: number | null): *Promise‹object›*
 
-*Defined in [src/client/index.ts:515](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L515)*
-
 Cancel an order.
 
 **Parameters:**
@@ -153,8 +145,6 @@ ___
 
 ▸ **checkAddress**(`address`: string, `prefix`: BncClient["addressPrefix"]): *boolean*
 
-*Defined in [src/client/index.ts:1198](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1198)*
-
 Validates an address.
 
 **Parameters:**
@@ -172,8 +162,6 @@ ___
 
 ▸ **chooseNetwork**(`network`: keyof typeof NETWORK_PREFIX_MAPPING): *void*
 
-*Defined in [src/client/index.ts:194](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L194)*
-
 Sets the client network (testnet or mainnet).
 
 **Parameters:**
@@ -189,8 +177,6 @@ ___
 ###  createAccount
 
 ▸ **createAccount**(): *object*
-
-*Defined in [src/client/index.ts:1068](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1068)*
 
 Creates a private key and returns it and its address.
 
@@ -211,8 +197,6 @@ ___
 ###  createAccountWithKeystore
 
 ▸ **createAccountWithKeystore**(`password`: string): *object*
-
-*Defined in [src/client/index.ts:1085](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1085)*
 
 Creates an account keystore object, and returns the private key and address.
 
@@ -236,8 +220,6 @@ ___
 
 ▸ **createAccountWithMneomnic**(): *object*
 
-*Defined in [src/client/index.ts:1111](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1111)*
-
 Creates an account from mnemonic seed phrase.
 
 **Returns:** *object*
@@ -260,8 +242,6 @@ ___
 
 ▸ **getAccount**(`address`: undefined | string): *Promise‹null | object›*
 
-*Defined in [src/client/index.ts:883](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L883)*
-
 get account
 
 **Parameters:**
@@ -279,8 +259,6 @@ ___
 ###  getBalance
 
 ▸ **getBalance**(`address`: undefined | string): *Promise‹any›*
-
-*Defined in [src/client/index.ts:903](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L903)*
 
 get balances
 
@@ -300,8 +278,6 @@ ___
 
 ▸ **getClientKeyAddress**(): *string*
 
-*Defined in [src/client/index.ts:1209](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1209)*
-
 Returns the address for the current account if setPrivateKey has been called on this client.
 
 **Returns:** *string*
@@ -311,8 +287,6 @@ ___
 ###  getDepth
 
 ▸ **getDepth**(`symbol`: string): *Promise‹object | never[]›*
-
-*Defined in [src/client/index.ts:970](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L970)*
 
 get depth for a given market
 
@@ -331,8 +305,6 @@ ___
 ###  getMarkets
 
 ▸ **getMarkets**(`limit`: number, `offset`: number): *Promise‹object | never[]›*
-
-*Defined in [src/client/index.ts:918](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L918)*
 
 get markets
 
@@ -353,8 +325,6 @@ ___
 
 ▸ **getOpenOrders**(`address`: string): *Promise‹object | never[]›*
 
-*Defined in [src/client/index.ts:989](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L989)*
-
 get open orders for an address
 
 **Parameters:**
@@ -373,8 +343,6 @@ ___
 
 ▸ **getPrivateKey**(): *null | string*
 
-*Defined in [src/client/index.ts:248](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L248)*
-
 Gets client's private key.
 
 **Returns:** *null | string*
@@ -386,8 +354,6 @@ ___
 ###  getSwapByCreator
 
 ▸ **getSwapByCreator**(`creator`: string, `limit`: number, `offset`: number): *Promise‹object | never[]›*
-
-*Defined in [src/client/index.ts:1027](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1027)*
 
 query atomic swap list by creator address
 
@@ -409,8 +375,6 @@ ___
 
 ▸ **getSwapByID**(`swapID`: string): *Promise‹object | never[]›*
 
-*Defined in [src/client/index.ts:1007](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1007)*
-
 get atomic swap
 
 **Parameters:**
@@ -428,8 +392,6 @@ ___
 ###  getSwapByRecipient
 
 ▸ **getSwapByRecipient**(`recipient`: string, `limit`: number, `offset`: number): *Promise‹object | never[]›*
-
-*Defined in [src/client/index.ts:1047](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1047)*
 
 query atomic swap list by recipient address
 
@@ -451,8 +413,6 @@ ___
 
 ▸ **getTransactions**(`address`: undefined | string, `offset`: number): *Promise‹object | never[]›*
 
-*Defined in [src/client/index.ts:937](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L937)*
-
 get transactions for an account
 
 **Parameters:**
@@ -472,8 +432,6 @@ ___
 
 ▸ **getTx**(`hash`: string): *Promise‹object | never[]›*
 
-*Defined in [src/client/index.ts:955](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L955)*
-
 get transaction
 
 **Parameters:**
@@ -492,8 +450,6 @@ ___
 
 ▸ **initChain**(): *Promise‹this›*
 
-*Defined in [src/client/index.ts:182](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L182)*
-
 Initialize the client with the chain's ID. Asynchronous.
 
 **Returns:** *Promise‹this›*
@@ -503,8 +459,6 @@ ___
 ###  list
 
 ▸ **list**(`address`: string, `proposalId`: number, `baseAsset`: string, `quoteAsset`: string, `initPrice`: number, `sequence`: null): *Promise‹object›*
-
-*Defined in [src/client/index.ts:638](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L638)*
 
 **Parameters:**
 
@@ -527,8 +481,6 @@ ___
 
 ▸ **listMiniToken**(`__namedParameters`: object): *Promise‹object›*
 
-*Defined in [src/client/index.ts:700](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L700)*
-
 list miniToken
 
 **Parameters:**
@@ -550,8 +502,6 @@ ___
 ###  multiSend
 
 ▸ **multiSend**(`fromAddress`: string, `outputs`: Transfer[], `memo`: string, `sequence`: null): *Promise‹object›*
-
-*Defined in [src/client/index.ts:437](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L437)*
 
 Create and sign a multi send tx
 
@@ -597,8 +547,6 @@ ___
 
 ▸ **placeOrder**(`address`: string, `symbol`: string, `side`: number, `price`: number, `quantity`: number, `sequence`: number | null, `timeinforce`: number): *Promise‹object›*
 
-*Defined in [src/client/index.ts:557](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L557)*
-
 Place an order.
 
 **Parameters:**
@@ -623,8 +571,6 @@ ___
 
 ▸ **recoverAccountFromKeystore**(`keystore`: Parameters<typeof getPrivateKeyFromKeyStore>[0], `password`: Parameters<typeof getPrivateKeyFromKeyStore>[1]): *object*
 
-*Defined in [src/client/index.ts:1134](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1134)*
-
 Recovers an account from a keystore object.
 
 **Parameters:**
@@ -646,8 +592,6 @@ ___
 
 ▸ **recoverAccountFromMnemonic**(`mnemonic`: string): *object*
 
-*Defined in [src/client/index.ts:1157](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1157)*
-
 Recovers an account from a mnemonic seed phrase.
 
 **Parameters:**
@@ -667,8 +611,6 @@ ___
 ###  recoverAccountFromPrivateKey
 
 ▸ **recoverAccountFromPrivateKey**(`privateKey`: string): *object*
-
-*Defined in [src/client/index.ts:1181](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L1181)*
 
 Recovers an account using private key.
 
@@ -690,8 +632,6 @@ ___
 
 ▸ **removePrivateKey**(): *this*
 
-*Defined in [src/client/index.ts:239](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L239)*
-
 Removes client's private key.
 
 **Returns:** *this*
@@ -703,8 +643,6 @@ ___
 ###  sendRawTransaction
 
 ▸ **sendRawTransaction**(`signedBz`: string, `sync`: boolean): *Promise‹object›*
-
-*Defined in [src/client/index.ts:835](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L835)*
 
 Broadcast a raw transaction to the blockchain.
 
@@ -725,8 +663,6 @@ ___
 
 ▸ **sendTransaction**(`signedTx`: [Transaction](transaction.md), `sync`: boolean): *Promise‹object›*
 
-*Defined in [src/client/index.ts:824](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L824)*
-
 Broadcast a transaction to the blockchain.
 
 **Parameters:**
@@ -745,8 +681,6 @@ ___
 ###  setAccountFlags
 
 ▸ **setAccountFlags**(`address`: string, `flags`: number, `sequence`: null): *Promise‹object›*
-
-*Defined in [src/client/index.ts:752](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L752)*
 
 Set account flags
 
@@ -768,8 +702,6 @@ ___
 
 ▸ **setAccountNumber**(`accountNumber`: number): *void*
 
-*Defined in [src/client/index.ts:256](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L256)*
-
 Sets the client's account number.
 
 **Parameters:**
@@ -785,8 +717,6 @@ ___
 ###  setBroadcastDelegate
 
 ▸ **setBroadcastDelegate**(`delegate`: BncClient["_broadcastDelegate"]): *[BncClient](bncclient.md)*
-
-*Defined in [src/client/index.ts:287](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L287)*
 
 Sets the broadcast delegate (for wallet integrations).
 
@@ -806,8 +736,6 @@ ___
 
 ▸ **setPrivateKey**(`privateKey`: string, `localOnly`: boolean): *Promise‹this›*
 
-*Defined in [src/client/index.ts:205](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L205)*
-
 Sets the client's private key for calls made by this client. Asynchronous.
 
 **Parameters:**
@@ -824,8 +752,6 @@ ___
 ###  setSigningDelegate
 
 ▸ **setSigningDelegate**(`delegate`: BncClient["_signingDelegate"]): *[BncClient](bncclient.md)*
-
-*Defined in [src/client/index.ts:275](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L275)*
 
 Sets the signing delegate (for wallet integrations).
 
@@ -844,8 +770,6 @@ ___
 ###  transfer
 
 ▸ **transfer**(`fromAddress`: string, `toAddress`: string, `amount`: BigSource, `asset`: string, `memo`: string, `sequence`: null): *Promise‹object›*
-
-*Defined in [src/client/index.ts:335](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L335)*
 
 Transfer tokens from one address to another.
 
@@ -870,8 +794,6 @@ ___
 
 ▸ **useAsyncBroadcast**(`useAsyncBroadcast`: boolean): *[BncClient](bncclient.md)*
 
-*Defined in [src/client/index.ts:265](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L265)*
-
 Use async broadcast mode. Broadcasts faster with less guarantees (default off)
 
 **Parameters:**
@@ -890,8 +812,6 @@ ___
 
 ▸ **useDefaultBroadcastDelegate**(): *[BncClient](bncclient.md)*
 
-*Defined in [src/client/index.ts:307](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L307)*
-
 Applies the default broadcast delegate.
 
 **Returns:** *[BncClient](bncclient.md)*
@@ -904,8 +824,6 @@ ___
 
 ▸ **useDefaultSigningDelegate**(): *[BncClient](bncclient.md)*
 
-*Defined in [src/client/index.ts:298](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L298)*
-
 Applies the default signing delegate.
 
 **Returns:** *[BncClient](bncclient.md)*
@@ -917,8 +835,6 @@ ___
 ###  useLedgerSigningDelegate
 
 ▸ **useLedgerSigningDelegate**(...`args`: Parameters‹typeof LedgerSigningDelegate›): *this*
-
-*Defined in [src/client/index.ts:320](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/index.ts#L320)*
 
 Applies the Ledger signing delegate.
 

@@ -33,8 +33,6 @@ issue or view tokens
 
 \+ **new TokenManagement**(`bncClient`: [BncClient](bncclient.md)): *[TokenManagement](tokenmanagement.md)*
 
-*Defined in [src/client/token/index.ts:84](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L84)*
-
 **Parameters:**
 
 Name | Type | Description |
@@ -48,8 +46,6 @@ Name | Type | Description |
 ###  burn
 
 ▸ **burn**(`fromAddress`: string, `symbol`: string, `amount`: BigSource): *Promise‹object›*
-
-*Defined in [src/client/token/index.ts:396](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L396)*
 
 burn some amount of token
 
@@ -71,8 +67,6 @@ ___
 
 ▸ **freeze**(`fromAddress`: string, `symbol`: string, `amount`: BigSource): *Promise‹object›*
 
-*Defined in [src/client/token/index.ts:314](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L314)*
-
 freeze some amount of token
 
 **Parameters:**
@@ -92,8 +86,6 @@ ___
 ###  issue
 
 ▸ **issue**(`senderAddress`: string, `tokenName`: string, `symbol`: string, `totalSupply`: number, `mintable`: boolean): *Promise‹object›*
-
-*Defined in [src/client/token/index.ts:107](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L107)*
 
 create a new asset on Binance Chain
 
@@ -116,8 +108,6 @@ ___
 ###  issueMiniToken
 
 ▸ **issueMiniToken**(`senderAddress`: string, `tokenName`: string, `symbol`: string, `totalSupply`: number, `mintable`: boolean, `tokenUri?`: undefined | string): *Promise‹object›*
-
-*Defined in [src/client/token/index.ts:169](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L169)*
 
 issue a new mini-token, total supply should be less than 1M
 
@@ -142,8 +132,6 @@ ___
 
 ▸ **issueTinyToken**(`senderAddress`: string, `tokenName`: string, `symbol`: string, `totalSupply`: number, `mintable`: boolean, `tokenUri?`: undefined | string): *Promise‹object›*
 
-*Defined in [src/client/token/index.ts:225](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L225)*
-
 issue a new tiny-token, total supply should be less than 10K
 
 **Parameters:**
@@ -167,8 +155,6 @@ ___
 
 ▸ **mint**(`fromAddress`: string, `symbol`: string, `amount`: BigSource): *Promise‹object›*
 
-*Defined in [src/client/token/index.ts:434](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L434)*
-
 mint tokens for an existing token
 
 **Parameters:**
@@ -188,8 +174,6 @@ ___
 ###  setTokenUri
 
 ▸ **setTokenUri**(`__namedParameters`: object): *Promise‹object›*
-
-*Defined in [src/client/token/index.ts:274](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L274)*
 
 set token URI of mini-token
 
@@ -211,8 +195,6 @@ ___
 
 ▸ **timeLock**(`fromAddress`: string, `description`: string, `amount`: Coin[], `lockTime`: number): *Promise‹object›*
 
-*Defined in [src/client/token/index.ts:473](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L473)*
-
 lock token for a while
 
 **Parameters:**
@@ -233,8 +215,6 @@ ___
 ###  timeRelock
 
 ▸ **timeRelock**(`fromAddress`: string, `id`: number, `description`: string, `amount`: Coin[], `lockTime`: number): *Promise‹object›*
-
-*Defined in [src/client/token/index.ts:520](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L520)*
 
 lock more token or increase locked period
 
@@ -258,8 +238,6 @@ ___
 
 ▸ **timeUnlock**(`fromAddress`: string, `id`: number): *Promise‹object›*
 
-*Defined in [src/client/token/index.ts:567](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L567)*
-
 unlock locked tokens
 
 **Parameters:**
@@ -278,8 +256,6 @@ ___
 ###  unfreeze
 
 ▸ **unfreeze**(`fromAddress`: string, `symbol`: string, `amount`: BigSource): *Promise‹object›*
-
-*Defined in [src/client/token/index.ts:355](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/client/token/index.ts#L355)*
 
 unfreeze some amount of token
 

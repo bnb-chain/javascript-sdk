@@ -30,8 +30,6 @@ Ledger app interface.
 
 \+ **new LedgerApp**(`transport`: Transport, `interactiveTimeout`: number, `nonInteractiveTimeout`: number): *[LedgerApp](ledgerapp.md)*
 
-*Defined in [src/ledger/ledger-app.ts:91](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L91)*
-
 Constructs a new LedgerApp.
 
 **Parameters:**
@@ -49,8 +47,6 @@ Name | Type | Default | Description |
 ###  getPublicKey
 
 ▸ **getPublicKey**(`hdPath`: number[]): *Promise‹PublicKey›*
-
-*Defined in [src/ledger/ledger-app.ts:611](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L611)*
 
 Gets the public key from the Ledger app that is currently open on the device.
 
@@ -70,8 +66,6 @@ ___
 
 ▸ **getVersion**(): *Promise‹Version›*
 
-*Defined in [src/ledger/ledger-app.ts:241](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L241)*
-
 Gets the version of the Ledger app that is currently open on the device.
 
 **`throws`** Will throw Error if a transport error occurs, or if the firmware app is not open.
@@ -83,8 +77,6 @@ ___
 ###  publicKeySecp256k1
 
 ▸ **publicKeySecp256k1**(`hdPath`: number[]): *Promise‹PublicKey›*
-
-*Defined in [src/ledger/ledger-app.ts:308](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L308)*
 
 Gets the public key from the Ledger app that is currently open on the device.
 
@@ -103,8 +95,6 @@ ___
 ###  showAddress
 
 ▸ **showAddress**(`hrp`: string, `hdPath`: number[]): *Promise‹ReturnResponse›*
-
-*Defined in [src/ledger/ledger-app.ts:573](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L573)*
 
 Shows the user's address for the given HD path on the device display.
 
@@ -125,8 +115,6 @@ ___
 
 ▸ **sign**(`signBytes`: Buffer, `hdPath`: number[]): *Promise‹SignedSignature›*
 
-*Defined in [src/ledger/ledger-app.ts:621](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L621)*
-
 Sends a transaction sign doc to the Ledger app to be signed.
 
 **`throws`** Will throw Error if a transport error occurs, or if the firmware app is not open.
@@ -145,8 +133,6 @@ ___
 ###  signSecp256k1
 
 ▸ **signSecp256k1**(`signBytes`: Buffer, `hdPath`: number[]): *Promise‹SignedSignature›*
-
-*Defined in [src/ledger/ledger-app.ts:438](https://github.com/binance-chain/javascript-sdk/blob/595f658/src/ledger/ledger-app.ts#L438)*
 
 Sends a transaction sign doc to the Ledger app to be signed.
 
