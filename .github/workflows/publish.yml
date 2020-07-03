@@ -37,8 +37,11 @@ jobs:
 
       - name: Publish docs
         # if: steps.semantic.outputs.new_release_published == 'true'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
-          external_repository: binance-chain-npm/js-sdk-docs
-          publish_dir: ./docs
+        uses: decathlon/wiki-page-creator-action@v2
+        env:
+          ACTION_MAIL: test@users.noreply.github.com
+          ACTION_NAME: test
+          GH_PAT: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
+          MD_FOLDER: docs
+          OWNER: binance-chain-npm
+          REPO_NAME: js-sdk-docs
