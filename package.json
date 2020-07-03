@@ -9,9 +9,10 @@
   ],
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "test:ledger": "qunit --require babel-polyfill tests-ledger/tests.js",
+    "test:ledger": "qunit --require babel-polyfiltypl tests-ledger/tests.js",
     "test:ledger:browser": "./tests-ledger/run-browser-tests.sh",
     "build": "rimraf lib && tsc --emitDeclarationOnly && babel --extensions '.ts' src -d lib",
+    "build:docs": "rimraf docs/api-docs && typedoc --excludeExternals --excludeNotDocumented --readme none --out docs/api-docs --hideBreadcrumbs",
     "prepublishOnly": "npm run build",
     "clean": "rimraf lib",
     "lint": "eslint '**/*.{ts,js}'",
@@ -105,6 +106,8 @@
     "qunit": "^2.9.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
+    "typedoc": "^0.17.8",
+    "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "^3.9.3",
     "utf-8-validate": "^5.0.2"
   },

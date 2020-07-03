@@ -1,6 +1,3 @@
-- [API Examples](./examples.md)
-- [Supported Transaction Types](./transaction-types.md)
-
 ## Terms
 
 - **Account** refers to a private/public keypair with a corresponding address.
@@ -236,3 +233,9 @@ client.getAccount(address)
   ]
 }
 ```
+
+## Other pages
+
+- [API Documentation](./api-docs/README.md)
+- [API Examples](./examples.md)
+- [Supported Transaction Types](./transaction-types.md)
