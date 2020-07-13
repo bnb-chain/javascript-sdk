@@ -15,20 +15,13 @@ import {
  * Bridge
  */
 export class Bridge {
-  static instance: Bridge
-
   private _bncClient!: BncClient
 
   /**
    * @param {BncClient} bncClient
    */
   constructor(bncClient: BncClient) {
-    if (!Bridge.instance) {
-      this._bncClient = bncClient
-      Bridge.instance = this
-    }
-
-    return Bridge.instance
+    this._bncClient = bncClient
   }
 
   /**
