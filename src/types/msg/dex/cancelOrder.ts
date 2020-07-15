@@ -19,6 +19,7 @@ export class CancelOrderMsg extends BaseMsg {
   private address: string
   private symbol: string
   private orderId: string
+  public readonly aminoPrefix: AminoPrefix = AminoPrefix.CancelOrderMsg
 
   constructor(address: string, sybmol: string, orderId: string) {
     super()
