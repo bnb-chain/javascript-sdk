@@ -47,7 +47,7 @@
     "eslint-utils": "^1.4.2",
     "events": "^3.0.0",
     "is_js": "^0.9.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "minimist": "^1.2.5",
     "ndjson": "^1.5.0",
     "protocol-buffers-encodings": "^1.1.0",
