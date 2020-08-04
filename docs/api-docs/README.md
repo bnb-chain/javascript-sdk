@@ -9,6 +9,7 @@
 * [Bridge](classes/bridge.md)
 * [LedgerApp](classes/ledgerapp.md)
 * [RpcClient](classes/rpcclient.md)
+* [Stake](classes/stake.md)
 * [TokenManagement](classes/tokenmanagement.md)
 * [Transaction](classes/transaction.md)
 

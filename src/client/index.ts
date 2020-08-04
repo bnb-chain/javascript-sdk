@@ -12,6 +12,7 @@ import Gov from "./gov"
 import Swap from "./swap"
 import TokenManagement, { validateMiniTokenSymbol } from "./token"
 import { Bridge } from "./bridge"
+import { Stake } from "./stake"
 
 const BASENUMBER = Math.pow(10, 8)
 
@@ -145,6 +146,7 @@ export class BncClient {
   public swap: Swap
   public gov: Gov
   public bridge: Bridge
+  public stake: Stake
   public chainId?: string | null
   public addressPrefix: typeof NETWORK_PREFIX_MAPPING[keyof typeof NETWORK_PREFIX_MAPPING] =
     "tbnb"
@@ -173,6 +175,7 @@ export class BncClient {
     this.swap = new Swap(this)
     this.gov = new Gov(this)
     this.bridge = new Bridge(this)
+    this.stake = new Stake(this)
   }
 
   /**
@@ -816,6 +819,7 @@ export class BncClient {
       sequence: typeof sequence !== "number" ? parseInt(sequence!) : sequence,
       source: this._source,
     })
+
     return this._signingDelegate.call(this, tx, stdSignMsg)
   }
 
