@@ -2,6 +2,8 @@ import * as bip39 from "bip39"
 
 import * as crypto from "../src/crypto"
 
+import { mnemonic } from "./utils"
+
 const privateKey = crypto.generatePrivateKey()
 const keyStore = crypto.generateKeyStore(privateKey, "1234567")
 
@@ -10,21 +12,6 @@ describe("crypto", () => {
     const privateKey = crypto.generatePrivateKey()
     const address = crypto.getAddressFromPrivateKey(privateKey)
     expect(address.length).toBe(43)
-  })
-
-  it("generate an address from privateKey", () => {
-    const privateKey =
-      "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
-    const address = crypto.getAddressFromPrivateKey(privateKey)
-    expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
-  })
-
-  it("generate an address from publicKey", () => {
-    const privateKey =
-      "90335b9d2153ad1a9799a3ccc070bd64b4164e9642ee1dd48053c33f9a3a05e9"
-    const publicKey = crypto.getPublicKeyFromPrivateKey(privateKey)
-    const address = crypto.getAddressFromPublicKey(publicKey)
-    expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
   it("generate private key from keyStore", () => {
@@ -55,16 +42,12 @@ describe("crypto", () => {
   })
 
   it("generate address from mnemonic", () => {
-    const mnemonic =
-      "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic)
     const address = crypto.getAddressFromPrivateKey(pk)
     expect(address).toBe("tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd")
   })
 
   it("generate address from mnemonic with index 1", () => {
-    const mnemonic =
-      "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
     const pk = crypto.getPrivateKeyFromMnemonic(mnemonic, true, 1)
     const address = crypto.getAddressFromPrivateKey(pk)
     expect(address).toBe("tbnb1egswqkszzfc2uq78zjslc6u2uky4pw46gq25tu")

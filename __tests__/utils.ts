@@ -2,8 +2,7 @@ import { BncClient } from "../src/client"
 import * as crypto from "../src/crypto"
 
 /* make sure the address from the mnemonic has balances, or the case will failed */
-export const mnemonic =
-  "offer caution gift cross surge pretty orange during eye soldier popular holiday mention east eight office fashion ill parrot vault rent devote earth cousin"
+export const mnemonic = process.env.mnemonic
 
 export const keystores = {
   // keystore with sha3 mac
