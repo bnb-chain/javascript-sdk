@@ -79,20 +79,13 @@ export const validateMiniTokenSymbol = (symbol: string) => {
  * issue or view tokens
  */
 class TokenManagement {
-  static instance: TokenManagement
-
   private _bncClient!: BncClient
 
   /**
    * @param {Object} bncClient
    */
   constructor(bncClient: BncClient) {
-    if (!TokenManagement.instance) {
-      this._bncClient = bncClient
-      TokenManagement.instance = this
-    }
-
-    return TokenManagement.instance
+    this._bncClient = bncClient
   }
 
   /**
