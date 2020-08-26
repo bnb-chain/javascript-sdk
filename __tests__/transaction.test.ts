@@ -132,7 +132,7 @@ describe("Transaction", () => {
     ]
     const sendMsg = new SendMsg(address, outputs)
     const data: StdSignMsg = {
-      chainId: "Binance-Chain-Nile",
+      chainId: "Binance-Chain-Ganges",
       accountNumber: accountNumber,
       sequence: sequence,
       baseMsg: sendMsg,

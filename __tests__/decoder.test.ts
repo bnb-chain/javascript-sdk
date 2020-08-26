@@ -1,5 +1,6 @@
 import * as amino from "../src/amino"
-import { AminoPrefix } from "../src/types/"
+import { unMarshalBinaryLengthPrefixed } from "../src/amino"
+import { AminoPrefix, StdTx, SendMsg } from "../src/types/"
 
 class Msg {
   constructor(opts) {

@@ -261,7 +261,6 @@ class RpcClient extends BaseRpc {
       hash,
       prove,
     })
-
     const txBytes = Buffer.from(res.tx, "base64")
     const msgAminoPrefix = txBytes.slice(8, 12).toString("hex")
     const msgType = getMsgByAminoPrefix(msgAminoPrefix)
