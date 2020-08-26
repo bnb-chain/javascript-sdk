@@ -193,7 +193,7 @@ const decodeArrayBinary = (bytes: Buffer, type: any) => {
     const { offset, val } = decodeBinary(bytes, type, true)
 
     arr.push({ ...val })
-    bytes = bytes.slice(offset)
+    bytes = bytes.slice(offset + 1)
 
     //add 1 byte of type
     arrayOffset += offset + 1

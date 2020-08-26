@@ -1,4 +1,4 @@
-import * as rpcClient from "../src/rpc"
+import rpcClient from "../src/rpc"
 
 const NETWORK = "testnet"
 const getClient = (type) => {
@@ -22,14 +22,14 @@ describe("rpc", () => {
     const client = getClient("https")
     const res = await client.status()
     expect(res).toBeTruthy()
-    expect(res.node_info.network).toBe("Binance-Chain-Nile")
+    expect(res.node_info.network).toBe("Binance-Chain-Ganges")
   })
 
   it("wss status", async () => {
     const client = getClient("wss")
     const res = await client.status()
     expect(res).toBeTruthy()
-    expect(res.node_info.network).toBe("Binance-Chain-Nile")
+    expect(res.node_info.network).toBe("Binance-Chain-Ganges")
     client.close()
   })
 
@@ -210,8 +210,9 @@ describe("rpc", () => {
   it("getTxByHash", async () => {
     const client = getClient("https")
     const hashStr =
-      "2029ED36444DFE12E6A235CFE8B1C81B7F31014D23790E382056B395EC1171FE"
+      "5E0C54841CF0261EE111EB6B024762DB200F3FA59397967AB4BC641154C0B789"
     const result = await client.getTxByHash(hashStr, true)
+    // console.log(JSON.stringify(result))
     expect(result).toBeTruthy()
     expect(result.height).toBeTruthy()
     expect(result.hash).toBe(hashStr)
