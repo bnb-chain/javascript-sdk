@@ -43,7 +43,7 @@
     "camelcase": "^5.3.1",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^3.1.9-1",
-    "elliptic": "^6.0.0",
+    "elliptic": "^6.5.4",
     "eslint-utils": "^1.4.2",
     "events": "^3.0.0",
     "is_js": "^0.9.0",
