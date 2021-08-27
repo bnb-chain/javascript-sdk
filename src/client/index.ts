@@ -963,9 +963,11 @@ export class BncClient {
    * @param {Number} startTime start time in milliseconds
    * @param {Number} endTime end time in in milliseconds, endTime - startTime should be smaller than 7 days
    * @return {Promise} resolves with http response ([more details](https://docs.binance.org/api-reference/dex-api/block-service.html#apiv1txs))
-   * Example:
+   * ```js
+   * // Example:
    * const client = new BncClient('https://testnet-api.binance.org')
    * client.getTxs(...);
+   * ```
    */
   async getTxs(address = this.address, startTime: number, endTime: number) {
     try {
