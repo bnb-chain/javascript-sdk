@@ -1,3 +1,4 @@
+import { BncClient } from "../src/client"
 import * as crypto from "../src/crypto"
 import Transaction from "../src/tx"
 import { checkNumber } from "../src/utils/"
@@ -174,6 +175,22 @@ describe("client", () => {
     )
     expect(status).toBe(200)
     expect(transactions).toHaveProperty("tx")
+    expect(transactions).toHaveProperty("total")
+  })
+
+  it("get txs works", async () => {
+    wait(waitSeconds)
+    const client = new BncClient("https://testnet-api.binance.org")
+    const endTime = 1630048291175
+    const startTime = 1629443534553
+    const address = "tbnb1x2d9sjleufa7ueve3y5n7a7c6hs8k8r8mx5rdh"
+    const { result: transactions, status } = await client.getTxs(
+      address,
+      startTime,
+      endTime
+    )
+    expect(status).toBe(200)
+    expect(transactions).toHaveProperty("txs")
     expect(transactions).toHaveProperty("total")
   })
 

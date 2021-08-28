@@ -25,6 +25,7 @@ export const api = {
   getOpenOrders: "/api/v1/orders/open",
   getDepth: "/api/v1/depth",
   getTransactions: "/api/v1/transactions",
+  getTxs: "/bc/api/v1/txs",
   getTx: "/api/v1/tx",
 }
 
@@ -941,6 +942,7 @@ export class BncClient {
    * @param {String} address optional address
    * @param {Number} offset from beggining, default 0
    * @return {Promise} resolves with http response
+   * @deprecated please use getTxs instead.
    */
   async getTransactions(address = this.address, offset = 0) {
     try {
@@ -951,6 +953,31 @@ export class BncClient {
       return data
     } catch (err) {
       console.warn("getTransactions error", err)
+      return []
+    }
+  }
+
+  /**
+   * get transactions for an account
+   * @param {String} address optional address
+   * @param {Number} startTime start time in milliseconds
+   * @param {Number} endTime end time in in milliseconds, endTime - startTime should be smaller than 7 days
+   * @return {Promise} resolves with http response ([more details](https://docs.binance.org/api-reference/dex-api/block-service.html#apiv1txs))
+   * ```js
+   * // Example:
+   * const client = new BncClient('https://testnet-api.binance.org')
+   * client.getTxs(...);
+   * ```
+   */
+  async getTxs(address = this.address, startTime: number, endTime: number) {
+    try {
+      const data = await this._httpClient.request(
+        "get",
+        `${api.getTxs}?address=${address}&startTime=${startTime}&endTime=${endTime}`
+      )
+      return data
+    } catch (err) {
+      console.warn("getTxs error", err)
       return []
     }
   }

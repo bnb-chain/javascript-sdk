@@ -35,6 +35,7 @@ The Binance Chain client.
 * [getSwapByRecipient](bncclient.md#getswapbyrecipient)
 * [getTransactions](bncclient.md#gettransactions)
 * [getTx](bncclient.md#gettx)
+* [getTxs](bncclient.md#gettxs)
 * [initChain](bncclient.md#initchain)
 * [list](bncclient.md#list)
 * [listMiniToken](bncclient.md#listminitoken)
@@ -415,6 +416,8 @@ ___
 
 get transactions for an account
 
+**`deprecated`** please use getTxs instead.
+
 **Parameters:**
 
 Name | Type | Default | Description |
@@ -443,6 +446,31 @@ Name | Type | Description |
 **Returns:** *Promise‹object | never[]›*
 
 resolves with http response
+
+___
+
+###  getTxs
+
+▸ **getTxs**(`address`: undefined | string, `startTime`: number, `endTime`: number): *Promise‹object | never[]›*
+
+get transactions for an account
+
+**Parameters:**
+
+Name | Type | Default | Description |
+------ | ------ | ------ | ------ |
+`address` | undefined &#124; string | this.address | optional address |
+`startTime` | number | - | start time in milliseconds |
+`endTime` | number | - | end time in in milliseconds, endTime - startTime should be smaller than 7 days |
+
+**Returns:** *Promise‹object | never[]›*
+
+resolves with http response ([more details](https://docs.binance.org/api-reference/dex-api/block-service.html#apiv1txs))
+```js
+// Example:
+const client = new BncClient('https://testnet-api.binance.org')
+client.getTxs(...);
+```
 
 ___
 
