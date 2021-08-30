@@ -119,8 +119,8 @@
     "**/glob-parent": "^5.1.1",
     "**/qs": "^6.0.4",
     "**/braces": "^2.3.1",
-    "**/ws": "ws@^7.4.6",
-    "**/node-notifier": "node-notifier@^8.0.1"
+    "**/ws": "^7.4.6",
+    "**/node-notifier": "^8.0.1"
   },
   "husky": {
     "hooks": {
