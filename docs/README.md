@@ -28,7 +28,7 @@ client.createAccount()
 
 client.createAccountWithKeystore([password])
 
-client.createAccountWithMneomnic()
+client.createAccountWithMnemonic()
 ```
 
 ### Parameters
@@ -55,7 +55,7 @@ client.createAccountWithMneomnic()
 ```js
 client.recoverAccountFromKeystore(keystore, password)
 
-client.recoverAccountFromMneomnic(mnemonic)
+client.recoverAccountFromMnemonic(mnemonic)
 
 client.recoverAccountFromPrivateKey(privateKey)
 ```
