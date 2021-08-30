@@ -15,7 +15,7 @@ declare module "secure-random" {
 }
 
 declare module "crypto-browserify" {
-  import _crypto from "crypto"
+  import * as _crypto from "crypto"
   const crypto: Pick<
     typeof _crypto,
     | "createHash"
