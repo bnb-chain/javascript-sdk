@@ -10,7 +10,7 @@
 
 ## Creating a Client
 
-```js
+```js 
 //common
 const { BncClient } = require("@binance-chain/javascript-sdk")
 
