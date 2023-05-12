@@ -465,7 +465,7 @@ Name | Type | Default | Description |
 
 **Returns:** *Promise‹object | never[]›*
 
-resolves with http response ([more details](https://docs.binance.org/api-reference/dex-api/block-service.html#apiv1txs))
+resolves with http response ([more details](https://docs.bnbchain.org/docs/beaconchain/develop/api-reference/dex-api/block-service/#apiv1txs))
 ```js
 // Example:
 const client = new BncClient('https://testnet-api.binance.org')
