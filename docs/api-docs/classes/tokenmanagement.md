@@ -87,7 +87,7 @@ ___
 
 ▸ **issue**(`senderAddress`: string, `tokenName`: string, `symbol`: string, `totalSupply`: number, `mintable`: boolean): *Promise‹object›*
 
-create a new asset on Binance Chain
+create a new asset on BNB Beacon Chain
 
 **Parameters:**
 

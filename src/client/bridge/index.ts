@@ -25,7 +25,7 @@ export class Bridge {
   }
 
   /**
-   * transfer smart chain token to binance chain receiver
+   * transfer smart chain token to BNB Beacon Chain receiver
    */
   public async transferIn({
     sequence,
@@ -55,7 +55,7 @@ export class Bridge {
     }
 
     if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
-      throw new Error("fromAddress is not a valid Binance Chain address")
+      throw new Error("fromAddress is not a valid BNB Beacon Chain address")
     }
 
     if (
@@ -71,7 +71,7 @@ export class Bridge {
       const addressHrp = address.startsWith("tbnb") ? "tbnb" : "bnb"
       if (!checkAddress(address, addressHrp)) {
         throw new Error(
-          `${address} in receiver_addresses is not a valid Binance Chain address`
+          `${address} in receiver_addresses is not a valid BNB Beacon Chain address`
         )
       }
 
@@ -131,7 +131,7 @@ export class Bridge {
     }
 
     if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
-      throw new Error("fromAddress is not a valid Binance Chain address")
+      throw new Error("fromAddress is not a valid BNB Beacon Chain address")
     }
 
     const claimHex = Buffer.from(
@@ -170,7 +170,7 @@ export class Bridge {
     fromAddress: string
   }) {
     if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
-      throw new Error("fromAddress is not a valid Binance Chain address")
+      throw new Error("fromAddress is not a valid BNB Beacon Chain address")
     }
 
     if (!contractAddress.startsWith("0x")) {
@@ -190,7 +190,7 @@ export class Bridge {
   }
 
   /**
-   * transfer token from Binance Chain to Binance Smart Chain
+   * transfer token from BNB Beacon Chain to BNB Smart Chain
    */
   public async transferFromBcToBsc({
     toAddress,
@@ -206,7 +206,7 @@ export class Bridge {
     fromAddress: string
   }) {
     if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
-      throw new Error("fromAddress is not a valid Binance Chain address")
+      throw new Error("fromAddress is not a valid BNB Beacon Chain address")
     }
 
     if (!toAddress.startsWith("0x")) {
@@ -237,7 +237,7 @@ export class Bridge {
     fromAddress: string
   }) {
     if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
-      throw new Error("fromAddress is not a valid Binance Chain address")
+      throw new Error("fromAddress is not a valid BNB Beacon Chain address")
     }
 
     if (!contract_address.startsWith("0x")) {
@@ -274,7 +274,7 @@ export class Bridge {
     }
 
     if (!checkAddress(fromAddress, this._bncClient.addressPrefix)) {
-      throw new Error("fromAddress is not a valid Binance Chain address")
+      throw new Error("fromAddress is not a valid BNB Beacon Chain address")
     }
 
     const claimHex = Buffer.from(

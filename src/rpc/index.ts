@@ -29,14 +29,14 @@ import {
 import BaseRpc from "./baseRpc"
 
 /**
- * The Binance Chain Node rpc client
+ * The BNB Beacon Chain Node rpc client
  */
 class RpcClient extends BaseRpc {
   private netWork: keyof typeof NETWORK_PREFIX_MAPPING
 
   /**
    * @param {String} uriString dataseed address
-   * @param {String} netWork Binance Chain network
+   * @param {String} netWork BNB Beacon Chain network
    */
   constructor(
     uriString = "localhost:27146",

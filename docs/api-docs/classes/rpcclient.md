@@ -1,7 +1,7 @@
 
 # Class: RpcClient
 
-The Binance Chain Node rpc client
+The BNB Beacon Chain Node rpc client
 
 ## Hierarchy
 
@@ -38,7 +38,7 @@ The Binance Chain Node rpc client
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `uriString` | string | "localhost:27146" | dataseed address |
-`netWork` | keyof typeof NETWORK_PREFIX_MAPPING | - | Binance Chain network  |
+`netWork` | keyof typeof NETWORK_PREFIX_MAPPING | - | BNB Beacon Chain network  |
 
 **Returns:** *[RpcClient](rpcclient.md)*
 

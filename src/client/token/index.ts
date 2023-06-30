@@ -89,7 +89,7 @@ class TokenManagement {
   }
 
   /**
-   * create a new asset on Binance Chain
+   * create a new asset on BNB Beacon Chain
    * @param {String} - senderAddress
    * @param {String} - tokenName
    * @param {String} - symbol

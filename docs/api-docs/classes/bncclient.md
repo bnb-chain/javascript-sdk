@@ -1,7 +1,7 @@
 
 # Class: BncClient
 
-The Binance Chain client.
+The BNB Beacon Chain client.
 
 ## Hierarchy
 
@@ -68,7 +68,7 @@ The Binance Chain client.
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
-`server` | string | - | Binance Chain public url |
+`server` | string | - | BNB Beacon Chain public url |
 `useAsyncBroadcast` | boolean | false | use async broadcast mode, faster but less guarantees (default off) |
 `source` | number | 0 | where does this transaction come from (default 0)  |
 

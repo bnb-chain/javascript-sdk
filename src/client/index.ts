@@ -135,7 +135,7 @@ const calInputCoins = (inputs: Array<{ coins: Coin[] }>, coins: Coin[]) => {
 }
 
 /**
- * The Binance Chain client.
+ * The BNB Beacon Chain client.
  */
 export class BncClient {
   public _httpClient: HttpRequest
@@ -159,13 +159,13 @@ export class BncClient {
   private _privateKey: string | null = null
 
   /**
-   * @param {String} server Binance Chain public url
+   * @param {String} server BNB Beacon Chain public url
    * @param {Boolean} useAsyncBroadcast use async broadcast mode, faster but less guarantees (default off)
    * @param {Number} source where does this transaction come from (default 0)
    */
   constructor(server: string, useAsyncBroadcast = false, source = 0) {
     if (!server) {
-      throw new Error("Binance chain server should not be null")
+      throw new Error("BNB Beacon Chain server should not be null")
     }
     this._httpClient = new HttpRequest(server)
     this._signingDelegate = DefaultSigningDelegate
@@ -1017,8 +1017,8 @@ export class BncClient {
 
   /**
    * get open orders for an address
-   * @param {String} address binance address
-   * @param {String} symbol binance BEP2 symbol
+   * @param {String} address bnb address
+   * @param {String} symbol bnb BEP2 symbol
    * @return {Promise} resolves with http response
    */
   async getOpenOrders(address: string = this.address!) {
