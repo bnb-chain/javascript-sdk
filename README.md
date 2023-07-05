@@ -1,11 +1,11 @@
-The Binance Chain JavaScript SDK allows browsers and Node.js clients to interact
-with Binance Chain. It includes the following core components.
+The BNB Beacon Chain JavaScript SDK allows browsers and Node.js clients to interact
+with BNB Beacon Chain. It includes the following core components.
 
 - **crypto** - core cryptographic functions.
 - **amino** -
   [amino](https://github.com/binance-chain/docs-site/blob/master/docs/encoding.md)
   (protobuf-like) encoding and decoding of transactions.
-- **client** - implementations of Binance Chain transaction types, such as for
+- **client** - implementations of BNB Beacon Chain transaction types, such as for
   transfers and trading.
 - **accounts** - management of "accounts" and wallets, including seed and
   encrypted mnemonic generation.
@@ -84,6 +84,6 @@ $ yarn test:ledger:browser
 
 ## Contributing
 
-Contributions to the Binance Chain JavaScript SDK are welcome. Please ensure
+Contributions to the BNB Beacon Chain JavaScript SDK are welcome. Please ensure
 that you have tested the changes with a local client and have added unit test
 coverage for your code.

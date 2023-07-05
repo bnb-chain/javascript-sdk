@@ -86,7 +86,7 @@ client.getBalance(address)
 
 ### Parameters
 
-- address - **String**: a valid Binance Chain address.
+- address - **String**: a valid BNB Beacon Chain address.
 
 ### Returns (example)
 
@@ -109,7 +109,7 @@ client.placeOrder(address, symbol, side, price, quantity, sequence)
 
 ### Parameters
 
-- address - **String**: a valid binance chain address
+- address - **String**: a valid BNB Beacon Chain address
 
 - symbol - **String**: an active market pair
 
@@ -145,9 +145,9 @@ client.transfer(fromAddress, toAddress, amount, asset, memo, sequence)
 
 ### Parameters
 
-- fromAddress - **String**: a valid binance chain address.
+- fromAddress - **String**: a valid BNB Beacon Chain address.
 
-- toAddress - **String**: a valid binance chain address.
+- toAddress - **String**: a valid BNB Beacon Chain address.
 
 - amount - **Number**
 
@@ -181,7 +181,7 @@ client.cancelOrder(fromAddress, symbols, orderIds, refids, sequence)
 
 ### Parameters
 
-- fromAddress - **String**: a valid binance chain address.
+- fromAddress - **String**: a valid BNB Beacon Chain address.
 
 - symbols - **Array[String]**
 
@@ -213,7 +213,7 @@ client.getAccount(address)
 
 ### Parameters
 
-- address - **String**: a valid Binance Chain address.
+- address - **String**: a valid BNB Beacon Chain address.
 
 ### Returns (example)
 

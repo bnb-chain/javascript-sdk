@@ -64,7 +64,7 @@ ___
 
 ▸ **transferFromBcToBsc**(`__namedParameters`: object): *Promise‹object›*
 
-transfer token from Binance Chain to Binance Smart Chain
+transfer token from BNB Beacon Chain to BNB Smart Chain
 
 **Parameters:**
 
@@ -86,7 +86,7 @@ ___
 
 ▸ **transferIn**(`__namedParameters`: object): *Promise‹object›*
 
-transfer smart chain token to binance chain receiver
+transfer smart chain token to BNB Beacon Chain receiver
 
 **Parameters:**
 

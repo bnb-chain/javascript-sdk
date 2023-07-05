@@ -1,7 +1,7 @@
 /* eslint-disable */
 /********************************************************************************
- *   Binance Chain Ledger App Interface
- *   (c) 2018-2019 Binance
+ *   BNB Beacon Chain Ledger App Interface
+ *   (c) 2018-2019 All BNB Chain Developers
  *   (c) 2018 ZondaX GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
