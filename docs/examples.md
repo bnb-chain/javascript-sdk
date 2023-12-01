@@ -5,7 +5,7 @@
 ### Example of a wallet-to-wallet transfer
 
 ```js
-const { BncClient } = require("@binance-chain/javascript-sdk")
+const { BncClient } = require("@bnb-chain/javascript-sdk")
 const axios = require("axios")
 
 const asset = "BNB" // asset string
@@ -55,7 +55,7 @@ httpClient
 ### Example of token issuance
 
 ```js
-const { BncClient, crypto, utils } = require("@binance-chain/javascript-sdk")
+const { BncClient, crypto, utils } = require("@bnb-chain/javascript-sdk")
 
 // Token params
 const tokenName = "Your Token Name"
@@ -91,7 +91,7 @@ main()
 ### RPC example (getAccount)
 
 ```js
-const { rpc } = require("@binance-chain/javascript-sdk")
+const { rpc } = require("@bnb-chain/javascript-sdk")
 new rpc("https://dataseed1.binance.org:443")
   .getAccount("bnb1qfmufc2q30cgw82ykjlpfeyauhcf5mad6p5y8t")
   .then((x) => console.log("", JSON.stringify(x)))
@@ -149,7 +149,7 @@ amino.marshalBinaryBare(data)
 The following code is an example of what you can do with the Ledger support:
 
 ```js
-const { ledger } = require("@binance-chain/javascript-sdk")
+const { ledger } = require("@bnb-chain/javascript-sdk")
 ledger(async () => {
   // check environment (web, node)
   console.log("node?", await ledger.transports.node.isSupported()) // => true if node

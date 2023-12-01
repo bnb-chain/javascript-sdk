@@ -22,17 +22,17 @@ pages.
 If you **do not** need Ledger support with Node.js:
 
 ```bash
-$ npm i @binance-chain/javascript-sdk --no-optional
+$ npm i @bnb-chain/javascript-sdk --no-optional
 # Or:
-$ yarn add @binance-chain/javascript-sdk --no-optional
+$ yarn add @bnb-chain/javascript-sdk --no-optional
 ```
 
 If you **need** Ledger support with Node.js:
 
 ```bash
-$ npm i @binance-chain/javascript-sdk
+$ npm i @bnb-chain/javascript-sdk
 # Or:
-$ yarn add @binance-chain/javascript-sdk
+$ yarn add @bnb-chain/javascript-sdk
 ```
 
 ### Prerequisites
