@@ -1,5 +1,5 @@
 
-# @binance-chain/javascript-sdk
+# @bnb-chain/javascript-sdk
 
 ## Index
 

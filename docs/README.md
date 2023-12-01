@@ -12,10 +12,10 @@
 
 ```js
 //common
-const { BncClient } = require("@binance-chain/javascript-sdk")
+const { BncClient } = require("@bnb-chain/javascript-sdk")
 
 //es6
-import { BncClient } from "@binance-chain/javascript-sdk"
+import { BncClient } from "@bnb-chain/javascript-sdk"
 
 const client = new BncClient("https://xxx.api.com/")
 client.initChain()
