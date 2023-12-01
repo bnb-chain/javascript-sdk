@@ -18,6 +18,9 @@
     "lint": "eslint '**/*.{ts,js}'",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,md,html,yml}\""
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@babel/runtime": "^7.10.4",
     "@ledgerhq/hw-transport-u2f": "^5.9.0",
