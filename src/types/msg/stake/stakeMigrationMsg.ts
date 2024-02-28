@@ -65,9 +65,9 @@ export class StakeMigrationMsg extends BaseMsg {
 
   getMsg() {
     const data: StakeMigrationData = {
-      delegator_addr: crypto.decodeAddress(this.delegator_addr),
+      delegator_addr: Buffer.from(this.delegator_addr.slice(2), "hex"),
       validator_src_addr: crypto.decodeAddress(this.validator_src_addr),
-      validator_dst_addr: crypto.decodeAddress(this.validator_dst_addr),
+      validator_dst_addr: Buffer.from(this.validator_dst_addr.slice(2), "hex"),
       amount: this.amount,
       refund_addr: crypto.decodeAddress(this.refund_addr),
       aminoPrefix: AminoPrefix.MsgSideChainStakeMigration,
