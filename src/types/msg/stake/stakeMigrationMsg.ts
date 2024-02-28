@@ -50,11 +50,11 @@ export class StakeMigrationMsg extends BaseMsg {
   getSignMsg() {
     const { denom, amount } = this.amount
     const signMsg: SignedStakeMigrationMsg = {
-      delegator_addr: this.delegator_addr,
       validator_src_addr: this.validator_src_addr,
       validator_dst_addr: this.validator_dst_addr,
-      amount: { denom, amount: String(amount) },
+      delegator_addr: this.delegator_addr,
       refund_addr: this.refund_addr,
+      amount: { denom, amount: String(amount) },
     }
 
     return {
@@ -65,11 +65,11 @@ export class StakeMigrationMsg extends BaseMsg {
 
   getMsg() {
     const data: StakeMigrationData = {
-      delegator_addr: Buffer.from(this.delegator_addr.slice(2), "hex"),
       validator_src_addr: crypto.decodeAddress(this.validator_src_addr),
       validator_dst_addr: Buffer.from(this.validator_dst_addr.slice(2), "hex"),
-      amount: this.amount,
+      delegator_addr: Buffer.from(this.delegator_addr.slice(2), "hex"),
       refund_addr: crypto.decodeAddress(this.refund_addr),
+      amount: this.amount,
       aminoPrefix: AminoPrefix.MsgSideChainStakeMigration,
     }
 
@@ -78,11 +78,11 @@ export class StakeMigrationMsg extends BaseMsg {
 
   static defaultMsg() {
     return {
-      delegator_addr: Buffer.from(""),
       validator_src_addr: Buffer.from(""),
       validator_dst_addr: Buffer.from(""),
-      amount: [{ denom: "", amount: 0 }],
+      delegator_addr: Buffer.from(""),
       refund_addr: Buffer.from(""),
+      amount: [{ denom: "", amount: 0 }],
       aminoPrefix: AminoPrefix.MsgSideChainStakeMigration,
     }
   }
