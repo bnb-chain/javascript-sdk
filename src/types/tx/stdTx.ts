@@ -65,6 +65,7 @@ export enum AminoPrefix {
   MsgSideChainDelegate = "E3A07FD2",
   MsgSideChainRedelegate = "E3CED364",
   MsgSideChainUndelegate = "514F7E0E",
+  MsgSideChainStakeMigration = "38589196",
   Claim = "4E781C11",
   ClaimMsg = "175A0521",
   BindMsg = "B9AE640C",
