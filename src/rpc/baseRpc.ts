@@ -4,7 +4,7 @@
 
 import axios from "axios"
 import { EventEmitter } from "events"
-import is from "is_js"
+import is from "is-it-check"
 import ndjson from "ndjson"
 import Pumpify from "pumpify"
 import url from "url"
