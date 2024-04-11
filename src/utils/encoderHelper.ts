@@ -1,4 +1,4 @@
-import is from "is_js"
+import is from "is-it-check"
 
 // typeToTyp3
 //amino type convert

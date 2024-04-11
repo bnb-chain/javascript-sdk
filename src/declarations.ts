@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-declare module "is_js" {
+declare module "is-it-check" {
   export const boolean: (a: any) => a is boolean
   export const number: (a: any) => a is number
   export const integer: (a: any) => a is number

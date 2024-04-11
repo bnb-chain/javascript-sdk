@@ -1,4 +1,4 @@
-import is from "is_js"
+import is from "is-it-check"
 import { string as VarString } from "protocol-buffers-encodings"
 
 import typeToTyp3 from "../../utils/encoderHelper"
