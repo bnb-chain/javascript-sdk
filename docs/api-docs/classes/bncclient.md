@@ -461,7 +461,7 @@ Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `address` | undefined &#124; string | this.address | optional address |
 `startTime` | number | - | start time in milliseconds |
-`endTime` | number | - | end time in in milliseconds, endTime - startTime should be smaller than 7 days |
+`endTime` | number | - | end time in milliseconds, endTime - startTime should be smaller than 7 days |
 
 **Returns:** *Promise‹object | never[]›*
 

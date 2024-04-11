@@ -961,7 +961,7 @@ export class BncClient {
    * get transactions for an account
    * @param {String} address optional address
    * @param {Number} startTime start time in milliseconds
-   * @param {Number} endTime end time in in milliseconds, endTime - startTime should be smaller than 7 days
+   * @param {Number} endTime end time in milliseconds, endTime - startTime should be smaller than 7 days
    * @return {Promise} resolves with http response ([more details](https://docs.binance.org/api-reference/dex-api/block-service.html#apiv1txs))
    * ```js
    * // Example:
