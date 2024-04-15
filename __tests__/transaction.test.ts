@@ -15,6 +15,7 @@ import {
   TimeReLockMsg,
   TimeUnlockMsg,
   TransferOutMsg,
+  StakeMigrationMsg,
 } from "../src/types"
 
 import { getClient, privateKey, address, targetAddress } from "./utils"
@@ -308,20 +309,44 @@ describe("Transaction", () => {
     }
   })
 
-  it("transfer from bc to bsc", async () => {
+  it("transfer from bc to bsc new", async () => {
     try {
-      const toAddress = "0xc1c87c37be3Ef20273A4E8982293EEb6E08C620C"
-      const from = "tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd"
+      const toAddress = "0xFBC7c1f58DAb89a8eE702DB1CBB49363db42E497"
+      const from = "tbnb1zzt7zg7j40cq0yy4ef2dx3nsns8csp4pgc4vd5"
       const transferOutMsg = new TransferOutMsg({
         from,
         to: toAddress,
-        expire_time: 1597543193,
-        amount: { denom: "BNB", amount: 1 },
+        expire_time: Math.ceil(new Date().getTime() / 1000) + 60,
+        amount: { denom: "BNB", amount: 0.1 },
       })
 
-      await buildAndSendTx(transferOutMsg, "https://testnet-kongo.defibit.io/")
+      await buildAndSendTx(
+        transferOutMsg,
+        "https://testnet-dex-atlantic.binance.org"
+      )
     } catch (err) {
-      throw err
+      console.error(err)
+    }
+  })
+
+  it("stake migration", async () => {
+    try {
+      const transferOutMsg = new StakeMigrationMsg({
+        validator_src_addr: "bva1pnww8kx30sz4xfcqvn8wjhrn796nf4dq77hcpa",
+        validator_dst_addr: "0xAf581B49EA5B09d69D86A8eD801EF0cEdA33Ae34",
+        delegator_addr: "0x4cE57E06a5408396ef94a887Dc00625D96343e69",
+        refund_addr: "tbnb1wu4vw68fccdc3e9zppqy66t8l60azd66w7flka",
+        amount: { denom: "BNB", amount: 100000000 },
+      })
+
+      console.log({ transferOutMsg })
+
+      await buildAndSendTx(
+        transferOutMsg,
+        "https://testnet-dex-atlantic.binance.org"
+      )
+    } catch (err) {
+      console.error(err)
     }
   })
 })
